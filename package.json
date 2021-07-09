@@ -1,0 +1,19 @@
+{
+  "name": "testgame",
+  "version": "1.0.0",
+  "description": "snake game",
+  "main": "index.js", 
+  "scripts": {
+    "start": "nodemon index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jsy",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.9",
+    "phaser": "^3.55.2"
+
+  },
+  "devDependencies": {}
+}
