@@ -1,6 +1,6 @@
 const express = require('express'); 
 const app = express();
-app.set("port", process.env.PORT || 4200); // 서버 포트 설정.  
+app.set("port", process.env.PORT || 3000); // 서버 포트 설정.  
 
 const morgan = require('morgan')
 app.use(morgan('dev'))
@@ -18,20 +18,59 @@ app.set("views", "./views");
 app.set("view engine", "html");
 //render(html)할려고 한 코드들..
 
+//id 보내는 코드 .html에서 '보내기' => /send_email POST
+app.use(express.json()); //req로 데이터 받을때. 
+app.use(express.urlencoded({extended: false})); //마찬가지
+
 
 app.get('/test',function(req,res){
     console.log('tets~s...');
     res.render('test')
 });//이건 걍 웹페이지 전환 코드 
 
-//id 보내는 코드 .html에서 '보내기' => /send_email POST
-app.use(express.json()); //req로 데이터 받을때. 
-app.use(express.urlencoded({extended: false})); //마찬가지
+app.post('/form_receive',function(req,res) {
+    //서버에서 컴파일하고
+    //결과값을 다시 클라이언트(웹페이지)로
+    //POST => 데이터 => req.body에 저장됨
+    var code = req.body.code;   //요청의 본문(body)(string 형태) 중 code 키에 해당하는 값(즉, form에 입력한 코드 내용 자체)
+    var source = code.split(/\r\n|\r\n/).join("\n");
+    var file='test.c';
+    console.log(code)//다행히 코드는 잘 저장되네
 
-app.post('/send_code', function(req,res){
-    console.log("code :", req.body.code);   //post로 받은건 req.body에 저장!                                                                 
-    res.send("<h1>WELCOME<h1>");
-  });
+    fs.writeFile(file,source,'utf8',function(error) {
+        console.log('write end');
+    });
+    var compile = spawn('gcc',[file]);
+    compile.stdout.on('data',function(data) {
+        console.log('stdout: '+data);
+    });
+    compile.stderr.on('data',function(data){
+        console.log(String(data));
+    });
+    compile.on('close',function(data){
+        if(data ==0) {
+            var run = spawn('./a.out',[]);    
+            run.stdout.on('data',function(output){
+                console.log('컴파일 완료');
+                var responseData = {'result':'ok','output': output.toString('utf8')};
+                res.json(responseData);
+            });
+            run.stderr.on('data', function (output) {
+                console.log(String(output));
+            });
+            run.on('close', function (output) {
+                console.log('stdout: ' + output);
+            });
+        }
+    });
+    
+});
+
+
+
+
+
+
 ///////////////////
 
 
