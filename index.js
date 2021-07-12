@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 app.set("port", process.env.PORT || 3000); // 서버 포트 설정.  
 
+const fs = require('fs');
+const spawn = require('child_process').spawn;
+
 const morgan = require('morgan')
 app.use(morgan('dev'))
 //morgan 미들웨어 : GET /assets/images/menu.png 304 0.916 ms - - 

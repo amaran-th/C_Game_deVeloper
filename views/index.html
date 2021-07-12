@@ -14,7 +14,8 @@
 <body>
     <form> 
         CODE :<textarea id="code" style="resize:none; width:400px; height:300px;" name="code"></textarea><br>                                                              
-        보내기<input class="sendcode" type="button">
+        <input class="sendcode"  value='보내기' type="button"><br>
+        output :<input id="output" type="text" name="output" style="resize:none; width:400px; height:50px;" readonly="readonly">
     </form>
     <script>
         document.querySelector('.sendcode').addEventListener('click', function() {
