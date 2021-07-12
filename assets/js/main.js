@@ -1,25 +1,24 @@
-//const { Game } = require("phaser");
+var gameSettings = {
+  playerSpeed: 200,
+}
 
-var game;
- 
 // 게임 인스턴스를 만든다.
-//game = new Phaser.Game(600, 450, Phaser.AUTO, '');
+var config = {
+  type: Phaser.AUTO,
+  width: 1000,
+  height: 600,
+  physics: {
+      default: 'arcade',
+      arcade: {
+        debug: true,
+        gravity: { y: 450 }
+      }
+  },
+  //backgroundColor: 0x9cbbd8,
+  scene: [ TestScene ] //class name
+};//
 
-game = new Phaser.Game({
-    type: Phaser.AUTO,
-    width: 600,
-    height: 600,
-    physics: {
-        default: 'arcade',
-    },
-    backgroundColor: 0x9cbbd8,
-    Scene: [TestScene] //class name?
-  });
+var game = new Phaser.Game(config);
 
-//  게임 인스턴스를 초기화 한 후, 상태를 추가한다.
-game.state.add('Menu', Menu);
-game.state.add('Game', TestScene); 
-
-game.state.start('Menu');
 
 
