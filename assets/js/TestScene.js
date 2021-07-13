@@ -1,6 +1,6 @@
 class TestScene extends Phaser.Scene {
     constructor(){ 
-        super("Scene1"); //identifier for the scene
+        super("bootGame"); //identifier for the scene
         console.log("construction of Test class");
     }
     preload() {
