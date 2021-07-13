@@ -59,6 +59,15 @@
                         }]
                 }, 
                 {
+                 "id":1,
+                 "properties":[
+                        {
+                         "name":"sky",
+                         "type":"string",
+                         "value":"whatasight"
+                        }]
+                }, 
+                {
                  "id":2,
                  "properties":[
                         {
