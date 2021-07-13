@@ -22,7 +22,8 @@ class Start extends Phaser.Scene {
 
       start_button.once("pointerup", function () {
 
-        this.scene.start("bootGame");
+        this.scene.start("buildMap");
+        //this.scene.start("bootGame");
 
       }, this);
 

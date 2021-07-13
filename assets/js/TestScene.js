@@ -1,7 +1,7 @@
 class TestScene extends Phaser.Scene {
     constructor(){ 
         super("bootGame"); //identifier for the scene
-        console.log("construction of Test class");
+        console.log("construction of TestScene");
     }
     preload() {
         this.load.image('player', './assets/images/heroin.png');
