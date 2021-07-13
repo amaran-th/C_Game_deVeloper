@@ -4,7 +4,7 @@ class TestScene extends Phaser.Scene {
         console.log("construction of Test class");
     }
     preload() {
-        this.load.image('player', './assets/images/snake.png');
+        this.load.image('player', './assets/images/heroin.png');
         console.log("preloading player image");
     }
     create () {
