@@ -11,12 +11,12 @@ var config = {
       default: 'arcade',
       arcade: {
         debug: true,
-        gravity: { y: 450 }
+        gravity: { y: 450 } //중력설정
       }
   },
   //backgroundColor: 0x9cbbd8,
   scene: [ Start, TestScene ] //class name
-};//
+};
 
 var game = new Phaser.Game(config);
 

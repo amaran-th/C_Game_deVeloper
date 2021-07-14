@@ -52,9 +52,31 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":6,
+         "name":"Sensors",
+         "objects":[
+                {
+                 "height":90.6666666666666,
+                 "id":4,
+                 "name":"Sign",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":94.6666666666666,
+                 "x":302,
+                 "y":306
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":6,
- "nextobjectid":4,
+ "nextlayerid":7,
+ "nextobjectid":5,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.1",
@@ -101,7 +123,7 @@
                         {
                          "name":"collides",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }, 
                         {
                          "name":"sign",
