@@ -1,3 +1,5 @@
+//내용 전부 TestScene으로 옮겼음!!!!! 안 쓰는 거//
+
 class TestSceneMap extends Phaser.Scene {
   constructor() {
     super("buildMap");
@@ -15,11 +17,13 @@ class TestSceneMap extends Phaser.Scene {
   
     // Parameters: layer name (or index) from Tiled, tileset, x, y
     const worldLayer = map.createLayer("ground", tileset, 0, 0);
-    const aboveLayer = map.createLayer( "sign", tileset, 0, 0);
+    const aboveLayer = map.createLayer( "sign", tileset, 0, 0); //값이 안읽혔다는데 잘뜨긴함..
     //const belowLayer = map.createLayer("Above Player", tileset, 0, 0);
 
-    worldLayer.setCollisionByProperty({ collides: true });
-
+    worldLayer.setCollisionByProperty({ collides: true }); //안됨
+    
+    
+    const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
     
     const debugGraphics = this.add.graphics().setAlpha(0,75);
     worldLayer.renderDebug(debugGraphics, {

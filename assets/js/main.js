@@ -15,7 +15,7 @@ var config = {
       }
   },
   //backgroundColor: 0x9cbbd8,
-  scene: [ Start, TestSceneMap, TestScene ] //class name
+  scene: [ Start, TestScene ] //class name
 };//
 
 var game = new Phaser.Game(config);
