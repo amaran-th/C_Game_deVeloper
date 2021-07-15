@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "testgame",
   "version": "1.0.0",
   "description": "snake game",
