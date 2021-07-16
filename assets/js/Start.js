@@ -4,10 +4,15 @@ class Start extends Phaser.Scene {
     }
 
     preload() {
+      /**시작화면 image 로드**/
       this.load.image("title_menu", "./assets/images/menu/title_menu.png"); 
       this.load.image("start_menu", "./assets/images/menu/start_menu.png");
       this.load.image("option_menu", "./assets/images/menu/option_menu.png");
       this.load.image("login_menu", "./assets/images/menu/login_menu.png");
+    
+      /**command관련 image 로드**/
+      this.load.image("entire_code_button", "./assets/images/command/entire_code_button.png");
+
     }
 
     create() {

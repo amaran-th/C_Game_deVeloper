@@ -13,9 +13,17 @@ class TestScene extends Phaser.Scene {
         this.cursorsKeys = this.input.keyboard.createCursorKeys();
         this.player.setCollideWorldBounds(true); //make player don't escape the screen
         console.log("create player image");
+
+        /**명령창 활성화**/
+        this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
+        this.entire_code_button.setInteractive();
+        this.entire_code_button.on('pointerup', function() {
+            console.log("HEY!!");
+        });
     }
     update() {
         this.movePlayerManager();
+
     }
 
     movePlayerManager() {
@@ -33,4 +41,5 @@ class TestScene extends Phaser.Scene {
             }
             console.log("move player image");
     }
+
 }
