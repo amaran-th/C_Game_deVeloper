@@ -3,7 +3,7 @@ class TestSceneMap extends Phaser.Scene {
     super("buildMap");
     console.log("Construction of testSceneMap");
   }
-
+/*
   preload() {
     this.load.image("tiles", "./assets/image/testSceneMap.png");
     this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
@@ -25,5 +25,5 @@ class TestSceneMap extends Phaser.Scene {
 
     console.log("build testSceneMap");
   }
-
+*/
 }
