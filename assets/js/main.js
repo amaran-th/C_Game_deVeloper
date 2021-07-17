@@ -1,4 +1,4 @@
-import TestScene from "./TestScene";
+//import TestScene from "./TestScene.js";
 
 var gameSettings = {
   playerSpeed: 200,
