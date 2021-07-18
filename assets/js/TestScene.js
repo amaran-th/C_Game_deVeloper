@@ -17,14 +17,26 @@ class TestScene extends Phaser.Scene {
         /*** 명령창버튼 활성화 ***/
         this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
+        
+        
         this.entire_code_button.on('pointerup', () => { //명령창 띄우기
-            this.commandbox = this.add.image(400 + 15, 5,'commandbox').setOrigin(0,0);
+            this.commandbox = this.add.image(config.width, 5,'commandbox').setOrigin(0,0);
+            this.slidebox();
         });
 
-        /*** 명령창 슬라이드 ***/
+        
         
     }
-   
+
+    /*** 명령창 슬라이드 함수 ***/
+    slidebox() {
+        this.tweens.add({
+            targets: this.commandbox,
+            x: config.width / 2 + 15,
+            ease: 'Power3'
+        });
+    }
+
     update() {
         this.movePlayerManager();
     }
@@ -44,5 +56,4 @@ class TestScene extends Phaser.Scene {
             }
             console.log("move player image");
     }
-
 }
