@@ -10,7 +10,7 @@ export default class Player extends Phaser.Scene {
             frameRate: 7,
             repeat: -1
         });
-        this.player = scene.physics.add.sprite(x ,y, 'player'); // x,y좌표, source
+        this.player = scene.physics.add.sprite(x ,y, 'player', 0); // x,y좌표, source
 
         this.cursorsKeys = scene.input.keyboard.createCursorKeys();
         this.player.setCollideWorldBounds(true); //make player don't escape the screen

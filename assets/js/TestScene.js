@@ -1,6 +1,6 @@
 import Player from "./Player.js";
 
-export default class Room extends Phaser.Scene {   
+export default class TestScene extends Phaser.Scene {   
     constructor(){ 
         super("bootGame"); //identifier for the scene
         console.log("construction of TestScene");
@@ -34,10 +34,10 @@ export default class Room extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
 
-        /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/ //이거 켜면 화면 까맣게만 나옴
-        //this.cameras.main.startFollow(this.player);
-        //this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        //this.cameras.main.setDeadzone(config.width/4, config.height);
+        /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
+        this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
+        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.widthInPixels);
+        this.cameras.main.setDeadzone(map.widthInPixels/4, map.widthInPixels); //config.width 대신 map.widthInPixels 쓰기
 
         /*** 충돌 설정하기 Set Collision ***/
         worldLayer.setCollisionByProperty({ collides: true });
@@ -51,9 +51,8 @@ export default class Room extends Phaser.Scene {
         collidingTileColor: new Phaser.Display.Color(243,134,48,255),
         faceColor: new Phaser.Display.Color(40,39,37,255)
         }); //근데 작동 안하는듯... 중요한 거 같진 않으니 일단 넘어감
-        
-        
 
+        
         /*** 플레이어랑 표지판이랑 만나면 무언가 하기 ***/
         /*
         const obj = this.scene.map.getObjectLayer('Sensors').objects;
