@@ -14,16 +14,19 @@ class TestScene extends Phaser.Scene {
         this.player.setCollideWorldBounds(true); //make player don't escape the screen
         console.log("create player image");
 
-        /**명령창 활성화**/
+        /*** 명령창버튼 활성화 ***/
         this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
-        this.entire_code_button.on('pointerup', function() {
-            console.log("HEY!!");
+        this.entire_code_button.on('pointerup', () => { //명령창 띄우기
+            this.commandbox = this.add.image(400 + 15, 5,'commandbox').setOrigin(0,0);
         });
+
+        /*** 명령창 슬라이드 ***/
+        
     }
+   
     update() {
         this.movePlayerManager();
-
     }
 
     movePlayerManager() {

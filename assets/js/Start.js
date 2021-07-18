@@ -12,6 +12,7 @@ class Start extends Phaser.Scene {
     
       /**command관련 image 로드**/
       this.load.image("entire_code_button", "./assets/images/command/entire_code_button.png");
+      this.load.image("commandbox", "./assets/images/command/commandbox.png");
 
     }
 
