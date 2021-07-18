@@ -1,4 +1,4 @@
-//import TestScene from "./TestScene.js";
+import TestScene from "./TestScene.js";
 
 var gameSettings = {
   playerSpeed: 200,
@@ -13,7 +13,7 @@ var config = {
       default: 'arcade',
       arcade: {
         debug: true,
-        gravity: { y: 450 } //중력설정
+        gravity: { y: 800 } //중력설정
       }
   },
   //backgroundColor: 0x9cbbd8,
