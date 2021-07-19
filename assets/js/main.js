@@ -20,7 +20,7 @@ var config = {
   scene: [ Start, TestScene ] //class name
 };
 
-var game = new Phaser.Game(config);
+var game = new Phaser.Game(config); //게임을 생성
 
 
 

@@ -24,8 +24,9 @@ export default class TestScene extends Phaser.Scene {
         
         const tileset = map.addTilesetImage("testSceneMap", "tiles"); //name of tileset(which is same as Png tileset) , source
         const worldLayer = map.createLayer("ground", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
-        const aboveLayer = map.createLayer( "sign", tileset, 0, 0); //값이 안읽혔다는데 잘뜨긴함
-        //const belowLayer = map.createLayer("Above Player", tileset, 0, 0);
+        const sign = map.createLayer( "sign", tileset, 0, 0); //값이 안읽혔다는데 잘뜨긴함
+        this.triggerpoint= map.createLayer("trigger", tileset, 0, 0);
+
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
@@ -36,13 +37,15 @@ export default class TestScene extends Phaser.Scene {
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
-        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.widthInPixels);
-        this.cameras.main.setDeadzone(map.widthInPixels/4, map.widthInPixels); //config.width 대신 map.widthInPixels 쓰기
+        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        this.cameras.main.setDeadzone(map.widthInPixels/4, map.heightInPixels); //config.width 대신 map.widthInPixels 쓰기
 
         /*** 충돌 설정하기 Set Collision ***/
         worldLayer.setCollisionByProperty({ collides: true });
-        this.physics.add.collider(this.player, worldLayer); //충돌 하도록 만들기
-        
+        this.physics.add.collider(this.player.player, worldLayer); //충돌 하도록 만들기
+        this.triggerpoint.setCollisionByProperty({ collides: true });
+        this.physics.add.collider(this.player.player, this.triggerpoint);
+
 
         /*** 충돌지점 색 칠하기 Mark the collid tile ***/
         const debugGraphics = this.add.graphics().setAlpha(0,75);
@@ -52,22 +55,15 @@ export default class TestScene extends Phaser.Scene {
         faceColor: new Phaser.Display.Color(40,39,37,255)
         }); //근데 작동 안하는듯... 중요한 거 같진 않으니 일단 넘어감
 
-        
-        /*** 플레이어랑 표지판이랑 만나면 무언가 하기 ***/
-        /*
-        const obj = this.scene.map.getObjectLayer('Sensors').objects;
-        
-        for (const Sensors of obj) {
-            this.sign.create(Sensors.x, Sensors.y, 'atlas')
-                .setOrigin(0)
-                .setDepth(-1);
-        }
-        */
+
+        /*** 플레이어랑 표지판이랑 만나면 펑션 불러오기 ***/
+
         console.log("build testScene");
     }
 
     update() {
         this.player.update();
+        this.triggerpoint.setTileIndexCallback(1,this.itsays,this);
     }
 
     itsays() {

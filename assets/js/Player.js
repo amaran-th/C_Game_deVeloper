@@ -54,6 +54,5 @@ export default class Player extends Phaser.Scene {
                 if(this.cursorsKeys.up.isDown && this.player.body.onFloor() ){
                     this.player.setVelocityY(-300); //jump
                 }
-                console.log("player.update");
     }
 }
