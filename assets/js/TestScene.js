@@ -1,4 +1,5 @@
 import Player from "./Player.js";
+import Minicoding from "./Minicoding.js";
 
 export default class TestScene extends Phaser.Scene {   
     constructor(){ 
@@ -7,18 +8,29 @@ export default class TestScene extends Phaser.Scene {
     }
 
     preload() {
+        /*** FROM Minicode.js***/
+        this.load.html('input', './assets/js/textInput.html');
+
         this.load.image("tiles", "./assets/images/testSceneMap.png");
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
 
+        /** FROM Player.js**/
         this.load.spritesheet('player', './assets/images/heroin.png', {
             frameWidth: 80,
             frameHeight: 140
         });
 
+
+
         console.log("preloading images.....");
+        
     }
 
     create () {
+        
+
+        //this.element = this.add.dom(300, 200).createFromCache('input');
+        
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
         
@@ -34,6 +46,7 @@ export default class TestScene extends Phaser.Scene {
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+        this.minicode = new Minicoding();
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -56,7 +69,7 @@ export default class TestScene extends Phaser.Scene {
         }); //근데 작동 안하는듯... 중요한 거 같진 않으니 일단 넘어감
 
 
-        /*** 플레이어랑 표지판이랑 만나면 펑션 불러오기 ***/
+
 
         console.log("build testScene");
     }
@@ -68,5 +81,7 @@ export default class TestScene extends Phaser.Scene {
 
     itsays() {
         console.log("welcome to hell!");
+        this.minicode.create(this);
+
     }
 }
