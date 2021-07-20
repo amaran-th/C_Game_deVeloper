@@ -28,9 +28,6 @@ export default class TestScene extends Phaser.Scene {
 
     create () {
         
-
-        //this.element = this.add.dom(300, 200).createFromCache('input');
-        
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
         
@@ -68,20 +65,20 @@ export default class TestScene extends Phaser.Scene {
         faceColor: new Phaser.Display.Color(40,39,37,255)
         }); //근데 작동 안하는듯... 중요한 거 같진 않으니 일단 넘어감
 
-
-
-
+        this.count = true;
         console.log("build testScene");
     }
 
     update() {
         this.player.update();
+
+        /** 표지판 근처에 갔을 때 itsays 작동 **/
         this.triggerpoint.setTileIndexCallback(1,this.itsays,this);
     }
 
     itsays() {
         console.log("welcome to hell!");
-        this.minicode.create(this);
-
+        if(this.count) this.minicode.create(this);
+        this.count = false
     }
 }

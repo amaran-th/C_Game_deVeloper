@@ -4,6 +4,7 @@ export default class Minicoding {
 
         //var text = scene.add.text(300, 100, 'test Text', { color: 'white', fontSize: '20px '});
 
+        /** 사용자 위치를 기준으로 input 창(textInput.html) 뜨게 만듦**/
         this.element = scene.add.dom(scene.player.x , scene.player.y - 200).createFromCache('input');
         this.element.addListener('click');
 
