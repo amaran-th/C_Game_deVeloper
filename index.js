@@ -12,15 +12,12 @@ import path from 'path';
 const __dirname = path.resolve();
 app.use(express.static(__dirname + '/'))
 
-app.set("views", "./views");
-app.set("view engine", "ejs");
-
 app.use(express.json()); 
 app.use(express.urlencoded({extended: false})); 
 
 app.get('/test',function(req,res){
     console.log('tets~s...');
-    res.render('test')
+    res.sendFile(path.join(__dirname, "./views", "test.html"));
 });
 
 app.post('/form_receive',function(req,res) {
@@ -61,7 +58,7 @@ app.post('/form_receive',function(req,res) {
 
 app.get('/',function(req,res){
     console.log('[main.js] Main page loading...');
-    res.render('index')
+    res.sendFile(path.join(__dirname, "./views", "index.html"));
 
 });
 app.listen(app.get('port'),function(){  //서버 연결 
