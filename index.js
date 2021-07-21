@@ -1,5 +1,8 @@
-var express = require('express'); 
+import express from 'express';
 var app = express();
+
+import path from 'path';
+const __dirname = path.resolve();
 
 app.set("port", process.env.PORT || 4000); // 서버 포트 설정.  
 app.use(express.static(__dirname + '/'))
