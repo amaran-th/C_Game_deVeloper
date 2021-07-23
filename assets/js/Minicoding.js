@@ -1,7 +1,11 @@
 export default class Minicoding {
     create(scene){
         this.scene = scene;
-
+        scene.onTile = false; //계속 업데이트 되는 걸 막아 사용자가 입력할 수 있도록
+        //if(scene.offTile) {
+        //    this.setVisible(false);
+        //    return
+        //}
         //var text = scene.add.text(300, 100, 'test Text', { color: 'white', fontSize: '20px '});
 
         /** 사용자 위치를 기준으로 input 창(textInput.html) 뜨게 만듦**/
@@ -21,7 +25,9 @@ export default class Minicoding {
     
                     //  Hide the login element
                     this.setVisible(false);
-    
+                    
+                    scene.count = true; //사용자가 입력을 끝나면 다시 입력할 수 있도록.
+
                     //  Populate the text with whatever they typed in
                     //text.setText('Welcome ' + inputText.value);
                 }
@@ -39,6 +45,8 @@ export default class Minicoding {
             }
     
         });
+
+
      /*
         this.tweens.add({
             targets: element,
