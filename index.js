@@ -1,7 +1,7 @@
 //혼또니
 const express = require("express");
 const app = express();
-app.set("port", process.env.PORT || 3000); 
+app.set("port", process.env.PORT || 3001); 
 
 
 const fs = require("fs");
@@ -48,6 +48,7 @@ app.post('/form_receive',function(req,res) { //웹컴파일러
             });
             run.stderr.on('data', function (output) {
                 console.log(String(output));
+                res.json(responseData);
             });
             run.on('close', function (output) {
                 console.log('stdout: ' + output);
