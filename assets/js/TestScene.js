@@ -70,6 +70,9 @@ export default class TestScene extends Phaser.Scene {
         this.count = true;
         console.log("build testScene");
 
+        /*** 카메라가 비추는 화면 변수 선언 ***/
+        this.worldView = this.cameras.main.worldView;
+
         /*** 명령창버튼 활성화 ***/
         this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
@@ -83,20 +86,25 @@ export default class TestScene extends Phaser.Scene {
         /** 표지판 근처에 갔을 때 itsays 작동 **/
         this.triggerpoint.setTileIndexCallback(1,this.itsays,this);
 
-        var worldView = this.cameras.main.worldView;
-        this.entire_code_button.x = worldView.x + 5;
-        this.commandbox.x = worldView.x + 200;
+        /*** 화면 이동시 entire code button 따라가도록 설정***/
+        this.entire_code_button.x = this.worldView.x + 5;
 
-        console.log(state);
-        if(state === 0) {
-            this.entire_code_button.on('pointerup', () => { //명령창 띄우기
-                this.commandbox = this.add.image(worldView.x + 200, 5,'commandbox').setOrigin(0,0);
+        /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
+        //여기 슬라이드 적용 안 돼서 수정예정
+        console.log(this.worldView.x);
+        if(state == 0) {
+            this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
+                this.commandbox.setVisible(true);
+                console.log("보임:"+this.commandbox.x);
                 this.slidebox();
                 state = 1;
             });
         } else {
+            this.commandbox.x = this.worldView.x + 415; //화면 이동시 명령창 따라가도록 설정
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(false);
+                this.commandbox.setX(this.worldView.x + 1100);
+                console.log("지움:"+this.commandbox.x);
                 state = 0;
             });
         }
@@ -113,8 +121,9 @@ export default class TestScene extends Phaser.Scene {
     slidebox() {
         this.tweens.add({
             targets: this.commandbox,
-            x: this.cameras.main.worldView.x,
+            x: this.worldView.x + 415,
             ease: 'Power3'
         });
+        //console.log("3:"+this.commandbox.x);
     }
 }
