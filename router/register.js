@@ -1,7 +1,7 @@
 var express = require('express');
 const router = express.Router();
 const crypto = require("crypto");//보안
-const { User } = require('../../../짱중요/C_Game_deVeloper/models');
+const { User } = require('../models');
 
 
 
