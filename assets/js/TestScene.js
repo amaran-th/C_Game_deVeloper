@@ -1,6 +1,8 @@
 import Player from "./Player.js";
 import Minicoding from "./Minicoding.js";
 
+var state = 0;
+
 export default class TestScene extends Phaser.Scene {   
     constructor(){ 
         super("bootGame"); //identifier for the scene
@@ -25,7 +27,7 @@ export default class TestScene extends Phaser.Scene {
         console.log("preloading images.....");
         
     }
-
+    
     create () {
         
         /*** 맵 만들기 Create Map ***/
@@ -71,24 +73,8 @@ export default class TestScene extends Phaser.Scene {
         /*** 명령창버튼 활성화 ***/
         this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
-        
-        
-        this.entire_code_button.on('pointerup', () => { //명령창 띄우기
-            this.commandbox = this.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
-            this.slidebox(map);
-        });
-
-        
-        
-    }
-
-    /*** 명령창 슬라이드 함수 ***/
-    slidebox(map) {
-        this.tweens.add({
-            targets: this.commandbox,
-            x: map.widthInPixels / 2 - 135,
-            ease: 'Power3'
-        });
+        this.commandbox = this.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
+                
     }
 
     update() {
@@ -96,11 +82,39 @@ export default class TestScene extends Phaser.Scene {
 
         /** 표지판 근처에 갔을 때 itsays 작동 **/
         this.triggerpoint.setTileIndexCallback(1,this.itsays,this);
+
+        var worldView = this.cameras.main.worldView;
+        this.entire_code_button.x = worldView.x + 5;
+        this.commandbox.x = worldView.x + 200;
+
+        console.log(state);
+        if(state === 0) {
+            this.entire_code_button.on('pointerup', () => { //명령창 띄우기
+                this.commandbox = this.add.image(worldView.x + 200, 5,'commandbox').setOrigin(0,0);
+                this.slidebox();
+                state = 1;
+            });
+        } else {
+            this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
+                this.commandbox.setVisible(false);
+                state = 0;
+            });
+        }
     }
 
     itsays() {
         console.log("welcome to hell!");
         if(this.count) this.minicode.create(this);
         this.count = false
+    }
+
+
+    /*** 명령창 슬라이드 함수 ***/
+    slidebox() {
+        this.tweens.add({
+            targets: this.commandbox,
+            x: this.cameras.main.worldView.x,
+            ease: 'Power3'
+        });
     }
 }
