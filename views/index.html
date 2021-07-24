@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+ 
+    <title>Snake</title>
+    <script src="assets/js/phaser.min.js"></script>
+    <script src="assets/js/Start.js"></script>
+    <script src="assets/js/conversation.js"></script>
+    <script src="assets/js/DialogText.js" type="module"></script>
+    <script src="assets/js/Player.js" type="module"></script>
+    <script src="assets/js/TestScene.js" type="module"></script>
+    <script src="assets/js/Minicoding.js" type="module"></script>
+    <script src="assets/js/main.js" type="module"></script>
+</head>
+<body>
+    <form> 
+        CODE :<textarea id="code" style="resize:none; width:400px; height:100px;" name="code"></textarea><br>                                                              
+        <input class="sendcode"  value='보내기' type="button"><br>
+        output :<textarea id="output" name="output" style="resize:none; width:400px; height:500px;" readonly="readonly"></textarea>
+    </form>
+
+    <h1>로그인</h1>
+
+        <form action="/login" method="POST">
+            ID : <input name='id' id='id' type='text'/><br>
+            비밀번호 : <input name='pw' id='pw' type='password'/>
+            <button type="submit"> 로그인 </button>
+        </form>
+
+    <h2>계정이 없으신가요?<h2>
+        <a href="/register">회원가입</a>
+
+
+    <script> //웹컴파일러
+        document.querySelector('.sendcode').addEventListener('click', function() {
+            sendAjax('/form_receive', code.value);
+        }) //form_receive : 
+        function sendAjax(url, data) {
+            var data = {
+                'code': data
+            };
+            data = JSON.stringify(data);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send(data);
+
+            xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
+                if (result.result != 'ok') return;
+                document.getElementById('output').value = result.output;
+            });
+        }
+       
+    </script>
+</body>
+</html>
+

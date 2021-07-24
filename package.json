@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "name": "testgame",
   "version": "1.0.0",
   "description": "snake game",
@@ -11,10 +10,31 @@
   "author": "jsy",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "child-process": "^1.0.2",
+    "child_process": "^1.0.2",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.2.5",
     "nodemon": "^2.0.9",
+    "parse": "^3.2.0",
+    "parse-json": "^5.2.0",
+    "path": "^0.12.7",
     "phaser": "^3.55.2",
-    "phaser3-rex-plugins": "^1.1.57"
+    "pug": "^3.0.2",
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SongSeyeon/C_Game_deVeloper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SongSeyeon/C_Game_deVeloper/issues"
+  },
+  "homepage": "https://github.com/SongSeyeon/C_Game_deVeloper#readme"
 }
