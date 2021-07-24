@@ -46,27 +46,27 @@ class Dialog {
     dialog: [
         {
         actor: 'player',
-        text: '대사1'
+        text: '1대사1'
           },
         {
         actor: 'player',
-        text: '대사2'
+        text: '2대사2'
           },
         {
             actor: 'player',
-            text: '대사3'
+            text: '3대사3'
             },
         {
             actor: 'player',
-            text: '대사4'
+            text: '4대사4'
             },
         {
             actor: 'player',
-            text: '대사5'
+            text: '5대사5'
             },   
         {
             actor: 'player',
-            text: '대사6'
+            text: '6대사6'
             },         
     ],
     /*

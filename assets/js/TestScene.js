@@ -110,7 +110,7 @@ export default class TestScene extends Phaser.Scene {
 
     dialogBox(i) {
         console.log('다이얼로그 박스 함수:', i);
-        return sleep(1000).then( resolve =>
+        return sleep(10).then( resolve =>
             this.textbox.createTextBox(this ,600, 200, {
                 wrapWidth: 100, //나오는 대사 길이 조절
                 fixedWidth: 100, //말풍선 길이
@@ -120,29 +120,28 @@ export default class TestScene extends Phaser.Scene {
             )
     }
 
-    async dialogBoxFor() {
-        for(let i=0; i<5; i++) {
-            console.log('for문:', i);
+    async dialogBoxFor(i) {
+        //for(let i=0; i<5; i++) {
+            //console.log('for문:', i);
             //if(this.dialogOn) {
             //    this.dialogOn = false;
-                await this.dialogBox(i); //얘가 끝이 안나는데......
+                await this.dialogBox(i);
                 console.log('다이얼로그 박스 함수 끝:', this.dialogOn );
             //}
-        }
+        //}
     }
 
 
     playerOnTile() {
         if(this.onTile) {
             this.minicode.create(this);
-            this.dialogBoxFor();
+            this.dialogBoxFor(2); //역거움....
+            this.dialogBoxFor(1);
+            this.dialogBoxFor(0);
+            
         }
         //this.onTile += 1;
         //if(onTile < 0) onTile = 2; //혹시나 싶은 오버플로우 방지
-
-
-        
-
     }
 
     //타일과 플레이어의 충돌했을때 그 return값이 boolean인 함수를 못찾겠음... 그 이유로 else-if 대신 아래의 방식을 행함

@@ -84,9 +84,24 @@ export default class DialogText extends Phaser.Scene {
                 }
             }, textBox)
             .on('pageend', function () {
-                if (this.isLastPage) {
-                    //scene.dialogOn = true; //다시 같은 대화를 반복 할 수 있도록.
+                /*
+                textBox.stop().then(() => {
+                    textBox.setInteractive().on('pointerdown', function() {
+                        textBox.resume();
+                    },textBox)
+                }).then(() => {
+                        if (this.isLastPage) {
+                        textBox.setVisible(false);
+                        console.log("end of createTextBox");
+                        return 0;
+                        }
+                })
+                */
+                
                     textBox.stop();
+                   if (this.isLastPage) {
+                    //scene.dialogOn = true; //다시 같은 대화를 반복 할 수 있도록.
+                    
                     //클릭을 해야 리턴이 되도록.... 근데 안됨
                     textBox.setInteractive().on('pointerdown', function() {
                         setTimeout(function() {
@@ -95,8 +110,11 @@ export default class DialogText extends Phaser.Scene {
                            console.log("end of createTextBox");
                         return 0;
                     },textBox)
-                    
+                    scene.ontile = true;
                 }
+                
+                  
+
     
                 
 
