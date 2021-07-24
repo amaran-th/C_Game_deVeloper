@@ -106,7 +106,7 @@ export default class DialogText extends Phaser.Scene {
                     textBox.setInteractive().on('pointerdown', function() {
                         setTimeout(function() {
                             textBox.setVisible(false);
-                           }, 3000); //3초 지연시간을 주고 사라지도록
+                           }, 10); //0.01초 지연시간을 주고 사라지도록
                            console.log("end of createTextBox");
                         return 0;
                     },textBox)
