@@ -3,16 +3,20 @@
     <body>
         <form action="/register" method="post" onsubmit = "return ischeck()"> <!--submit으로 form에 있는 데이터 서버로 보내줌-->
             <label>nickname</label>
-            <input type="text" name="nick" id="nick">
+            <input type="text" name="nick" id="nick" placeholder="닉네임">
             <br>
             <label>id</label>
-            <input type="text" name="id" id="id">
+            <input type="text" name="id" id="id" placeholder="아이디">
+            <span id="icon">X</span>
             <br>
             <label>password</label>
-            <input type="text" name="pw" id="pw">
+            <input type="password" name="pw" id="pw" placeholder="비밀번호">
+            <br>
+            <label>password check</label>
+            <input type="password" name="pwck" id="pwck" placeholder="비밀번호 확인">
             <br>
 
-            <button type="button" id="checkid" onclick="checkdp(document.getElementById('id').value)">id 중복 확인</button>
+            <button type="button" id="checkid" onclick="checkdp()">id 중복 확인</button>
               
             <button type="submit">회원가입</button>
         </form>
@@ -21,21 +25,34 @@
         </form>
     </body>
     <script>
-        var dpflag=1;
+        var dpflag=1;    //중복체크 수행 여부(중복이 아닐 시 0이 됨)
 
-        function ischeck(){
+        id.oninput = function() {
+            console.log("id change");
+            dpflag=1;
+            document.getElementById("icon").innerHTML='X';
+        };
+        function ischeck(){     //회원가입 버튼을 누르면 동작한다.
+
             console.log("[ischeck()]");
+
             if(dpflag==1){
-                alert("중복 확인을 마쳐주세요");
+                alert("아이디 중복 확인을 마쳐주세요");
+                return false;
+            }else if(checkinputs()==false){
                 return false;
             }else{
                 alert("정상적으로 회원가입이 완료되었습니다.");
+                return false;
             }
+            return true;
         }
 
-        function checkdp(ID){
+        function checkdp(){     //중복 체크 버튼을 누르면 동작한다.
+            var ID=document.getElementById('id').value;
             console.log("[checkdp()]");
             console.log(ID);
+            if(checkid(ID)!=true) return;
             
             var data={'id':ID};
             data=JSON.stringify(data);
@@ -54,9 +71,66 @@
                     console.log("중복아님!!");
                     alert("중복 아님!!");
                     dpflag=0;
+                    document.getElementById("icon").innerHTML='O';
                 }
             });
 
+        }
+
+        //id가 조건에 부합하는지 확인
+        function checkid(id){
+
+            console.log("checkid()")
+
+            if(id==''){
+                //id가 공백인지 확인
+                console.log("[id를 입력해주세요.]");
+                alert("id를 입력해주세요.");
+                return false;
+
+            }else if(id.indexOf('\'') >= 0 || id.indexOf('\"') >= 0 || id.indexOf(' ') >= 0 || id.indexOf('#') >= 0 || id.indexOf('(') >= 0 
+                            || id.indexOf(')') >= 0 || id.indexOf('<') >= 0 || id.indexOf('>') >= 0 || id.indexOf('/') >= 0
+                            || id.indexOf(';') >= 0 || id.indexOf('*') >= 0 || id.indexOf('-') >= 0 || id.indexOf('=') >= 0 ){
+                //id에 특수문자가 포함되어 있는지 확인
+                console.log("[id에 다음 특수문자가 포함되어있습니다.()<>\'\" -=;*/#]");
+                alert("id에 다음 특수문자가 포함되어있습니다.\n()<>\'\" -=;*/#");
+                return false;
+
+            }else{
+                console.log('checkid pass!!')
+                return true;
+            }
+        }
+        function checkinputs(){
+            //닉네임과 비밀번호 입력 검사
+            console.log("checkinputs()");
+            var nick  = document.getElementById('nick').value;
+            var pw   = document.getElementById('pw').value;
+            var pwck = document.getElementById('pwck').value;
+            if(nick==''){
+                console.log("[닉네임을 입력해주세요.]");
+                alert("닉네임을 입력해주세요.");
+                return false;
+            }else if(pw==''){
+                console.log("[비밀번호를 입력해주세요.]");
+                alert("비밀번호를 입력해주세요.");
+                return false;
+            }else if(pwck==''){
+                console.log("[비밀번호 확인이 완료되지 않았습니다.]");
+                alert("비밀번호 확인이 완료되지 않았습니다.");
+                return false;
+            }else if(pw.length<5){
+                console.log("[비밀번호는 5글자 이상이어야합니다.]");
+                alert("비밀번호는 5글자 이상이어야합니다.");
+                return false;   
+            }else if((pw===pwck)==false){
+                console.log("[비밀번호 확인이 올바르지 않습니다.]");
+                alert("비밀번호 확인이 올바르지 않습니다.");
+                return false; 
+            }else{
+                console.log('checkinputs pass!!');
+                return true;
+            }
         }
         
     </script>
