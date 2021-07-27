@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 app.set("port", process.env.PORT || 3000); 
 
-
 const fs = require("fs");
 const { spawn } = require("child_process");
 
@@ -20,6 +19,21 @@ app.set('view engine', 'html'); //html이지만 render쓰고 싶어서 하는 �
 
 app.use(express.json()); 
 app.use(express.urlencoded({extended: false})); 
+
+const session = require("express-session");
+
+app.use(
+    session({
+      secret: "pipi",//쿠키 서명필요. 요거 중요함!!!! 나중에는 아무도 모를 변수로 저장해야함
+      resave: false, //수정사항 없어도 세션 다시 설정할건지
+      saveUninitialized: true, //세션에 저장할 내용이 없더라고 세션 다시 저장할건지
+      cookie: {
+        HttpOnly : true,//클라이언트는 쿠키못보게
+        secure : false, //http아닌 환경도 가능한지. 배포시에는 true로
+        maxAge : 60000 * 30, //60000밀리초 (1분) * 30 = 30분
+      },
+    })
+  );
 
 app.post('/form_receive',function(req,res) { //웹컴파일러
 
@@ -60,7 +74,10 @@ app.post('/form_receive',function(req,res) { //웹컴파일러
 
 //라우터
 var registerRouter = require("./router/register");
+var loginRouter = require("./router/login");
+
 app.use('/register',registerRouter);
+app.use('/login',loginRouter);
 
 
 //메인페이지로, 라우터 따로 안해줬는데 해줘야함
