@@ -96,6 +96,44 @@ export default class TestScene extends Phaser.Scene {
         this.entire_code_button.setInteractive();
         this.commandbox = this.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
                 
+        /*** 드래그앤드랍 ***/
+        //코드 조각 텍스트 (후에 문장으로 바꿔 웹컴파일러 돌릴때 용이하도록)
+        var code_piece_text_1 = 'printf';
+        var code_piece_text_2 = 'if';
+            //... 각 스테이지 구현할 때마다 추가 예정
+        
+        // 코드 조각 불러와 배치하기
+        var code_piece_1 = this.add.text(50, 100, code_piece_text_1, { font: "30px Arial Black", fill: "#fff" });
+        var code_piece_2 = this.add.text(50, 135, code_piece_text_2, { font: "30px Arial Black", fill: "#fff" });
+
+        code_piece_1.setInteractive();
+        code_piece_2.setInteractive();
+
+        // 드래그 가능하도록
+        this.input.setDraggable(code_piece_1); 
+        this.input.setDraggable(code_piece_2);
+
+        // 마우스가 코드 조각 위에 위치했을 때 색 변하도록
+        code_piece_1.on('pointerover', function () { 
+            code_piece_1.setTint(0x44ff44);
+        });
+        code_piece_2.on('pointerover', function () { 
+            code_piece_2.setTint(0x44ff44);
+        });
+
+        // 마우스가 코드 조각 벗어났을때 원래 색으로!
+        code_piece_1.on('pointerout', function () { 
+            code_piece_1.clearTint();
+        });
+        code_piece_2.on('pointerout', function () { 
+            code_piece_2.clearTint();
+        });
+
+        //드래그 기능
+        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+        });
     }
 
     update() {
@@ -109,11 +147,10 @@ export default class TestScene extends Phaser.Scene {
 
         /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
         //여기 슬라이드 적용 안 돼서 수정예정
-        console.log(this.worldView.x);
         if(state == 0) {
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
-                console.log("보임:"+this.commandbox.x);
+                //console.log("보임:"+this.commandbox.x);
                 this.slidebox();
                 state = 1;
             });
@@ -121,11 +158,13 @@ export default class TestScene extends Phaser.Scene {
             this.commandbox.x = this.worldView.x + 415; //화면 이동시 명령창 따라가도록 설정
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(false);
-                this.commandbox.setX(this.worldView.x + 1100);
-                console.log("지움:"+this.commandbox.x);
+                //this.commandbox.setX(this.worldView.x + 1100);
+                //console.log("지움:"+this.commandbox.x);
                 state = 0;
             });
         }
+
+
         //언니꺼~!
         //if(!this.playerOnTile) this.minicode.setvisible(false);
         
@@ -138,7 +177,7 @@ export default class TestScene extends Phaser.Scene {
         //this.triggerpoint.addListener()
         //if(this.triggerpoint.body.onCollide()) this.itsays;
 
-        console.log(this.onTile);
+        //console.log(this.onTile);
 
         
         //this.physics.collide(this.player, this.triggerpoint, this.itsays, null, this) 둘 다 physics 여야 작동하나봄
