@@ -1,7 +1,7 @@
 {
     "development": { 
       "username": "root",
-      "password": "dnflwlq1",
+      "password": "냐하 자기꺼 비밀번호 넣으삼",
       "database": "nodejs",
       "host": "127.0.0.1",
       "dialect": "mysql"
