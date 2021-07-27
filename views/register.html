@@ -1,15 +1,19 @@
 <html>
     <head><h1>Register</h1></head>
     <body>
-        <form action="/register" method="post" onsubmit = "return checkflag()"> <!--submit으로 form에 있는 데이터 서버로 보내줌-->
+        <form action="/register" method="post" onsubmit = "return ischeck()"> <!--submit으로 form에 있는 데이터 서버로 보내줌-->
             <label>nickname</label>
-            <input type="text" name="nick" id="nick"><br>
+            <input type="text" name="nick" id="nick">
+            <br>
             <label>id</label>
-            <button onclick="checkdp('0')">중복 확인</button>
-            <!--id 중복검사 필수-->
-            <input type="text" name="id" id="id"><br>
+            <input type="text" name="id" id="id">
+            <br>
             <label>password</label>
-            <input type="text" name="pw" id="pw"><br>  
+            <input type="text" name="pw" id="pw">
+            <br>
+
+            <button type="button" id="checkid" onclick="checkdp(document.getElementById('id').value)">id 중복 확인</button>
+              
             <button type="submit">회원가입</button>
         </form>
         <form action="/" method="get">
@@ -17,24 +21,43 @@
         </form>
     </body>
     <script>
-        
         var dpflag=1;
-        function checkflag(){
+
+        function ischeck(){
+            console.log("[ischeck()]");
             if(dpflag==1){
-                alert("중복!");
+                alert("중복 확인을 마쳐주세요");
+                return false;
             }else{
-                alert("중복 아님!");
+                alert("정상적으로 회원가입이 완료되었습니다.");
             }
-            return false;
         }
 
-        function checkdp(id){
-            if(id=='1'){
-                return;
-            }else{
-                dpflag=0;
-            }
+        function checkdp(ID){
+            console.log("[checkdp()]");
+            console.log(ID);
+            
+            var data={'id':ID};
+            data=JSON.stringify(data);
+            var xhr=new XMLHttpRequest();
+            xhr.open('POST', '/register/checkdp',true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send(data);
+
+            xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
+                if (result.result == 1){
+                    console.log("중복!!");
+                    alert("중복!!");
+                    return;
+                }else{
+                    console.log("중복아님!!");
+                    alert("중복 아님!!");
+                    dpflag=0;
+                }
+            });
 
         }
+        
     </script>
 </html>
