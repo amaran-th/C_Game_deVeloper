@@ -3,6 +3,7 @@ class Dialog {
         
     }
 }
+//hihihhihihi
    
   configDialog = {
     actor: [
