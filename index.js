@@ -75,16 +75,24 @@ app.post('/form_receive',function(req,res) { //웹컴파일러
 //라우터
 var registerRouter = require("./router/register");
 var loginRouter = require("./router/login");
+var logoutRouter = require("./router/logout");
 
 app.use('/register',registerRouter);
 app.use('/login',loginRouter);
-
+app.use('/logout',logoutRouter);
 
 //메인페이지로, 라우터 따로 안해줬는데 해줘야함
 app.get('/',function(req,res){
-    console.log('[main.js] Main page loading...');
-    res.render('index.html');
-
+    console.log('=========[main.js] Main page loading...=========');
+  //  res.render('index.html');
+    if (req.session.is_logined) {
+        console.log("[Login GET] 로그인중이야~");
+        res.render('index.html');
+        //==res.render('tutorial', { uid: req.session.uid });
+    } else {
+        console.log("[Login GET] 아직 로그인은 안됬는데 메인페이지는 줌");
+        res.render('index.html');
+    }
 });
 
 const { sequelize } = require('./models');
