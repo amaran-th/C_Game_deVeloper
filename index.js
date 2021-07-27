@@ -76,10 +76,12 @@ app.post('/form_receive',function(req,res) { //웹컴파일러
 var registerRouter = require("./router/register");
 var loginRouter = require("./router/login");
 var logoutRouter = require("./router/logout");
+var terminateRouter = require("./router/terminate");
 
 app.use('/register',registerRouter);
 app.use('/login',loginRouter);
 app.use('/logout',logoutRouter);
+app.use('/terminate',terminateRouter);
 
 //메인페이지로, 라우터 따로 안해줬는데 해줘야함
 app.get('/',function(req,res){
