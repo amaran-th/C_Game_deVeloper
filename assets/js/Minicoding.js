@@ -20,11 +20,37 @@ export default class Minicoding {
     
                 if (inputText.value !== '')
                 {
+                    var data = {
+
+                        'code': inputText.value
+    
+                    };
+                    data = JSON.stringify(data);
+
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open('POST', '/form_receive', true);
+                    
+                    //console.log("---post 되냐???---");
+                    xhr.setRequestHeader('Content-type', 'application/json');
+                    
+                    xhr.send(data);
+                    //console.log("---post 되냐???---2");
+
+                    xhr.addEventListener('load', function() {
+                        //console.log("---post 되냐???---3");
+                        var result = JSON.parse(xhr.responseText);
+    
+                        if (result.result != 'ok') return;
+    
+                        document.getElementById('testoutput').value = result.output;
+    
+                    });
                     //  Turn off the click events
-                    this.removeListener('click');
+                    //this.removeListener('click');
     
                     //  Hide the login element
-                    this.setVisible(false);
+                    //this.setVisible(false);
                     
                     scene.count = true; //사용자가 입력을 끝나면 다시 입력할 수 있도록.
 

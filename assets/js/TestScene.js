@@ -109,7 +109,7 @@ export default class TestScene extends Phaser.Scene {
 
         /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
         //여기 슬라이드 적용 안 돼서 수정예정
-        console.log(this.worldView.x);
+        //console.log(this.worldView.x);
         if(state == 0) {
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
@@ -138,7 +138,7 @@ export default class TestScene extends Phaser.Scene {
         //this.triggerpoint.addListener()
         //if(this.triggerpoint.body.onCollide()) this.itsays;
 
-        console.log(this.onTile);
+        //console.log(this.onTile);
 
         
         //this.physics.collide(this.player, this.triggerpoint, this.itsays, null, this) 둘 다 physics 여야 작동하나봄

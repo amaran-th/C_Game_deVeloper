@@ -45,6 +45,7 @@ app.post('/form_receive',function(req,res) { //웹컴파일러
     fs.writeFile(file,source,'utf8',function(error) {
         console.log('write end');
     });
+    
     var compile = spawn('gcc',[file]);
     compile.stdout.on('data',function(data) {
         console.log('stdout: '+data);
