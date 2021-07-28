@@ -35,6 +35,22 @@ app.use(
     })
   );
 
+  app.post('/form_test',function(req,res) { //웹컴파일러
+
+    var code = req.body.code;  
+    var source = code.split(/\r\n|\r\n/).join("\n");
+    var file='test.c';
+    console.log(code)
+
+    fs.writeFile(file,source,'utf8',function(error) {
+        console.log('write end');
+    });
+    console.log('(임시)gcc 실행 테스트');
+    var responseData={'result':'ok','output':code.toString('utf8')};
+    res.json(responseData);
+    
+});
+
 app.post('/form_receive',function(req,res) { //웹컴파일러
 
     var code = req.body.code;  
@@ -45,7 +61,7 @@ app.post('/form_receive',function(req,res) { //웹컴파일러
     fs.writeFile(file,source,'utf8',function(error) {
         console.log('write end');
     });
-    
+
     var compile = spawn('gcc',[file]);
     compile.stdout.on('data',function(data) {
         console.log('stdout: '+data);

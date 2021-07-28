@@ -29,7 +29,7 @@ export default class Minicoding {
 
                     var xhr = new XMLHttpRequest();
 
-                    xhr.open('POST', '/form_receive', true);
+                    xhr.open('POST', '/form_test', true);
                     
                     //console.log("---post 되냐???---");
                     xhr.setRequestHeader('Content-type', 'application/json');
