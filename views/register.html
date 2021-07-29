@@ -28,7 +28,7 @@
         var dpflag=1;    //중복체크 수행 여부(중복이 아닐 시 0이 됨)
 
         id.oninput = function() {
-            console.log("id change");
+            console.log("[id change]");
             dpflag=1;
             document.getElementById("icon").innerHTML='X';
         };
@@ -64,12 +64,12 @@
             xhr.addEventListener('load', function() {
                 var result = JSON.parse(xhr.responseText);
                 if (result.result == 1){
-                    console.log("중복!!");
-                    alert("중복!!");
+                    console.log("[register: 존재하는 id 입니다.]");
+                    alert("존재하는 id 입니다.");
                     return;
                 }else{
-                    console.log("중복아님!!");
-                    alert("중복 아님!!");
+                    console.log("[register: 가능한 id 입니다.]");
+                    alert("가능한 id 입니다.");
                     dpflag=0;
                     document.getElementById("icon").innerHTML='O';
                 }
@@ -80,11 +80,11 @@
         //id가 조건에 부합하는지 확인
         function checkid(id){
 
-            console.log("checkid()");
+            console.log("[checkid()]");
 
             if(id==''){
                 //id가 공백인지 확인
-                console.log("[id를 입력해주세요.]");
+                console.log("[register: id를 입력해주세요.]");
                 alert("id를 입력해주세요.");
                 return false;
 
@@ -92,43 +92,43 @@
                             || id.indexOf(')') >= 0 || id.indexOf('<') >= 0 || id.indexOf('>') >= 0 || id.indexOf('/') >= 0
                             || id.indexOf(';') >= 0 || id.indexOf('*') >= 0 || id.indexOf('-') >= 0 || id.indexOf('=') >= 0 ){
                 //id에 특수문자가 포함되어 있는지 확인
-                console.log("[id에 다음 특수문자가 포함되어있습니다.()<>\'\" -=;*/#]");
+                console.log("[register: id에 다음 특수문자가 포함되어있습니다.()<>\'\" -=;*/#]");
                 alert("id에 다음 특수문자가 포함되어있습니다.\n()<>\'\" -=;*/#");
                 return false;
 
             }else{
-                console.log('checkid pass!!')
+                console.log('[register: 통과되었습니다.]')
                 return true;
             }
         }
         function checkinputs(){
             //닉네임과 비밀번호 입력 검사
-            console.log("checkinputs()");
+            console.log("[checkinputs()]");
             var nick  = document.getElementById('nick').value;
             var pw   = document.getElementById('pw').value;
             var pwck = document.getElementById('pwck').value;
             if(nick==''){
-                console.log("[닉네임을 입력해주세요.]");
+                console.log("[register: 닉네임을 입력해주세요.]");
                 alert("닉네임을 입력해주세요.");
                 return false;
             }else if(pw==''){
-                console.log("[비밀번호를 입력해주세요.]");
+                console.log("[register: 비밀번호를 입력해주세요.]");
                 alert("비밀번호를 입력해주세요.");
                 return false;
             }else if(pwck==''){
-                console.log("[비밀번호 확인이 완료되지 않았습니다.]");
+                console.log("[register: 비밀번호 확인이 완료되지 않았습니다.]");
                 alert("비밀번호 확인이 완료되지 않았습니다.");
                 return false;
             }else if(pw.length<5){
-                console.log("[비밀번호는 5글자 이상이어야합니다.]");
+                console.log("[register: 비밀번호는 5글자 이상이어야합니다.]");
                 alert("비밀번호는 5글자 이상이어야합니다.");
                 return false;   
             }else if((pw===pwck)==false){
-                console.log("[비밀번호 확인이 올바르지 않습니다.]");
+                console.log("[register: 비밀번호 확인이 올바르지 않습니다.]");
                 alert("비밀번호 확인이 올바르지 않습니다.");
                 return false; 
             }else{
-                console.log('checkinputs pass!!');
+                console.log('[register: 통과되었습니다.]');
                 return true;
             }
         }

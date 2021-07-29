@@ -25,7 +25,7 @@
 
             xhr.addEventListener('load', function() {
                 var result = JSON.parse(xhr.responseText);
-                console.log("세션 정보를 정상적으로 받았습니다.");
+                console.log("[세션 정보를 정상적으로 받았습니다.]");
                 document.getElementById('user_info').value ='nickname : '+result.nick+'\nid : '+result.id;
             });
         }

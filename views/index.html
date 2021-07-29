@@ -25,19 +25,19 @@
             var PW=document.getElementById('pw').value;
             if(ID==''){
                 //입력한 id가 공백인지 확인
-                console.log("[id를 입력해주세요.]");
+                console.log("[checkinput : id를 입력해주세요.]");
                 alert("id를 입력해주세요.");
 
             }else if(PW==''){
                 //입력한 pw가 공백인지 확인
-                console.log("[pw를 입력해주세요.]");
+                console.log("[checkinput : pw를 입력해주세요.]");
                 alert("pw를 입력해주세요.");
 
             }else if(ID.indexOf('\'') >= 0 || ID.indexOf('\"') >= 0 || ID.indexOf(' ') >= 0 || ID.indexOf('#') >= 0 || ID.indexOf('(') >= 0 
                             || ID.indexOf(')') >= 0 || ID.indexOf('<') >= 0 || ID.indexOf('>') >= 0 || ID.indexOf('/') >= 0
                             || ID.indexOf(';') >= 0 || ID.indexOf('*') >= 0 || ID.indexOf('-') >= 0 || ID.indexOf('=') >= 0 ){
                 //id에 특수문자가 포함되어 있는지 확인
-                console.log("[id에 다음 특수문자가 포함되어있습니다.()<>\'\" -=;*/#]");
+                console.log("[checkinput : id에 다음 특수문자가 포함되어있습니다.()<>\'\" -=;*/#]");
                 alert("id에 다음 특수문자가 포함되어있습니다.\n()<>\'\" -=;*/#");
 
             }else{
@@ -48,7 +48,6 @@
                 xhr.open('POST', '/login/check',true);
                 xhr.setRequestHeader('Content-type', 'application/json');
                 xhr.send(data);
-                console.log("test");
 
                 xhr.addEventListener('load', function() {
                     var result = JSON.parse(xhr.responseText);

@@ -3,9 +3,9 @@ const router = express.Router();
 const crypto = require("crypto");
 const { User } = require('../models');
 
-router.route('/check')
+router.route('/check')//중복확인
     .post(async(req,res,next)=>{
-        console.log('==== [login check POST] ====');
+        console.log('[POST /login/check]');
         const id = req.body.id;
         const pw = req.body.pw;
 
@@ -16,7 +16,7 @@ router.route('/check')
         });
 
         if (result == null){
-            console.log("[아이디가 존재 X!]");
+            console.log("==Failed : ID already exits==");
             var responseData = {'pass': false};
             res.json(responseData);
         }else{
@@ -29,17 +29,15 @@ router.route('/check')
             
 
             if((db_pw === hash_pw)==false){
-                console.log("비밀번호 불일치");
+                console.log("==Failed : PW does not match==");
                 var responseData = {'pass': false};
                 res.json(responseData);
             }else{
-                console.log("비밀번호 일치");
                 
                 req.session.is_logined = true; 
                 req.session.uid = id; 
                 req.session.nickname=nick;
 
-                console.log("[로그인 성공]");
                 var responseData = {'pass': true};
                 res.json(responseData);
                 
@@ -49,7 +47,7 @@ router.route('/check')
 
 router.route('/')
     .post(async (req, res, next) => {
-        console.log('==== [login POST] ===='); //login버튼 눌렀을 때
+        console.log('[POST /login]'); //login버튼 눌렀을 때
         const id = req.body.id;
         const pw = req.body.pw;
 
@@ -61,7 +59,7 @@ router.route('/')
             });
             
             if (result == null){
-                console.log("[아이디가 존재 X!]");
+                console.log("==Failed : ID does not exist==");
                 res.redirect('/');
             }
             const nick = result.dataValues.nickname;
@@ -73,13 +71,12 @@ router.route('/')
             
 
             if(db_pw === hash_pw){
-                console.log("비밀번호 일치");
                 
                 req.session.is_logined = true; 
                 req.session.uid = id; 
 
                 req.session.nickname=nick;
-                console.log("[로그인 성공]");
+                console.log("==Success to login==");
                 res.redirect('/game');
             }
             

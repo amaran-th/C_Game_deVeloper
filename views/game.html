@@ -26,7 +26,7 @@
 
             xhr.addEventListener('load', function() {
                 var result = JSON.parse(xhr.responseText);
-                console.log("세션 정보를 정상적으로 받았습니다.");
+                console.log("[game : 세션 정보를 정상적으로 받았습니다.]");
                 if(result.is_logined){
                     document.getElementById('test').value ='nickname : '+result.nick+'\nid : '+result.id;
                 }else{

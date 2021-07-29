@@ -36,7 +36,7 @@ app.use(
   );
 
   app.post('/form_test',function(req,res) { //웹컴파일러
-
+    console.log("[POST(ajax) /form_test] ");
     var code = req.body.code;  
     var source = code.split(/\r\n|\r\n/).join("\n");
     var file='test.c';
@@ -53,6 +53,7 @@ app.use(
 
 app.post('/form_receive',function(req,res) { //웹컴파일러
 
+    console.log("[POST(ajax) /form_receive] ");
     var code = req.body.code;  
     var source = code.split(/\r\n|\r\n/).join("\n");
     var file='test.c';
@@ -105,21 +106,21 @@ app.use('/game',gameRouter);
 //================================================================이 부분은 지워도 될 것 같은데 일단 냅뒀음
 //메인페이지로, 라우터 따로 안해줬는데 해줘야함
 app.get('/',function(req,res){
-    console.log('=========[main.js] Main page loading...=========');
+    console.log('[GET /]');
   //  res.render('index.html');
     if (req.session.is_logined) {
-        console.log("[Login GET] 로그인중이야~");
         res.render('index2.html');
         //==res.render('tutorial', { uid: req.session.uid });
     } else {
-        console.log("[Login GET] 아직 로그인은 안됬는데 메인페이지는 줌");
         res.render('index.html');
     }
 });
 //==============================================================================================================
 
 app.post('/get_session',function(req,res) { //세션 정보(닉네임, 아이디)를 받아오기 위한 url
-    console.log('세션 정보를 확인합니다.');
+
+    console.log("[POST(ajax) /get_session] ");
+    console.log('==check the Session==');
     if(req.session.is_logined){
         var nick=req.session.nickname;
         var id=req.session.uid;
@@ -136,7 +137,7 @@ app.post('/get_session',function(req,res) { //세션 정보(닉네임, 아이디
 const { sequelize } = require('./models');
 sequelize.sync({ force: false })
     .then(() => {
-        console.log("======[Success] Database Connect======");
+        console.log("[Success] Database Connect");
     })
     .catch((err) => {
     console.error(err);
