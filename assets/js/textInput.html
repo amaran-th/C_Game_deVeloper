@@ -1,11 +1,39 @@
+
 <!DOCTYPE html>
 <html>
     <head>
     </head>
     <body>
         <div id="input-form">
-            <input type="text", name="playerInput" />
-            <input type="button", value="click", name="button" />
-        </div>>
+            <textarea class="testinput" style="resize:none; width:300px; height:50px;" name="playerInput"></textarea>
+            <input id="testbutton"  value='보내기' type="button" name="button">
+            <textarea id="testoutput" name="playerOutput" style="resize:none; width:300px; height:50px;" readonly="readonly"></textarea>
+        </div>
+        <!--
+        <script>
+            
+            document.querySelector('.testbutton').addEventListener('click', function() {
+                sendAjax('/form_receive', playerInput.value);
+            }) //form_receive : 
+            function sendAjax(url, data) {
+                console.log("sendAjax()");
+                var data = {
+                    'code': data
+                };
+                data = JSON.stringify(data);
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send(data);
+
+                xhr.addEventListener('load', function() {
+                    var result = JSON.parse(xhr.responseText);
+                    if (result.result != 'ok') return;
+                    document.getElementById('testoutput').value = result.output;
+                });
+            }
+        </script>
+        -->
     </body>
+
 </html>

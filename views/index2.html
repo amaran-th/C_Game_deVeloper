@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>C Game deVeloper</title>
+</head>
+<body>
+    <p id="islogined">**로그인된 상태**</p>
+    <h1>사용자 정보</h1> 
+    <textarea id="user_info" style="resize:none; width:400px; height:100px;" readonly="readonly"></textarea>
+    <form action="/logout" method="POST">
+        <button type="submit"> 로그아웃 </button>
+    </form>  
+        
+    <form action="/terminate" method="POST" onsubmit="return check_terminate();">
+        <button type="submit"> 회원탈퇴 </button>
+    </form>
+    
+    <script>
+        window.onload=function(){
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/get_session', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
+                console.log("[세션 정보를 정상적으로 받았습니다.]");
+                document.getElementById('user_info').value ='nickname : '+result.nick+'\nid : '+result.id;
+            });
+        }
+
+        function check_terminate() {
+            if (confirm("정말 탈퇴하시겠습니까?") == true){   
+                alert("탈퇴되었습니다.");
+                return true;
+            }else{  
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
+

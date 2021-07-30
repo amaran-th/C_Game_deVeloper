@@ -1,4 +1,5 @@
-/*** textbox 예시코드***/
+/*** 나중에 다이얼로그 텍스트 출력방식 수정할때 참고하려고 남겨둠 ***/
+/** 지금은 사용 안함 **/
 
 const COLOR_PRIMARY = 0xffffff; //안쪽
 const COLOR_LIGHT = 0xC3C3C3; //바깥 선
