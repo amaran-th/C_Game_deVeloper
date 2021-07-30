@@ -11,7 +11,9 @@ const sleep = ms => {
   }
 
 var state = 0;
-var text; //ㅜㅜㅜㅜㅜ쓰기 싫었던 전역변수ㅜㅜㅜㅜㅜㅜ
+var text;
+var code_piece_1;
+var code_piece_2;
 export default class TestScene extends Phaser.Scene {   
     constructor(){ 
         super("bootGame"); //identifier for the scene
@@ -218,19 +220,6 @@ export default class TestScene extends Phaser.Scene {
     update() {
         this.player.update();
 
-
-        /*** 드래그를 하기위해 존 설정 + 드래그 설정 ***/
-        var zone = this.add.zone(this.worldView.x + 430, 25,  360, 550).setOrigin(0).setInteractive();
-        zone.on('pointermove', function (pointer) {
-            console.log('pointer move!!')
-            if (pointer.isDown){
-                console.log('pointer is Down!!!!')
-                text.y += (pointer.velocity.y / 10);
-                text.y = Phaser.Math.Clamp(this.text.y, -400, 600);
-                //this.extext.setVisible(true);
-            }
-        });
-
         /** 표지판 근처에 갔을 때 itsays 작동 **/
         this.triggerpoint.setTileIndexCallback(1,this.itsays,this);
 
@@ -248,13 +237,27 @@ export default class TestScene extends Phaser.Scene {
                 state = 1;
             });
         } else {
-            this.commandbox.x = this.worldView.x + 415; //화면 이동시 명령창 따라가도록 설정
-            text.x = this.worldView.x + 435; // 화면 이동시 글 이동
-            this.graphics.fillRect(this.worldView.x + 430, 20, 360, 550); // 화면 이동시 글이 보이는 판을 이동 
-                        
+            this.commandbox.x = this.worldView.x + 310; //화면 이동시 명령창 따라가도록 설정
+            text.x = this.worldView.x + 325; // 화면 이동시 글 이동
+            var invenZone = this.add.zone(this.worldView.x + 745, 300, 100, 570).setRectangleDropZone(100,550);
+            var invenGra = this.add.graphics();
+            invenGra.lineStyle(4, 0x00ff00);
+            invenGra.strokeRect(invenZone.x - invenZone.input.hitArea.width / 2, invenZone.y - invenZone.input.hitArea.height / 2, invenZone.input.hitArea.width, invenZone.input.hitArea.height);
+            this.graphics.fillRect(this.worldView.x + 320, 20, 360, 550); // 화면 이동시 글이 보이는 판을 이동 
+            /*** 드래그를 하기위해 존 설정 + 드래그 설정 ***/
+            var zone = this.add.zone(this.worldView.x + 320, 25,  360, 550).setOrigin(0).setInteractive();
+            zone.on('pointermove', function (pointer) {
+                if (pointer.isDown){
+                    text.y += (pointer.velocity.y / 10);
+                    text.y = Phaser.Math.Clamp(text.y, -400, 600);
+                    //this.extext.setVisible(true);
+                }
+            });
+
             this.entire_code_button.on('pointerdown', () => {
                 this.commandbox.setVisible(false);
                 text.setVisible(false);
+                invenGra.setVisible(false);
                 console.log("지움:"+this.commandbox.x);
                 state = 0;
             });
