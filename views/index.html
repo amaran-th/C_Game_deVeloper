@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
+
  
     <title>Snake</title>
     <script src="assets/js/phaser.min.js"></script>
@@ -12,25 +13,73 @@
     <script src="assets/js/TestScene.js" type="module"></script>
     <script src="assets/js/Minicoding.js" type="module"></script>
     <script src="assets/js/main.js" type="module"></script>
+
 </head>
 <body>
+    <h1>로그인</h1>
+    <p id="islogined">**로그아웃된 상태**</p> 
+    <form id='form' action="/login" method="POST" onsubmit="checkinput(); return false;">
+        ID : <input type='text' name='id' id='id' placeholder="아이디" /><br>
+        비밀번호 : <input type='password' name='pw' id='pw' placeholder="비밀번호"/>
+        <button type="submit"> 로그인 </button>
+    </form>
+
+
+    <h2>계정이 없으신가요?<h2>
+    <a href="/register">회원가입</a>
+
+
+    <script>
+        function checkinput(){
+            console.log('checkinput()')
+            var ID=document.getElementById('id').value;
+            var PW=document.getElementById('pw').value;
+            if(ID==''){
+                //입력한 id가 공백인지 확인
+                console.log("[checkinput : id를 입력해주세요.]");
+                alert("id를 입력해주세요.");
+
+            }else if(PW==''){
+                //입력한 pw가 공백인지 확인
+                console.log("[checkinput : pw를 입력해주세요.]");
+                alert("pw를 입력해주세요.");
+
+            }else if(ID.indexOf('\'') >= 0 || ID.indexOf('\"') >= 0 || ID.indexOf(' ') >= 0 || ID.indexOf('#') >= 0 || ID.indexOf('(') >= 0 
+                            || ID.indexOf(')') >= 0 || ID.indexOf('<') >= 0 || ID.indexOf('>') >= 0 || ID.indexOf('/') >= 0
+                            || ID.indexOf(';') >= 0 || ID.indexOf('*') >= 0 || ID.indexOf('-') >= 0 || ID.indexOf('=') >= 0 ){
+                //id에 특수문자가 포함되어 있는지 확인
+                console.log("[checkinput : id에 다음 특수문자가 포함되어있습니다.()<>\'\" -=;*/#]");
+                alert("id에 다음 특수문자가 포함되어있습니다.\n()<>\'\" -=;*/#");
+
+            }else{
+                
+                var data={'id':ID, 'pw':PW};
+                data=JSON.stringify(data);
+                var xhr=new XMLHttpRequest();
+                xhr.open('POST', '/login/check',true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send(data);
+
+                xhr.addEventListener('load', function() {
+                    var result = JSON.parse(xhr.responseText);
+                    if (result.pass){
+                        console.log("pass");
+                        document.getElementById('form').submit();   //조건이 부합하므로 폼의 정보를 submit해준다.
+                        
+                    }else{
+                        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+                        
+                    }
+                });
+            }
+        }
+    </script>
+    <!--
     <form> 
         CODE :<textarea id="code" style="resize:none; width:400px; height:100px;" name="code"></textarea><br>                                                              
         <input class="sendcode"  value='보내기' type="button"><br>
-        output :<textarea id="output" name="output" style="resize:none; width:400px; height:500px;" readonly="readonly"></textarea>
+        output :<textarea id="output" name="output" style="resize:none; width:400px; height:100px;" readonly="readonly"></textarea>
     </form>
-
-    <h1>로그인</h1>
-
-        <form action="/login" method="POST">
-            ID : <input name='id' id='id' type='text'/><br>
-            비밀번호 : <input name='pw' id='pw' type='password'/>
-            <button type="submit"> 로그인 </button>
-        </form>
-
-    <h2>계정이 없으신가요?<h2>
-        <a href="/register">회원가입</a>
-
 
     <script> //웹컴파일러
         document.querySelector('.sendcode').addEventListener('click', function() {
@@ -54,6 +103,8 @@
         }
        
     </script>
+-->
+    
 </body>
 </html>
 

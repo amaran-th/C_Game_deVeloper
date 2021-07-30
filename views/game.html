@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+ 
+    <title>C Game deVeloper</title>
+    <script src="assets/js/phaser.min.js"></script>
+    <script src="assets/js/Start.js"></script>
+    <script src="assets/js/conversation.js"></script>
+    <script src="assets/js/DialogText.js" type="module"></script>
+    <script src="assets/js/Player.js" type="module"></script>
+    <script src="assets/js/TestScene.js" type="module"></script>
+    <script src="assets/js/Minicoding.js" type="module"></script>
+    <script src="assets/js/main.js" type="module"></script>
+</head>
+<body>
+    <!--로그인 정보 읽어오기 테스트-->
+    <textarea id="test" name="test" style="resize:none; width:400px; height:100px;" readonly="readonly"></textarea>
+    <form id='form' action="/" method="GET"></form>
+    <br>
+    <script>
+        window.onload=function(){
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/get_session', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
+                console.log("세션 정보를 정상적으로 받았습니다.");
+                if(result.is_logined){
+                    document.getElementById('test').value ='nickname : '+result.nick+'\nid : '+result.id;
+                }else{
+                    document.getElementById('test').value ='로그인이 정상적으로 이루어지지 않았습니다.';
+                }                
+            });
+        }
+
+        setInterval(check_session,5000);    //5초에 한번씩 함수가 동작됨, 
+
+
+        //로그인 상태를 확인하는 함수, 로그아웃된 상태일 경우 자동으로 메인 페이지로 옮겨진다.
+        function check_session(){
+            //console.log("check_session()");
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/get_session', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
+                //console.log("세션 정보를 정상적으로 받았습니다.");
+                if(result.is_logined){
+                    console.log("Timer : 로그인 상태입니다.");
+                    return;
+                }else{
+                    console.log("Timer : 로그아웃 상태입니다.");
+                    document.getElementById('form').submit();   //redirect
+                }                
+            });
+        }
+    </script>
+</body>
+</html>
