@@ -3,6 +3,8 @@ class MyZone extends Phaser.GameObjects.Zone {
         super(scene, x, y, width, height);
         // ...
         scene.add.existing(this);
+
+        
     }
     // ...
 

@@ -131,8 +131,8 @@ export default class TestScene extends Phaser.Scene {
         });
 
         // 드랍 영역 위치
-        var zone = new MyZone(this, 300, 20, 100, 30);
-        zone.setRectangleDropZone(100, 30);
+        var zone = new MyZone(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
+        
         // 드랍 영역 선으로 임시 표시
         var graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
