@@ -1,6 +1,10 @@
+
 import Player from "./Player.js";
 import Minicoding from "./Minicoding.js";
 import DialogText from "./DialogText.js";
+import Dialog from "./Dialog.js";
+
+
 
 const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms))
@@ -11,7 +15,6 @@ var text; //ㅜㅜㅜㅜㅜ쓰기 싫었던 전역변수ㅜㅜㅜㅜㅜㅜ
 export default class TestScene extends Phaser.Scene {   
     constructor(){ 
         super("bootGame"); //identifier for the scene
-        console.log("construction of TestScene");
     }
 
     preload() {
@@ -27,25 +30,27 @@ export default class TestScene extends Phaser.Scene {
             frameHeight: 140
         });
 
-        /** 다이얼로그 띄우는 용 rexUI preload **/
+        /** 텍스트 박스에 사용하는 플러그인 rexUI preload **/
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
             sceneKey: 'rexUI'
         });
         this.load.image('nextPage', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png');
-                
         
-
+        /** 순차진행에 필요한 플러그인 **/
+        var url;
+        url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsequenceplugin.min.js';
+        this.load.plugin('rexsequenceplugin', url, true);
 
         this.onTile = 1;
-        console.log("preloading images.....");
         
     }
     
     create () {
         this.textbox = new DialogText();
-        this.dialog = new Dialog();
+        this.dialog = new Dialog(this);
+        
         
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
@@ -63,6 +68,7 @@ export default class TestScene extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
         this.minicode = new Minicoding();
+
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -83,10 +89,6 @@ export default class TestScene extends Phaser.Scene {
         collidingTileColor: new Phaser.Display.Color(243,134,48,255),
         faceColor: new Phaser.Display.Color(40,39,37,255)
         }); //근데 작동 안하는듯... 중요한 거 같진 않으니 일단 넘어감
-
-
-
-        console.log("build testScene");
 
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
@@ -123,12 +125,94 @@ export default class TestScene extends Phaser.Scene {
         this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
         this.commandbox = this.add.sprite(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
-        
+                
         /*** 전체코드를 띄우고 드래그 할 수 있기위한 설정 ***/
         this.graphics = this.make.graphics();
         text = this.add.text(map.widthInPixels, 25, contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);     
         var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
         text.setMask(mask);
+
+        /*** 드래그앤드랍 ***/
+        //코드 조각 텍스트 (후에 문장으로 바꿔 웹컴파일러 돌릴때 용이하도록)
+        var code_piece_text_1 = 'printf';
+        var code_piece_text_2 = 'if';
+            //... 각 스테이지 구현할 때마다 추가 예정
+        
+        // 코드 조각 불러와 배치하기
+        var code_piece_1 = this.add.text(50, 100, code_piece_text_1, { font: "30px Arial Black", fill: "#fff" });
+        var code_piece_2 = this.add.text(50, 135, code_piece_text_2, { font: "30px Arial Black", fill: "#fff" });
+
+        code_piece_1.setInteractive();
+        code_piece_2.setInteractive();
+
+        // 드래그 가능하도록
+        this.input.setDraggable(code_piece_1); 
+        this.input.setDraggable(code_piece_2);
+
+        // 마우스가 코드 조각 위에 위치했을 때 색 변하도록
+        code_piece_1.on('pointerover', function () { 
+            code_piece_1.setTint(0x44ff44);
+        });
+        code_piece_2.on('pointerover', function () { 
+            code_piece_2.setTint(0x44ff44);
+        });
+
+        // 마우스가 코드 조각 벗어났을때 원래 색으로!
+        code_piece_1.on('pointerout', function () { 
+            code_piece_1.clearTint();
+        });
+        code_piece_2.on('pointerout', function () { 
+            code_piece_2.clearTint();
+        });
+
+        // 드랍 영역 위치
+        var zone = new MyZone(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
+        
+        // 드랍 영역 선으로 임시 표시
+        var graphics = this.add.graphics();
+        graphics.lineStyle(2, 0xffff00);
+        graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+
+        // 드래그 하려고 선택한 거 맨 위로 올림
+        this.input.on('dragstart', function (pointer, gameObject) { 
+            this.children.bringToTop(gameObject);
+        }, this); 
+        // 드래그해서 가는 동작 실시간으로? 보여줌
+        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+        });
+        // 드랍 영역 안에 들어가면 영역 색 변환
+        this.input.on('dragenter', function (pointer, gameObject, dropZone) { 
+            graphics.clear();
+            graphics.lineStyle(2, 0x00ffff);
+            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+        });
+        // 영역 벗어났을 때 원래 색으로
+        this.input.on('dragleave', function (pointer, gameObject, dropZone) { 
+            graphics.clear();
+            graphics.lineStyle(2, 0xffff00);
+            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+        });
+        // 영역안에서도 지정된 부분에만 고정되는 듯
+        this.input.on('drop', function (pointer, gameObject, dropZone) {
+            gameObject.x = dropZone.x - 50; // 이거 왜 위치 중앙이 아니라 오른쪽 밑에 치우치는 지 모르겠음.. 임의로 위치 조정해둠
+            gameObject.y = dropZone.y - 15;
+
+            //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
+        });
+        // 드랍 위치가 아니면 원래 자리로 돌아가도록 함 + 색 조정
+        this.input.on('dragend', function (pointer, gameObject, dropped) {
+            if (!dropped)
+            {
+                gameObject.x = gameObject.input.dragStartX;
+                gameObject.y = gameObject.input.dragStartY;
+            }
+            graphics.clear();
+            graphics.lineStyle(2, 0xffff00);
+            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+        });
+                
     }
 
     update() {
@@ -155,7 +239,6 @@ export default class TestScene extends Phaser.Scene {
 
         /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
         //여기 슬라이드 적용 안 돼서 수정예정
-        //console.log(this.worldView.x);
         if(state == 0) {
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
@@ -176,22 +259,19 @@ export default class TestScene extends Phaser.Scene {
                 state = 0;
             });
         }
-        //언니꺼~!
-        //if(!this.playerOnTile) this.minicode.setvisible(false);
-        
-        //this.physics.add.overlap(this.triggerpoint, this.playerOnTile , null, this);
-        
+
         this.triggerpoint.setTileIndexCallback(1,this.playerOnTile,this);
-        //this.worldLayer.setTileLocationCallback(6, 4, 50, 100, this.playerOffTile, null, this);
 
+    }
 
-        //this.triggerpoint.addListener()
-        //if(this.triggerpoint.body.onCollide()) this.itsays;
-
-        //console.log(this.onTile);
-
-        
-        //this.physics.collide(this.player, this.triggerpoint, this.itsays, null, this) 둘 다 physics 여야 작동하나봄
+    /*** 명령창 슬라이드 함수 ***/
+    slidebox() {
+        this.tweens.add({
+            targets: this.commandbox,
+            x: this.worldView.x + 415,
+            ease: 'Power3'
+        });
+        //console.log("3:"+this.commandbox.x);
     }
 
     dialogBox(i) {
@@ -205,39 +285,24 @@ export default class TestScene extends Phaser.Scene {
             .start(configDialog.dialog[i].text, 50)
             )
     }
-
-
-    /*** 명령창 슬라이드 함수 ***/
-    slidebox() {
-        this.tweens.add({
-            targets: this.commandbox,
-            x: this.worldView.x + 415,
-            ease: 'Power3'
-        });
-        //console.log("3:"+this.commandbox.x);
-    }
+    
     async dialogBoxFor(i) {
-        //for(let i=0; i<5; i++) {
-            //console.log('for문:', i);
-            //if(this.dialogOn) {
-            //    this.dialogOn = false;
                 await this.dialogBox(i);
                 console.log('다이얼로그 박스 함수 끝:', this.dialogOn );
-            //}
-        //}
     }
 
 
     playerOnTile() {
         if(this.onTile) {
             this.minicode.create(this);
-            this.dialogBoxFor(2); //역거움....
-            this.dialogBoxFor(1);
-            this.dialogBoxFor(0);
-            
+
+            /** 플레이어 대사 **/
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this); //텍스트박스(다이얼로그 박스)를 불러와주는 함수를 따로 또 적어줘야함(scene 지정 문제 때문에)
+            seq
+                .load(this.dialog.talk1, this.dialog)
+                .start();
         }
-        //this.onTile += 1;
-        //if(onTile < 0) onTile = 2; //혹시나 싶은 오버플로우 방지
     }
 
     //타일과 플레이어의 충돌했을때 그 return값이 boolean인 함수를 못찾겠음... 그 이유로 else-if 대신 아래의 방식을 행함
@@ -247,7 +312,6 @@ export default class TestScene extends Phaser.Scene {
     //그렇기 때문에 count가 1보다 작거나 같은 경우에만 minicode가 실행되게 한다.
 
     playerOffTile() {
-        console.log("player on tile");
         //this.offTile = true;
         //this.minicode.create(this);
         this.Minicoding.setActive(true);
