@@ -131,7 +131,8 @@ export default class TestScene extends Phaser.Scene {
         });
 
         // 드랍 영역 위치
-        var zone = this.add.zone(300, 20, 100, 30).setRectangleDropZone(100, 30);
+        var zone = new MyZone(this, 300, 20, 100, 30);
+        zone.setRectangleDropZone(100, 30);
         // 드랍 영역 선으로 임시 표시
         var graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
@@ -160,8 +161,8 @@ export default class TestScene extends Phaser.Scene {
         });
         // 영역안에서도 지정된 부분에만 고정되는 듯
         this.input.on('drop', function (pointer, gameObject, dropZone) {
-            gameObject.x = dropZone.x;
-            gameObject.y = dropZone.y;
+            gameObject.x = dropZone.x - 50; // 이거 왜 위치 중앙이 아니라 오른쪽 밑에 치우치는 지 모르겠음.. 임의로 위치 조정해둠
+            gameObject.y = dropZone.y - 15;
 
             //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
         });
@@ -169,8 +170,8 @@ export default class TestScene extends Phaser.Scene {
         this.input.on('dragend', function (pointer, gameObject, dropped) {
             if (!dropped)
             {
-            gameObject.x = gameObject.input.dragStartX;
-            gameObject.y = gameObject.input.dragStartY;
+                gameObject.x = gameObject.input.dragStartX;
+                gameObject.y = gameObject.input.dragStartY;
             }
             graphics.clear();
             graphics.lineStyle(2, 0xffff00);
