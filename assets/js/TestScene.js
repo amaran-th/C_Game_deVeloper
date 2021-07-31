@@ -121,12 +121,10 @@ export default class TestScene extends Phaser.Scene {
             "From Neuromancer by William Gibson"
         ]; 
 
-
-
         /*** 명령창버튼 활성화 ***/
         this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
-        this.commandbox = this.add.sprite(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
+        this.commandbox = this.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
                 
         /*** 전체코드를 띄우고 드래그 할 수 있기위한 설정 ***/
         this.graphics = this.make.graphics();
@@ -134,87 +132,9 @@ export default class TestScene extends Phaser.Scene {
         var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
         text.setMask(mask);
 
-        /*** 드래그앤드랍 ***/
-        //코드 조각 텍스트 (후에 문장으로 바꿔 웹컴파일러 돌릴때 용이하도록)
-        var code_piece_text_1 = 'printf';
-        var code_piece_text_2 = 'if';
-            //... 각 스테이지 구현할 때마다 추가 예정
-        
-        // 코드 조각 불러와 배치하기
-        var code_piece_1 = this.add.text(50, 100, code_piece_text_1, { font: "30px Arial Black", fill: "#fff" });
-        var code_piece_2 = this.add.text(50, 135, code_piece_text_2, { font: "30px Arial Black", fill: "#fff" });
-
-        code_piece_1.setInteractive();
-        code_piece_2.setInteractive();
-
-        // 드래그 가능하도록
-        this.input.setDraggable(code_piece_1); 
-        this.input.setDraggable(code_piece_2);
-
-        // 마우스가 코드 조각 위에 위치했을 때 색 변하도록
-        code_piece_1.on('pointerover', function () { 
-            code_piece_1.setTint(0x44ff44);
-        });
-        code_piece_2.on('pointerover', function () { 
-            code_piece_2.setTint(0x44ff44);
-        });
-
-        // 마우스가 코드 조각 벗어났을때 원래 색으로!
-        code_piece_1.on('pointerout', function () { 
-            code_piece_1.clearTint();
-        });
-        code_piece_2.on('pointerout', function () { 
-            code_piece_2.clearTint();
-        });
-
-        // 드랍 영역 위치
-        var zone = new MyZone(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
-        
-        // 드랍 영역 선으로 임시 표시
-        var graphics = this.add.graphics();
-        graphics.lineStyle(2, 0xffff00);
-        graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
-
-        // 드래그 하려고 선택한 거 맨 위로 올림
-        this.input.on('dragstart', function (pointer, gameObject) { 
-            this.children.bringToTop(gameObject);
-        }, this); 
-        // 드래그해서 가는 동작 실시간으로? 보여줌
-        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-            gameObject.x = dragX;
-            gameObject.y = dragY;
-        });
-        // 드랍 영역 안에 들어가면 영역 색 변환
-        this.input.on('dragenter', function (pointer, gameObject, dropZone) { 
-            graphics.clear();
-            graphics.lineStyle(2, 0x00ffff);
-            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
-        });
-        // 영역 벗어났을 때 원래 색으로
-        this.input.on('dragleave', function (pointer, gameObject, dropZone) { 
-            graphics.clear();
-            graphics.lineStyle(2, 0xffff00);
-            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
-        });
-        // 영역안에서도 지정된 부분에만 고정되는 듯
-        this.input.on('drop', function (pointer, gameObject, dropZone) {
-            gameObject.x = dropZone.x - 50; // 이거 왜 위치 중앙이 아니라 오른쪽 밑에 치우치는 지 모르겠음.. 임의로 위치 조정해둠
-            gameObject.y = dropZone.y - 15;
-
-            //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
-        });
-        // 드랍 위치가 아니면 원래 자리로 돌아가도록 함 + 색 조정
-        this.input.on('dragend', function (pointer, gameObject, dropped) {
-            if (!dropped)
-            {
-                gameObject.x = gameObject.input.dragStartX;
-                gameObject.y = gameObject.input.dragStartY;
-            }
-            graphics.clear();
-            graphics.lineStyle(2, 0xffff00);
-            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
-        });
-                
+        // 드래그앤드랍
+        var zone = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
+           
     }
 
     update() {

@@ -13,7 +13,7 @@ var config = {
   dom: {
     createContainer: true
 }, //dom element 사용 가능하도록.
-  width: 800,
+  width: 1100,
   height: 600,
   physics: {
       default: 'arcade',
