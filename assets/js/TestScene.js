@@ -67,6 +67,7 @@ export default class TestScene extends Phaser.Scene {
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
+        this.player.player.setFlipX(true);
         this.minicode = new Minicoding();
 
 
@@ -135,6 +136,13 @@ export default class TestScene extends Phaser.Scene {
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+
+        /** 초반 인트로 대사 출력 **/
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro, this.dialog)
+        .start();
            
     }
 
@@ -186,6 +194,9 @@ export default class TestScene extends Phaser.Scene {
         if(this.player.player.x < 300) {
             console.log("playeronTile");
             this.playerOnTile();
+        }
+        else{
+            //this.scene.remove();
         }
 
 

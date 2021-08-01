@@ -1,4 +1,3 @@
-import Player from "./Player.js";
 import TestScene from "./TestScene.js";
 
 const COLOR_PRIMARY = 0xffffff; //안쪽
@@ -33,23 +32,28 @@ export default class Dialog extends Phaser.Events.EventEmitter {
       this['wait-click'] = this.waitClick;
       this['wait-time'] = this.waitTime;
       this['console'] = this.consoleOut;
+      this['visible'] = this.visible;
 
       this.testScene = new TestScene();
 
   }
+  
 
 loadTextbox(scene) { //현재 장면을 가져와야함
-    //this.scene = scene;
+    this.scene = scene;
 
-    this.textBox = scene.rexUI.add.textBox({
+       /*
+    this.textBox = scene.add.textBox({
         //x: 100, //위치
         //y: 100,
         anchor: 'centor',
     
-        background: scene.rexUI.add.roundRectangle(0, 0, 2, 2, 20, COLOR_PRIMARY)
-            .setStrokeStyle(2, COLOR_LIGHT),
+        //background: scene.rexUI.add.roundRectangle(0, 0, 2, 2, 20, COLOR_PRIMARY)
+        //   .setStrokeStyle(2, COLOR_LIGHT),
+
+        background: CreateSpeechBubbleShape(scene, COLOR_PRIMARY, COLOR_LIGHT),
     
-        text: getBBcodeText(scene, 100, 100, 65),
+        text: getBBcodeText(scene, 100, 100, 55),
     
         action: scene.add.image(0, 0, 'nextPage').setTint(COLOR_LIGHT).setVisible(false),
     
@@ -64,11 +68,22 @@ loadTextbox(scene) { //현재 장면을 가져와야함
     })
     .setOrigin(0)
     .layout();
+    */
 
-
+    this.textBox = scene.add.image(0,400,'textbox').setOrigin(0,0);
+    this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, '', {
+        fontFamily: 'Arial', 
+         fill: '#000000',
+         fontSize: '30px', 
+         wordWrap: { width: 250 },
+        }).setOrigin(0,0);
 
     
     }
+
+visible(visible) {
+    this.textBox.setVisible(visible);
+}
   
   consoleOut(msg) {
     console.log(msg)
@@ -81,7 +96,7 @@ loadTextbox(scene) { //현재 장면을 가져와야함
   }
   // callbacks
   print(msg) {
-      this.textBox.setText(msg);
+      this.script.setText(msg);
       // return undefined to run next command
   }
 
@@ -99,8 +114,19 @@ loadTextbox(scene) { //현재 장면을 가져와야함
       this.emit('complete');  // resume sequence
   }
 
+  intro = [
+    ['visible',false],
+    ['wait-time', 1],
+    ['visible',true],
+    ['print', '.....'],
+    ['wait-click'],
+    ['print', '테스트용일이삼사오륙칠팔구십십일십이십삼십사십오십육'],
+
+  ]
+
   talk1 = [
     //['loadTextbox'],
+    ['visible',true],
     ['place',650,150],
     ['print', '플레이어 위치를 못읽어와요'],
     ['wait-click'],
@@ -117,6 +143,7 @@ loadTextbox(scene) { //현재 장면을 가져와야함
     ['print', '위치 못받아오는거 빡치네요'],
     ['wait-click'],
     ['wait-time', 1],
+    ['visible',false],
   ];
 
 }
