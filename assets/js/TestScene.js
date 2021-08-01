@@ -23,7 +23,7 @@ export default class TestScene extends Phaser.Scene {
         /*** FROM Minicode.js***/
         this.load.html('input', './assets/js/textInput.html');
 
-        this.load.image("tiles", "./assets/images/testSceneMap.png");
+        this.load.image("tiles", "./assets/images/map.png");
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
 
         /** FROM Player.js**/
@@ -59,16 +59,14 @@ export default class TestScene extends Phaser.Scene {
         
         const tileset = map.addTilesetImage("testSceneMap", "tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("ground", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
-        const sign = map.createLayer( "sign", tileset, 0, 0); //값이 안읽혔다는데 잘뜨긴함
-        this.triggerpoint= map.createLayer("trigger", tileset, 0, 0);
-
+        this.deco = map.createLayer("deco", tileset, 0, 0);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+        this.player = new Player(this, spawnPoint.x, 330);
         this.minicode = new Minicoding();
 
 
@@ -80,8 +78,8 @@ export default class TestScene extends Phaser.Scene {
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
-        this.triggerpoint.setCollisionByProperty({ collides: true });
-        this.physics.add.collider(this.player.player, this.triggerpoint);
+        this.deco.setCollisionByProperty({ collides: true });
+        this.physics.add.collider(this.player.player, this.deco);
 
 
         /*** 충돌지점 색 칠하기 Mark the collid tile ***/
@@ -134,14 +132,15 @@ export default class TestScene extends Phaser.Scene {
 
         // 드래그앤드랍
         var zone = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
+
+        /** 플레이어 위치 확인용 **/
+        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
            
     }
 
     update() {
         this.player.update();
 
-        /** 표지판 근처에 갔을 때 itsays 작동 **/
-        this.triggerpoint.setTileIndexCallback(1,this.itsays,this);
 
         /*** 화면 이동시 entire code button 따라가도록 설정***/
         this.entire_code_button.x = this.worldView.x + 5;
@@ -183,7 +182,21 @@ export default class TestScene extends Phaser.Scene {
             });
         }
 
-        this.triggerpoint.setTileIndexCallback(1,this.playerOnTile,this);
+        //this.triggerpoint.setTileIndexCallback(1,this.playerOnTile,this);
+        if(this.player.player.x < 300) {
+            console.log("playeronTile");
+            this.playerOnTile();
+        }
+
+
+         /* 플레이어 위치 알려줌 */
+         this.playerCoord.setText([
+            '플레이어 위치',
+            'x: ' + this.player.player.x,
+            'y: ' + this.player.player.y,
+        ]);
+        this.playerCoord.x = this.worldView.x + 500;
+        this.playerCoord.y = this.worldView.y + 10;
 
     }
 
