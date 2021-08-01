@@ -137,12 +137,19 @@ export default class TestScene extends Phaser.Scene {
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
+
+
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //플레이어 얼려두기
         /** 초반 인트로 대사 출력 **/
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.intro, this.dialog)
         .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });
            
     }
 

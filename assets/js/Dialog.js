@@ -3,23 +3,6 @@ import TestScene from "./TestScene.js";
 const COLOR_PRIMARY = 0xffffff; //안쪽
 const COLOR_LIGHT = 0xC3C3C3; //바깥 선
 
-//** 텍스트 출력이 입력되는 것처럼 나오게 하는 함수인듯..**/
-var getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
-  return scene.rexUI.add.BBCodeText(0, 0, '', {
-      fixedWidth: fixedWidth,
-      fixedHeight: fixedHeight,
-
-      fontFamily: 'font1',
-      fontSize: '15px',
-      color: '#000000', //글자색
-      wrap: {
-          mode: 'word',
-          width: wrapWidth
-      },
-      maxLines: 3
-  })
-}
-
 export default class Dialog extends Phaser.Events.EventEmitter {
   constructor(scene) {
       super();
@@ -75,14 +58,14 @@ loadTextbox(scene) { //현재 장면을 가져와야함
         fontFamily: 'Arial', 
          fill: '#000000',
          fontSize: '30px', 
-         wordWrap: { width: 250 },
+         wordWrap: { width: 450, useAdvancedWrap: true }
         }).setOrigin(0,0);
 
-    
     }
 
 visible(visible) {
     this.textBox.setVisible(visible);
+    this.script.setVisible(visible);
 }
   
   consoleOut(msg) {
@@ -114,6 +97,7 @@ visible(visible) {
       this.emit('complete');  // resume sequence
   }
 
+
   intro = [
     ['visible',false],
     ['wait-time', 1],
@@ -121,6 +105,8 @@ visible(visible) {
     ['print', '.....'],
     ['wait-click'],
     ['print', '테스트용일이삼사오륙칠팔구십십일십이십삼십사십오십육'],
+    ['wait-click'],
+    ['visible',false],
 
   ]
 
