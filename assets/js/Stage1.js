@@ -1,7 +1,7 @@
 
 import Player from "./Player.js";
 import Minicoding from "./Minicoding.js";
-import DialogText from "./DialogText.js";
+import Inventory from "./Inventory.js";
 import Dialog from "./Dialog.js";
 
 
@@ -54,8 +54,11 @@ export default class Stage1 extends Phaser.Scene {
     }
     
     create () {
+
+        this.inventory = new Inventory();
         this.dialog = new Dialog(this);
         this.minicode = new Minicoding();
+
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
@@ -112,6 +115,11 @@ export default class Stage1 extends Phaser.Scene {
 
         // 드래그앤드랍
         var zone = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
+
+        
+        /** 인벤토리 만들기 **/     
+        this.inven = this.inventory.create(this);
+
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
@@ -190,6 +198,7 @@ export default class Stage1 extends Phaser.Scene {
 
     update() {
         this.player.update();
+        this.inventory.update();
 
         /*** 인벤토리 ***/
         if(state == 0) {
