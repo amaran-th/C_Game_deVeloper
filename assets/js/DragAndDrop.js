@@ -68,6 +68,16 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
             gameObject.x = dropZone.x - 50; // 이거 왜 위치 중앙이 아니라 오른쪽 밑에 치우치는 지 모르겠음.. 임의로 위치 조정해둠
             gameObject.y = dropZone.y - 15;
 
+            if(dropZone.name == "1"){
+                scene.code_zone_1 = gameObject._text;
+            }
+            else if (dropZone.name == "2"){
+                scene.code_zone_2 = gameObject._text;
+            }
+            else if (dropZone.name == "3"){
+                scene.code_zone_3 = gameObject._text;
+            }
+
             //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
         });
         // 드랍 위치가 아니면 원래 자리로 돌아가도록 함 + 색 조정

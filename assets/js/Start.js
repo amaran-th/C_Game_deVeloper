@@ -26,6 +26,8 @@ class Start extends Phaser.Scene {
         frameWidth: 134,
         frameHeight: 130,
     });
+      /*** minibox 관련 image 로드 ***/
+      this.load.image("minibox", "./assets/images/command/mini_commandbox.png");
 
     }
 
