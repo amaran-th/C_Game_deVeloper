@@ -3,7 +3,7 @@ import Player from "./Player.js";
 import Minicoding from "./Minicoding.js";
 import DialogText from "./DialogText.js";
 import Dialog from "./Dialog.js";
-
+import Minibox from "./Minibox.js";
 
 
 const sleep = ms => {
@@ -11,8 +11,7 @@ const sleep = ms => {
   }
 
 var state = 0;
-var code_piece_1;
-var code_piece_2;
+
 export default class TestScene extends Phaser.Scene {   
     constructor(){ 
         super("bootGame"); //identifier for the scene
@@ -110,7 +109,9 @@ export default class TestScene extends Phaser.Scene {
         text.setMask(mask);
 
         // 드래그앤드랍
-        var zone = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
+        this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, 500, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, 700, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
@@ -194,11 +195,18 @@ export default class TestScene extends Phaser.Scene {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
+
+         /*** 미니코딩창 불러오기 ***/
+         this.minibox = new Minibox(this);
+         //드래그앤드롭으로 zone에 있는 코드 받아올거임.
+         this.code_zone_1 = "";
+         this.code_zone_2 = "";
+         this.code_zone_3 = "";
     }
 
     update() {
         this.player.update();
-
+        this.minibox.update(this);
         /*** 인벤토리 ***/
         if(state == 0) {
             this.inventory_button.on('pointerdown', () => {

@@ -21,6 +21,9 @@ class Start extends Phaser.Scene {
       /*** textbox 이미지 로드***/
       this.load.image("textbox", "./assets/images/textbox.png");
 
+      /*** minibox 관련 image 로드 ***/
+      this.load.image("minibox", "./assets/images/command/mini_commandbox.png");
+
     }
 
     create() {
