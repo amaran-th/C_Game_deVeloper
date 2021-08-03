@@ -21,6 +21,11 @@ class Start extends Phaser.Scene {
       /*** textbox 이미지 로드***/
       this.load.image("textbox", "./assets/images/textbox.png");
 
+      /** 플레이어 얼굴 이미지 로드 **/
+      this.load.spritesheet('face', './assets/images/face.png', {
+        frameWidth: 134,
+        frameHeight: 130,
+    });
       /*** minibox 관련 image 로드 ***/
       this.load.image("minibox", "./assets/images/command/mini_commandbox.png");
 

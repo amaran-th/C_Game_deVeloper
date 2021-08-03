@@ -16,6 +16,7 @@ export default class Dialog extends Phaser.Events.EventEmitter {
       this['wait-time'] = this.waitTime;
       this['console'] = this.consoleOut;
       this['visible'] = this.visible;
+      this['setFace'] = this.setFace;
 
       this.testScene = new TestScene();
 
@@ -61,11 +62,14 @@ loadTextbox(scene) { //현재 장면을 가져와야함
          wordWrap: { width: 450, useAdvancedWrap: true }
         }).setOrigin(0,0);
 
+    this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+
     }
 
 visible(visible) {
     this.textBox.setVisible(visible);
     this.script.setVisible(visible);
+    this.playerFace.setVisible(visible);
 }
   
   consoleOut(msg) {
@@ -97,13 +101,19 @@ visible(visible) {
       this.emit('complete');  // resume sequence
   }
 
+  setFace(i) {
+    this.playerFace.setFrame(i);
+  }
+
 
   intro = [
     ['visible',false],
     ['wait-time', 1],
     ['visible',true],
+    ['setFace', 1],
     ['print', '.....'],
     ['wait-click'],
+    ['setFace', 0],
     ['print', '(헉목소리가 안나옴 어쩌구저쩌구)'],
     ['wait-click'],
     ['print', '(무슨일이지??)'],

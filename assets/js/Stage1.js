@@ -45,6 +45,7 @@ export default class Stage1 extends Phaser.Scene {
         //url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsequenceplugin.min.js';
         //this.load.plugin('rexsequenceplugin', url, true);
     
+
         this.onTile = 1;
 
         console.log("맵이동함");
@@ -53,9 +54,8 @@ export default class Stage1 extends Phaser.Scene {
     }
     
     create () {
-        this.textbox = new DialogText();
         this.dialog = new Dialog(this);
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        this.minicode = new Minicoding();
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
@@ -71,7 +71,6 @@ export default class Stage1 extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
         this.player.player.setFlipX(true);
-        this.minicode = new Minicoding();
 
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -118,10 +117,9 @@ export default class Stage1 extends Phaser.Scene {
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
 
-
+        /** 초반 인트로 대사 출력 **/
         this.cameras.main.fadeIn(1000,0,0,0);
         this.player.playerPaused = true; //플레이어 얼려두기
-        /** 초반 인트로 대사 출력 **/
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -130,7 +128,7 @@ export default class Stage1 extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
-        //===================================================================================
+
         //compile button
         this.compile_button = this.add.image(20,150,'compile_button').setOrigin(0,0);
         this.compile_button.setInteractive();
@@ -181,7 +179,6 @@ export default class Stage1 extends Phaser.Scene {
             console.log(" compile finish!!!");
            
         });
-        //=================================================================================
            
         /*** 인벤토리 버튼 활성화 ***/
         this.inventory_button = this.add.image(map.widthInPixels - 100, 20,'inventory_button').setOrigin(0,0);
@@ -209,20 +206,7 @@ export default class Stage1 extends Phaser.Scene {
             });
         }
 
-        
-    
-        
-
-        //this.triggerpoint.setTileIndexCallback(1,this.playerOnTile,this);
-        if(this.player.player.x < 300) {
-            console.log("playeronTile");
-            this.playerOnTile();
-        }
-        else{
-            //this.scene.remove();
-        }
-
-        
+                
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
             '플레이어 위치',
@@ -233,26 +217,6 @@ export default class Stage1 extends Phaser.Scene {
         this.playerCoord.y = this.worldView.y + 10;
         
     }
-
-    
-
-    dialogBox(i) {
-        console.log('다이얼로그 박스 함수:', i);
-        return sleep(10).then( resolve =>
-            this.textbox.createTextBox(this ,600, 200, {
-                wrapWidth: 100, //나오는 대사 길이 조절
-                fixedWidth: 100, //말풍선 길이
-                fixedHeight: 50,
-            })
-            .start(configDialog.dialog[i].text, 50)
-            )
-    }
-    
-    async dialogBoxFor(i) {
-                await this.dialogBox(i);
-                console.log('다이얼로그 박스 함수 끝:', this.dialogOn );
-    }
-
 
     playerOnTile() {
         if(this.onTile) {
@@ -267,24 +231,4 @@ export default class Stage1 extends Phaser.Scene {
         }
     }
 
-    //타일과 플레이어의 충돌했을때 그 return값이 boolean인 함수를 못찾겠음... 그 이유로 else-if 대신 아래의 방식을 행함
-
-    //타일을 밟을 때마다 count가 1씩 증가한다.
-    //minicode는 타일을 밟고 있을 때 '딱 한 번' 실행돼서 그것이 계속 유지되고 있어야 한다.
-    //그렇기 때문에 count가 1보다 작거나 같은 경우에만 minicode가 실행되게 한다.
-
-    playerOffTile() {
-        //this.offTile = true;
-        //this.minicode.create(this);
-        this.Minicoding.setActive(true);
-        this.Minicoding.setVisible(false);
-    }
-
-    //타일에서 발을 땐 경유에는 count를 0으로 초기화 한다.
-    //count가 0인 경우에는 minicode를 지워야 한다.
-    //minicode는 minicode.js에 들어가서만 지울 수 있다 (여기서 지우는 방법 급구.......)
-    //따라서 타일에서 발을 땐 경우 minicode를 한 번 더 실행하고, count가 0일때만 setvisible(false)를 실행하도록 한다.
-
-    
-    //dk.........씨바 난 모르겠다...
 }

@@ -48,7 +48,6 @@ export default class TestScene extends Phaser.Scene {
     }
     
     create () {
-        this.textbox = new DialogText();
         this.dialog = new Dialog(this);
 
         /** x 키 입력 받기**/
@@ -255,25 +254,6 @@ export default class TestScene extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
         
-    }
-
-    
-
-    dialogBox(i) {
-        console.log('다이얼로그 박스 함수:', i);
-        return sleep(10).then( resolve =>
-            this.textbox.createTextBox(this ,600, 200, {
-                wrapWidth: 100, //나오는 대사 길이 조절
-                fixedWidth: 100, //말풍선 길이
-                fixedHeight: 50,
-            })
-            .start(configDialog.dialog[i].text, 50)
-            )
-    }
-    
-    async dialogBoxFor(i) {
-                await this.dialogBox(i);
-                console.log('다이얼로그 박스 함수 끝:', this.dialogOn );
     }
 
 
