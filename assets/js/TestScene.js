@@ -51,7 +51,7 @@ export default class TestScene extends Phaser.Scene {
     create () {
         this.textbox = new DialogText();
         this.dialog = new Dialog(this);
-        
+        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
@@ -92,14 +92,75 @@ export default class TestScene extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
-        /*** 명령창 불러오기 ***/
-        var command = new Command(this, map);
-              
-        /*** 드래그앤드랍 불러오기 ***/ 
-        var draganddrop = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
+        /*** 전체 코드에 걍 예시로 넣은 문장 ***/
+        var contenttext = '#include<stdio.h>\nint main(void){printf("hi");return 0;}';
 
-        /** 플레이어 위치 확인용 **/
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        /*** 명령창버튼 활성화 ***/
+        this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
+        this.entire_code_button.setInteractive();
+        this.commandbox = this.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
+                
+        /*** 전체코드를 띄우고 드래그 할 수 있기위한 설정 ***/
+        this.graphics = this.make.graphics();
+        text = this.add.text(map.widthInPixels, 25, contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);     
+        var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
+        text.setMask(mask);
+
+        // 드래그앤드랍
+        var zone = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
+
+        //===================================================================================
+        //compile button
+        this.compile_button = this.add.image(20,150,'compile_button').setOrigin(0,0);
+        this.compile_button.setInteractive();
+        this.compile_button.on('pointerdown', () => {
+           
+            if (contenttext !== '')
+                {
+                    var data = {
+
+                        'code': contenttext
+    
+                    };
+                    data = JSON.stringify(data);
+
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open('POST', '/form_test', true);                
+                    
+                    xhr.setRequestHeader('Content-type', 'application/json');
+                    xhr.send(data);
+                    xhr.addEventListener('load', function() {
+                        
+                        var result = JSON.parse(xhr.responseText);
+    
+                        if (result.result != 'ok') return;
+                        console.log(result.output);
+                        //document.getElementById('testoutput').value = result.output;
+    
+                    });
+                    //  Turn off the click events
+                    //this.removeListener('click');
+                    //  Hide the login element
+                    //this.setVisible(false);
+                    //  Populate the text with whatever they typed in
+                    //text.setText('Welcome ' + inputText.value);
+                }
+                else
+                {
+                    //  Flash the prompt 이거 뭔지 모르겠음 다른 곳에서 긁어옴
+                    this.scene.tweens.add({
+                        targets: text,
+                        alpha: 0.2,
+                        duration: 250,
+                        ease: 'Power3',
+                        yoyo: true
+                    });
+                            }
+            console.log(" compile finish!!!");
+           
+        });
+        //=================================================================================
            
         /*** 인벤토리 버튼 활성화 ***/
         this.inventory_button = this.add.image(map.widthInPixels - 100, 20,'inventory_button').setOrigin(0,0);
@@ -137,8 +198,8 @@ export default class TestScene extends Phaser.Scene {
             this.playerOnTile();
         }
 
-
-         /* 플레이어 위치 알려줌 */
+        
+         /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -146,7 +207,7 @@ export default class TestScene extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 500;
         this.playerCoord.y = this.worldView.y + 10;
-
+        
     }
 
     
