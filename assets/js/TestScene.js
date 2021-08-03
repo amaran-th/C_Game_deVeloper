@@ -110,6 +110,22 @@ export default class TestScene extends Phaser.Scene {
         // 드래그앤드랍
         var zone = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
 
+        /** 플레이어 위치 확인용 **/
+        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+
+
+
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //플레이어 얼려두기
+        /** 초반 인트로 대사 출력 **/
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });
         //===================================================================================
         //compile button
         this.compile_button = this.add.image(20,150,'compile_button').setOrigin(0,0);
