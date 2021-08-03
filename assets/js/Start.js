@@ -11,9 +11,25 @@ class Start extends Phaser.Scene {
       /*** command 관련 image 로드 ***/
       this.load.image("entire_code_button", "./assets/images/command/entire_code_button.png");
       this.load.image("commandbox", "./assets/images/command/commandbox.png");
+      this.load.image("compile_button", "./assets/images/command/execute_button.png");  //==============================================
 
       /*** inventory 관련 image 로드 ***/
       this.load.image("inventory_button", "./assets/images/inventory_button.png");
+
+      /*** textbox 이미지 로드***/
+      this.load.image("textbox", "./assets/images/textbox.png");
+
+      /** 플레이어 얼굴 이미지 로드 **/
+      this.load.spritesheet('face', './assets/images/face.png', {
+        frameWidth: 134,
+        frameHeight: 130,
+    });
+      /*** minibox 관련 image 로드 ***/
+      this.load.image("minibox", "./assets/images/command/mini_commandbox.png");
+
+      /** 아이템 이미지 로드 **/
+      this.load.image("item", "./assets/images/item.png");
+      this.load.image("itemGet", "./assets/images/itemget.png");
 
     }
 
