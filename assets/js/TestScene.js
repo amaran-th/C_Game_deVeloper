@@ -11,7 +11,6 @@ const sleep = ms => {
   }
 
 var state = 0;
-var text;
 var code_piece_1;
 var code_piece_2;
 export default class TestScene extends Phaser.Scene {   
@@ -46,14 +45,14 @@ export default class TestScene extends Phaser.Scene {
         this.load.plugin('rexsequenceplugin', url, true);
 
         this.onTile = 1;
-        
+
     }
     
     create () {
         this.textbox = new DialogText();
         this.dialog = new Dialog(this);
-        
-        
+        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
         
@@ -95,30 +94,7 @@ export default class TestScene extends Phaser.Scene {
         this.worldView = this.cameras.main.worldView;
 
         /*** 전체 코드에 걍 예시로 넣은 문장 ***/
-        var contenttext = [
-            "The sky above the port was the color of television, tuned to a dead channel.",
-            "`It's not like I'm using,' Case heard someone say, as he shouldered his way ",
-            "through the crowd around the door of the Chat. `It's like my body's developed",
-            "this massive drug deficiency.' It was a Sprawl voice and a Sprawl joke.",
-            "The Chatsubo was a bar for professional expatriates; you could drink there for",
-            "a week and never hear two words in Japanese.",
-            "",
-            "Ratz was tending bar, his prosthetic arm jerking monotonously as he filled a tray",
-            "of glasses with draft Kirin. He saw Case and smiled, his teeth a webwork of",
-            "East European steel and brown decay. Case found a place at the bar, between the",
-            "unlikely tan on one of Lonny Zone's whores and the crisp naval uniform of a tall",
-            "African whose cheekbones were ridged with precise rows of tribal scars. `Wage was",
-            "in here early, with two joeboys,' Ratz said, shoving a draft across the bar with",
-            "his good hand. `Maybe some business with you, Case?'",
-            "",
-            "Case shrugged. The girl to his right giggled and nudged him.",
-            "The bartender's smile widened. His ugliness was the stuff of legend. In an age of",
-            "affordable beauty, there was something heraldic about his lack of it. The antique",
-            "arm whined as he reached for another mug.",
-            "",
-            "",
-            "From Neuromancer by William Gibson"
-        ]; 
+        var contenttext = '#include<stdio.h>\nint main(void){printf("hi");return 0;}';
 
         /*** 명령창버튼 활성화 ***/
         this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
@@ -134,68 +110,88 @@ export default class TestScene extends Phaser.Scene {
         // 드래그앤드랍
         var zone = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
 
-        /** 플레이어 위치 확인용 **/
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
-
-
-
-        this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //플레이어 얼려두기
-        /** 초반 인트로 대사 출력 **/
-        var seq = this.plugins.get('rexsequenceplugin').add();
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.intro, this.dialog)
-        .start();
-        seq.on('complete', () => {
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
-        });
+        //===================================================================================
+        //compile button
+        this.compile_button = this.add.image(20,150,'compile_button').setOrigin(0,0);
+        this.compile_button.setInteractive();
+        this.compile_button.on('pointerdown', () => {
            
+            if (contenttext !== '')
+                {
+                    var data = {
+
+                        'code': contenttext
+    
+                    };
+                    data = JSON.stringify(data);
+
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open('POST', '/form_test', true);                
+                    
+                    xhr.setRequestHeader('Content-type', 'application/json');
+                    xhr.send(data);
+                    xhr.addEventListener('load', function() {
+                        
+                        var result = JSON.parse(xhr.responseText);
+    
+                        if (result.result != 'ok') return;
+                        console.log(result.output);
+                        //document.getElementById('testoutput').value = result.output;
+    
+                    });
+                    //  Turn off the click events
+                    //this.removeListener('click');
+                    //  Hide the login element
+                    //this.setVisible(false);
+                    //  Populate the text with whatever they typed in
+                    //text.setText('Welcome ' + inputText.value);
+                }
+                else
+                {
+                    //  Flash the prompt 이거 뭔지 모르겠음 다른 곳에서 긁어옴
+                    this.scene.tweens.add({
+                        targets: text,
+                        alpha: 0.2,
+                        duration: 250,
+                        ease: 'Power3',
+                        yoyo: true
+                    });
+                            }
+            console.log(" compile finish!!!");
+           
+        });
+        //=================================================================================
+           
+        /*** 인벤토리 버튼 활성화 ***/
+        this.inventory_button = this.add.image(map.widthInPixels - 100, 20,'inventory_button').setOrigin(0,0);
+        this.inventory_button.setInteractive();
+        this.invenZone = this.add.zone(map.widthInPixels + 745, 300, 100, 570).setRectangleDropZone(100,550);
+        this.invenGra = this.add.graphics();
+        this.invenGra.lineStyle(4, 0x00ff00);
     }
 
     update() {
         this.player.update();
 
-
-        /*** 화면 이동시 entire code button 따라가도록 설정***/
-        this.entire_code_button.x = this.worldView.x + 5;
-
-        /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
-        //여기 슬라이드 적용 안 돼서 수정예정
+        /*** 인벤토리 ***/
         if(state == 0) {
-            this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
-                this.commandbox.setVisible(true);
-                text.setVisible(true);
-                console.log("보임:"+this.commandbox.x);
-                this.slidebox();
+            this.inventory_button.on('pointerdown', () => {
+                this.invenGra.setVisible(true);
                 state = 1;
             });
         } else {
-            this.commandbox.x = this.worldView.x + 310; //화면 이동시 명령창 따라가도록 설정
-            text.x = this.worldView.x + 325; // 화면 이동시 글 이동
-            var invenZone = this.add.zone(this.worldView.x + 745, 300, 100, 570).setRectangleDropZone(100,550);
-            var invenGra = this.add.graphics();
-            invenGra.lineStyle(4, 0x00ff00);
-            invenGra.strokeRect(invenZone.x - invenZone.input.hitArea.width / 2, invenZone.y - invenZone.input.hitArea.height / 2, invenZone.input.hitArea.width, invenZone.input.hitArea.height);
-            this.graphics.fillRect(this.worldView.x + 320, 20, 360, 550); // 화면 이동시 글이 보이는 판을 이동 
-            /*** 드래그를 하기위해 존 설정 + 드래그 설정 ***/
-            var zone = this.add.zone(this.worldView.x + 320, 25,  360, 550).setOrigin(0).setInteractive();
-            zone.on('pointermove', function (pointer) {
-                if (pointer.isDown){
-                    text.y += (pointer.velocity.y / 10);
-                    text.y = Phaser.Math.Clamp(text.y, -400, 600);
-                    //this.extext.setVisible(true);
-                }
-            });
-
-            this.entire_code_button.on('pointerdown', () => {
-                this.commandbox.setVisible(false);
-                text.setVisible(false);
-                invenGra.setVisible(false);
-                console.log("지움:"+this.commandbox.x);
+            this.invenZone.x = this.worldView.x + 745; //화면 이동시 따라가도록 설정
+            this.invenGra.strokeRect(this.invenZone.x - this.invenZone.input.hitArea.width / 2, this.invenZone.y - this.invenZone.input.hitArea.height / 2, this.invenZone.input.hitArea.width, this.invenZone.input.hitArea.height);
+            this.inventory_button.on('pointerdown', () => {
+                this.invenGra.setVisible(false);
                 state = 0;
             });
         }
+
+        
+    
+        
 
         //this.triggerpoint.setTileIndexCallback(1,this.playerOnTile,this);
         if(this.player.player.x < 300) {
@@ -206,8 +202,8 @@ export default class TestScene extends Phaser.Scene {
             //this.scene.remove();
         }
 
-
-         /* 플레이어 위치 알려줌 */
+        
+         /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -215,18 +211,10 @@ export default class TestScene extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 500;
         this.playerCoord.y = this.worldView.y + 10;
-
+        
     }
 
-    /*** 명령창 슬라이드 함수 ***/
-    slidebox() {
-        this.tweens.add({
-            targets: this.commandbox,
-            x: this.worldView.x + 415,
-            ease: 'Power3'
-        });
-        //console.log("3:"+this.commandbox.x);
-    }
+    
 
     dialogBox(i) {
         console.log('다이얼로그 박스 함수:', i);

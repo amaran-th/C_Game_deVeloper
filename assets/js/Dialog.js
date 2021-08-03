@@ -113,13 +113,10 @@ visible(visible) {
   talk1 = [
     //['loadTextbox'],
     ['visible',true],
-    ['place',650,150],
     ['print', '플레이어 위치를 못읽어와요'],
     ['wait-click'],
-    ['place',650,200],
     ['print', '위치는 그냥 일일이 적어야해요'],
     ['wait-click'],
-    ['place',650,150],
     ['print', '정말 짱이다'],
     ['wait-click'],
     ['print', '대사가 너무 길면 짤려요'],
