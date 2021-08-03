@@ -81,7 +81,6 @@ class Command extends Phaser.GameObjects.Image {
             this.entire_code_button.on('pointerdown', () => {
                 this.commandbox.setVisible(false);
                 text.setVisible(false);
-                //invenGra.setVisible(false);
                 state = 0;
             });
         }

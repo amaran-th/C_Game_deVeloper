@@ -11,8 +11,7 @@ const sleep = ms => {
   }
 
 var state = 0;
-var code_piece_1;
-var code_piece_2;
+
 export default class Stage1 extends Phaser.Scene {   
     constructor(){ 
         super("stage1"); //identifier for the scene
@@ -116,20 +115,13 @@ export default class Stage1 extends Phaser.Scene {
         /*** 전체 코드에 걍 예시로 넣은 문장 ***/
         var contenttext = '#include<stdio.h>\nint main(void){printf("hi");return 0;}';
 
-        /*** 명령창버튼 활성화 ***/
-        this.entire_code_button = this.add.image(20,20,'entire_code_button').setOrigin(0,0);
-        this.entire_code_button.setInteractive();
-        this.commandbox = this.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
-                
-        /*** 전체코드를 띄우고 드래그 할 수 있기위한 설정 ***/
-        this.graphics = this.make.graphics();
-        text = this.add.text(map.widthInPixels, 25, contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);     
-        var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
-        text.setMask(mask);
+        /*** 명령창 불러오기 ***/
+        var command = new Command(this, map);
 
         // 드래그앤드랍
-        var zone = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
-
+        this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, 500, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, 700, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
         
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
