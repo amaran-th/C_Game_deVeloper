@@ -1,7 +1,7 @@
 
 import Player from "./Player.js";
 import Minicoding from "./Minicoding.js";
-import DialogText from "./DialogText.js";
+import Inventory from "./Inventory.js";
 import Dialog from "./Dialog.js";
 
 
@@ -54,8 +54,13 @@ export default class Stage1 extends Phaser.Scene {
     }
     
     create () {
+
+        this.inventory = new Inventory();
         this.dialog = new Dialog(this);
         this.minicode = new Minicoding();
+
+        /** x 키 입력 받기**/
+        this.keyX = this.input.keyboard.addKey('X');
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
@@ -66,6 +71,18 @@ export default class Stage1 extends Phaser.Scene {
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
+
+        /** 아이템 만들기 **/
+        this.itemPrintf = this.add.image(360,330,'item'); 
+        /** 아이템 얻었을 때 뜨는 이미지 **/
+        this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
+        this.itemPrintfText = this.add.text(550,300,'printf',{
+            color: '#000000',
+            fontsize: '30px',
+        }).setOrigin(0,0);
+        this.itemPrintfget.setVisible(false);
+        this.itemPrintfText.setVisible(false);
+        this.beforeItemGet = true; //한 번만 뜨도록
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
@@ -112,6 +129,11 @@ export default class Stage1 extends Phaser.Scene {
 
         // 드래그앤드랍
         var zone = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30);
+
+        
+        /** 인벤토리 만들기 **/     
+        this.inven = this.inventory.create(this);
+
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
@@ -186,10 +208,13 @@ export default class Stage1 extends Phaser.Scene {
         this.invenZone = this.add.zone(map.widthInPixels + 745, 300, 100, 570).setRectangleDropZone(100,550);
         this.invenGra = this.add.graphics();
         this.invenGra.lineStyle(4, 0x00ff00);
+
+        console.log('itme 위치', this.itemPrintf.x);
     }
 
     update() {
         this.player.update();
+        this.inventory.update();
 
         /*** 인벤토리 ***/
         if(state == 0) {
@@ -213,8 +238,26 @@ export default class Stage1 extends Phaser.Scene {
             'x: ' + this.player.player.x,
             'y: ' + this.player.player.y,
         ]);
-        this.playerCoord.x = this.worldView.x + 500;
+        this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
+
+        /** 아이템 획득하는 경우 **/
+        if (this.beforeItemGet && this.player.player.x < this.itemPrintf.x+54 && this.itemPrintf.x < this.player.player.x) {
+            this.itemPrintf.setVisible(false);
+            this.itemPrintfget.setVisible(true);
+            this.itemPrintfText.setVisible(true);
+            //삼초 뒤에 사라지는 기능도 넣기
+        }
+        if(this.keyX.isDown) {
+            this.itemPrintfget.setVisible(false);
+            this.itemPrintfText.setVisible(false);
+            this.beforeItemGet = false;
+        }
+
+        /** 아이템 얻은 뒤에 인벤에 넣기 + 대사 출력 **/
+        if(!this.beforeItemGet) {
+            
+        }
         
     }
 

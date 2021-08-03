@@ -29,6 +29,10 @@ class Start extends Phaser.Scene {
       /*** minibox 관련 image 로드 ***/
       this.load.image("minibox", "./assets/images/command/mini_commandbox.png");
 
+      /** 아이템 이미지 로드 **/
+      this.load.image("item", "./assets/images/item.png");
+      this.load.image("itemGet", "./assets/images/itemget.png");
+
     }
 
     create() {
@@ -43,7 +47,6 @@ class Start extends Phaser.Scene {
 
       start_button.once("pointerup", function () {
 
-        this.scene.start("buildMap");
         this.scene.start("bootGame");
 
       }, this);
