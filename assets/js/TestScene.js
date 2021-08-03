@@ -11,7 +11,6 @@ const sleep = ms => {
   }
 
 var state = 0;
-var text;
 var code_piece_1;
 var code_piece_2;
 export default class TestScene extends Phaser.Scene {   
@@ -23,7 +22,7 @@ export default class TestScene extends Phaser.Scene {
         /*** FROM Minicode.js***/
         this.load.html('input', './assets/js/textInput.html');
 
-        this.load.image("tiles", "./assets/images/testSceneMap.png");
+        this.load.image("tiles", "./assets/images/map.png");
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
 
         /** FROM Player.js**/
@@ -46,29 +45,27 @@ export default class TestScene extends Phaser.Scene {
         this.load.plugin('rexsequenceplugin', url, true);
 
         this.onTile = 1;
-        
+
     }
     
     create () {
         this.textbox = new DialogText();
         this.dialog = new Dialog(this);
-        
-        
+        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
         
         const tileset = map.addTilesetImage("testSceneMap", "tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("ground", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
-        const sign = map.createLayer( "sign", tileset, 0, 0); //값이 안읽혔다는데 잘뜨긴함
-        this.triggerpoint= map.createLayer("trigger", tileset, 0, 0);
-
+        this.deco = map.createLayer("deco", tileset, 0, 0);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+        this.player = new Player(this, spawnPoint.x, 330);
         this.minicode = new Minicoding();
 
 
@@ -80,8 +77,8 @@ export default class TestScene extends Phaser.Scene {
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
-        this.triggerpoint.setCollisionByProperty({ collides: true });
-        this.physics.add.collider(this.player.player, this.triggerpoint);
+        this.deco.setCollisionByProperty({ collides: true });
+        this.physics.add.collider(this.player.player, this.deco);
 
 
         /*** 충돌지점 색 칠하기 Mark the collid tile ***/
@@ -165,67 +162,55 @@ export default class TestScene extends Phaser.Scene {
         });
         //=================================================================================
            
+        /*** 인벤토리 버튼 활성화 ***/
+        this.inventory_button = this.add.image(map.widthInPixels - 100, 20,'inventory_button').setOrigin(0,0);
+        this.inventory_button.setInteractive();
+        this.invenZone = this.add.zone(map.widthInPixels + 745, 300, 100, 570).setRectangleDropZone(100,550);
+        this.invenGra = this.add.graphics();
+        this.invenGra.lineStyle(4, 0x00ff00);
     }
 
     update() {
         this.player.update();
 
-        /** 표지판 근처에 갔을 때 itsays 작동 **/
-        this.triggerpoint.setTileIndexCallback(1,this.itsays,this);
-
-        /*** 화면 이동시 entire code button 따라가도록 설정***/
-        this.entire_code_button.x = this.worldView.x + 5;
-
-        /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
-        //여기 슬라이드 적용 안 돼서 수정예정
+        /*** 인벤토리 ***/
         if(state == 0) {
-            this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
-                this.commandbox.setVisible(true);
-                text.setVisible(true);
-                console.log("보임:"+this.commandbox.x);
-                this.slidebox();
+            this.inventory_button.on('pointerdown', () => {
+                this.invenGra.setVisible(true);
                 state = 1;
             });
         } else {
-            this.commandbox.x = this.worldView.x + 310; //화면 이동시 명령창 따라가도록 설정
-            text.x = this.worldView.x + 325; // 화면 이동시 글 이동
-            var invenZone = this.add.zone(this.worldView.x + 745, 300, 100, 570).setRectangleDropZone(100,550);
-            var invenGra = this.add.graphics();
-            invenGra.lineStyle(4, 0x00ff00);
-            invenGra.strokeRect(invenZone.x - invenZone.input.hitArea.width / 2, invenZone.y - invenZone.input.hitArea.height / 2, invenZone.input.hitArea.width, invenZone.input.hitArea.height);
-            this.graphics.fillRect(this.worldView.x + 320, 20, 360, 550); // 화면 이동시 글이 보이는 판을 이동 
-            /*** 드래그를 하기위해 존 설정 + 드래그 설정 ***/
-            var zone = this.add.zone(this.worldView.x + 320, 25,  360, 550).setOrigin(0).setInteractive();
-            zone.on('pointermove', function (pointer) {
-                if (pointer.isDown){
-                    text.y += (pointer.velocity.y / 10);
-                    text.y = Phaser.Math.Clamp(text.y, -400, 600);
-                    //this.extext.setVisible(true);
-                }
-            });
-
-            this.entire_code_button.on('pointerdown', () => {
-                this.commandbox.setVisible(false);
-                text.setVisible(false);
-                invenGra.setVisible(false);
-                console.log("지움:"+this.commandbox.x);
+            this.invenZone.x = this.worldView.x + 745; //화면 이동시 따라가도록 설정
+            this.invenGra.strokeRect(this.invenZone.x - this.invenZone.input.hitArea.width / 2, this.invenZone.y - this.invenZone.input.hitArea.height / 2, this.invenZone.input.hitArea.width, this.invenZone.input.hitArea.height);
+            this.inventory_button.on('pointerdown', () => {
+                this.invenGra.setVisible(false);
                 state = 0;
             });
         }
 
-        this.triggerpoint.setTileIndexCallback(1,this.playerOnTile,this);
+        
+    
+        
 
+        //this.triggerpoint.setTileIndexCallback(1,this.playerOnTile,this);
+        if(this.player.player.x < 300) {
+            console.log("playeronTile");
+            this.playerOnTile();
+        }
+
+        
+         /* 플레이어 위치 알려줌*/
+         this.playerCoord.setText([
+            '플레이어 위치',
+            'x: ' + this.player.player.x,
+            'y: ' + this.player.player.y,
+        ]);
+        this.playerCoord.x = this.worldView.x + 500;
+        this.playerCoord.y = this.worldView.y + 10;
+        
     }
 
-    /*** 명령창 슬라이드 함수 ***/
-    slidebox() {
-        this.tweens.add({
-            targets: this.commandbox,
-            x: this.worldView.x + 415,
-            ease: 'Power3'
-        });
-        //console.log("3:"+this.commandbox.x);
-    }
+    
 
     dialogBox(i) {
         console.log('다이얼로그 박스 함수:', i);

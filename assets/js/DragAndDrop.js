@@ -42,7 +42,6 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         graphics.lineStyle(2, 0xffff00);
         graphics.strokeRect(x - width / 2, y - height / 2, width, height);
         
-        
         // 드래그 하려고 선택한 거 맨 위로 올림
         scene.input.on('dragstart', function (pointer, gameObject) { 
             scene.children.bringToTop(gameObject);

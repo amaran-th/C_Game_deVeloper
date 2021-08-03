@@ -6,7 +6,7 @@ export default class Player extends Phaser.Scene {
 
         anims.create({
             key: "playerWalk",
-            frames: anims.generateFrameNumbers('player',{ start: 0, end: 2}), //TestScene의 preload에 있는 player 들고 옴
+            frames: anims.generateFrameNumbers('player',{ start: 0, end: 3}), //TestScene의 preload에 있는 player 들고 옴
             frameRate: 7,
             repeat: -1
         });
