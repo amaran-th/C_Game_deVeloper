@@ -253,6 +253,11 @@ export default class Stage1 extends Phaser.Scene {
             this.itemPrintfText.setVisible(false);
             this.beforeItemGet = false;
         }
+
+        /** 아이템 얻은 뒤에 인벤에 넣기 + 대사 출력 **/
+        if(!this.beforeItemGet) {
+            
+        }
         
     }
 
