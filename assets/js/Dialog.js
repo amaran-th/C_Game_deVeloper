@@ -104,7 +104,9 @@ visible(visible) {
     ['visible',true],
     ['print', '.....'],
     ['wait-click'],
-    ['print', '테스트용일이삼사오륙칠팔구십십일십이십삼십사십오십육'],
+    ['print', '(헉목소리가 안나옴 어쩌구저쩌구)'],
+    ['wait-click'],
+    ['print', '(무슨일이지??)'],
     ['wait-click'],
     ['visible',false],
 

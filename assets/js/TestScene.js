@@ -51,7 +51,9 @@ export default class TestScene extends Phaser.Scene {
     create () {
         this.textbox = new DialogText();
         this.dialog = new Dialog(this);
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+
+        /** x 키 입력 받기**/
+        this.keyX = this.input.keyboard.addKey('X');
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
@@ -185,6 +187,13 @@ export default class TestScene extends Phaser.Scene {
         this.invenZone = this.add.zone(map.widthInPixels + 745, 300, 100, 570).setRectangleDropZone(100,550);
         this.invenGra = this.add.graphics();
         this.invenGra.lineStyle(4, 0x00ff00);
+
+
+        //플레이어 위 pressX 생성해두기
+        this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
     }
 
     update() {
@@ -205,18 +214,28 @@ export default class TestScene extends Phaser.Scene {
             });
         }
 
-        
-    
-        
 
         //this.triggerpoint.setTileIndexCallback(1,this.playerOnTile,this);
         if(this.player.player.x < 300) {
-            console.log("playeronTile");
             this.playerOnTile();
         }
         else{
             //this.scene.remove();
         }
+
+        /* 플레이어가 문 앞에 서면 작동하도록 함 */
+        if(this.player.player.x < 175 && 100 < this.player.player.x ) {
+            this.pressX.x = this.player.player.x-50;
+            this.pressX.y = this.player.player.y-100;
+            this.pressX.setVisible(true);
+
+            if(this.keyX.isDown) {
+                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                this.scene.sleep('testScene'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                this.scene.run("stage1");
+            }
+        }
+        else this.pressX.setVisible(false);
 
         
          /* 플레이어 위치 알려줌*/
@@ -225,7 +244,7 @@ export default class TestScene extends Phaser.Scene {
             'x: ' + this.player.player.x,
             'y: ' + this.player.player.y,
         ]);
-        this.playerCoord.x = this.worldView.x + 500;
+        this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
         
     }
