@@ -18,6 +18,9 @@ class Start extends Phaser.Scene {
       /*** inventory 관련 image 로드 ***/
       this.load.image("inventory_button", "./assets/images/inventory_button.png");
 
+      /*** textbox 이미지 로드***/
+      this.load.image("textbox", "./assets/images/textbox.png");
+
     }
 
     create() {

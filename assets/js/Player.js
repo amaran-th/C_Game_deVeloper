@@ -32,27 +32,32 @@ export default class Player extends Phaser.Scene {
     }
     
     update() {
+        if(!this.playerPaused) {
+            if(this.cursorsKeys.left.isDown){
+                this.player.setVelocityX(-200); //싯...파... 여기서 main의 게임세팅에 접근하는 방법 모르겠음...
+                this.player.play("playerWalk", true);
+            } else if(this.cursorsKeys.right.isDown){
+                this.player.setVelocityX(200);
+                this.player.play("playerWalk", true);
+            }else {
+                this.player.setFrame(1);
+                this.player.setVelocityX(0);
+            }
+            
+            /*** 걷는 방향에 따라 보는 방향 다르게 하기 ***/
+            if (this.player.body.velocity.x > 0) {
+                this.player.setFlipX(false);
+              } else if (this.player.body.velocity.x < 0) {
+                this.player.setFlipX(true);
+              }
 
-                if(this.cursorsKeys.left.isDown){
-                    this.player.setVelocityX(-200); //싯...파... 여기서 main의 게임세팅에 접근하는 방법 모르겠음...
-                    this.player.play("playerWalk", true);
-                } else if(this.cursorsKeys.right.isDown){
-                    this.player.setVelocityX(200);
-                    this.player.play("playerWalk", true);
-                }else {
-                    this.player.setFrame(1);
-                    this.player.setVelocityX(0);
-                }
-                
-                /*** 걷는 방향에 따라 보는 방향 다르게 하기 ***/
-                if (this.player.body.velocity.x > 0) {
-                    this.player.setFlipX(false);
-                  } else if (this.player.body.velocity.x < 0) {
-                    this.player.setFlipX(true);
-                  }
-
-                if(this.cursorsKeys.up.isDown && this.player.body.onFloor() ){
-                    this.player.setVelocityY(-300); //jump
-                }
-    }
+            if(this.cursorsKeys.up.isDown && this.player.body.onFloor() ){
+                this.player.setVelocityY(-300); //jump
+            }
+        }
+        else { //cutScene 혹은 대사가 나올때 플레이어가 멈춰있도록 한다.
+            this.player.setFrame(1);
+            this.player.setVelocityX(0);
+        }
+}
 }
