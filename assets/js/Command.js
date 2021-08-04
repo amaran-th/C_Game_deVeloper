@@ -25,7 +25,7 @@ class Command extends Phaser.GameObjects.Image {
     
         /*** 명령창, 명령창 내용 zone 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
-        this.zone = scene.add.zone(map.widthInPixels, 25,  360, 550).setOrigin(0).setInteractive();
+        this.zone = scene.add.zone(map.widthInPixels, 100,  360, 550).setOrigin(0).setInteractive();
         text = scene.add.text(map.widthInPixels, 100, this.contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
 
         /*** 명령창에 전체코드 띄우고 드래그 할 수 있기위한 설정 ***/
