@@ -115,7 +115,7 @@ export default class Stage1 extends Phaser.Scene {
         var contenttext = '#include<stdio.h>\nint main(void){printf("hi");return 0;}';
 
         /*** 명령창 불러오기 ***/
-        var command = new Command(this, map);
+        this.command = new Command(this, map);
 
         // 드래그앤드랍
         this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
@@ -142,56 +142,6 @@ export default class Stage1 extends Phaser.Scene {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
 
-        //compile button
-        this.compile_button = this.add.image(20,150,'compile_button').setOrigin(0,0);
-        this.compile_button.setInteractive();
-        this.compile_button.on('pointerdown', () => {
-           
-            if (contenttext !== '')
-                {
-                    var data = {
-
-                        'code': contenttext
-    
-                    };
-                    data = JSON.stringify(data);
-
-                    var xhr = new XMLHttpRequest();
-
-                    xhr.open('POST', '/form_test', true);                
-                    
-                    xhr.setRequestHeader('Content-type', 'application/json');
-                    xhr.send(data);
-                    xhr.addEventListener('load', function() {
-                        
-                        var result = JSON.parse(xhr.responseText);
-    
-                        if (result.result != 'ok') return;
-                        console.log(result.output);
-                        //document.getElementById('testoutput').value = result.output;
-    
-                    });
-                    //  Turn off the click events
-                    //this.removeListener('click');
-                    //  Hide the login element
-                    //this.setVisible(false);
-                    //  Populate the text with whatever they typed in
-                    //text.setText('Welcome ' + inputText.value);
-                }
-                else
-                {
-                    //  Flash the prompt 이거 뭔지 모르겠음 다른 곳에서 긁어옴
-                    this.scene.tweens.add({
-                        targets: text,
-                        alpha: 0.2,
-                        duration: 250,
-                        ease: 'Power3',
-                        yoyo: true
-                    });
-                            }
-            console.log(" compile finish!!!");
-           
-        });
            
         /*** 인벤토리 버튼 활성화 ***/
         this.inventory_button = this.add.image(map.widthInPixels - 100, 20,'inventory_button').setOrigin(0,0);
@@ -206,6 +156,7 @@ export default class Stage1 extends Phaser.Scene {
     update() {
         this.player.update();
         this.inventory.update();
+        this.command.update(this);
 
         /*** 인벤토리 ***/
         if(state == 0) {

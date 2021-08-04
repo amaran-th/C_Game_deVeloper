@@ -11,44 +11,77 @@ class Command extends Phaser.GameObjects.Image {
         this.worldView = scene.cameras.main.worldView;
 
         /*** 전체 코드에 걍 예시로 넣은 문장 ***/
-        var contenttext = [
-            "The sky above the port was the color of television, tuned to a dead channel.",
-            "`It's not like I'm using,' Case heard someone say, as he shouldered his way ",
-            "through the crowd around the door of the Chat. `It's like my body's developed",
-            "this massive drug deficiency.' It was a Sprawl voice and a Sprawl joke.",
-            "The Chatsubo was a bar for professional expatriates; you could drink there for",
-            "a week and never hear two words in Japanese.",
-            "",
-            "Ratz was tending bar, his prosthetic arm jerking monotonously as he filled a tray",
-            "of glasses with draft Kirin. He saw Case and smiled, his teeth a webwork of",
-            "East European steel and brown decay. Case found a place at the bar, between the",
-            "unlikely tan on one of Lonny Zone's whores and the crisp naval uniform of a tall",
-            "African whose cheekbones were ridged with precise rows of tribal scars. `Wage was",
-            "in here early, with two joeboys,' Ratz said, shoving a draft across the bar with",
-            "his good hand. `Maybe some business with you, Case?'",
-            "",
-            "Case shrugged. The girl to his right giggled and nudged him.",
-            "The bartender's smile widened. His ugliness was the stuff of legend. In an age of",
-            "affordable beauty, there was something heraldic about his lack of it. The antique",
-            "arm whined as he reached for another mug.",
-            "",
-            "",
-            "From Neuromancer by William Gibson"
-        ]; 
+        this.contenttext = 
+            "#include <stdio.h> \n int main(){ \n " +  scene.code_zone_1 +  "(\"HI\"); \n }" 
+            + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
 
         /*** 명령창버튼 활성화 ***/
         this.entire_code_button = scene.add.image(20,20,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
+
+        /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
+        this.compile_button = scene.add.image(20,170,'compile_button').setOrigin(0,0);
+        this.compile_button.setInteractive();
     
         /*** 명령창, 명령창 내용 zone 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
         this.zone = scene.add.zone(map.widthInPixels, 25,  360, 550).setOrigin(0).setInteractive();
-        text = scene.add.text(map.widthInPixels, 25, contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+        text = scene.add.text(map.widthInPixels, 25, this.contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
 
         /*** 명령창에 전체코드 띄우고 드래그 할 수 있기위한 설정 ***/
         this.graphics = scene.make.graphics(); 
         var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
         text.setMask(mask);
+
+
+        /*** 컴파일 버튼 누를시 컴파일러 동작. ***/ //@@@@@@@@@@@
+        this.compile_button.on('pointerdown', () => {
+           
+            if (this.contenttext !== '')
+                {
+                    var data = {
+
+                        'code': this.contenttext
+    
+                    };
+                    data = JSON.stringify(data);
+
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open('POST', '/form_test', true);                
+                    
+                    xhr.setRequestHeader('Content-type', 'application/json');
+                    xhr.send(data);
+                    xhr.addEventListener('load', function() {
+                        
+                        var result = JSON.parse(xhr.responseText);
+    
+                        if (result.result != 'ok') return;
+                        console.log(result.output);
+                        //document.getElementById('testoutput').value = result.output;
+    
+                    });
+                    //  Turn off the click events
+                    //this.removeListener('click');
+                    //  Hide the login element
+                    //this.setVisible(false);
+                    //  Populate the text with whatever they typed in
+                    //text.setText('Welcome ' + inputText.value);
+                }
+                else
+                {
+                    //  Flash the prompt 이거 뭔지 모르겠음 다른 곳에서 긁어옴
+                    this.scene.tweens.add({
+                        targets: text,
+                        alpha: 0.2,
+                        duration: 250,
+                        ease: 'Power3',
+                        yoyo: true
+                    });
+                            }
+            console.log(" compile finish!!!");
+           
+        });
 
     }
 
@@ -95,4 +128,12 @@ class Command extends Phaser.GameObjects.Image {
         });
         //console.log("3:"+this.commandbox.x);
     }*/
+    update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
+        
+        this.contenttext = 
+            "#include <stdio.h> \n int main(){ \n " +  scene.code_zone_1 +  "(\"HI\"); \n }" 
+            + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
+
+        text.setText(this.contenttext);
+    }
 }
