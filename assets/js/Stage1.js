@@ -1,6 +1,5 @@
 
 import Player from "./Player.js";
-import Minicoding from "./Minicoding.js";
 import Inventory from "./Inventory.js";
 import Dialog from "./Dialog.js";
 
@@ -54,7 +53,6 @@ export default class Stage1 extends Phaser.Scene {
 
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
-        this.minicode = new Minicoding();
 
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
@@ -110,8 +108,6 @@ export default class Stage1 extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
-        /*** 전체 코드에 걍 예시로 넣은 문장 ***/
-        var contenttext = '#include<stdio.h>\nint main(void){printf("hi");return 0;}';
 
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map);
@@ -208,7 +204,6 @@ export default class Stage1 extends Phaser.Scene {
 
     playerOnTile() {
         if(this.onTile) {
-            this.minicode.create(this);
 
             /** 플레이어 대사 **/
             var seq = this.plugins.get('rexsequenceplugin').add();

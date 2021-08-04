@@ -1,6 +1,5 @@
 
 import Player from "./Player.js";
-import Minicoding from "./Minicoding.js";
 import DialogText from "./DialogText.js";
 import Dialog from "./Dialog.js";
 
@@ -18,7 +17,6 @@ export default class TestScene extends Phaser.Scene {
 
     preload() {
         /*** FROM Minicode.js***/
-        this.load.html('input', './assets/js/textInput.html');
 
         this.load.image("tiles", "./assets/images/map.png");
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
@@ -61,7 +59,7 @@ export default class TestScene extends Phaser.Scene {
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
         //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
-        this.phone = this.add.sprite(700,210,'phone').setOrigin(0,0);
+        this.phone = this.add.image(700,210,'phone').setOrigin(0,0);
         this.table = this.add.image(650,200,'table').setOrigin(0,0);
         
         this.phone.setInteractive();
@@ -75,7 +73,6 @@ export default class TestScene extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
         this.player.player.setFlipX(true);
-        this.minicode = new Minicoding();
 
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -218,7 +215,6 @@ export default class TestScene extends Phaser.Scene {
 
     playerOnTile() {
         if(this.onTile) {
-            this.minicode.create(this);
 
             /** 플레이어 대사 **/
             var seq = this.plugins.get('rexsequenceplugin').add();
