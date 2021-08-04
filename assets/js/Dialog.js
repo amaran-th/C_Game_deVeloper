@@ -122,6 +122,23 @@ visible(visible) {
 
   ]
 
+  intro2 = [
+    ['wait-time', 1],
+    ['visible',true],
+    ['print', '\'printf\'?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '(이게 뭐야? 내가 영어를 싫어하긴 하지만 printf가 아니라 print가 맞는 말이라는 것 정돈 안다고. 바보아냐?)'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '(그것보다 이게 왜 우리집에?)'],
+    ['wait-click'],
+    ['print', '(저기있는 저건 또 뭐고? //저 위에 미니코딩창좀 만들어주셈)'],
+    ['wait-click'],
+    ['visible',false],
+
+  ]
+
   talk1 = [
     //['loadTextbox'],
     ['visible',true],
