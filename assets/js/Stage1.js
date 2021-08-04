@@ -47,8 +47,6 @@ export default class Stage1 extends Phaser.Scene {
     
 
         this.onTile = 1;
-
-        console.log("맵이동함");
         
 
     }
@@ -242,20 +240,20 @@ export default class Stage1 extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
 
+
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemPrintf.x+54 && this.itemPrintf.x < this.player.player.x) {
             this.itemPrintf.setVisible(false);
             this.itemPrintfget.setVisible(true);
             this.itemPrintfText.setVisible(true);
-            this.time.delayedCall(3000, function() {
+            this.time.delayedCall(2000, function() { //이초 뒤에 알아서 사라짐
                 this.itemPrintfget.setVisible(false);
                 this.itemPrintfText.setVisible(false);
                 this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
                 this.beforeItemGet = false;
             }, [], this);
-            //삼초 뒤에 사라지는 기능도 넣기
         }
-        if(this.beforeItemGet && this.keyX.isDown) {
+        if(this.itemPrintfget.visible && this.keyX.isDown) {
             this.itemPrintfget.setVisible(false);
             this.itemPrintfText.setVisible(false);
             this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가

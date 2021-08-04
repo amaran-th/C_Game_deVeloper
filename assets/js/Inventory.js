@@ -1,3 +1,5 @@
+//인벤 아래로 넣고 빼는 클릭이 ㅋㅋ 잘 안먹힘 이거 누가 좀 고쳐주세요
+
 export default class inventory {
     preload() {
 
@@ -41,7 +43,7 @@ export default class inventory {
         this.inven.once('pointerdown', () => {
             if(this.invenIn) {this.inven.y = 375;} 
             else { this.inven.y = 550;}
-            console.log('clicked');
+            //console.log('clicked');
             this.invenIn = !this.invenIn;
         })
 
@@ -64,30 +66,3 @@ export default class inventory {
     }
 
 }
-
-/*
-{
-this.codeGet = new Array();
-this.inveNum = 0;
-this.question;
-this.is_action = true;
-this.actNum = 0;
-        
-}
-
-invenSave(geText){
-if (this.is_action === false) { return false; }
-this.is_action = false;
-this.codeGet[this.inveNum] = geText;
-console.log('this.codeGet['+this.inveNum+'] : '+this.codeGet[this.inveNum]+' actNum : '+this.actNum);
-this.inveNum = this.inveNum + 1;
-}
-
-update() {
-
-if((Math.abs(code_piece_1.x - this.player.player.x) <= 100) && (Math.abs(code_piece_1.y - this.player.player.y) <= 50)){
-    code_piece_1.destroy();
-    this.invenSave(code_piece_1.text);
-    this.question = this.add.text(130, 10,'!',{font: "40px Arial", color: '#ff0000'})
-}
-*/
