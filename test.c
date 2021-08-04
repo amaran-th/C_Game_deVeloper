@@ -1,2 +1,5 @@
-#include<stdio.h>
-int main(void){printf("hi");return 0;}
+#include <stdio.h> 
+ int main(){ 
+ printf("HI"); 
+ }2번째 코드 : printf
+3번째 코드 : if
