@@ -51,8 +51,7 @@ export default class inventory {
     }
 
     invenSave(scene, itemName) {
-        scene.invenPlus = false; 
-        //x를 여러번 누른 걸로 인식해서 invenSave가 여러번 불러와지는 거 같음
+        scene.invenPlus = false;  //여러번 불러와지는 거 방지
         this.item[this.item.length] = itemName; // 배열에 아이템을 추가한다.
         // 코드 조각 불러와 배치하기
         console.log('인덱스:', this.item.length);
