@@ -26,7 +26,7 @@ class Command extends Phaser.GameObjects.Image {
         /*** 명령창, 명령창 내용 zone 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
         this.zone = scene.add.zone(map.widthInPixels, 25,  360, 550).setOrigin(0).setInteractive();
-        text = scene.add.text(map.widthInPixels, 25, this.contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+        text = scene.add.text(map.widthInPixels, 100, this.contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
 
         /*** 명령창에 전체코드 띄우고 드래그 할 수 있기위한 설정 ***/
         this.graphics = scene.make.graphics(); 
@@ -100,9 +100,9 @@ class Command extends Phaser.GameObjects.Image {
             });
         } else {
             this.commandbox.x = this.worldView.x + 715; //화면 이동시 명령창 따라가도록 설정
-            text.x = this.worldView.x + 730;
-            this.graphics.fillRect(this.worldView.x + 725, 20, 360, 550); // 화면 이동시 글이 보이는 판을 이동
-            this.zone.x = this.worldView.x + 725;
+            text.x = this.worldView.x + 760;
+            this.graphics.fillRect(text.x -5, 100, 360, 550); // 화면 이동시 글이 보이는 판을 이동
+            this.zone.x = text.x -5;
             this.zone.on('pointermove', function (pointer) {
                 if (pointer.isDown){
                     text.y += (pointer.velocity.y / 350);
