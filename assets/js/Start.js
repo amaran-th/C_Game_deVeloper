@@ -31,7 +31,7 @@ class Start extends Phaser.Scene {
       this.load.image("item", "./assets/images/item.png");
       this.load.image("itemGet", "./assets/images/itemget.png");
 
-    }
+    } 
 
     create() {
       this.hsv = Phaser.Display.Color.HSVColorWheel();

@@ -235,21 +235,19 @@ export default class Stage1 extends Phaser.Scene {
 
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemPrintf.x+54 && this.itemPrintf.x < this.player.player.x) {
+            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
             this.itemPrintf.setVisible(false);
             this.itemPrintfget.setVisible(true);
             this.itemPrintfText.setVisible(true);
-            this.time.delayedCall(2000, function() { //이초 뒤에 알아서 사라짐
+            this.time.delayedCall(1000, function() { //일초 뒤에 알아서 사라짐
                 this.itemPrintfget.setVisible(false);
                 this.itemPrintfText.setVisible(false);
-                //this.intro2();
-                this.beforeItemGet = false;
                 this.invenPlus = true;
             }, [], this);
         }
-        if(this.itemPrintfget.visible && this.keyX.isDown) {
+        if(this.itemPrintfget.visible && this.keyX.isDown) { //x키는 어쩔 수 없음... 그냥 누르지말기
             this.itemPrintfget.setVisible(false);
             this.itemPrintfText.setVisible(false);
-            //this.intro2();
             this.beforeItemGet = false;
             this.invenPlus = true;
         }
@@ -257,9 +255,7 @@ export default class Stage1 extends Phaser.Scene {
         if(this.invenPlus) {
             this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
             this.intro2();
-            
         }
-        
     }
 
     intro2() {
