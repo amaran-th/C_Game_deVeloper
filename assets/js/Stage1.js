@@ -250,7 +250,7 @@ export default class Stage1 extends Phaser.Scene {
             this.time.delayedCall(3000, function() {
                 this.itemPrintfget.setVisible(false);
                 this.itemPrintfText.setVisible(false);
-                this.inventory.invenSave('printf'); //인벤토리에 아이템 추가
+                this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
                 this.beforeItemGet = false;
             }, [], this);
             //삼초 뒤에 사라지는 기능도 넣기
@@ -258,13 +258,13 @@ export default class Stage1 extends Phaser.Scene {
         if(this.beforeItemGet && this.keyX.isDown) {
             this.itemPrintfget.setVisible(false);
             this.itemPrintfText.setVisible(false);
-            this.inventory.invenSave('printf');
+            this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
             this.beforeItemGet = false;
         }
         
     }
 
-    
+
 
     playerOnTile() {
         if(this.onTile) {
