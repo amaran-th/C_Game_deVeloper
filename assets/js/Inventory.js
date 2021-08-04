@@ -20,12 +20,10 @@ export default class inventory {
 
         this.inven.setInteractive();
 
+
         this.item = new Array(); //저장되는 아이템
         this.itemNum = 0;
-        console.log('인벤토리 생성');
-        console.log(this.inven.y);
-
-        this.invenIn = true;
+        this.invenIn = true; //인벤토리 창이 내려가있는지 올라가있는지
     }
     update() {
         console.log(this.invenIn);
@@ -36,15 +34,12 @@ export default class inventory {
             console.log('clicked');
             this.invenIn = !this.invenIn;
         })
-
-
-        
-
-
     }
 
-    invenSave() {
-
+    invenSave(itemName) {
+        this.item[this.itemNum] = itemName; // 배열에 아이템을 추가한다.
+        this.itemNum += 1;
+        console.log(this.item[0]);
     }
 
 }
