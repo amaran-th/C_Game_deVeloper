@@ -105,7 +105,7 @@ class Command extends Phaser.GameObjects.Image {
             this.zone.x = this.worldView.x + 725;
             this.zone.on('pointermove', function (pointer) {
                 if (pointer.isDown){
-                    text.y += (pointer.velocity.y / 10);
+                    text.y += (pointer.velocity.y / 350);
                     text.y = Phaser.Math.Clamp(text.y, -400, 600);
                     //this.extext.setVisible(true);
                 }
