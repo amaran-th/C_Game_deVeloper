@@ -52,7 +52,7 @@ export default class Stage1 extends Phaser.Scene {
     
     create () {
 
-        this.inventory = new Inventory();
+        this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
         this.minicode = new Minicoding();
 
@@ -80,9 +80,8 @@ export default class Stage1 extends Phaser.Scene {
 
          /** 아이템 얻었을 때 뜨는 이미지 **/
          this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-         this.itemPrintfText = this.add.text(550,300,'printf',{
-             color: '#000000',
-             fontsize: '30px',
+         this.itemPrintfText = this.add.text(500,270,'printf',{
+            font: "30px Arial Black", fill: "#000000" 
          }).setOrigin(0,0);
          this.itemPrintfget.setVisible(false);
          this.itemPrintfText.setVisible(false);
@@ -192,36 +191,12 @@ export default class Stage1 extends Phaser.Scene {
             console.log(" compile finish!!!");
            
         });
-           
-        /*** 인벤토리 버튼 활성화 ***/
-        this.inventory_button = this.add.image(map.widthInPixels - 100, 20,'inventory_button').setOrigin(0,0);
-        this.inventory_button.setInteractive();
-        this.invenZone = this.add.zone(map.widthInPixels + 745, 300, 100, 570).setRectangleDropZone(100,550);
-        this.invenGra = this.add.graphics();
-        this.invenGra.lineStyle(4, 0x00ff00);
-
         console.log('itme 위치', this.itemPrintf.x);
     }
 
     update() {
         this.player.update();
         this.inventory.update();
-
-        /*** 인벤토리 ***/
-        if(state == 0) {
-            this.inventory_button.on('pointerdown', () => {
-                this.invenGra.setVisible(true);
-                state = 1;
-            });
-        } else {
-            this.invenZone.x = this.worldView.x + 745; //화면 이동시 따라가도록 설정
-            this.invenGra.strokeRect(this.invenZone.x - this.invenZone.input.hitArea.width / 2, this.invenZone.y - this.invenZone.input.hitArea.height / 2, this.invenZone.input.hitArea.width, this.invenZone.input.hitArea.height);
-            this.inventory_button.on('pointerdown', () => {
-                this.invenGra.setVisible(false);
-                state = 0;
-            });
-        }
-
                 
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
@@ -253,6 +228,7 @@ export default class Stage1 extends Phaser.Scene {
         }
 
         if(this.invenPlus) {
+            //this.inventory.invenSave2(this, 0);
             this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
             this.intro2();
         }
