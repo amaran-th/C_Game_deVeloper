@@ -255,6 +255,7 @@ export default class Stage1 extends Phaser.Scene {
         if(this.invenPlus) {
             this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
             this.intro2();
+            this.invenPlus = false;
         }
     }
 
