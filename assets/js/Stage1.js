@@ -46,8 +46,6 @@ export default class Stage1 extends Phaser.Scene {
     
 
         this.onTile = 1;
-
-        console.log("맵이동함");
         
 
     }
@@ -73,21 +71,22 @@ export default class Stage1 extends Phaser.Scene {
 
         /** 아이템 만들기 **/
         this.itemPrintf = this.add.image(360,330,'item'); 
-        /** 아이템 얻었을 때 뜨는 이미지 **/
-        this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemPrintfText = this.add.text(550,300,'printf',{
-            color: '#000000',
-            fontsize: '30px',
-        }).setOrigin(0,0);
-        this.itemPrintfget.setVisible(false);
-        this.itemPrintfText.setVisible(false);
-        this.beforeItemGet = true; //한 번만 뜨도록
+       
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
         this.player.player.setFlipX(true);
 
+         /** 아이템 얻었을 때 뜨는 이미지 **/
+         this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
+         this.itemPrintfText = this.add.text(550,300,'printf',{
+             color: '#000000',
+             fontsize: '30px',
+         }).setOrigin(0,0);
+         this.itemPrintfget.setVisible(false);
+         this.itemPrintfText.setVisible(false);
+         this.beforeItemGet = true; //한 번만 뜨도록
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -233,25 +232,29 @@ export default class Stage1 extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
 
+
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemPrintf.x+54 && this.itemPrintf.x < this.player.player.x) {
             this.itemPrintf.setVisible(false);
             this.itemPrintfget.setVisible(true);
             this.itemPrintfText.setVisible(true);
-            //삼초 뒤에 사라지는 기능도 넣기
+            this.time.delayedCall(2000, function() { //이초 뒤에 알아서 사라짐
+                this.itemPrintfget.setVisible(false);
+                this.itemPrintfText.setVisible(false);
+                this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
+                this.beforeItemGet = false;
+            }, [], this);
         }
-        if(this.keyX.isDown) {
+        if(this.itemPrintfget.visible && this.keyX.isDown) {
             this.itemPrintfget.setVisible(false);
             this.itemPrintfText.setVisible(false);
+            this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
             this.beforeItemGet = false;
-        }
-
-        /** 아이템 얻은 뒤에 인벤에 넣기 + 대사 출력 **/
-        if(!this.beforeItemGet) {
-            
         }
         
     }
+
+
 
     playerOnTile() {
         if(this.onTile) {
