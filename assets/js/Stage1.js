@@ -249,20 +249,39 @@ export default class Stage1 extends Phaser.Scene {
             this.time.delayedCall(2000, function() { //이초 뒤에 알아서 사라짐
                 this.itemPrintfget.setVisible(false);
                 this.itemPrintfText.setVisible(false);
-                this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
+                //this.intro2();
                 this.beforeItemGet = false;
+                this.invenPlus = true;
             }, [], this);
         }
         if(this.itemPrintfget.visible && this.keyX.isDown) {
             this.itemPrintfget.setVisible(false);
             this.itemPrintfText.setVisible(false);
-            this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
+            //this.intro2();
             this.beforeItemGet = false;
+            this.invenPlus = true;
+        }
+
+        if(this.invenPlus) {
+            this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
+            this.intro2();
+            
         }
         
     }
 
+    intro2() {
+        this.player.playerPaused = true; //플레이어 얼려두기
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });
 
+    }
 
     playerOnTile() {
         if(this.onTile) {
