@@ -61,7 +61,9 @@ export default class TestScene extends Phaser.Scene {
         //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
         this.phone = this.add.image(700,210,'phone').setOrigin(0,0);
         this.table = this.add.image(650,200,'table').setOrigin(0,0);
-        
+        this.npc1 = this.add.image(450,400,'npc1').setOrigin(0,0);
+        this.npc2 = this.add.image(550,400,'npc2').setOrigin(0,0);
+        this.npc3 = this.add.image(650,400,'npc3').setOrigin(0,0);
         this.phone.setInteractive();
         
         
