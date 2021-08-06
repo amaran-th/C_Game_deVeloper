@@ -212,7 +212,7 @@ export default class Stage1 extends Phaser.Scene {
 
     intro3() {
         this.command.commandbox.setVisible(true);   ///작동안됨!!!!!!!!!!!!!!!!!
-        this.command.text.setVisible(true);
+        //this.command.text.setVisible(true);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
