@@ -116,11 +116,13 @@ export default class Stage1 extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map);
 
+        // 드래그앤 드랍할 조각
+        this.drag_piece = ['printf', 'if', 'else'];
         // 드래그앤드랍
-        this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
-        this.draganddrop_2 = new DragAndDrop(this, 500, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
-        this.draganddrop_3 = new DragAndDrop(this, 700, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
-        
+        this.draganddrop_1 = new DragAndDrop(this, 470, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
+       
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
 
