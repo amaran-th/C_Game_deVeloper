@@ -34,7 +34,6 @@ class Start extends Phaser.Scene {
       /**휴대폰, npc 로드 */
       this.load.image("phone", "./assets/images/phone.png");
       this.load.image("npc3", "./assets/images/npc/npc3.png");
-      this.load.image("table", "./assets/images/table.png");
 
       /** 드랍 리셋 버든 로드 **/
       this.load.image("reset_button", "./assets/images/reset_button.png");
