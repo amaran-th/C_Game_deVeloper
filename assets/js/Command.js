@@ -16,7 +16,7 @@ class Command extends Phaser.GameObjects.Image {
             + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
 
         /*** 명령창버튼 활성화 ***/
-        this.entire_code_button = scene.add.image(20,20,'entire_code_button').setOrigin(0,0);
+        this.entire_code_button = scene.add.image(20,10,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
 
         /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
@@ -105,7 +105,7 @@ class Command extends Phaser.GameObjects.Image {
             this.zone.x = text.x -5;
             this.zone.on('pointermove', function (pointer) {
                 if (pointer.isDown){
-                    text.y += (pointer.velocity.y / 350);
+                    text.y += (pointer.velocity.y / 8000);
                     text.y = Phaser.Math.Clamp(text.y, -400, 600);
                     //this.extext.setVisible(true);
                 }
