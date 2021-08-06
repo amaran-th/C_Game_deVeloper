@@ -17,7 +17,7 @@ export default class Dialog extends Phaser.Events.EventEmitter {
       this['console'] = this.consoleOut;
       this['visible'] = this.visible;
       this['setFace'] = this.setFace;
-
+      this['setExtraFace'] = this.setFaceact;
       this.testScene = new TestScene();
 
   }
@@ -105,6 +105,13 @@ visible(visible) {
     this.playerFace.setFrame(i);
   }
 
+  setFaceact(extraFace,i) { //key , 프래임
+    this.playerFace.setVisible(false);
+    var extraFace = this.scene.add.sprite(this.script.x + 600 ,this.script.y+50, extraFace , 0);
+    extraFace.setFrame(i);
+    this.scene.input.once('pointerup', function () {extraFace.destroy(); this.playerFace.setVisible(true);} , this);
+  }
+
 
   intro = [
     ['visible',false],
@@ -123,7 +130,6 @@ visible(visible) {
   ]
 
   intro2 = [
-    ['wait-time', 1],
     ['visible',true],
     ['print', '\'printf\'?'],
     ['wait-click'],
@@ -133,17 +139,32 @@ visible(visible) {
     ['setFace', 0],
     ['print', '(그것보다 이게 왜 우리집에?)'],
     ['wait-click'],
-    ['print', '(저기있는 저건 또 뭐고? //저 위에 미니코딩창좀 만들어주셈)'],
+    ['setExtraFace', 'entire_code_button', 0],
+    ['print', '띠링띠링!'],
     ['wait-click'],
     ['visible',false],
 
   ]
+
+  intro3 = [
+    ['visible',true],
+    ['print', '휴대폰에 이건 또 뭐고??'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '......'],
+    ['wait-click'],
+    ['print', '이걸로 뭔가 해야하는 걸까? 인벤토리 창을 열어서 아까 주운 걸 사용해보자.'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
 
   talk1 = [
     //['loadTextbox'],
     ['visible',true],
     ['print', '플레이어 위치를 못읽어와요'],
     ['wait-click'],
+    ['move'],
     ['print', '위치는 그냥 일일이 적어야해요'],
     ['wait-click'],
     ['print', '정말 짱이다'],
