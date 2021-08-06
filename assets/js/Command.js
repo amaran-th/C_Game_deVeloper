@@ -11,12 +11,14 @@ class Command extends Phaser.GameObjects.Image {
         this.worldView = scene.cameras.main.worldView;
 
         /*** 전체 코드에 걍 예시로 넣은 문장 ***/
+        /*
         this.contenttext = 
             "#include <stdio.h> \n int main(){ \n " +  scene.code_zone_1 +  "(\"HI\"); \n }" 
             + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
+        */
 
         /*** 명령창버튼 활성화 ***/
-        this.entire_code_button = scene.add.image(20,20,'entire_code_button').setOrigin(0,0);
+        this.entire_code_button = scene.add.image(20,10,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
 
         /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
@@ -26,7 +28,7 @@ class Command extends Phaser.GameObjects.Image {
         /*** 명령창, 명령창 내용 zone 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
         this.zone = scene.add.zone(map.widthInPixels, 100,  360, 550).setOrigin(0).setInteractive();
-        text = scene.add.text(map.widthInPixels, 100, this.contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+        text = scene.add.text(map.widthInPixels, 100, ' ', { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
 
         /*** 명령창에 전체코드 띄우고 드래그 할 수 있기위한 설정 ***/
         this.graphics = scene.make.graphics(); 
@@ -105,7 +107,7 @@ class Command extends Phaser.GameObjects.Image {
             this.zone.x = text.x -5;
             this.zone.on('pointermove', function (pointer) {
                 if (pointer.isDown){
-                    text.y += (pointer.velocity.y / 350);
+                    text.y += (pointer.velocity.y / 10000);
                     text.y = Phaser.Math.Clamp(text.y, -400, 600);
                     //this.extext.setVisible(true);
                 }
@@ -128,12 +130,18 @@ class Command extends Phaser.GameObjects.Image {
         });
         //console.log("3:"+this.commandbox.x);
     }*/
+
     update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
-        
+        /*
         this.contenttext = 
             "#include <stdio.h> \n int main(){ \n " +  scene.code_zone_1 +  "(\"HI\"); \n }" 
             + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
 
         text.setText(this.contenttext);
+        */
+    }
+    /*** 스테이지 마다 글 바꿔주기 위해서? ***/
+    phonetext( ctext ){
+        text.setText(ctext);
     }
 }
