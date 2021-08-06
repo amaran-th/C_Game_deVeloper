@@ -1,4 +1,5 @@
 //인벤 아래로 넣고 빼는 클릭이 ㅋㅋ 잘 안먹힘 이거 누가 좀 고쳐주세요
+//inven.y 위치가 넣었을때랑 뺐을 때 값을 내가 입력한 값이랑 다르게 인식하나봄... 넣은 상태에서 아이템 추가했을 때 위치랑 뺀 상태에서 아이템 추가했을 때 위치가 다름
 
 export default class inventory {
     preload() {
@@ -38,7 +39,7 @@ export default class inventory {
         }
     }
     update() {
-        //console.log(this.invenIn);
+        //console.log(this.invenIn); 
 
         this.inven.once('pointerdown', () => {
             if(this.invenIn) { this.inven.y = 375;} 
@@ -51,7 +52,7 @@ export default class inventory {
     }
 
     invenSave(scene, itemName) {
-        scene.invenPlus = false;  //여러번 불러와지는 거 방지
+        //scene.invenPlus = false;  //여러번 불러와지는 거 방지
         this.item[this.item.length] = itemName; // 배열에 아이템을 추가한다.
         // 코드 조각 불러와 배치하기
         console.log('인덱스:', this.item.length);
@@ -59,6 +60,7 @@ export default class inventory {
              font: "30px Arial Black",
              fill: "#f9cb9c" 
             });
+        console.log('글자 위치:', this.newItem.y);
         this.newItem.setInteractive();
         scene.input.setDraggable(this.newItem);
         this.inven.add(this.newItem);

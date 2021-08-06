@@ -1,5 +1,5 @@
 var state = 0;
-var text;
+//var text;
         
 class Command extends Phaser.GameObjects.Image {
     constructor(scene, map) {
@@ -26,12 +26,12 @@ class Command extends Phaser.GameObjects.Image {
         /*** 명령창, 명령창 내용 zone 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
         this.zone = scene.add.zone(map.widthInPixels, 100,  360, 550).setOrigin(0).setInteractive();
-        text = scene.add.text(map.widthInPixels, 100, this.contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+        this.text = scene.add.text(map.widthInPixels, 100, this.contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
 
         /*** 명령창에 전체코드 띄우고 드래그 할 수 있기위한 설정 ***/
         this.graphics = scene.make.graphics(); 
         var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
-        text.setMask(mask);
+        this.text.setMask(mask);
 
 
         /*** 컴파일 버튼 누를시 컴파일러 동작. ***/ //@@@@@@@@@@@
@@ -72,7 +72,7 @@ class Command extends Phaser.GameObjects.Image {
                 {
                     //  Flash the prompt 이거 뭔지 모르겠음 다른 곳에서 긁어옴
                     this.scene.tweens.add({
-                        targets: text,
+                        targets: this.text,
                         alpha: 0.2,
                         duration: 250,
                         ease: 'Power3',
@@ -94,26 +94,26 @@ class Command extends Phaser.GameObjects.Image {
         if(state == 0) {
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
-                text.setVisible(true);
+                this.text.setVisible(true);
                 //this.slidebox(); //슬라이드 기능 수치가 중간에 이상해져서 될 때 있고 안 될 때 있음(일단 빼두겠음)
                 state = 1;
             });
         } else {
             this.commandbox.x = this.worldView.x + 715; //화면 이동시 명령창 따라가도록 설정
-            text.x = this.worldView.x + 760;
-            this.graphics.fillRect(text.x -5, 100, 360, 550); // 화면 이동시 글이 보이는 판을 이동
-            this.zone.x = text.x -5;
+            this.text.x = this.worldView.x + 760;
+            this.graphics.fillRect(this.text.x -5, 100, 360, 550); // 화면 이동시 글이 보이는 판을 이동
+            this.zone.x = this.text.x -5;
             this.zone.on('pointermove', function (pointer) {
                 if (pointer.isDown){
-                    text.y += (pointer.velocity.y / 350);
-                    text.y = Phaser.Math.Clamp(text.y, -400, 600);
+                    this.text.y += (pointer.velocity.y / 350);
+                    this.text.y = Phaser.Math.Clamp(this.text.y, -400, 600);
                     //this.extext.setVisible(true);
                 }
             });
 
             this.entire_code_button.on('pointerdown', () => {
                 this.commandbox.setVisible(false);
-                text.setVisible(false);
+                this.text.setVisible(false);
                 state = 0;
             });
         }
@@ -134,6 +134,6 @@ class Command extends Phaser.GameObjects.Image {
             "#include <stdio.h> \n int main(){ \n " +  scene.code_zone_1 +  "(\"HI\"); \n }" 
             + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
 
-        text.setText(this.contenttext);
+        this.text.setText(this.contenttext);
     }
 }

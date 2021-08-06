@@ -1,6 +1,5 @@
 
 import Player from "./Player.js";
-import Minicoding from "./Minicoding.js";
 import Inventory from "./Inventory.js";
 import Dialog from "./Dialog.js";
 
@@ -54,7 +53,6 @@ export default class Stage1 extends Phaser.Scene {
 
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
-        this.minicode = new Minicoding();
 
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
@@ -110,8 +108,6 @@ export default class Stage1 extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
-        /*** 전체 코드에 걍 예시로 넣은 문장 ***/
-        var contenttext = '#include<stdio.h>\nint main(void){printf("hi");return 0;}';
 
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map);
@@ -146,14 +142,6 @@ export default class Stage1 extends Phaser.Scene {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
 
-           
-        /*** 인벤토리 버튼 활성화 ***/
-        this.inventory_button = this.add.image(map.widthInPixels - 100, 20,'inventory_button').setOrigin(0,0);
-        this.inventory_button.setInteractive();
-        this.invenZone = this.add.zone(map.widthInPixels + 745, 300, 100, 570).setRectangleDropZone(100,550);
-        this.invenGra = this.add.graphics();
-        this.invenGra.lineStyle(4, 0x00ff00);
-
         console.log('itme 위치', this.itemPrintf.x);
     }
 
@@ -178,23 +166,30 @@ export default class Stage1 extends Phaser.Scene {
             this.itemPrintf.setVisible(false);
             this.itemPrintfget.setVisible(true);
             this.itemPrintfText.setVisible(true);
-            this.time.delayedCall(1000, function() { //일초 뒤에 알아서 사라짐
-                this.itemPrintfget.setVisible(false);
-                this.itemPrintfText.setVisible(false);
-                this.invenPlus = true;
-            }, [], this);
+            this.tweens.add({
+                targets: [this.itemPrintfget, this.itemPrintfText],
+                alpha: 0,
+                duration: 2000,
+                ease: 'Linear',
+                repeat: 0,
+                onComplete: ()=>{this.invenPlus = true;}
+            }, this);
         }
-        if(this.itemPrintfget.visible && this.keyX.isDown) { //x키는 어쩔 수 없음... 그냥 누르지말기
+
+
+        /* x 키 눌렀을 때 바로 사라지게 하는 건데 대사 많이 출력하는 오류있음
+        if(this.itemPrintfget.visible && this.keyX.isDown) {
             this.itemPrintfget.setVisible(false);
             this.itemPrintfText.setVisible(false);
             this.beforeItemGet = false;
             this.invenPlus = true;
         }
+        */
 
         if(this.invenPlus) {
-            //this.inventory.invenSave2(this, 0);
             this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
             this.intro2();
+            this.invenPlus = false;
         }
     }
 
@@ -206,22 +201,20 @@ export default class Stage1 extends Phaser.Scene {
         .load(this.dialog.intro2, this.dialog)
         .start();
         seq.on('complete', () => {
+            this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
+            this.time.delayedCall( 1000, () => {  this.intro3(); }, [], this);
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
-
     }
 
-    playerOnTile() {
-        if(this.onTile) {
-            this.minicode.create(this);
-
-            /** 플레이어 대사 **/
-            var seq = this.plugins.get('rexsequenceplugin').add();
-            this.dialog.loadTextbox(this); //텍스트박스(다이얼로그 박스)를 불러와주는 함수를 따로 또 적어줘야함(scene 지정 문제 때문에)
-            seq
-                .load(this.dialog.talk1, this.dialog)
-                .start();
-        }
+    intro3() {
+        this.command.commandbox.setVisible(true);   ///작동안됨!!!!!!!!!!!!!!!!!
+        this.command.text.setVisible(true);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro3, this.dialog)
+        .start();
     }
 
 }

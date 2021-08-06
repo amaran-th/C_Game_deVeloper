@@ -1,6 +1,5 @@
 
 import Player from "./Player.js";
-import Minicoding from "./Minicoding.js";
 import DialogText from "./DialogText.js";
 import Dialog from "./Dialog.js";
 
@@ -18,7 +17,6 @@ export default class TestScene extends Phaser.Scene {
 
     preload() {
         /*** FROM Minicode.js***/
-        this.load.html('input', './assets/js/textInput.html');
 
         this.load.image("tiles", "./assets/images/map.png");
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
@@ -71,7 +69,6 @@ export default class TestScene extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
         this.player.player.setFlipX(true);
-        this.minicode = new Minicoding();
 
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -218,7 +215,6 @@ export default class TestScene extends Phaser.Scene {
 
     playerOnTile() {
         if(this.onTile) {
-            this.minicode.create(this);
 
             /** 플레이어 대사 **/
             var seq = this.plugins.get('rexsequenceplugin').add();
