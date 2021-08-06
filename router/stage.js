@@ -16,10 +16,10 @@ router.route('/')
             ,{
             where: { id: req.session.uid }//1. 현재 로그인한 사용자
           });
-
-        var update_stage =  req.session.stage + 1;
-        var responseData = {'is_logined':true, 'stage': update_stage};
-        req.session.stage =  update_stage; //DB에서는 업데이트 됬으나, 세션값도 업데이트 해야함.
+          
+        req.session.stage++;
+        var responseData = {'is_logined':true, 'stage': req.session.stage};
+         //DB에서는 업데이트 됬으나, 세션값도 업데이트 해야함.
 
         res.json(responseData);
     }

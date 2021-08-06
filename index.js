@@ -30,7 +30,7 @@ app.use(
       cookie: {
         HttpOnly : true,//클라이언트는 쿠키못보게
         secure : false, //http아닌 환경도 가능한지. 배포시에는 true로
-        maxAge : 60000 * 30, //60000밀리초 (1분) * 30 = 30분
+      //  maxAge : 60000 * 30, //60000밀리초 (1분) * 30 = 30분
       },
     })
   );
