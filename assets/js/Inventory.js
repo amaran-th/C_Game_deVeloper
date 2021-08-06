@@ -53,8 +53,6 @@ export default class inventory {
             //console.log('clicked');
             this.invenIn = !this.invenIn;
         })
-
-        this.exclamationIsReal = false;
     }
 
     invenSave(scene, itemName) {
