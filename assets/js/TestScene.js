@@ -102,6 +102,10 @@ export default class TestScene extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map);
 
+        // 폰 화면 글자 설정
+        var text1 = "heyhey!!\n드이어 일어났냐! \n지금은 바쁘니 일단 문 쪽으로 가보자!";
+        this.command.phonetext(text1);
+
         // 드래그앤드랍
         this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
         this.draganddrop_2 = new DragAndDrop(this, 500, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
