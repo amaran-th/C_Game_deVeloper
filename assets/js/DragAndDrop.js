@@ -4,38 +4,37 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         // ...
         scene.add.existing(this);
         
-        /*** 드래그앤드랍 ***/
-        //코드 조각 텍스트 (후에 문장으로 바꿔 웹컴파일러 돌릴때 용이하도록)
-        var code_piece_text_1 = 'printf';
-        var code_piece_text_2 = 'if';
-            //... 각 스테이지 구현할 때마다 추가 예정
-        
+        /*** 드래그앤드랍 ***/        
         // 코드 조각 불러와 배치하기
-        var code_piece_1 = scene.add.text(10, 107, code_piece_text_1, { font: "30px Arial Black", fill: "#ffccff" });
-        var code_piece_2 = scene.add.text(10, 140, code_piece_text_2, { font: "30px Arial Black", fill: "#ffccff" });
+        var code_piece = [];  // 배열로 줘서 씬에서 할당한 코드조각 만큼을 text 생성 변수로 주어줌
+        var code_piece_x = 460; // 처음 코드조각 x좌표 위치 이건 나중에 inventory 창 부분에 맞게 수정 예정
 
-        code_piece_1.setInteractive();
-        code_piece_2.setInteractive();
-
-        // 드래그 가능하도록
-        scene.input.setDraggable(code_piece_1); 
-        scene.input.setDraggable(code_piece_2);
+        //console.log('코드조각 수 : ' + scene.drag_piece.length);
+        for (var i = 0; i < scene.drag_piece.length; i++){
+            const j = i;
+            code_piece[j] = scene.add.text(code_piece_x, 55, scene.drag_piece[i], { font: "30px Arial Black", fill: "#ffccff" }).setInteractive();
+            scene.input.setDraggable(code_piece[j]); // 드래그 가능하도록
+            code_piece_x += 100; // 각 코드 조각 위치 설정
+            code_piece[j].on('pointerover', function () { 
+                //여기 부분 0을 i로 하면 인 식 못함
+                code_piece[j].setTint(0xf9cb9c);
+            });
+            // 마우스가 코드 조각 벗어났을때 원래 색으로!
+            code_piece[j].on('pointerout', function () { 
+                code_piece[j].clearTint();
+            });
+        }
 
         // 마우스가 코드 조각 위에 위치했을 때 색 변하도록
-        code_piece_1.on('pointerover', function () { 
-            code_piece_1.setTint(0xf9cb9c);
+        // for문 안에 넣으면 setInt 안 돼서 이건 각각 해줘야 함
+        // 근데 각각 하면 코드조각 수가 여기서 배정한 수보다 적은 경우 선언 안 됐다고 에러 뜸.
+        /*code_piece[0].on('pointerover', function () { 
+            code_piece[0].setTint(0xf9cb9c);
         });
-        code_piece_2.on('pointerover', function () { 
-            code_piece_2.setTint(0xf9cb9c);
-        });
-
         // 마우스가 코드 조각 벗어났을때 원래 색으로!
-        code_piece_1.on('pointerout', function () { 
-            code_piece_1.clearTint();
-        });
-        code_piece_2.on('pointerout', function () { 
-            code_piece_2.clearTint();
-        });
+        code_piece[0].on('pointerout', function () { 
+            code_piece[0].clearTint();
+        });*/
 
         // 드랍 영역 선으로 임시 표시
         var graphics = scene.add.graphics();
@@ -67,33 +66,96 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         scene.input.on('drop', function (pointer, gameObject, dropZone) {
             gameObject.x = dropZone.x - 50; // 이거 왜 위치 중앙이 아니라 오른쪽 밑에 치우치는 지 모르겠음.. 임의로 위치 조정해둠
             gameObject.y = dropZone.y - 15;
-
             if(dropZone.name == "1"){
                 scene.code_zone_1 = gameObject._text;
+                this.dropzone = 1; // dragend부분에서 쓰려하는데 거긴 파라미터에 dropZone없어서 여기서 지정해줌
             }
             else if (dropZone.name == "2"){
                 scene.code_zone_2 = gameObject._text;
+                this.dropzone = 2;
             }
             else if (dropZone.name == "3"){
                 scene.code_zone_3 = gameObject._text;
+                this.dropzone = 3;
             }
-
             //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
         });
+
         // 드랍 위치가 아니면 원래 자리로 돌아가도록 함 + 색 조정
         scene.input.on('dragend', function (pointer, gameObject, dropped) {
-            if (!dropped)
-            {
-                gameObject.x = gameObject.input.dragStartX;
-                gameObject.y = gameObject.input.dragStartY;
+            //console.log(this.dropzone);
+            //console.log('scene.drop_state_1 > '+ scene.drop_state_1);
+            //console.log('scene.drop_state_2 > '+ scene.drop_state_2);
+            //console.log('scene.drop_state_3 > '+ scene.drop_state_3);
+            switch (this.dropzone) {
+                case 1:
+                    if (!dropped || scene.drop_state_1) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_1 = 1;
+                    }, 1000);
+                    break;
+                case 2:
+                    if (!dropped || scene.drop_state_2) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_2 = 1;
+                    }, 1000);
+                    break;
+                case 3:
+                    if (!dropped || scene.drop_state_3) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_3 = 1;
+                    }, 1000);
+                    break;
+                default:
+                    console.log('DragAndDrop부분 dragend 부분 원래 이 부분 뜨면 안 되는데.. 클래스 이름 바로 받아와야 하는데 풀 받아오면서 이부분으로 온다.. 일단 작동되는 건 이상 없게 딴 코드 추가 해둠..');
+                    gameObject.x = gameObject.input.dragStartX;
+                    gameObject.y = gameObject.input.dragStartY;
             }
+            
             graphics.clear();
             graphics.lineStyle(2, 0xffff00);
             graphics.strokeRect(x - width / 2, y - height / 2, width, height);
         });
         
-    }
-    // ...
-
-    // preUpdate(time, delta) {}
+        //초기화 시키기
+        var reset_button = scene.add.image(710, 55, 'reset_button');
+        reset_button.setInteractive();
+        reset_button.on('pointerover', function () {
+            reset_button.setTint(0x4A6BD6);
+        });
+        reset_button.on('pointerout', function () {
+            reset_button.clearTint();
+        });
+        reset_button.on('pointerup', function () {
+            console.log('reset');
+            var code_piece_reset_x = 460;
+            for (var i = 0; i < scene.drag_piece.length; i++){
+                code_piece[i].x = code_piece_reset_x;
+                code_piece[i].y = 55;
+                code_piece_reset_x += 100;
+            }
+            //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
+            scene.drop_state_1 = 0;
+            scene.drop_state_2 = 0;
+            scene.drop_state_3 = 0;
+        });
+        
+        if (scene.code_piece_add_state != 2) {
+            for (var i = 0; i < scene.drag_piece.length; i++){
+                code_piece[i].destroy();
+            }
+            //console.log('code piece destroyed');
+                
+            scene.code_piece_add_state += 1;
+        }        
+    } 
 }
