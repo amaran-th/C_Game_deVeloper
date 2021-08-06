@@ -58,15 +58,9 @@ export default class TestScene extends Phaser.Scene {
         this.worldLayer = map.createLayer("ground", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
-        //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
-        this.phone = this.add.image(700,210,'phone').setOrigin(0,0);
-        this.table = this.add.image(650,200,'table').setOrigin(0,0);
-        this.npc1 = this.add.image(450,400,'npc1').setOrigin(0,0);
-        this.npc2 = this.add.image(550,400,'npc2').setOrigin(0,0);
-        this.npc3 = this.add.image(650,400,'npc3').setOrigin(0,0);
-        this.phone.setInteractive();
-        
-        
+        //휴대폰, npc
+        this.phone = this.add.image(700,210,'phone').setOrigin(0,0); 
+    
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
@@ -149,6 +143,28 @@ export default class TestScene extends Phaser.Scene {
          this.code_zone_1 = "";
          this.code_zone_2 = "";
          this.code_zone_3 = "";
+
+         /*** Stage Clear! 창 불러오기 ***/
+     //    this.StageClear = new StageClear(this);
+         this.npc3 = this.add.image(150,400,'npc3').setOrigin(0,0);
+        this.npc3.setInteractive();
+
+        this.npc3.on('pointerdown', () => {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+    
+            xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
+                if(result.is_logined){
+                    console.log("Stage : " + result.stage)
+                }else{
+                    console.log("로그인이 정상적으로 이루어지지 않았습니다.")
+                }                
+            });
+        });
+         
         
     }
 

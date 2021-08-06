@@ -28,6 +28,10 @@ module.exports = class User extends Sequelize.Model {
                 type: Sequelize.STRING(100),
                 allowNull: false,
             },
+            stage: {
+                type: Sequelize.INTEGER(20),
+                allowNull: false,
+            },
         }, { //2번째 인수: 테이블 자체에 관한 정의,
             sequelize,
             timestamps: false,

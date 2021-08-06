@@ -60,6 +60,7 @@ router.route('/')
                 id: id,
                 pw: hashPw, // 그냥 pw가 아님!!
                 salt: salt,
+                stage: 0,
             });
 
             console.log("==Success to INSERT new user==");

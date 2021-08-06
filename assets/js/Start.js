@@ -31,12 +31,9 @@ class Start extends Phaser.Scene {
       this.load.image("item", "./assets/images/item.png");
       this.load.image("itemGet", "./assets/images/itemget.png");
 
-      /**휴대폰, 서랍장 이미지 로드 (나중에 서랍장은 map으로) */
+      /**휴대폰, npc 로드 */
       this.load.image("phone", "./assets/images/phone.png");
-      this.load.image("table", "./assets/images/table.png");
-      this.load.image("npc1", "./assets/images/npc1.png");
-      this.load.image("npc2", "./assets/images/npc2.png");
-      this.load.image("npc3", "./assets/images/npc3.png");
+      this.load.image("npc3", "./assets/images/npc/npc3.png");
     } 
 
     create() {
