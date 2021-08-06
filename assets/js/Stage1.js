@@ -197,12 +197,14 @@ export default class Stage1 extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
-            this.time.delayedCall( 1000, () => { this.intro3() }, [], this);
+            this.time.delayedCall( 1000, () => {  this.intro3(); }, [], this);
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
     }
 
     intro3() {
+        this.command.commandbox.setVisible(true);   ///작동안됨!!!!!!!!!!!!!!!!!
+        this.command.text.setVisible(true);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
