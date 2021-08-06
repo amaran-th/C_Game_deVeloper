@@ -11,8 +11,8 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
             //... 각 스테이지 구현할 때마다 추가 예정
         
         // 코드 조각 불러와 배치하기
-        var code_piece_1 = scene.add.text(50, 100, code_piece_text_1, { font: "30px Arial Black", fill: "#fff" });
-        var code_piece_2 = scene.add.text(50, 135, code_piece_text_2, { font: "30px Arial Black", fill: "#fff" });
+        var code_piece_1 = scene.add.text(50, 80, code_piece_text_1, { font: "30px Arial Black", fill: "#ffccff" });
+        var code_piece_2 = scene.add.text(50, 115, code_piece_text_2, { font: "30px Arial Black", fill: "#ffccff" });
 
         code_piece_1.setInteractive();
         code_piece_2.setInteractive();
@@ -23,10 +23,10 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
 
         // 마우스가 코드 조각 위에 위치했을 때 색 변하도록
         code_piece_1.on('pointerover', function () { 
-            code_piece_1.setTint(0x44ff44);
+            code_piece_1.setTint(0xf9cb9c);
         });
         code_piece_2.on('pointerover', function () { 
-            code_piece_2.setTint(0x44ff44);
+            code_piece_2.setTint(0xf9cb9c);
         });
 
         // 마우스가 코드 조각 벗어났을때 원래 색으로!

@@ -1,9 +1,7 @@
 
 import Player from "./Player.js";
-import Minicoding from "./Minicoding.js";
 import DialogText from "./DialogText.js";
 import Dialog from "./Dialog.js";
-import Minibox from "./Minibox.js";
 
 
 const sleep = ms => {
@@ -19,7 +17,6 @@ export default class TestScene extends Phaser.Scene {
 
     preload() {
         /*** FROM Minicode.js***/
-        this.load.html('input', './assets/js/textInput.html');
 
         this.load.image("tiles", "./assets/images/map.png");
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
@@ -52,6 +49,7 @@ export default class TestScene extends Phaser.Scene {
 
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
+        this.keyZ = this.input.keyboard.addKey('Z');
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
@@ -60,6 +58,14 @@ export default class TestScene extends Phaser.Scene {
         this.worldLayer = map.createLayer("ground", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
+        //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
+        this.phone = this.add.image(700,210,'phone').setOrigin(0,0);
+        this.table = this.add.image(650,200,'table').setOrigin(0,0);
+        
+        this.phone.setInteractive();
+        
+        
+
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
 
@@ -67,7 +73,6 @@ export default class TestScene extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
         this.player.player.setFlipX(true);
-        this.minicode = new Minicoding();
 
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -93,11 +98,9 @@ export default class TestScene extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
-        /*** 전체 코드에 걍 예시로 넣은 문장 ***/
-        var contenttext = '#include<stdio.h>\nint main(void){printf("hi");return 0;}';
 
         /*** 명령창 불러오기 ***/
-        var command = new Command(this, map);
+        this.command = new Command(this, map);
 
         // 드래그앤드랍
         this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
@@ -124,57 +127,7 @@ export default class TestScene extends Phaser.Scene {
         });
             */
 
-        //compile button
-        this.compile_button = this.add.image(20,150,'compile_button').setOrigin(0,0);
-        this.compile_button.setInteractive();
-        this.compile_button.on('pointerdown', () => {
-           
-            if (contenttext !== '')
-                {
-                    var data = {
-
-                        'code': contenttext
     
-                    };
-                    data = JSON.stringify(data);
-
-                    var xhr = new XMLHttpRequest();
-
-                    xhr.open('POST', '/form_test', true);                
-                    
-                    xhr.setRequestHeader('Content-type', 'application/json');
-                    xhr.send(data);
-                    xhr.addEventListener('load', function() {
-                        
-                        var result = JSON.parse(xhr.responseText);
-    
-                        if (result.result != 'ok') return;
-                        console.log(result.output);
-                        //document.getElementById('testoutput').value = result.output;
-    
-                    });
-                    //  Turn off the click events
-                    //this.removeListener('click');
-                    //  Hide the login element
-                    //this.setVisible(false);
-                    //  Populate the text with whatever they typed in
-                    //text.setText('Welcome ' + inputText.value);
-                }
-                else
-                {
-                    //  Flash the prompt 이거 뭔지 모르겠음 다른 곳에서 긁어옴
-                    this.scene.tweens.add({
-                        targets: text,
-                        alpha: 0.2,
-                        duration: 250,
-                        ease: 'Power3',
-                        yoyo: true
-                    });
-                            }
-            console.log(" compile finish!!!");
-           
-        });
-        //=================================================================================
            
         /*** 인벤토리 버튼 활성화 ***/
         this.inventory_button = this.add.image(map.widthInPixels - 100, 20,'inventory_button').setOrigin(0,0);
@@ -190,17 +143,16 @@ export default class TestScene extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
-         /*** 미니코딩창 불러오기 ***/
-         this.minibox = new Minibox(this);
          //드래그앤드롭으로 zone에 있는 코드 받아올거임.
          this.code_zone_1 = "";
          this.code_zone_2 = "";
          this.code_zone_3 = "";
+        
     }
 
     update() {
         this.player.update();
-        this.minibox.update(this);
+        this.command.update(this);
         /*** 인벤토리 ***/
         if(state == 0) {
             this.inventory_button.on('pointerdown', () => {
@@ -233,7 +185,8 @@ export default class TestScene extends Phaser.Scene {
 
             if(this.keyX.isDown) {
                 this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                this.scene.sleep('testScene'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                console.log('맵이동');
+                this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
                 this.scene.run("stage1");
             }
         }
@@ -248,13 +201,20 @@ export default class TestScene extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
+
+        /*** 빨리 stage1으로 넘어가기 위해 잠시 만들어 두겠습니다.... ***/
+        if(this.keyZ.isDown) {
+            this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+            console.log('맵이동');
+            this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("stage1");
+        }
         
     }
 
 
     playerOnTile() {
         if(this.onTile) {
-            this.minicode.create(this);
 
             /** 플레이어 대사 **/
             var seq = this.plugins.get('rexsequenceplugin').add();

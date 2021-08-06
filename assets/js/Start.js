@@ -31,7 +31,11 @@ class Start extends Phaser.Scene {
       this.load.image("item", "./assets/images/item.png");
       this.load.image("itemGet", "./assets/images/itemget.png");
 
-    }
+      /**휴대폰, 서랍장 이미지 로드 (나중에 서랍장은 map으로) */
+      this.load.image("phone", "./assets/images/phone.png");
+      this.load.image("table", "./assets/images/table.png");
+
+    } 
 
     create() {
       this.hsv = Phaser.Display.Color.HSVColorWheel();
