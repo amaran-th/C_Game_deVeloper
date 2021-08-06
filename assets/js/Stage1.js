@@ -116,7 +116,10 @@ export default class Stage1 extends Phaser.Scene {
         this.drag_piece = ['printf', 'if', 'else'];
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;
-        
+        // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
+        this.drop_state_1 = 0;
+        this.drop_state_2 = 0;
+        this.drop_state_3 = 0;
         // 드래그앤드랍
         this.draganddrop_1 = new DragAndDrop(this, 470, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
         this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
