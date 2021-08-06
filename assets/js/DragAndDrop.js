@@ -1,8 +1,6 @@
 var drop_state_1 = 0;
 var drop_state_2 = 0;
 var drop_state_3 = 0;
-var code_piece_add_state = 0;
-var count = 0;
 
 class DragAndDrop extends Phaser.GameObjects.Zone {
     constructor(scene, x, y, width, height) {
@@ -12,29 +10,35 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         
         /*** 드래그앤드랍 ***/        
         // 코드 조각 불러와 배치하기
-        console.log(scene.drag_piece.length);
-        var code_piece_1 = scene.add.text(460, 55, scene.drag_piece[0], { font: "30px Arial Black", fill: "#ffccff" }).setInteractive();
-        var code_piece_2 = scene.add.text(560, 55, scene.drag_piece[1], { font: "30px Arial Black", fill: "#ffccff" }).setInteractive();
-            //... 각 스테이지 구현할 때마다 추가 예정
-        // 드래그 가능하도록
-        scene.input.setDraggable(code_piece_1); 
-        scene.input.setDraggable(code_piece_2);
+        var code_piece = [];
+        var code_piece_x = 460;
+
+        //console.log('코드조각 수 : ' + scene.drag_piece.length);
+        for (var i = 0; i < scene.drag_piece.length; i++){
+            code_piece[i] = scene.add.text(code_piece_x, 55, scene.drag_piece[i], { font: "30px Arial Black", fill: "#ffccff" }).setInteractive();
+            scene.input.setDraggable(code_piece[i]); // 드래그 가능하도록
+            code_piece_x += 100; // 각 코드 조각 위치 설정
+            
+            code_piece[i].on('pointerover', function () { 
+                //여기 부분
+                code_piece[0].setTint(0xf9cb9c);
+            });
+            // 마우스가 코드 조각 벗어났을때 원래 색으로!
+            code_piece[i].on('pointerout', function () { 
+                code_piece[0].clearTint();
+            });
+        }
 
         // 마우스가 코드 조각 위에 위치했을 때 색 변하도록
-        code_piece_1.on('pointerover', function () { 
-            code_piece_1.setTint(0xf9cb9c);
+        // for문 안에 넣으면 setInt 안 돼서 이건 각각 해줘야 함
+        // 근데 각각 하면 코드조각 수가 여기서 배정한 수보다 적은 경우 선언 안 됐다고 에러 뜸.
+        /*code_piece[0].on('pointerover', function () { 
+            code_piece[0].setTint(0xf9cb9c);
         });
-        code_piece_2.on('pointerover', function () { 
-            code_piece_2.setTint(0xf9cb9c);
-        });
-
         // 마우스가 코드 조각 벗어났을때 원래 색으로!
-        code_piece_1.on('pointerout', function () { 
-            code_piece_1.clearTint();
-        });
-        code_piece_2.on('pointerout', function () { 
-            code_piece_2.clearTint();
-        });
+        code_piece[0].on('pointerout', function () { 
+            code_piece[0].clearTint();
+        });*/
 
         // 드랍 영역 선으로 임시 표시
         var graphics = scene.add.graphics();
@@ -136,24 +140,24 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         });
         reset_button.on('pointerup', function () {
             console.log('reset');
-            code_piece_1.x = 460;
-            code_piece_1.y = 55;
-            code_piece_2.x = 560;
-            code_piece_2.y = 55;
+            var code_piece_reset_x = 460;
+            for (var i = 0; i < scene.drag_piece.length; i++){
+                code_piece[i].x = code_piece_reset_x;
+                code_piece[i].y = 55;
+                code_piece_reset_x += 100;
+            }
             drop_state_1 = 0;
             drop_state_2 = 0;
             drop_state_3 = 0;
         });
         
-        if (code_piece_add_state != 2) {
-            code_piece_1.destroy();
-            code_piece_2.destroy();
-            console.log('code piece destroyed');
+        if (scene.code_piece_add_state != 2) {
+            for (var i = 0; i < scene.drag_piece.length; i++){
+                code_piece[i].destroy();
+            }
+            //console.log('code piece destroyed');
                 
-            code_piece_add_state += 1;
+            scene.code_piece_add_state += 1;
         }        
-    }
-    // ...
-
-    // preUpdate(time, delta) {}
+    } 
 }
