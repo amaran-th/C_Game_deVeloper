@@ -63,8 +63,13 @@ export default class TestScene extends Phaser.Scene {
         this.table = this.add.image(650,200,'table').setOrigin(0,0);
         
         this.phone.setInteractive();
-        
-        
+
+        /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
+        this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
+        this.minimap_button.setInteractive();
+        this.minimap_button.once("pointerdown",function(){
+            this.scene.start("minimap");
+        },this);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");

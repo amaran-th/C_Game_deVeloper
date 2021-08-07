@@ -17,7 +17,7 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         code_piece_1.setInteractive();
         code_piece_2.setInteractive();
 
-        // 드래그 가능하도록
+        // 드래그 가능하도록 
         scene.input.setDraggable(code_piece_1); 
         scene.input.setDraggable(code_piece_2);
 

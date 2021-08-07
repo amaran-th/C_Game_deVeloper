@@ -25,7 +25,7 @@ var config = {
   },
 
   //backgroundColor: 0x9cbbd8,
-  scene: [ Start, TestScene, Stage1 ] //class name
+  scene: [Start, TestScene, Stage1, MiniMap, FirstStage] //class name
 };
 
 var game = new Phaser.Game(config); //게임을 생성
