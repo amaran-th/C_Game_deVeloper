@@ -1,3 +1,5 @@
+var stagenum;
+
 class Start extends Phaser.Scene {
     constructor() {
       super("startGame");
@@ -5,6 +7,9 @@ class Start extends Phaser.Scene {
     }
 
     preload() {
+      
+
+      
       /*** 시작화면 image 로드 ***/
       this.load.image("title_menu", "./assets/images/menu/title_menu.png");
     

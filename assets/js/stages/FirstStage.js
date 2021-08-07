@@ -1,10 +1,9 @@
-import Player from "./assets/js/Player.js";
-import Inventory from "./assets/js/Inventory.js";
-import Dialog from "./assets/js/Dialog.js";
+import Player from "../Player.js";
+import Inventory from "../Inventory.js";
+import Dialog from "../Dialog.js";
 
 
-
-class FirstStage extends Phaser.Scene {   
+export default class FirstStage extends Phaser.Scene {   
     constructor(){ 
         super("first_stage"); //identifier for the scene
     }
@@ -27,7 +26,7 @@ class FirstStage extends Phaser.Scene {
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "first_stage" });
         
-        const tileset = map.addTilesetImage("stage_tile", "stage_tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("test", "stage_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
 
         /***스폰 포인트 설정하기 locate spawn point***/
@@ -67,19 +66,7 @@ class FirstStage extends Phaser.Scene {
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
 
-        /** 초반 인트로 대사 출력 **/
-        this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //플레이어 얼려두기
-        var seq = this.plugins.get('rexsequenceplugin').add();
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.intro, this.dialog)
-        .start();
-        seq.on('complete', () => {
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
-        });
-
-        console.log('itme 위치', this.itemPrintf.x);
+        
     }
 
     update() {

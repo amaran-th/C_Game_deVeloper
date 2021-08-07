@@ -1,6 +1,7 @@
 //import RexUIPlugin from 'node_modules/phaser3-rex-plugins/templates/ui/ui-plugin'
 import Stage1 from "./Stage1.js";
 import TestScene from "./TestScene.js";
+import FirstStage from "./stages/FirstStage.js";
 
 
 var gameSettings = {

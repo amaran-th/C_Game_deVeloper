@@ -67,8 +67,9 @@ export default class TestScene extends Phaser.Scene {
         /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
         this.minimap_button.setInteractive();
-        this.minimap_button.once("pointerdown",function(){
-            this.scene.start("minimap");
+        this.minimap_button.on("pointerdown",function(){
+            this.scene.sleep('bootGame'); 
+            this.scene.run("minimap",'0');
         },this);
 
         /***스폰 포인트 설정하기 locate spawn point***/
@@ -152,6 +153,9 @@ export default class TestScene extends Phaser.Scene {
          this.code_zone_1 = "";
          this.code_zone_2 = "";
          this.code_zone_3 = "";
+
+         //minimap에서 사용될 전역변수
+         stagenum = 0;
         
     }
 
