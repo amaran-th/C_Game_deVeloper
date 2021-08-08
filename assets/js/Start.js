@@ -1,3 +1,5 @@
+var stagenum;
+
 class Start extends Phaser.Scene {
     constructor() {
       super("startGame");
@@ -5,6 +7,9 @@ class Start extends Phaser.Scene {
     }
 
     preload() {
+      
+
+      
       /*** 시작화면 image 로드 ***/
       this.load.image("title_menu", "./assets/images/menu/title_menu.png");
     
@@ -12,6 +17,7 @@ class Start extends Phaser.Scene {
       this.load.image("entire_code_button", "./assets/images/command/entire_code_button.png");
       this.load.image("commandbox", "./assets/images/command/commandbox.png");
       this.load.image("compile_button", "./assets/images/command/execute_button.png");  //==============================================
+      this.load.image("map_button", "./assets/images/command/map_button.png");
 
       /*** inventory 관련 image 로드 ***/
       this.load.image("inventory_button", "./assets/images/inventory_button.png");
@@ -37,6 +43,13 @@ class Start extends Phaser.Scene {
 
       /** 드랍 리셋 버든 로드 **/
       this.load.image("reset_button", "./assets/images/reset_button.png");
+      /** 미니맵 이미지 로드 **/
+      this.load.image("map_background", "./assets/images/map/minimap.png");
+      this.load.image("stage_1_button", "./assets/images/map/stage_1.png");
+      this.load.image("stage_2_button", "./assets/images/map/stage_2.png");
+      this.load.image("stage_3_button", "./assets/images/map/stage_3.png");
+
+
     } 
 
     create() {

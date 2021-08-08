@@ -60,6 +60,17 @@ export default class TestScene extends Phaser.Scene {
 
         //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
         this.phone = this.add.image(700,210,'phone').setOrigin(0,0);
+        this.table = this.add.image(650,200,'table').setOrigin(0,0);
+        
+        this.phone.setInteractive();
+
+        /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
+        this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
+        this.minimap_button.setInteractive();
+        this.minimap_button.on("pointerdown",function(){
+            this.scene.sleep('bootGame'); 
+            this.scene.run("minimap");
+        },this);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
@@ -155,6 +166,8 @@ export default class TestScene extends Phaser.Scene {
          /*** Stage Clear! 창 불러오기 ***/
          this.StageClear = new StageClear(this);
         
+         //minimap에서 사용될 전역변수
+         stagenum = 0;
         
     }
 
