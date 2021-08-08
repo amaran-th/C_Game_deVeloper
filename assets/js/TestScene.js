@@ -69,7 +69,7 @@ export default class TestScene extends Phaser.Scene {
         this.minimap_button.setInteractive();
         this.minimap_button.on("pointerdown",function(){
             this.scene.sleep('bootGame'); 
-            this.scene.run("minimap",'0');
+            this.scene.run("minimap");
         },this);
 
         /***스폰 포인트 설정하기 locate spawn point***/

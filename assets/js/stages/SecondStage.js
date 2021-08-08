@@ -3,15 +3,15 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 
 
-export default class FirstStage extends Phaser.Scene {   
+export default class SecondStage extends Phaser.Scene {   
     constructor(){ 
-        super("first_stage"); //identifier for the scene
+        super("second_stage"); //identifier for the scene
     }
 
     preload() {
 
         this.load.image("stage_tiles", "./assets/images/test.png");
-        this.load.tilemapTiledJSON("first_stage", "./assets/first_stage.json");
+        this.load.tilemapTiledJSON("second_stage", "./assets/second_stage.json");
     
     }
     
@@ -24,7 +24,7 @@ export default class FirstStage extends Phaser.Scene {
         this.keyX = this.input.keyboard.addKey('X');
 
         /*** 맵 만들기 Create Map ***/
-        const map = this.make.tilemap({ key: "first_stage" });
+        const map = this.make.tilemap({ key: "second_stage" });
         
         const tileset = map.addTilesetImage("test", "stage_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
@@ -69,12 +69,11 @@ export default class FirstStage extends Phaser.Scene {
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
         this.minimap_button.setInteractive();
         this.minimap_button.on("pointerdown",function(){
-            this.scene.sleep('first_stage'); 
+            this.scene.sleep('second_stage'); 
             this.scene.run("minimap");
         },this);
 
-        stagenum = 1;
-
+        stagenum = 2;
         
     }
 

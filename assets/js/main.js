@@ -2,6 +2,8 @@
 import Stage1 from "./Stage1.js";
 import TestScene from "./TestScene.js";
 import FirstStage from "./stages/FirstStage.js";
+import SecondStage from "./stages/SecondStage.js";
+import ThirdStage from "./stages/ThirdStage.js";
 
 
 var gameSettings = {
@@ -26,7 +28,7 @@ var config = {
   },
 
   //backgroundColor: 0x9cbbd8,
-  scene: [Start, TestScene, Stage1, MiniMap, FirstStage] //class name
+  scene: [Start, TestScene, Stage1, MiniMap, FirstStage, SecondStage, ThirdStage] //class name
 };
 
 var game = new Phaser.Game(config); //게임을 생성

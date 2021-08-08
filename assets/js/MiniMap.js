@@ -19,8 +19,57 @@ class MiniMap extends Phaser.Scene {
         stage_3.setInteractive();
 
         stage_1.once("pointerup",function(){
-            this.scene.stop('bootGame'); 
-            this.scene.start("first_stage");
+            if(stagenum == 0){
+                this.scene.stop('bootgame');
+                this.scene.run('first_stage');
+            }else if(stagenum==1){
+                this.scene.stop('first_stage');
+                this.scene.run('first_stage');
+            }
+            else if(stagenum==2){
+                this.scene.stop('second_stage');
+                this.scene.run('first_stage');
+            }
+            else if(stagenum==3){
+                this.scene.stop('third_stage');
+                this.scene.run('first_stage');
+            }
+        },this);
+
+        stage_2.once("pointerup",function(){
+            if(stagenum == 0){
+                this.scene.stop('bootgame');
+                this.scene.run('second_stage');
+            }else if(stagenum==1){
+                this.scene.stop('first_stage');
+                this.scene.run('second_stage');
+            }
+            else if(stagenum==2){
+                this.scene.stop('second_stage');
+                this.scene.run('second_stage');
+            }
+            else if(stagenum==3){
+                this.scene.stop('third_stage');
+                this.scene.run('second_stage');
+            }
+        },this);
+
+        stage_3.once("pointerup",function(){
+            if(stagenum == 0){
+                this.scene.stop('bootgame');
+                this.scene.run('third_stage');
+            }else if(stagenum==1){
+                this.scene.stop('first_stage');
+                this.scene.run('third_stage');
+            }
+            else if(stagenum==2){
+                this.scene.stop('second_stage');
+                this.scene.run('third_stage');
+            }
+            else if(stagenum==3){
+                this.scene.stop('third_stage');
+                this.scene.run('third_stage');
+            }
         },this);
 
         back.on("pointerdown",function(){
@@ -28,11 +77,23 @@ class MiniMap extends Phaser.Scene {
             console.log(stagenum);
             
             if(stagenum == 0){
-                console.log("back");
-                this.scene.sleep('minimap');
+                console.log("back satage0");
+                this.scene.stop('minimap');
                 this.scene.run('bootGame');
-                
-
+            }else if(stagenum==1){
+                console.log("back satage1");
+                this.scene.stop('minimap');
+                this.scene.run('first_stage');
+            }
+            else if(stagenum==2){
+                console.log("back satage2");
+                this.scene.stop('minimap');
+                this.scene.run('second_stage');
+            }
+            else if(stagenum==3){
+                console.log("back satage3");
+                this.scene.stop('minimap');
+                this.scene.run('third_stage');
             }
             
         },this);
