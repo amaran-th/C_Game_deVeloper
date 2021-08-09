@@ -41,6 +41,11 @@ class Start extends Phaser.Scene {
       this.load.image("phone", "./assets/images/phone.png");
       this.load.image("npc3", "./assets/images/npc/npc3.png");
 
+      /*** 휴대폰 앱 로드 ***/
+      this.load.image("app_code", "./assets/images/app_code.png");
+      this.load.image("app_map", "./assets/images/app_map.png");
+      this.load.image("app_tutorial", "./assets/images/app_tutorial.png");
+
       /** 드랍 리셋 버든 로드 **/
       this.load.image("reset_button", "./assets/images/reset_button.png");
       /** 미니맵 이미지 로드 **/
