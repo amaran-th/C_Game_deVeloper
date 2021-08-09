@@ -51,6 +51,8 @@ export default class Stage1 extends Phaser.Scene {
     
     create () {
 
+ 
+
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 

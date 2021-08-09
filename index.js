@@ -30,7 +30,7 @@ app.use(
       cookie: {
         HttpOnly : true,//클라이언트는 쿠키못보게
         secure : false, //http아닌 환경도 가능한지. 배포시에는 true로
-        maxAge : 60000 * 30, //60000밀리초 (1분) * 30 = 30분
+      //  maxAge : 60000 * 30, //60000밀리초 (1분) * 30 = 30분
       },
     })
   );
@@ -96,12 +96,14 @@ var loginRouter = require("./router/login");
 var logoutRouter = require("./router/logout");
 var terminateRouter = require("./router/terminate");
 var gameRouter = require("./router/game");
+var stageRouter = require("./router/stage");
 
 app.use('/register',registerRouter);
 app.use('/login',loginRouter);
 app.use('/logout',logoutRouter);
 app.use('/terminate',terminateRouter);
 app.use('/game',gameRouter);
+app.use('/stage',stageRouter);
 
 //================================================================이 부분은 지워도 될 것 같은데 일단 냅뒀음
 //메인페이지로, 라우터 따로 안해줬는데 해줘야함

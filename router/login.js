@@ -24,6 +24,7 @@ router.route('/check')//중복확인
             const salt = result.dataValues.salt; //db에서 가져온 salt값
             const db_pw = result.dataValues.pw //db에서 가져온 pw 값
             const input_pw = pw; //입력받은 pw값
+            const stage =  result.dataValues.stage ; //db에서 가져온 stage값
           
             const hash_pw =  crypto.pbkdf2Sync(input_pw, salt, 100, 64, "sha512").toString("base64");
             
@@ -33,10 +34,6 @@ router.route('/check')//중복확인
                 var responseData = {'pass': false};
                 res.json(responseData);
             }else{
-                
-                req.session.is_logined = true; 
-                req.session.uid = id; 
-                req.session.nickname=nick;
 
                 var responseData = {'pass': true};
                 res.json(responseData);
@@ -66,6 +63,7 @@ router.route('/')
             const salt = result.dataValues.salt; //db에서 가져온 salt값
             const db_pw = result.dataValues.pw //db에서 가져온 pw 값
             const input_pw = pw; //입력받은 pw값
+            const stage =  result.dataValues.stage ; //입력받은 pw값
           
             const hash_pw =  crypto.pbkdf2Sync(input_pw, salt, 100, 64, "sha512").toString("base64");
             
@@ -74,8 +72,9 @@ router.route('/')
                 
                 req.session.is_logined = true; 
                 req.session.uid = id; 
-
                 req.session.nickname=nick;
+                req.session.stage=stage;
+
                 console.log("==Success to login==");
                 res.redirect('/game');
             }
