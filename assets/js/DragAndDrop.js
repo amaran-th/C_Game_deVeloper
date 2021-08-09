@@ -25,17 +25,6 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
             });
         }
 
-        // 마우스가 코드 조각 위에 위치했을 때 색 변하도록
-        // for문 안에 넣으면 setInt 안 돼서 이건 각각 해줘야 함
-        // 근데 각각 하면 코드조각 수가 여기서 배정한 수보다 적은 경우 선언 안 됐다고 에러 뜸.
-        /*code_piece[0].on('pointerover', function () { 
-            code_piece[0].setTint(0xf9cb9c);
-        });
-        // 마우스가 코드 조각 벗어났을때 원래 색으로!
-        code_piece[0].on('pointerout', function () { 
-            code_piece[0].clearTint();
-        });*/
-
         // 드랍 영역 선으로 임시 표시
         var graphics = scene.add.graphics();
         graphics.lineStyle(2, 0xffff00);
