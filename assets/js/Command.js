@@ -1,6 +1,6 @@
 var state = 0;
 var text;
-        
+var text_on = false;
 class Command extends Phaser.GameObjects.Image {
     constructor(scene, map) {
         super(scene, map);
@@ -27,6 +27,42 @@ class Command extends Phaser.GameObjects.Image {
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
         this.zone = scene.add.zone(map.widthInPixels, 100,  360, 550).setOrigin(0).setInteractive();
         text = scene.add.text(map.widthInPixels, 100, this.contenttext, { fontFamily: 'Arial', color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+
+        /*** 폰 앱들 넣어주기 ***/
+        var app_names = ['app_code', 'app_map', 'app_tutorial'];
+        this.apps = [];
+        for(var i=0; i < app_names.length; i++){
+            const j = i;
+            this.apps[j] = scene.add.image(map.widthInPixels, 80 + (parseInt(i / 2))*130, app_names[j]).setOrigin(0).setInteractive();
+            this.apps[j].on('pointerup', function () { 
+                //눌려졌는지 확인용으로 클릭됐다는 메시지 띄움
+                var text_ex = scene.add.text(200, 100 + j*20, app_names[j]+' is click!', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
+                switch(j){
+                    case 0:
+                        // case 0 안으로 들어왔는지 확인용으로 0 띄움
+                        scene.add.text(300, 10, '0', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
+                        text_on = true;
+                        break;
+                    case 1:
+                        // case 1 안으로 들어왔는지 확인용으로 1 띄움
+                        scene.add.text(310, 10, '1', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
+                        // HELP HELP 맵 이동 어떻게 하는지 모르겠음.. 
+                        /*
+                        this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                        console.log('맵이동');
+                        this.scene.sleep(scene); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                        this.scene.run("MiniMap");
+                        */
+                        break;
+                    case 2:
+                        scene.add.text(350, 100, '음... 튜토리얼 뭘 넣어야 하는거징..', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
+                        break;
+                    default:
+                        scene.add.text(400, 300, 'default zone... why?', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
+                        break;
+                }
+            });
+        }
 
         /*** 명령창에 전체코드 띄우고 드래그 할 수 있기위한 설정 ***/
         this.graphics = scene.make.graphics(); 
@@ -89,30 +125,44 @@ class Command extends Phaser.GameObjects.Image {
         //console.log('state' + state);
         /*** 화면 이동시 entire code button 따라가도록 설정***/
         this.entire_code_button.x = this.worldView.x + 5;
-
         /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
         if(state == 0) {
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
-                text.setVisible(true);
+                for(var i=0; i < this.apps.length; i++){
+                    this.apps[i].setVisible(true);
+                }
                 //this.slidebox(); //슬라이드 기능 수치가 중간에 이상해져서 될 때 있고 안 될 때 있음(일단 빼두겠음)
                 state = 1;
             });
         } else {
             this.commandbox.x = this.worldView.x + 715; //화면 이동시 명령창 따라가도록 설정
-            text.x = this.worldView.x + 760;
-            this.graphics.fillRect(text.x -5, 100, 360, 550); // 화면 이동시 글이 보이는 판을 이동
-            this.zone.x = text.x -5;
-            this.zone.on('pointermove', function (pointer) {
-                if (pointer.isDown){
-                    text.y += (pointer.velocity.y / 8000);
-                    text.y = Phaser.Math.Clamp(text.y, -400, 600);
-                    //this.extext.setVisible(true);
+            for(var i=0; i < this.apps.length; i++){
+                this.apps[i].x = this.worldView.x + 755 + (i%2)*170;
+            }
+            if(text_on === true){
+                for(var i=0; i < this.apps.length; i++){
+                    this.apps[i].setVisible(false);
                 }
-            });
-
+                text.setVisible(true);
+                text.x = this.worldView.x + 760;
+                this.graphics.fillRect(text.x -5, 100, 360, 550); // 화면 이동시 글이 보이는 판을 이동
+                this.zone.x = text.x -5;
+                this.zone.on('pointermove', function (pointer) {
+                    if (pointer.isDown){
+                        text.y += (pointer.velocity.y / 5000);
+                        text.y = Phaser.Math.Clamp(text.y, -400, 600);
+                        //this.extext.setVisible(true);
+                    }
+                });
+            }
             this.entire_code_button.on('pointerdown', () => {
                 this.commandbox.setVisible(false);
+                for(var i=0; i < this.apps.length; i++){
+                    this.apps[i].setVisible(false);
+                }
+                text_on = false;
+                console.log(text_on + ' : text_on');
                 text.setVisible(false);
                 state = 0;
             });
