@@ -20,58 +20,64 @@ export default class inventory {
 
         //인벤창을 모두 하나의 오브젝트로 묶기
         this.inven = scene.add.container(3,550, [this.inventoryHandle,this.inventoryBody, this.invenText]);
-        this.inven.setSize(200, 100)
+        this.inven.setSize(200, 100);
 
         this.inven.setInteractive();
 
+        scene.invenIn = false; //인벤토리 창이 내려가있는지 올라가있는지
 
-        this.item = new Array(); //저장되는 아이템
-        this.invenIn = false; //인벤토리 창이 내려가있는지 올라가있는지
-
-        console.log('인덱스:', this.item.length);
+        console.log('인덱스:', scene.item.length);
 
         //저장된 아이템은 미리 인벤창에 넣어둔다.
-        for(var i=0; i<=this.item.length; i++ ) {
-            this.newItem = scene.add.text(50 + i*100, this.inven.y-250 , this.item[i], { font: "30px Arial Black", fill: "#fff" });
+        /*for(var i=0; i<=scene.item.length; i++ ) {
+            this.newItem = scene.add.text(50 + i*100, this.inven.y-250 , scene.item[i], { font: "30px Arial Black", fill: "#fff" });
             this.newItem.setInteractive();
             scene.input.setDraggable(this.newItem);
             this.inven.add(this.newItem); //하나의 오브젝트로 묶어준다.
-        }
+        }*/
     }
-    update() {
-        //console.log(this.invenIn); 
+    update(scene) {
+        //console.log(scene.invenIn); 
 
-        this.inven.once('pointerdown', () => {
-            if(this.invenIn) { 
+        this.inven.on('pointerdown', () => {
+            if(scene.invenIn) { 
                 this.inven.y = 375;
                 if(this.exclamationIsReal){
                     this.exclamation.destroy();
                     this.exclamationIsReal = false;
                 }
+
+                // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
+                if(this.draganddrop_1 != undefined) this.draganddrop_1.updownwithinven(scene);
+                if(this.draganddrop_2 != undefined) this.draganddrop_2.updownwithinven(scene);
+                if(this.draganddrop_3 != undefined) this.draganddrop_3.updownwithinven(scene);
             } 
-            else { this.inven.y = 550;}
+            else { 
+                this.inven.y = 550;
+                
+                // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
+                if(this.draganddrop_1 != undefined) this.draganddrop_1.updownwithinven(scene);
+                if(this.draganddrop_2 != undefined) this.draganddrop_2.updownwithinven(scene);
+                if(this.draganddrop_3 != undefined) this.draganddrop_3.updownwithinven(scene);
+            }
             //console.log('clicked');
-            this.invenIn = !this.invenIn;
+            scene.invenIn = !scene.invenIn;
         })
     }
 
     invenSave(scene, itemName) {
         //scene.invenPlus = false;  //여러번 불러와지는 거 방지
-        this.item[this.item.length] = itemName; // 배열에 아이템을 추가한다.
+        scene.item[scene.item.length] = itemName; // 배열에 아이템을 추가한다.
+
         // 코드 조각 불러와 배치하기
-        console.log('인덱스:', this.item.length);
-        this.newItem = scene.add.text(50 + (this.item.length-1)*100, 125 , this.item[this.item.length-1], {
-             font: "30px Arial Black",
-             fill: "#f9cb9c" 
-            });
-        console.log('글자 위치:', this.newItem.y);
-        if(!this.invenIn) { 
+        console.log('아이템 수:', scene.item.length);
+        console.log('아이템 배열: ' + scene.item);
+        this.draganddrop_1 = new DragAndDrop(scene, 470, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
+        this.draganddrop_2 = new DragAndDrop(scene, 570, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
+        this.draganddrop_3 = new DragAndDrop(scene, 670, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
+        if(!scene.invenIn) { 
             this.exclamation = scene.add.text(140, 540,'!', { font: "30px Arial Black", fill: "#ff0000" }); 
             this.exclamationIsReal = true;
         }
-        this.newItem.setInteractive();
-        scene.input.setDraggable(this.newItem);
-        this.inven.add(this.newItem);
-
     }
 }
