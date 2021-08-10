@@ -1,8 +1,8 @@
 
 import Player from "./Player.js";
-import DialogText from "./DialogText.js";
 import Dialog from "./Dialog.js";
 import StageClear from "./StageClear.js";
+import Command from "./Command.js";
 
 const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms))
