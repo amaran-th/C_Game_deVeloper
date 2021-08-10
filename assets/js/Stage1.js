@@ -152,10 +152,22 @@ export default class Stage1 extends Phaser.Scene {
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
+
+        //드래그앤드롭으로 zone에 있는 코드 받아올거임.
+        this.code_zone_1 = "       ";
+        this.code_zone_2 = "       ";
+        this.code_zone_3 = "       ";
+
+        // Stage1 씬의 전체코드
+        this.contenttext = "" ;
         
     }
 
     update() {
+        this.contenttext = 
+            "Stage1 코드 \n#include <stdio.h> \n int main(){ \n " +  this.code_zone_1 +  "(\"HI\"); \n }" 
+            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
+
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);

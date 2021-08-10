@@ -16,10 +16,6 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = scene.cameras.main.worldView;
 
-        /*** 전체 코드에 걍 예시로 넣은 문장 ***/
-        this.contenttext = 
-            "#include <stdio.h> \n int main(){ \n " +  scene.code_zone_1 +  "(\"HI\"); \n }" 
-            + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
 
         /*** 명령창버튼 활성화 ***/
         this.entire_code_button = scene.add.image(20,10,'entire_code_button').setOrigin(0,0);
@@ -32,7 +28,7 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 명령창, 명령창 내용 zone 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
         this.zone = scene.add.zone(map.widthInPixels, 100,  360, 550).setOrigin(0).setInteractive();
-        text = scene.add.text(map.widthInPixels, 100, this.contenttext, {  font: "30px Arial Black", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+        text = scene.add.text(map.widthInPixels, 100, scene.contenttext, {  font: "30px Arial Black", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
 
         /*** 폰 앱들 넣어주기 ***/
         var app_names = ['app_code', 'app_map', 'app_tutorial'];
@@ -79,11 +75,11 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 컴파일 버튼 누를시 컴파일러 동작. ***/ //@@@@@@@@@@@
         this.compile_button.on('pointerdown', () => {
            
-            if (this.contenttext !== '')
+            if (scene.contenttext !== '')
                 {
                     var data = {
 
-                        'code': this.contenttext
+                        'code': scene.contenttext
     
                     };
                     data = JSON.stringify(data);
@@ -187,11 +183,7 @@ export default class Command extends Phaser.GameObjects.Image {
         //console.log("3:"+this.commandbox.x);
     }*/
     update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
-        
-        this.contenttext = 
-            "#include <stdio.h> \n int main(){ \n " +  scene.code_zone_1 +  "(\"HI\"); \n }" 
-            + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
 
-        text.setText(this.contenttext);
+        text.setText(scene.contenttext);
     }
 }

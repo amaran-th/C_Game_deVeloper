@@ -1,7 +1,7 @@
 import Player from "../Player.js";
 import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
-
+import Command from "../Command.js";
 
 export default class ThirdStage extends Phaser.Scene {   
     constructor(){ 
@@ -10,14 +10,14 @@ export default class ThirdStage extends Phaser.Scene {
 
     preload() {
 
-        this.load.image("stage_tiles", "./assets/images/test.png");
+        this.load.image("stage_tiles", "./assets/images/map_stage3.png");
         this.load.tilemapTiledJSON("third_stage", "./assets/third_stage.json");
     
     }
     
     create () {
-
-        this.inventory = new Inventory(this);
+        
+      //  this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
         /** x 키 입력 받기**/
@@ -26,8 +26,12 @@ export default class ThirdStage extends Phaser.Scene {
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "third_stage" });
         
-        const tileset = map.addTilesetImage("test", "stage_tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("map_stage3", "stage_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
+        this.deco = map.createLayer("deco", tileset, 0, 0);
+
+        /*** npc_chef 불러오기 ***/ 
+        this.npc_chef = this.add.image(900,250,'npc_chef').setOrigin(0,0);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -59,7 +63,7 @@ export default class ThirdStage extends Phaser.Scene {
         //this.draganddrop_3 = new DragAndDrop(this, 700, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
         
         /** 인벤토리 만들기 **/     
-        this.inven = this.inventory.create(this);
+      //  this.inven = this.inventory.create(this);
 
 
         /** 플레이어 위치 확인용 **/
@@ -73,13 +77,24 @@ export default class ThirdStage extends Phaser.Scene {
             this.scene.run("minimap");
         },this);
 
+        //드래그앤드롭으로 zone에 있는 코드 받아올거임.
+        this.code_zone_1 = "       ";
+        this.code_zone_2 = "       ";
+        this.code_zone_3 = "       ";
+
+        //stage3의 전체 코드
+        this.contenttext = "" ;
+
         stagenum = 3;
         
     }
 
     update() {
+        this.contenttext = 
+            "#include <stdio.h> \n int main(){ \n " + "이건 3번째 스테이지얌"  +  this.code_zone_1 
+            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
         this.player.update();
-        this.inventory.update();
+      //  this.inventory.update();
         this.command.update(this);
                 
          /* 플레이어 위치 알려줌*/

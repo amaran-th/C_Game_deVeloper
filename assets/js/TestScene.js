@@ -161,7 +161,9 @@ export default class TestScene extends Phaser.Scene {
          this.code_zone_2 = "       ";
          this.code_zone_3 = "       ";
 
-      
+         // 테스트씬의 전체코드
+         this.contenttext = "" ;
+         
          /*** Stage Clear! 창 불러오기 ***/
          this.StageClear = new StageClear(this);
         
@@ -171,6 +173,10 @@ export default class TestScene extends Phaser.Scene {
     }
 
     update() {
+        this.contenttext = 
+            "#include <stdio.h> \n int main(){ \n " +  this.code_zone_1 +  "(\"HI\"); \n }" 
+            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
+
         this.player.update();
         this.command.update(this);
         /*** 인벤토리 ***/

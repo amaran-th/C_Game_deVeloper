@@ -61,7 +61,9 @@ class Start extends Phaser.Scene {
     });
 
     /** 첫번째 스테이지의 집 이미지 로드 **/
-    this.load.image("house", "./assets/images/house.png");
+      this.load.image("house", "./assets/images/house.png");
+    /** 3번째 스테이지의 npc 로드 **/
+      this.load.image("npc_chef", "./assets/images/npc/npc1.png");
 
     } 
 

@@ -93,12 +93,24 @@ export default class FirstStage extends Phaser.Scene {
             this.scene.run("minimap");
         },this);
 
+        //드래그앤드롭으로 zone에 있는 코드 받아올거임.
+        this.code_zone_1 = "       ";
+        this.code_zone_2 = "       ";
+        this.code_zone_3 = "       ";
+
+        //stage1의 전체 코드
+        this.contenttext = "" ;
+
         stagenum = 1;
 
         
     }
 
     update() {
+        this.contenttext = 
+            "#include <stdio.h> \n int main(){ \n " + "이건 1번째 스테이지"  +this.code_zone_1 
+            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
+
         this.player.update();
         //this.inventory.update();
         this.command.update(this);
