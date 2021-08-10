@@ -108,7 +108,7 @@ export default class TestScene extends Phaser.Scene {
         this.command = new Command(this, map);
 
         // 드래그앤 드랍할 조각
-        this.drag_piece = ['printf', 'if'];
+        /*this.drag_piece = ['printf', 'if'];
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수 (새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
         this.code_piece_add_state = 0;
         // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
@@ -118,7 +118,7 @@ export default class TestScene extends Phaser.Scene {
         // 드래그앤드랍
         this.draganddrop_1 = new DragAndDrop(this, 470, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
         this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
-        this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
+        this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");*/
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });

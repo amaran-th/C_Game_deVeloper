@@ -6,22 +6,23 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         
         /*** 드래그앤드랍 ***/        
         // 코드 조각 불러와 배치하기
-        var code_piece = [];  // 배열로 줘서 씬에서 할당한 코드조각 만큼을 text 생성 변수로 주어줌
-        var code_piece_x = 460; // 처음 코드조각 x좌표 위치 이건 나중에 inventory 창 부분에 맞게 수정 예정
-
-        //console.log('코드조각 수 : ' + scene.drag_piece.length);
-        for (var i = 0; i < scene.drag_piece.length; i++){
+        this.code_piece = [];  // 배열로 줘서 씬에서 할당한 코드조각 만큼을 text 생성 변수로 주어줌
+        var code_piece_x = 50; // 처음 코드조각 x좌표 위치 이건 나중에 inventory 창 부분에 맞게 수정 예정
+        
+        //console.log('코드조각 수 : ' + scene.item.length);
+        for (var i = 0; i < scene.item.length; i++){
             const j = i;
-            code_piece[j] = scene.add.text(code_piece_x, 55, scene.drag_piece[i], { font: "30px Arial Black", fill: "#ffccff" }).setInteractive();
-            scene.input.setDraggable(code_piece[j]); // 드래그 가능하도록
+            this.code_piece[j] = scene.add.text(code_piece_x, 600, scene.item[i], { font: "30px Arial Black", fill: "#f9cb9c" }).setInteractive();
+            scene.input.setDraggable(this.code_piece[j]); // 드래그 가능하도록
             code_piece_x += 100; // 각 코드 조각 위치 설정
-            code_piece[j].on('pointerover', function () { 
-                //여기 부분 0을 i로 하면 인 식 못함
-                code_piece[j].setTint(0xf9cb9c);
+            var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
+            this.code_piece[j].on('pointerover', function () { 
+                //console.log('조각 수' + this.code_piece.length);
+                code_piece.setTint(0xf9cb9c);
             });
             // 마우스가 코드 조각 벗어났을때 원래 색으로!
-            code_piece[j].on('pointerout', function () { 
-                code_piece[j].clearTint();
+            this.code_piece[j].on('pointerout', function () { 
+                code_piece.clearTint();
             });
         }
 
@@ -126,12 +127,13 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         });
         reset_button.on('pointerup', function () {
             console.log('reset');
-            var code_piece_reset_x = 460;
-            for (var i = 0; i < scene.drag_piece.length; i++){
-                code_piece[i].x = code_piece_reset_x;
-                code_piece[i].y = 55;
+            var code_piece_reset_x = 50;
+            /*for (var i = 0; i < scene.item.length; i++){
+                var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
+                this.code_piece[i].x = code_piece_reset_x;
+                this.code_piece[i].y = 490;
                 code_piece_reset_x += 100;
-            }
+            }*/
             //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
             scene.drop_state_1 = 0;
             scene.drop_state_2 = 0;
@@ -143,12 +145,31 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         });
         
         if (scene.code_piece_add_state != 2) {
-            for (var i = 0; i < scene.drag_piece.length; i++){
-                code_piece[i].destroy();
+            for (var i = 0; i < scene.item.length; i++){
+                this.code_piece[i].destroy();
             }
             //console.log('code piece destroyed');
                 
             scene.code_piece_add_state += 1;
         }        
     } 
+
+    // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
+    updownwithinven(scene) {
+        if(scene.drop_state_1 == 0){ // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
+            if (this.code_piece.length > 0) {
+                if (scene.invenIn) { // 인벤창이 나와있을 때 코드도 나와 있도록
+                    //console.log('there');
+                    for (var i = 0; i < scene.item.length; i++){
+                        this.code_piece[i].y = 490;
+                    }
+                } else { // 인벤창이 들어가있을 때 코드도 들어가 있도록
+                    //console.log('here');
+                    for (var i = 0; i < scene.item.length; i++){
+                        this.code_piece[i].y = 600;
+                    }
+                }
+            }
+        }
+    }
 }
