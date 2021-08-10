@@ -214,7 +214,7 @@ export default class Stage1 extends Phaser.Scene {
                 this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
                 console.log('맵이동');
                 this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                //this.scene.run("");
+                this.scene.run("first_stage");
             }
         }
         else this.pressX.setVisible(false);

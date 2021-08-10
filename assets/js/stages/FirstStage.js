@@ -1,7 +1,7 @@
 import Player from "../Player.js";
 import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
-
+import Command from "../Command.js";
 
 export default class FirstStage extends Phaser.Scene {   
     constructor(){ 
