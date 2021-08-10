@@ -54,6 +54,14 @@ class Start extends Phaser.Scene {
       this.load.image("stage_2_button", "./assets/images/map/stage_2.png");
       this.load.image("stage_3_button", "./assets/images/map/stage_3.png");
 
+      /** 불타는 배경 로드 **/
+      this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {
+        frameWidth: 1100,
+        frameHeight: 552
+    });
+
+    /** 첫번째 스테이지의 집 이미지 로드 **/
+    this.load.image("house", "./assets/images/house.png");
 
     } 
 
