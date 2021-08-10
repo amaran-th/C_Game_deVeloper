@@ -1,8 +1,7 @@
-
 import Player from "./Player.js";
 import Inventory from "./Inventory.js";
 import Dialog from "./Dialog.js";
-
+import Command from "./Command.js";
 
 
 const sleep = ms => {
@@ -50,8 +49,6 @@ export default class Stage1 extends Phaser.Scene {
     }
     
     create () {
-
- 
 
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
@@ -134,6 +131,14 @@ export default class Stage1 extends Phaser.Scene {
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
+        
+        //플레이어 위 pressX 생성해두기
+        this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+
 
         /** 초반 인트로 대사 출력 **/
         this.cameras.main.fadeIn(1000,0,0,0);
@@ -196,6 +201,23 @@ export default class Stage1 extends Phaser.Scene {
             this.intro2();
             this.invenPlus = false;
         }
+
+        /* 플레이어가 문 앞에 서면 작동하도록 함 */
+        if(this.player.player.x < 175 && 100 < this.player.player.x ) {
+            this.pressX.x = this.player.player.x-50;
+            this.pressX.y = this.player.player.y-100;
+            this.pressX.setVisible(true);
+        
+            if(this.keyX.isDown) {
+                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                console.log('맵이동');
+                this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                //this.scene.run("");
+            }
+        }
+        else this.pressX.setVisible(false);
+
+
     }
 
     intro2() {
@@ -222,4 +244,24 @@ export default class Stage1 extends Phaser.Scene {
         .start();
     }
 
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
+        var script = scene.add.text(textBox.x + 200, textBox.y +50, msg, {
+        fontFamily: 'Arial', 
+         fill: '#000000',
+         fontSize: '30px', 
+         wordWrap: { width: 450, useAdvancedWrap: true }
+        }).setOrigin(0,0);
+
+        var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+
+        scene.input.once('pointerdown', function() {
+            textBox.setVisible(false);
+            script.setVisible(false);
+            playerFace.setVisible(false);
+
+            //this.intro3();
+        }, this);
+    }
 }

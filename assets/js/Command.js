@@ -1,9 +1,15 @@
 var state = 0;
 var text;
 var text_on = false;
-class Command extends Phaser.GameObjects.Image {
+
+import Stage1 from "./Stage1.js";
+
+export default class Command extends Phaser.GameObjects.Image {
     constructor(scene, map) {
         super(scene, map);
+
+        var stage1 = new Stage1();
+
         // ...
         scene.add.existing(this);
 
@@ -94,6 +100,8 @@ class Command extends Phaser.GameObjects.Image {
     
                         if (result.result != 'ok') return;
                         console.log(result.output);
+                        console.log('command 파일 result:', result.output);
+                        stage1.complied(scene, result.output);
                         //document.getElementById('testoutput').value = result.output;
     
                     });

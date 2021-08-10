@@ -1,5 +1,6 @@
 import TestScene from "./TestScene.js";
 
+
 const COLOR_PRIMARY = 0xffffff; //안쪽
 const COLOR_LIGHT = 0xC3C3C3; //바깥 선
 
@@ -19,6 +20,7 @@ export default class Dialog extends Phaser.Events.EventEmitter {
       this['setFace'] = this.setFace;
       this['setExtraFace'] = this.setFaceact;
       this.testScene = new TestScene();
+
 
   }
   
