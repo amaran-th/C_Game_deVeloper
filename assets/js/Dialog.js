@@ -160,6 +160,26 @@ visible(visible) {
     ['visible',false],
   ]
 
+  intro4 = [
+    ['wait-click'],
+    ['visible',true],
+    ['setFace', 0],
+    ['print', '(말이 나왔어...!)'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '이 휴대폰 앱을 통해서 \'어떠한 행동\'을 할 수 있게 되는 걸지도...?'],
+    ['wait-click'],
+    ['print', '......'],
+    ['wait-click'],
+    ['print', '하하! 그럴리가 없잖아. 여기가 코딩 지옥이냐? 난 코딩같은 거 모른다고!'],
+    ['wait-click'],
+    ['print', '음... 그나저나 좀 더운 거 같은데...'],
+    ['wait-click'],
+    ['print', '...일단 밖으로 나가볼까?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
 
   talk1 = [
     //['loadTextbox'],

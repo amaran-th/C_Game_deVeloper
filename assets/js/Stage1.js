@@ -235,8 +235,6 @@ export default class Stage1 extends Phaser.Scene {
     }
 
     intro3() {
-        this.command.commandbox.setVisible(true);   ///작동안됨!!!!!!!!!!!!!!!!!
-        //this.command.text.setVisible(true);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -261,7 +259,19 @@ export default class Stage1 extends Phaser.Scene {
             script.setVisible(false);
             playerFace.setVisible(false);
 
-            //this.intro3();
+            scene.intro4();
         }, this);
+    }
+
+    intro4() {
+        this.player.playerPaused = true; //플레이어 얼려두기
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro4, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });
     }
 }
