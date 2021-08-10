@@ -157,9 +157,9 @@ export default class TestScene extends Phaser.Scene {
         }).setOrigin(0,0);
 
          //드래그앤드롭으로 zone에 있는 코드 받아올거임.
-         this.code_zone_1 = "";
-         this.code_zone_2 = "";
-         this.code_zone_3 = "";
+         this.code_zone_1 = "       ";
+         this.code_zone_2 = "       ";
+         this.code_zone_3 = "       ";
 
       
          /*** Stage Clear! 창 불러오기 ***/
