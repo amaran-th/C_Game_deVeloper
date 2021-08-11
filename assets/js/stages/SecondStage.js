@@ -23,6 +23,8 @@ export default class SecondStage extends Phaser.Scene {
 
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
+        this.key1 = this.input.keyboard.addKey('ONE');
+        this.key3 = this.input.keyboard.addKey('THREE');
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "second_stage" });
@@ -92,6 +94,16 @@ export default class SecondStage extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
 
+        if(this.key1.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('first_stage');
+        }
+        if(this.key3.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("third_stage");
+        }
 
     }
 
