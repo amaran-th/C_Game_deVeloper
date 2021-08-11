@@ -105,7 +105,7 @@ export default class TestScene extends Phaser.Scene {
 
 
         /*** 명령창 불러오기 ***/
-        this.command = new Command(this, map);
+        this.command = new Command(this, map, "bootgame");
 
         // 드래그앤 드랍할 조각
         /*this.drag_piece = ['printf', 'if'];

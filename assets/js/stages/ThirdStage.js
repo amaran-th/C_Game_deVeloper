@@ -10,7 +10,7 @@ export default class ThirdStage extends Phaser.Scene {
 
     preload() {
 
-        this.load.image("stage_tiles", "./assets/images/map_stage3.png");
+        //this.load.image("stage_tiles", "./assets/images/map_stage3.png");
         this.load.tilemapTiledJSON("third_stage", "./assets/third_stage.json");
     
     }
@@ -26,7 +26,7 @@ export default class ThirdStage extends Phaser.Scene {
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "third_stage" });
         
-        const tileset = map.addTilesetImage("map_stage3", "stage_tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("map_stage3", "stage3_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
@@ -55,7 +55,7 @@ export default class ThirdStage extends Phaser.Scene {
 
 
         /*** 명령창 불러오기 ***/
-        this.command = new Command(this, map);
+        this.command = new Command(this, map, "third_stage");
 
         // 드래그앤드랍
         //this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");

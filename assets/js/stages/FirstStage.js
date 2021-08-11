@@ -71,7 +71,7 @@ export default class FirstStage extends Phaser.Scene {
 
 
         /*** 명령창 불러오기 ***/
-        this.command = new Command(this, map);
+        this.command = new Command(this, map, "first_stage");
 
         // 드래그앤드랍
         //this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");

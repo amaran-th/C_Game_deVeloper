@@ -66,8 +66,11 @@ class Start extends Phaser.Scene {
 
     /** 첫번째 스테이지의 집 이미지 로드 **/
       this.load.image("house", "./assets/images/house.png");
+    /** 2번째 스테이지 타일 **/
+      this.load.image("stage2_tiles", "./assets/images/test.png");
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");
+      this.load.image("stage3_tiles", "./assets/images/map_stage3.png");
 
     } 
 
