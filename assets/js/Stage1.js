@@ -94,7 +94,7 @@ export default class Stage1 extends Phaser.Scene {
         this.worldView = this.cameras.main.worldView;
 
         /*** 명령창 불러오기 ***/
-        this.command = new Command(this, map);
+        this.command = new Command(this, map, "stage1");
 
 
         /** 플레이어 위치 확인용 **/

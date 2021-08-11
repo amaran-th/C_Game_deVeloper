@@ -5,8 +5,8 @@ var app_on = false;
 import Stage1 from "./Stage1.js";
 
 export default class Command extends Phaser.GameObjects.Image {
-    constructor(scene, map) {
-        super(scene, map);
+    constructor(scene, map, name) {
+        super(scene, map, name);
 
         var stage1 = new Stage1();
 
@@ -50,12 +50,10 @@ export default class Command extends Phaser.GameObjects.Image {
                         // case 1 안으로 들어왔는지 확인용으로 1 띄움
                         scene.add.text(310, 10, '1', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
                         // HELP HELP 맵 이동 어떻게 하는지 모르겠음.. 
-                        /*
-                        this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                        scene.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
                         console.log('맵이동');
-                        this.scene.sleep(scene); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                        this.scene.run("MiniMap");
-                        */
+                        scene.scene.sleep(name); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                        scene.scene.run("minimap");
                         break;
                     case 2:
                         scene.add.text(350, 100, '음... 튜토리얼 뭘 넣어야 하는거징..', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
