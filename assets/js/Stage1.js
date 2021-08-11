@@ -1,8 +1,7 @@
-
 import Player from "./Player.js";
 import Inventory from "./Inventory.js";
 import Dialog from "./Dialog.js";
-
+import Command from "./Command.js";
 
 
 const sleep = ms => {
@@ -51,8 +50,6 @@ export default class Stage1 extends Phaser.Scene {
     
     create () {
 
- 
-
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -69,23 +66,10 @@ export default class Stage1 extends Phaser.Scene {
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
 
-        /** 아이템 만들기 **/
-        this.itemPrintf = this.add.image(360,330,'item'); 
-       
-
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
         this.player.player.setFlipX(true);
-
-         /** 아이템 얻었을 때 뜨는 이미지 **/
-         this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-         this.itemPrintfText = this.add.text(500,270,'printf',{
-            font: "30px Arial Black", fill: "#000000" 
-         }).setOrigin(0,0);
-         this.itemPrintfget.setVisible(false);
-         this.itemPrintfText.setVisible(false);
-         this.beforeItemGet = true; //한 번만 뜨도록
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -98,7 +82,6 @@ export default class Stage1 extends Phaser.Scene {
         this.deco.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.deco);
 
-
         /*** 충돌지점 색 칠하기 Mark the collid tile ***/
         const debugGraphics = this.add.graphics().setAlpha(0,75);
         this.worldLayer.renderDebug(debugGraphics, {
@@ -110,29 +93,20 @@ export default class Stage1 extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
-
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map);
-
-        // 드래그앤 드랍할 조각
-        this.drag_piece = ['printf', 'if', 'else'];
-        // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
-        this.code_piece_add_state = 0;
-        // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
-        this.drop_state_1 = 0;
-        this.drop_state_2 = 0;
-        this.drop_state_3 = 0;
-        // 드래그앤드랍
-        this.draganddrop_1 = new DragAndDrop(this, 470, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
-        this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
-        this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
-       
-        /** 인벤토리 만들기 **/     
-        this.inven = this.inventory.create(this);
 
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+
+        
+        //플레이어 위 pressX 생성해두기
+        this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
 
 
         /** 초반 인트로 대사 출력 **/
@@ -147,12 +121,55 @@ export default class Stage1 extends Phaser.Scene {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
 
-        console.log('itme 위치', this.itemPrintf.x);
+        
+        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
+
+        // 인벤창 팝업 여부를 나타내는 상태변수
+        this.invenIn = false;
+        
+        /** 아이템 만들기 **/
+        this.itemPrintf = this.add.image(360,330,'item'); 
+        
+        /** 아이템 얻었을 때 뜨는 이미지 **/
+        this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
+        this.itemPrintfText = this.add.text(500,270,'printf',{
+        font: "30px Arial Black", fill: "#000000" 
+        }).setOrigin(0,0);
+        this.itemPrintfget.setVisible(false);
+        this.itemPrintfText.setVisible(false);
+        this.beforeItemGet = true; //한 번만 뜨도록
+
+        /** 인벤토리 만들기 **/     
+        this.inven = this.inventory.create(this);
+
+        //console.log('item 위치', this.itemPrintf.x);
+
+        // 드래그앤드랍
+        //this.drag_piece = ['printf', 'if', 'else'];
+        // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
+        this.code_piece_add_state = 0;
+        // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
+        this.drop_state_1 = 0;
+        this.drop_state_2 = 0;
+        this.drop_state_3 = 0;
+
+        //드래그앤드롭으로 zone에 있는 코드 받아올거임.
+        this.code_zone_1 = "       ";
+        this.code_zone_2 = "       ";
+        this.code_zone_3 = "       ";
+
+        // Stage1 씬의 전체코드
+        this.contenttext = "" ;
+        
     }
 
     update() {
+        this.contenttext = 
+            "Stage1 코드 \n#include <stdio.h> \n int main(){ \n " +  this.code_zone_1 +  "(\"HI\"); \n }" 
+            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
+
         this.player.update();
-        this.inventory.update();
+        this.inventory.update(this);
         this.command.update(this);
                 
          /* 플레이어 위치 알려줌*/
@@ -193,9 +210,28 @@ export default class Stage1 extends Phaser.Scene {
 
         if(this.invenPlus) {
             this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
+            //this.inventory.invenSave(this, 'if');
+            //his.inventory.invenSave(this, 'else');
             this.intro2();
             this.invenPlus = false;
         }
+
+        /* 플레이어가 문 앞에 서면 작동하도록 함 */
+        if(this.player.player.x < 175 && 100 < this.player.player.x ) {
+            this.pressX.x = this.player.player.x-50;
+            this.pressX.y = this.player.player.y-100;
+            this.pressX.setVisible(true);
+        
+            if(this.keyX.isDown) {
+                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                console.log('맵이동');
+                this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                this.scene.run("first_stage");
+            }
+        }
+        else this.pressX.setVisible(false);
+
+
     }
 
     intro2() {
@@ -213,8 +249,6 @@ export default class Stage1 extends Phaser.Scene {
     }
 
     intro3() {
-        this.command.commandbox.setVisible(true);   ///작동안됨!!!!!!!!!!!!!!!!!
-        //this.command.text.setVisible(true);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -222,4 +256,36 @@ export default class Stage1 extends Phaser.Scene {
         .start();
     }
 
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
+        var script = scene.add.text(textBox.x + 200, textBox.y +50, msg, {
+        fontFamily: 'Arial', 
+         fill: '#000000',
+         fontSize: '30px', 
+         wordWrap: { width: 450, useAdvancedWrap: true }
+        }).setOrigin(0,0);
+
+        var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+
+        scene.input.once('pointerdown', function() {
+            textBox.setVisible(false);
+            script.setVisible(false);
+            playerFace.setVisible(false);
+
+            scene.intro4();
+        }, this);
+    }
+
+    intro4() {
+        this.player.playerPaused = true; //플레이어 얼려두기
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro4, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });
+    }
 }

@@ -23,7 +23,7 @@ class Start extends Phaser.Scene {
       this.load.image("inventory_button", "./assets/images/inventory_button.png");
 
       /*** textbox 이미지 로드***/
-      this.load.image("textbox", "./assets/images/textbox.png");
+      this.load.image('textbox', "./assets/images/textbox.png");
 
       /** 플레이어 얼굴 이미지 로드 **/
       this.load.spritesheet('face', './assets/images/face.png', {
@@ -58,6 +58,16 @@ class Start extends Phaser.Scene {
       this.load.image("stage_2_button", "./assets/images/map/stage_2.png");
       this.load.image("stage_3_button", "./assets/images/map/stage_3.png");
 
+      /** 불타는 배경 로드 **/
+      this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {
+        frameWidth: 1100,
+        frameHeight: 552
+    });
+
+    /** 첫번째 스테이지의 집 이미지 로드 **/
+      this.load.image("house", "./assets/images/house.png");
+    /** 3번째 스테이지의 npc 로드 **/
+      this.load.image("npc_chef", "./assets/images/npc/npc1.png");
 
     } 
 
