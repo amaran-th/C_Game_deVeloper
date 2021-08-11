@@ -46,6 +46,10 @@ class Start extends Phaser.Scene {
       this.load.image("app_map", "./assets/images/app_map.png");
       this.load.image("app_tutorial", "./assets/images/app_tutorial.png");
 
+      /*** 뒤로가기 버튼 로드 ***/
+      this.load.image("back_button", "./assets/images/back_button.png");
+      this.load.image("back_button_on", "./assets/images/back_button_on.png");
+
       /** 드랍 리셋 버든 로드 **/
       this.load.image("reset_button", "./assets/images/reset_button.png");
       /** 미니맵 이미지 로드 **/
