@@ -33,7 +33,41 @@ export default class ThirdStage extends Phaser.Scene {
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
         /*** npc_chef 불러오기 ***/ 
-        this.npc_chef = this.add.image(900,250,'npc_chef').setOrigin(0,0);
+        this.npc_chef = this.add.image(350,250,'npc_chef').setOrigin(0,0);
+        this.npc_chef.setInteractive();
+
+        /***bread 불러오기 */
+        this.bread = this.add.image(370,250,'bread').setOrigin(0,0);
+        this.full_bread_1 = this.add.image(50,151,'full_bread').setOrigin(0,0)
+        this.full_bread_2 = this.add.image(200,151,'full_bread').setOrigin(0,0)
+        this.bread.setVisible(false);
+        this.full_bread_1.setVisible(false);
+        this.full_bread_2.setVisible(false);
+
+        /*** 오븐 이미지 불러오기 */
+        this.oven = this.add.image(851,300,'oven').setOrigin(0,0).setInteractive();
+        this.oven_open = this.add.image(851,300,'oven_open').setOrigin(0,0)
+        this.oven_open.setVisible(false);
+
+         /** 아이템 만들기 **/ 
+        this.itemfor = this.add.image(930,350,'item');
+        this.itemfor.setVisible(false); //오븐 눌러야지 아이템 보이게
+
+        /** 아이템 얻었을 때 뜨는 이미지 **/
+        this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
+        this.itemPrintfText = this.add.text(500,270,'printf',{
+        font: "30px Arial Black", fill: "#000000" 
+        }).setOrigin(0,0);
+        this.itemPrintfget.setVisible(false);
+        this.itemPrintfText.setVisible(false);
+        this.beforeItemGet = true; //한 번만 뜨도록
+
+        //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
+        this.oven.on('pointerup', () => {
+            this.oven_open.setVisible(true);
+             /** 아이템 만들기 **/
+             this.itemfor.setVisible(true);
+        });
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -54,7 +88,18 @@ export default class ThirdStage extends Phaser.Scene {
 
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
-
+        
+        /*** 퀘스트 말풍선 애니메이션 */
+        this.anims.create({
+            key: "exclam",
+            frames: this.anims.generateFrameNumbers('exp_exclam',{ start: 0, end: 4}), 
+            frameRate: 8,
+            repeat: 0,
+            hideOnComplete: true
+        });
+        
+        this.exclamMark = this.add.sprite( 390, 220, 'exp_exclam', 0);
+        this.exclamMark.setVisible(false);
 
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map, "third_stage");
@@ -87,18 +132,42 @@ export default class ThirdStage extends Phaser.Scene {
         //stage3의 전체 코드
         this.contenttext = "" ;
 
+        //코드 실행후 불러올 output값
+        this.out = "";
+
         stagenum = 3;
+
+        //초반 대사
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        this.stage3_1();
         
     }
 
     update() {
         this.contenttext = 
-            "#include <stdio.h> \n int main(){ \n " + "이건 3번째 스테이지얌"  +  this.code_zone_1 
-            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
+            "#include <stdio.h> \n int main(){ \nint bread = 0;\n for (int i=0; i<25; i++){\n   bread=bread+1;\n}\nprintf(\"%d\",bread);\n}" 
+        
+        //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
+        if (this.out == "#include <stdio.h> \n int main(){ \nint bread = 0;\n for (int i=0; i<25; i++){\n   bread=bread+1;\n}\nprintf(\"%d\",bread);\n}"){
+            console.log("===stage3 클리어!===");
+            this.bread.setVisible(true);
+            this.full_bread_1.setVisible(true);
+            this.full_bread_2.setVisible(true);
+            this.out = "";
+            this.exclamMark.setVisible(true);
+            this.exclamMark.play('exclam');
+
+            this.cameras.main.fadeIn(1000,0,0,0);
+            
+            this.stage3_3();
+            
+        }
+
         this.player.update();
       //  this.inventory.update();
         this.command.update(this);
-                
+        
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
             '플레이어 위치',
@@ -118,9 +187,45 @@ export default class ThirdStage extends Phaser.Scene {
             this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run('second_stage');
         }
+        
+      
 
     }
+    stage3_1() {
+        this.time.delayedCall( 1000, () => { 
+        var seq = this.plugins.get('rexsequenceplugin').add(); 
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage3_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.npc_chef.setFlipX(true);
+            this.exclamMark.setVisible(true);
+            this.exclamMark.play('exclam');
+            this.time.delayedCall( 1000, () => { this.stage3_2() }, [] , this);
+            });   
+        }, [], this);
+    }
+    stage3_2() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage3_2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });     
+    }
 
-
+    stage3_3() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage3_3, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });     
+    }
 
 }

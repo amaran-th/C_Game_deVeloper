@@ -258,6 +258,48 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage3_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 3],
+    ['print', '어떡하지.. '],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '저기..'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage3_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 3],
+    ['print', '뭐? 도와준다고?! 정말 고마워!'],
+    ['wait-click'],
+    ['print', '난 제빵왕 김핑퐁이야. 눈을 떠보니 코딩세계에 갇혀버렸지 뭐야!'],
+    ['wait-click'],
+    ['print', '코딩세계는 빵도 코딩으로 만들더라구?\n하지만 난 코딩을 못해..'],
+    ['wait-click'],
+    ['print', '빵을 딱 25개만 만들어줄래?'],
+    ['wait-click'],
+    ['print', '아! 여기 어딘가 코드조각을 놔뒀는데, 필요하면 찾아봐'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '아..넵..'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+  stage3_3 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 3],
+    ['print', '세상에! 진짜 해냈구나! '],
+    ['wait-click'],
+    ['print', '고마워! 코드조각은 너 가져'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
 
   talk1 = [
     //['loadTextbox'],
