@@ -81,6 +81,10 @@ visible(visible) {
   place(x,y) {
       this.textBox.x = x;
       this.textBox.y = y;
+      this.script.x = x+200;
+      this.script.y = y+50;
+      this.playerFace.x = x+800;
+      this.playerFace.y = y+100;
 
   }
   // callbacks
@@ -128,7 +132,6 @@ visible(visible) {
     ['print', '(무슨일이지??)'],
     ['wait-click'],
     ['visible',false],
-
   ]
 
   intro2 = [
@@ -176,6 +179,40 @@ visible(visible) {
     ['print', '음... 그나저나 좀 더운 거 같은데...'],
     ['wait-click'],
     ['print', '...일단 밖으로 나가볼까?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '(부... 불타고 있어!)'],
+    ['wait-click'],
+    ['print', '(이.. 이게 뭐야?! 악몽같아!)'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '거기 너!'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '(뭐야 쟨???)'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '뭐라뭐라뭐라'],
+    ['wait-click'],
+    ['print', '대사좀써주세요'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '전 코딩할줄 모르는데요???'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '뭐라뭐라뭐라'],
     ['wait-click'],
     ['visible',false],
   ]
