@@ -41,7 +41,6 @@ export default class TestScene extends Phaser.Scene {
         this.load.plugin('rexsequenceplugin', url, true);
 
         this.onTile = 1;
-
     }
     
     create () {
@@ -50,7 +49,9 @@ export default class TestScene extends Phaser.Scene {
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
         this.keyZ = this.input.keyboard.addKey('Z');
-
+        this.key1 = this.input.keyboard.addKey('ONE');
+        this.key2 = this.input.keyboard.addKey('TWO');
+        this.key3 = this.input.keyboard.addKey('THREE');
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
         
@@ -105,7 +106,7 @@ export default class TestScene extends Phaser.Scene {
 
 
         /*** 명령창 불러오기 ***/
-        this.command = new Command(this, map);
+        this.command = new Command(this, map, "bootgame");
 
         // 드래그앤 드랍할 조각
         /*this.drag_piece = ['printf', 'if'];
@@ -235,7 +236,21 @@ export default class TestScene extends Phaser.Scene {
             this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run("stage1");
         }
-        
+        if(this.key1.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('first_stage');
+        }
+        if(this.key2.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('second_stage');
+        }
+        if(this.key3.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("third_stage");
+        }
     }
 
 

@@ -1,6 +1,7 @@
 import Player from "../Player.js";
 import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
+import Command from "../Command.js";
 
 
 export default class SecondStage extends Phaser.Scene {   
@@ -10,23 +11,25 @@ export default class SecondStage extends Phaser.Scene {
 
     preload() {
 
-        this.load.image("stage_tiles", "./assets/images/test.png");
+        //this.load.image("stage_tiles", "./assets/images/test.png");
         this.load.tilemapTiledJSON("second_stage", "./assets/second_stage.json");
     
     }
     
     create () {
 
-        this.inventory = new Inventory(this);
+        //this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
+        this.key1 = this.input.keyboard.addKey('ONE');
+        this.key3 = this.input.keyboard.addKey('THREE');
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "second_stage" });
         
-        const tileset = map.addTilesetImage("test", "stage_tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("test", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
 
         /***스폰 포인트 설정하기 locate spawn point***/
@@ -51,7 +54,7 @@ export default class SecondStage extends Phaser.Scene {
 
 
         /*** 명령창 불러오기 ***/
-        this.command = new Command(this, map);
+        this.command = new Command(this, map, "second_stage");
 
         // 드래그앤드랍
         //this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
@@ -59,7 +62,7 @@ export default class SecondStage extends Phaser.Scene {
         //this.draganddrop_3 = new DragAndDrop(this, 700, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
         
         /** 인벤토리 만들기 **/     
-        this.inven = this.inventory.create(this);
+        //this.inven = this.inventory.create(this);
 
 
         /** 플레이어 위치 확인용 **/
@@ -79,7 +82,7 @@ export default class SecondStage extends Phaser.Scene {
 
     update() {
         this.player.update();
-        this.inventory.update();
+        //this.inventory.update();
         this.command.update(this);
                 
          /* 플레이어 위치 알려줌*/
@@ -91,6 +94,16 @@ export default class SecondStage extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
 
+        if(this.key1.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('first_stage');
+        }
+        if(this.key3.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("third_stage");
+        }
 
     }
 

@@ -26,7 +26,7 @@ export default class inventory {
 
         scene.invenIn = false; //인벤토리 창이 내려가있는지 올라가있는지
 
-        console.log('인덱스:', scene.item.length);
+        //console.log('인덱스:', scene.item.length);
 
         //저장된 아이템은 미리 인벤창에 넣어둔다.
         /*for(var i=0; i<=scene.item.length; i++ ) {

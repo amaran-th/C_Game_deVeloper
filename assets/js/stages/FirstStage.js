@@ -18,6 +18,8 @@ export default class FirstStage extends Phaser.Scene {
 
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
+        this.key2 = this.input.keyboard.addKey('TWO');
+        this.key3 = this.input.keyboard.addKey('THREE');
 
         this.anims.create({
             key: "fire",
@@ -90,7 +92,7 @@ export default class FirstStage extends Phaser.Scene {
 
 
         /*** 명령창 불러오기 ***/
-        this.command = new Command(this, map);
+        this.command = new Command(this, map, "first_stage");
 
         // 드래그앤드랍
         //this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
@@ -147,6 +149,17 @@ export default class FirstStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
+
+        if(this.key2.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('second_stage');
+        }
+        if(this.key3.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("third_stage");
+        }
 
 
     }
