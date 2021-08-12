@@ -73,6 +73,8 @@ class Start extends Phaser.Scene {
       frameWidth: 79,
       frameHeight: 140,
     });
+    /** 첫번째 스테이지의 잠긴 휴대폰 화면 로드 **/
+      this.load.image("locked", "./assets/images/commandbox_locked.png");
 
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");

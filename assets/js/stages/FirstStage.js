@@ -202,21 +202,39 @@ export default class FirstStage extends Phaser.Scene {
 
     stage1_4() {
         this.devil.anims.stop();
-        console.log('대사44');
-        /*
-        this.image.add();
+        this.devil.setFrame(1);
+        var phoneLocked = this.add.image(this.worldView.x+1110,50,'locked').setOrigin(0,0);
+        this.tweens.add({
+            targets: phoneLocked,
+            x: 350, //위치 이동
+            duration: 500,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{console.log('done')}
+        }, this);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.time.delayedCall( 2000, () => { 
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage1_4, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.stage1_5();
+            }); 
+        }, [] , this);
+    }
+
+    stage1_5() {
+        this.devil.setFlipX(false);
+        this.devil.play('devil_walk');
+        this.devil.setVelocityX(500);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
-        .load(this.dialog.stage1_4, this.dialog)
+        .load(this.dialog.stage1_5, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.devil.play('devil_touch_phone');
-            this.time.delayedCall( 1000, () => {
-                this.devil.setFrame(1);
-                this.stage1_4();
-            }, [] , this);
-        });
-        */  
+            this.devil.destroy();
+        }); 
     }
 }
