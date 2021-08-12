@@ -214,6 +214,44 @@ visible(visible) {
     ['setFace', 2],
     ['print', '뭐라뭐라뭐라'],
     ['wait-click'],
+    ['print', '흠.. 이거 안되겠군'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_3 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '휴대폰 이리내놔!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_4 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '흠...(만족)'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '저기요! 이게 무슨짓이에요?!'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '그리고 왜 반말함??? 빨리 잠금풀어!'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '니 알아서해라 ㅃㅇ'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_5 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '야!! 어디가!!'],
+    ['wait-click'],
     ['visible',false],
   ]
 

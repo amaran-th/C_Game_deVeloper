@@ -56,11 +56,23 @@ export default class FirstStage extends Phaser.Scene {
             repeat: 0,
             hideOnComplete: true
         });
-
-
         this.exclamMark = this.add.sprite( 600, 330, 'exp_exclam', 0);
         this.exclamMark.setVisible(false);
-        this.devil = this.add.image(600 ,430,'npc_devil');
+
+        this.anims.create({
+            key: "devil_walk",
+            frames: this.anims.generateFrameNumbers('npc_devil',{ start: 0, end: 3}), 
+            frameRate: 7,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: "devil_touch_phone",
+            frames: this.anims.generateFrameNumbers('npc_devil',{ start: 4, end: 5}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+        this.devil = this.physics.add.sprite(600 ,430,'npc_devil');
+        this.devil.setFrame(1);
         
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -71,6 +83,7 @@ export default class FirstStage extends Phaser.Scene {
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
+        this.physics.add.collider(this.devil, this.worldLayer);
 
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
@@ -162,5 +175,48 @@ export default class FirstStage extends Phaser.Scene {
             seq
             .load(this.dialog.stage1_2, this.dialog)
             .start();
+            seq.on('complete', () => {
+                this.devil.play('devil_walk',true);
+                this.devil.setVelocityX(-200);
+                this.time.delayedCall( 1000, () => {
+                    this.devil.anims.stop();
+                    this.devil.setVelocityX(0);
+                    this.stage1_3();
+                 }, [] , this);
+            });  
+    }
+
+    stage1_3() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_3, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.devil.play('devil_touch_phone',true);
+            this.time.delayedCall( 2000, () => {
+                this.stage1_4();
+             }, [] , this);
+        });  
+    }
+
+    stage1_4() {
+        this.devil.anims.stop();
+        console.log('대사44');
+        /*
+        this.image.add();
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_4, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.devil.play('devil_touch_phone');
+            this.time.delayedCall( 1000, () => {
+                this.devil.setFrame(1);
+                this.stage1_4();
+            }, [] , this);
+        });
+        */  
     }
 }
