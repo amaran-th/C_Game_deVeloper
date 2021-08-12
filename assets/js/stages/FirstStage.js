@@ -248,6 +248,8 @@ export default class FirstStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.devil.destroy();
+            console.log('대화 끝');
+            this.scene.run('quiz')
         }); 
     }
 }
