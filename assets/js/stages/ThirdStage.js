@@ -49,10 +49,24 @@ export default class ThirdStage extends Phaser.Scene {
         this.oven_open = this.add.image(851,300,'oven_open').setOrigin(0,0)
         this.oven_open.setVisible(false);
 
+         /** 아이템 만들기 **/ 
+        this.itemfor = this.add.image(930,350,'item');
+        this.itemfor.setVisible(false); //오븐 눌러야지 아이템 보이게
+
+        /** 아이템 얻었을 때 뜨는 이미지 **/
+        this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
+        this.itemPrintfText = this.add.text(500,270,'printf',{
+        font: "30px Arial Black", fill: "#000000" 
+        }).setOrigin(0,0);
+        this.itemPrintfget.setVisible(false);
+        this.itemPrintfText.setVisible(false);
+        this.beforeItemGet = true; //한 번만 뜨도록
+
         //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
         this.oven.on('pointerup', () => {
-                this.oven_open.setVisible(true);
-             
+            this.oven_open.setVisible(true);
+             /** 아이템 만들기 **/
+             this.itemfor.setVisible(true);
         });
 
         /***스폰 포인트 설정하기 locate spawn point***/

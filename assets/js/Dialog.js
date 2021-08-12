@@ -293,7 +293,6 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 3],
-    ['wait-click'],
     ['print', '세상에! 진짜 해냈구나! '],
     ['wait-click'],
     ['print', '고마워! 코드조각은 너 가져'],
