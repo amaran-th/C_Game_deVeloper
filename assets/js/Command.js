@@ -28,7 +28,7 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 명령창, 명령창 내용 zone 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
         this.zone = scene.add.zone(map.widthInPixels, 100,  360, 550).setOrigin(0).setInteractive();
-        text = scene.add.text(map.widthInPixels, 100, scene.contenttext, {  font: "30px Arial Black", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+        text = scene.add.text(map.widthInPixels, 100, scene.contenttext, {  font: "20px Arial Black", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
 
         /*** 폰 앱들 넣어주기 ***/
         var app_names = ['app_code', 'app_map', 'app_tutorial'];
@@ -120,6 +120,7 @@ export default class Command extends Phaser.GameObjects.Image {
                         var result = JSON.parse(xhr.responseText);
     
                         if (result.result != 'ok') return;
+                        scene.out = result.output;
                         console.log(result.output);
                         console.log('command 파일 result:', result.output);
                         stage1.complied(sc, result.output);
