@@ -10,12 +10,9 @@ export default class FirstStage extends Phaser.Scene {
 
     preload() {
         this.load.tilemapTiledJSON("stage1", "./assets/stage1.json");
-    
     }
     
     create () {
-
-
         //this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -26,7 +23,7 @@ export default class FirstStage extends Phaser.Scene {
 
         this.anims.create({
             key: "fire",
-            frames: this.anims.generateFrameNumbers('fireBackground',{ start: 0, end: 2}), //TestScene의 preload에 있는 player 들고 옴
+            frames: this.anims.generateFrameNumbers('fireBackground',{ start: 0, end: 2}), 
             frameRate: 5,
             repeat: -1
         });
@@ -36,9 +33,7 @@ export default class FirstStage extends Phaser.Scene {
 
         this.background1.play('fire',true);
         this.background2.play('fire',true);
-
         
-
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "stage1" });
 
@@ -56,17 +51,41 @@ export default class FirstStage extends Phaser.Scene {
         this.worldLayer = map.createLayer("world", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
 
 
-    
+        this.anims.create({
+            key: "exclam",
+            frames: this.anims.generateFrameNumbers('exp_exclam',{ start: 0, end: 4}), 
+            frameRate: 8,
+            repeat: 0,
+            hideOnComplete: true
+        });
+        this.exclamMark = this.add.sprite( 600, 330, 'exp_exclam', 0);
+        this.exclamMark.setVisible(false);
 
+        this.anims.create({
+            key: "devil_walk",
+            frames: this.anims.generateFrameNumbers('npc_devil',{ start: 0, end: 3}), 
+            frameRate: 7,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: "devil_touch_phone",
+            frames: this.anims.generateFrameNumbers('npc_devil',{ start: 4, end: 5}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+        this.devil = this.physics.add.sprite(600 ,430,'npc_devil');
+        this.devil.setFrame(1);
+        
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        this.cameras.main.setDeadzone(map.widthInPixels/4, map.heightInPixels); //config.width 대신 map.widthInPixels 쓰기
+        this.cameras.main.setDeadzone(map.widthInPixels/16, map.heightInPixels); //config.width 대신 map.widthInPixels 쓰기
 
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
+        this.physics.add.collider(this.devil, this.worldLayer);
 
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
@@ -105,6 +124,11 @@ export default class FirstStage extends Phaser.Scene {
 
         stagenum = 1;
 
+        /** 초반 대사 **/
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        this.stage1_1();
+
         
     }
 
@@ -140,6 +164,90 @@ export default class FirstStage extends Phaser.Scene {
 
     }
 
+    stage1_1() {
+        this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
+        this.time.delayedCall( 1000, () => {  
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage1_1, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                //악마를 플레이어 방향을 보게 하고, 그 위에 느낌표 표시를 한 뒤 stage2 대사로 넘어간다
+                this.devil.setFlipX(true);
+                this.exclamMark.setVisible(true);
+                this.exclamMark.play('exclam');
+                this.time.delayedCall( 1000, () => { this.stage1_2() }, [] , this);
+            });    
+        }, [], this);
+    }
 
+    stage1_2() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage1_2, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.devil.play('devil_walk',true);
+                this.devil.setVelocityX(-200);
+                this.time.delayedCall( 1000, () => {
+                    this.devil.anims.stop();
+                    this.devil.setVelocityX(0);
+                    this.stage1_3();
+                 }, [] , this);
+            });  
+    }
 
+    stage1_3() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_3, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.devil.play('devil_touch_phone',true);
+            this.time.delayedCall( 2000, () => {
+                this.stage1_4();
+             }, [] , this);
+        });  
+    }
+
+    stage1_4() {
+        this.devil.anims.stop();
+        this.devil.setFrame(1);
+        var phoneLocked = this.add.image(this.worldView.x+1110,50,'locked').setOrigin(0,0);
+        this.tweens.add({
+            targets: phoneLocked,
+            x: 350, //위치 이동
+            duration: 500,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{console.log('done')}
+        }, this);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.time.delayedCall( 2000, () => { 
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage1_4, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.stage1_5();
+            }); 
+        }, [] , this);
+    }
+
+    stage1_5() {
+        this.devil.setFlipX(false);
+        this.devil.play('devil_walk');
+        this.devil.setVelocityX(500);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_5, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.devil.destroy();
+        }); 
+    }
 }

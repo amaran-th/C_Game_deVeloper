@@ -64,8 +64,22 @@ class Start extends Phaser.Scene {
         frameHeight: 552
     });
 
+    /** 느낌표 말풍선 로드 **/
+    this.load.spritesheet('exp_exclam', './assets/images/exp_exclam.png', {
+      frameWidth: 55,
+      frameHeight: 50
+  });
+
     /** 첫번째 스테이지의 집 이미지 로드 **/
       this.load.image("house", "./assets/images/house.png");
+    /**첫번째 스테이지 npc 로드  **/
+    this.load.spritesheet('npc_devil', './assets/images/npc/npc3.png', {
+      frameWidth: 79,
+      frameHeight: 140,
+    });
+    /** 첫번째 스테이지의 잠긴 휴대폰 화면 로드 **/
+      this.load.image("locked", "./assets/images/commandbox_locked.png");
+
     /** 2번째 스테이지 타일 **/
       this.load.image("stage2_tiles", "./assets/images/test.png");
     /** 3번째 스테이지의 npc 로드 **/
