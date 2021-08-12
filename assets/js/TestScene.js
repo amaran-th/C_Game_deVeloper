@@ -18,16 +18,19 @@ export default class TestScene extends Phaser.Scene {
     preload() {
         /*** FROM Minicode.js***/
 
-        this.load.image("tiles", "./assets/images/map.png");
+        
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
 
-        /** FROM Player.js**/
+        /*
+        this.load.image("tiles", "./assets/images/map.png");
+
+        // FROM Player.js
         this.load.spritesheet('player', './assets/images/heroin.png', {
             frameWidth: 80,
             frameHeight: 140
         });
 
-        /** 텍스트 박스에 사용하는 플러그인 rexUI preload **/
+        // 텍스트 박스에 사용하는 플러그인 rexUI preload 
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
@@ -35,10 +38,11 @@ export default class TestScene extends Phaser.Scene {
         });
         this.load.image('nextPage', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png');
         
-        /** 순차진행에 필요한 플러그인 **/
+        // 순차진행에 필요한 플러그인
         var url;
         url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsequenceplugin.min.js';
         this.load.plugin('rexsequenceplugin', url, true);
+        */
 
         this.onTile = 1;
     }

@@ -19,6 +19,30 @@ class Start extends Phaser.Scene {
       this.load.image("compile_button", "./assets/images/command/execute_button.png");  //==============================================
       this.load.image("map_button", "./assets/images/command/map_button.png");
 
+      //나중에 지우기 ======================================
+              this.load.image("tiles", "./assets/images/map.png");
+
+              /** FROM Player.js**/
+              this.load.spritesheet('player', './assets/images/heroin.png', {
+                frameWidth: 80,
+                frameHeight: 140
+            });
+    
+            /** 텍스트 박스에 사용하는 플러그인 rexUI preload **/
+            this.load.scenePlugin({
+                key: 'rexuiplugin',
+                url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+                sceneKey: 'rexUI'
+            });
+            this.load.image('nextPage', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png');
+            
+            /** 순차진행에 필요한 플러그인 **/
+            var url;
+            url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsequenceplugin.min.js';
+            this.load.plugin('rexsequenceplugin', url, true);
+      //나중에 지우기 ======================================
+
+
       /*** inventory 관련 image 로드 ***/
       this.load.image("inventory_button", "./assets/images/inventory_button.png");
 
@@ -85,7 +109,6 @@ class Start extends Phaser.Scene {
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");
       this.load.image("stage3_tiles", "./assets/images/map_stage3.png");
-
     } 
 
     create() {
@@ -134,7 +157,7 @@ class Start extends Phaser.Scene {
         this.scene.start("bootGame");
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("bootGame");
+        this.scene.start("quiz");
       }, this);
 
     }

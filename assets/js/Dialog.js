@@ -251,7 +251,10 @@ visible(visible) {
     ['place', 40,10],
     ['setFace', 0],
     ['print', '야!! 어디가!!'],
+    ['wait-time', 1],
     ['wait-click'],
+    ['setFace', 0],
+    ['print', '이게.. 이게 뭐야 진짜?!'],
     ['visible',false],
   ]
 
