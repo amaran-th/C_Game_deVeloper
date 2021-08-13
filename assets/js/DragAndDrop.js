@@ -25,7 +25,7 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
                 code_piece.clearTint();
             });
         }
-
+        
         // 드랍 영역 선으로 임시 표시
         var graphics = scene.add.graphics();
         graphics.lineStyle(2, 0xffff00);
@@ -125,15 +125,15 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         reset_button.on('pointerout', function () {
             reset_button.clearTint();
         });
+        var code_piece2 = this.code_piece; // 리셋 버튼 안에서 this.code_piece를 가져오지 못해서 따로 변수로 둠(앞에서 code_piece로 변수 둬서 충돌하길래 2로 둠)
         reset_button.on('pointerup', function () {
             console.log('reset');
             var code_piece_reset_x = 50;
-            /*for (var i = 0; i < scene.item.length; i++){
-                var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
-                this.code_piece[i].x = code_piece_reset_x;
-                this.code_piece[i].y = 490;
+            for (var i = 0; i < scene.item.length; i++){
+                code_piece2[i].x = code_piece_reset_x;
+                code_piece2[i].y = 490;
                 code_piece_reset_x += 100;
-            }*/
+            }
             //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
             scene.drop_state_1 = 0;
             scene.drop_state_2 = 0;

@@ -73,8 +73,6 @@ export default class inventory {
         console.log('아이템 수:', scene.item.length);
         console.log('아이템 배열: ' + scene.item);
         this.draganddrop_1 = new DragAndDrop(scene, 815, 182, 100, 30).setRectangleDropZone(100, 30).setName("1");
-        this.draganddrop_2 = new DragAndDrop(scene, 570, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
-        this.draganddrop_3 = new DragAndDrop(scene, 670, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
         if(!scene.invenIn) { 
             this.exclamation = scene.add.text(140, 540,'!', { font: "30px Arial Black", fill: "#ff0000" }); 
             this.exclamationIsReal = true;
