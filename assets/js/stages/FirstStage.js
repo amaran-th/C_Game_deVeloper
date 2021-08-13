@@ -129,7 +129,7 @@ export default class FirstStage extends Phaser.Scene {
         this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
         this.stage1_1();
 
-        
+        this.quiz_running = false;
     }
 
     update() {
@@ -161,6 +161,7 @@ export default class FirstStage extends Phaser.Scene {
             this.scene.run("third_stage");
         }
 
+        if(!this.scene.isActive('quiz') && this.quiz_running ) this.stage1_6();
 
     }
 
@@ -216,9 +217,9 @@ export default class FirstStage extends Phaser.Scene {
     stage1_4() {
         this.devil.anims.stop();
         this.devil.setFrame(1);
-        var phoneLocked = this.add.image(this.worldView.x+1110,50,'locked').setOrigin(0,0);
+        this.phoneLocked = this.add.image(this.worldView.x+1110,50,'locked').setOrigin(0,0).setInteractive();
         this.tweens.add({
-            targets: phoneLocked,
+            targets: this.phoneLocked,
             x: 350, //위치 이동
             duration: 500,
             ease: 'Power1',
@@ -249,7 +250,40 @@ export default class FirstStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.devil.destroy();
             console.log('대화 끝');
-            this.scene.run('quiz')
+            this.click = this.add.text(500, 400, 'Click!', { font: 'Courier', fill: '#ffffff', fontSize: '100px' })
+            this.phoneLocked.on('pointerdown', function() {
+                this.scene.run('quiz');
+                this.quiz_running = true;
+            }, this);
         }); 
+    }
+
+    stage1_6() {
+        this.quiz_running = false;
+        this.phoneLocked.destroy();
+        this.click.destroy();
+
+        var phoneUnlocked = this.add.image(350,50,'unlocked').setOrigin(0,0);
+
+        this.time.delayedCall( 1000, () => { 
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage1_6, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.tweens.add({
+                    targets: phoneUnlocked,
+                    x: 1100, //위치 이동
+                    duration: 500,
+                    ease: 'Power1',
+                    repeat: 0,
+                    onComplete: ()=>{phoneUnlocked.destroy();}
+                }, this);
+            }); 
+        }, [], this);
+
+       
+        
     }
 }

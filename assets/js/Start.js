@@ -103,6 +103,7 @@ class Start extends Phaser.Scene {
     });
     /** 첫번째 스테이지의 잠긴 휴대폰 화면 로드 **/
       this.load.image("locked", "./assets/images/commandbox_locked.png");
+      this.load.image('unlocked', './assets/images/commandbox_unlocked.png')
 
     /** 2번째 스테이지 타일 **/
       this.load.image("stage2_tiles", "./assets/images/test.png");
