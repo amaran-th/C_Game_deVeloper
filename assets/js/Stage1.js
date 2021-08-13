@@ -145,6 +145,10 @@ export default class Stage1 extends Phaser.Scene {
         //console.log('item 위치', this.itemPrintf.x);
 
         // 드래그앤드랍
+        //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
+        this.code_zone_1 = "          ";
+        this.code_zone_2 = "          ";
+        this.code_zone_3 = "          ";
         //this.drag_piece = ['printf', 'if', 'else'];
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;

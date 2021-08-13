@@ -17,7 +17,7 @@ export default class FirstStage extends Phaser.Scene {
     
     create () {
 
-        this.inventory = new Inventory(this);
+        //this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
         /** x 키 입력 받기**/
@@ -59,7 +59,7 @@ export default class FirstStage extends Phaser.Scene {
         //this.draganddrop_3 = new DragAndDrop(this, 700, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
         
         /** 인벤토리 만들기 **/     
-        this.inven = this.inventory.create(this);
+        //this.inven = this.inventory.create(this);
 
 
         /** 플레이어 위치 확인용 **/
@@ -80,7 +80,7 @@ export default class FirstStage extends Phaser.Scene {
 
     update() {
         this.player.update();
-        this.inventory.update();
+        //this.inventory.update();
         this.command.update(this);
                 
          /* 플레이어 위치 알려줌*/
