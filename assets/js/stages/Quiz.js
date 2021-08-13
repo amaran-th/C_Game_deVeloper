@@ -1,3 +1,7 @@
+/* 스테이지1의 문제*/
+
+import FirstStage from "./FirstStage.js";
+
 var curve = [];
 var graphics;
 var path;
@@ -15,6 +19,7 @@ export default class Quiz extends Phaser.Scene {
     }
 
     create(){
+        this.firstStage = new FirstStage();
         console.log('퀴즈 시작!');
         //this.inventory.fillRoundedRect(0, 50, 1094, 173, 20).strokeRoundedRect(0, 50, 1094, 173, 20);
         var screen = this.add.rectangle(150, 100, 10, 10, 0x9966ff).setOrigin(0,0);
@@ -61,7 +66,6 @@ export default class Quiz extends Phaser.Scene {
             var zone = this.add.zone(800, 250 + 100*i).setCircleDropZone(10);
             graphics_zone.strokeCircle(zone.x, zone.y, 10);
         }
-
         this.make_circle();
     }
     make_circle() {
@@ -128,6 +132,7 @@ export default class Quiz extends Phaser.Scene {
         if(!player_answer.includes(3)) {
             if(JSON.stringify(player_answer) == '[1,0,0,2]') {
                 console.log('맞는 답');
+                this.scene.stop('quiz');
             }
             else {
             
@@ -148,7 +153,7 @@ export default class Quiz extends Phaser.Scene {
                 this.problem3.data.get('vector').set(this.problem3.x, this.problem3.y);
                 //this.problem3.setData('vector', curve[3].p0);
                 graphics.clear();
-               this.start_quiz();
+                this.start_quiz();
                 }
             }
 

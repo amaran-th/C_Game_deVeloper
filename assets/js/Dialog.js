@@ -255,8 +255,22 @@ visible(visible) {
     ['wait-click'],
     ['setFace', 0],
     ['print', '이게.. 이게 뭐야 진짜?!'],
+    ['wait-click'],
+    ['print', '응..? 이 잠금화면, 일반적인 잠금이랑은 다른 거 같은데....?'],
+    ['wait-click'],
     ['visible',false],
   ]
+
+  stage1_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '풀렸다!'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 1],
+  ]
+
 
   stage3_1 = [
     ['visible',true],
