@@ -66,7 +66,7 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
             }
             else if (dropZone.name == "3"){
                 scene.code_zone_3 = gameObject._text;
-                this.dropzone = 3;
+                this.dropzone = 3;0
             }
             //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
         });
