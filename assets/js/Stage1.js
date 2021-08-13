@@ -55,6 +55,9 @@ export default class Stage1 extends Phaser.Scene {
 
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
+        this.key1 = this.input.keyboard.addKey('ONE');
+        this.key2 = this.input.keyboard.addKey('TWO');
+        this.key3 = this.input.keyboard.addKey('THREE');
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
@@ -94,7 +97,7 @@ export default class Stage1 extends Phaser.Scene {
         this.worldView = this.cameras.main.worldView;
 
         /*** 명령창 불러오기 ***/
-        this.command = new Command(this, map);
+        this.command = new Command(this, map, "stage1");
 
 
         /** 플레이어 위치 확인용 **/
@@ -156,10 +159,22 @@ export default class Stage1 extends Phaser.Scene {
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
+
+        //드래그앤드롭으로 zone에 있는 코드 받아올거임.
+        this.code_zone_1 = "       ";
+        this.code_zone_2 = "       ";
+        this.code_zone_3 = "       ";
+
+        // Stage1 씬의 전체코드
+        this.contenttext = "" ;
         
     }
 
     update() {
+        this.contenttext = 
+            "Stage1 코드 \n#include <stdio.h> \n int main(){ \n " +  this.code_zone_1 +  "(\"HI\"); \n }" 
+            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
+
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
@@ -223,6 +238,21 @@ export default class Stage1 extends Phaser.Scene {
         }
         else this.pressX.setVisible(false);
 
+        if(this.key1.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('first_stage');
+        }
+        if(this.key2.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('second_stage');
+        }
+        if(this.key3.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("third_stage");
+        }
 
     }
 

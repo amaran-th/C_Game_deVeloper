@@ -1,12 +1,12 @@
 var state = 0;
 var text;
-var text_on = false;
-
+var code_on = false;
+var app_on = false;
 import Stage1 from "./Stage1.js";
 
 export default class Command extends Phaser.GameObjects.Image {
-    constructor(scene, map) {
-        super(scene, map);
+    constructor(scene, map, name) {
+        super(scene, map, name);
 
         var stage1 = new Stage1();
 
@@ -16,10 +16,6 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = scene.cameras.main.worldView;
 
-        /*** 전체 코드에 걍 예시로 넣은 문장 ***/
-        this.contenttext = 
-            "#include <stdio.h> \n int main(){ \n " +  scene.code_zone_1 +  "(\"HI\"); \n }" 
-            + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
 
         /*** 명령창버튼 활성화 ***/
         this.entire_code_button = scene.add.image(20,10,'entire_code_button').setOrigin(0,0);
@@ -32,7 +28,7 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 명령창, 명령창 내용 zone 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
         this.zone = scene.add.zone(map.widthInPixels, 100,  360, 550).setOrigin(0).setInteractive();
-        text = scene.add.text(map.widthInPixels, 100, this.contenttext, {  font: "30px Arial Black", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+        text = scene.add.text(map.widthInPixels, 100, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
 
         /*** 폰 앱들 넣어주기 ***/
         var app_names = ['app_code', 'app_map', 'app_tutorial'];
@@ -41,24 +37,23 @@ export default class Command extends Phaser.GameObjects.Image {
             const j = i;
             this.apps[j] = scene.add.image(map.widthInPixels, 80 + (parseInt(i / 2))*130, app_names[j]).setOrigin(0).setInteractive();
             this.apps[j].on('pointerup', function () { 
+                app_on = true;
                 //눌려졌는지 확인용으로 클릭됐다는 메시지 띄움
                 var text_ex = scene.add.text(200, 100 + j*20, app_names[j]+' is click!', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
                 switch(j){
                     case 0:
                         // case 0 안으로 들어왔는지 확인용으로 0 띄움
                         scene.add.text(300, 10, '0', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
-                        text_on = true;
+                        code_on = true;
                         break;
                     case 1:
                         // case 1 안으로 들어왔는지 확인용으로 1 띄움
                         scene.add.text(310, 10, '1', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
                         // HELP HELP 맵 이동 어떻게 하는지 모르겠음.. 
-                        /*
-                        this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                        scene.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
                         console.log('맵이동');
-                        this.scene.sleep(scene); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                        this.scene.run("MiniMap");
-                        */
+                        scene.scene.sleep(name); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                        scene.scene.run("minimap");
                         break;
                     case 2:
                         scene.add.text(350, 100, '음... 튜토리얼 뭘 넣어야 하는거징..', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
@@ -70,6 +65,32 @@ export default class Command extends Phaser.GameObjects.Image {
             });
         }
 
+        /*** 뒤로가기 버튼 ***/
+        this.back_button = scene.add.image(map.widthInPixels, 538, 'back_button').setOrigin(0).setInteractive();
+        /*
+        this.back_button.on('pointerover', function () {
+            this.back_button.destroy();
+            this.back_button = scene.add.image(map.widthInPixels, 550, 'back_button_on').setOrigin(0).setInteractive();
+        });
+        this.back_button.on('pointerout', function () { 
+            this.back_button.destroy();
+            this.back_button = scene.add.image(map.widthInPixels, 550, 'back_button').setOrigin(0).setInteractive();
+        });
+        */
+        this.back_button.on('pointerup', function () {
+            console.log('out app_on : '+app_on);
+            if(app_on == true){
+                console.log("heuhe");
+                app_on = false;
+                code_on = false;
+                text.setVisible(false);
+                console.log('in app_on : '+app_on);
+                console.log('code_on : '+code_on);
+            }
+        });
+
+
+
         /*** 명령창에 전체코드 띄우고 드래그 할 수 있기위한 설정 ***/
         this.graphics = scene.make.graphics(); 
         var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
@@ -79,11 +100,11 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 컴파일 버튼 누를시 컴파일러 동작. ***/ //@@@@@@@@@@@
         this.compile_button.on('pointerdown', () => {
            
-            if (this.contenttext !== '')
+            if (scene.contenttext !== '')
                 {
                     var data = {
 
-                        'code': this.contenttext
+                        'code': scene.contenttext
     
                     };
                     data = JSON.stringify(data);
@@ -99,6 +120,7 @@ export default class Command extends Phaser.GameObjects.Image {
                         var result = JSON.parse(xhr.responseText);
     
                         if (result.result != 'ok') return;
+                        scene.out = result.output;
                         console.log(result.output);
                         console.log('command 파일 result:', result.output);
                         stage1.complied(sc, result.output);
@@ -140,15 +162,17 @@ export default class Command extends Phaser.GameObjects.Image {
                 for(var i=0; i < this.apps.length; i++){
                     this.apps[i].setVisible(true);
                 }
+                this.back_button.setVisible(true);
                 //this.slidebox(); //슬라이드 기능 수치가 중간에 이상해져서 될 때 있고 안 될 때 있음(일단 빼두겠음)
                 state = 1;
             });
         } else {
             this.commandbox.x = this.worldView.x + 715; //화면 이동시 명령창 따라가도록 설정
+            this.back_button.x = this.worldView.x + 980;
             for(var i=0; i < this.apps.length; i++){
                 this.apps[i].x = this.worldView.x + 755 + (i%2)*170;
             }
-            if(text_on === true){
+            if(code_on === true){
                 for(var i=0; i < this.apps.length; i++){
                     this.apps[i].setVisible(false);
                 }
@@ -163,15 +187,20 @@ export default class Command extends Phaser.GameObjects.Image {
                         //this.extext.setVisible(true);
                     }
                 });
+            } else {
+                text.setVisible(false);
+                for(var i=0; i < this.apps.length; i++){
+                    this.apps[i].setVisible(true);
+                }
             }
             this.entire_code_button.on('pointerdown', () => {
                 this.commandbox.setVisible(false);
                 for(var i=0; i < this.apps.length; i++){
                     this.apps[i].setVisible(false);
                 }
-                text_on = false;
-                console.log(text_on + ' : text_on');
+                code_on = false;
                 text.setVisible(false);
+                this.back_button.setVisible(false);
                 state = 0;
             });
         }
@@ -187,11 +216,7 @@ export default class Command extends Phaser.GameObjects.Image {
         //console.log("3:"+this.commandbox.x);
     }*/
     update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
-        
-        this.contenttext = 
-            "#include <stdio.h> \n int main(){ \n " +  scene.code_zone_1 +  "(\"HI\"); \n }" 
-            + "2번째 코드 : " +  scene.code_zone_2 + "\n3번째 코드 : " + scene.code_zone_3 ;
 
-        text.setText(this.contenttext);
+        text.setText(scene.contenttext);
     }
 }

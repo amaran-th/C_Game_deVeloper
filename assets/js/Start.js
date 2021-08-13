@@ -19,6 +19,30 @@ class Start extends Phaser.Scene {
       this.load.image("compile_button", "./assets/images/command/execute_button.png");  //==============================================
       this.load.image("map_button", "./assets/images/command/map_button.png");
 
+      //나중에 지우기 ======================================
+              this.load.image("tiles", "./assets/images/map.png");
+
+              /** FROM Player.js**/
+              this.load.spritesheet('player', './assets/images/heroin.png', {
+                frameWidth: 80,
+                frameHeight: 140
+            });
+    
+            /** 텍스트 박스에 사용하는 플러그인 rexUI preload **/
+            this.load.scenePlugin({
+                key: 'rexuiplugin',
+                url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+                sceneKey: 'rexUI'
+            });
+            this.load.image('nextPage', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png');
+            
+            /** 순차진행에 필요한 플러그인 **/
+            var url;
+            url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsequenceplugin.min.js';
+            this.load.plugin('rexsequenceplugin', url, true);
+      //나중에 지우기 ======================================
+
+
       /*** inventory 관련 image 로드 ***/
       this.load.image("inventory_button", "./assets/images/inventory_button.png");
 
@@ -46,6 +70,10 @@ class Start extends Phaser.Scene {
       this.load.image("app_map", "./assets/images/app_map.png");
       this.load.image("app_tutorial", "./assets/images/app_tutorial.png");
 
+      /*** 뒤로가기 버튼 로드 ***/
+      this.load.image("back_button", "./assets/images/back_button.png");
+      this.load.image("back_button_on", "./assets/images/back_button_on.png");
+
       /** 드랍 리셋 버든 로드 **/
       this.load.image("reset_button", "./assets/images/reset_button.png");
       /** 미니맵 이미지 로드 **/
@@ -54,7 +82,40 @@ class Start extends Phaser.Scene {
       this.load.image("stage_2_button", "./assets/images/map/stage_2.png");
       this.load.image("stage_3_button", "./assets/images/map/stage_3.png");
 
+      /** 불타는 배경 로드 **/
+      this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {
+        frameWidth: 1100,
+        frameHeight: 552
+    });
 
+    /** 느낌표 말풍선 로드 **/
+    this.load.spritesheet('exp_exclam', './assets/images/exp_exclam.png', {
+      frameWidth: 55,
+      frameHeight: 50
+  });
+
+    /** 첫번째 스테이지의 집 이미지 로드 **/
+      this.load.image("house", "./assets/images/house.png");
+    /**첫번째 스테이지 npc 로드  **/
+    this.load.spritesheet('npc_devil', './assets/images/npc/npc3.png', {
+      frameWidth: 79,
+      frameHeight: 140,
+    });
+    /** 첫번째 스테이지의 잠긴 휴대폰 화면 로드 **/
+      this.load.image("locked", "./assets/images/commandbox_locked.png");
+      this.load.image('unlocked', './assets/images/commandbox_unlocked.png')
+
+    /** 2번째 스테이지 타일 **/
+      this.load.image("stage2_tiles", "./assets/images/test.png");
+    /** 3번째 스테이지의 npc 로드 **/
+      this.load.image("npc_chef", "./assets/images/npc/npc1.png");
+      this.load.image("stage3_tiles", "./assets/images/stage3/map_stage3.png");
+
+    /** 3번째 스테이지 이미지 로드 **/
+      this.load.image("bread", "./assets/images/stage3/bread.png");
+      this.load.image("full_bread", "./assets/images/stage3/full_bread.png");
+      this.load.image("oven", "./assets/images/stage3/oven.png");
+      this.load.image("oven_open", "./assets/images/stage3/oven_open.png");
     } 
 
     create() {
@@ -103,7 +164,7 @@ class Start extends Phaser.Scene {
         this.scene.start("bootGame");
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("bootGame");
+        this.scene.start("quiz");
       }, this);
 
     }

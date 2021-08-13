@@ -81,6 +81,10 @@ visible(visible) {
   place(x,y) {
       this.textBox.x = x;
       this.textBox.y = y;
+      this.script.x = x+200;
+      this.script.y = y+50;
+      this.playerFace.x = x+800;
+      this.playerFace.y = y+100;
 
   }
   // callbacks
@@ -128,7 +132,6 @@ visible(visible) {
     ['print', '(무슨일이지??)'],
     ['wait-click'],
     ['visible',false],
-
   ]
 
   intro2 = [
@@ -180,6 +183,137 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage1_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '(부... 불타고 있어!)'],
+    ['wait-click'],
+    ['print', '(이.. 이게 뭐야?! 악몽같아!)'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '거기 너!'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '(뭐야 쟨???)'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '뭐라뭐라뭐라'],
+    ['wait-click'],
+    ['print', '대사좀써주세요'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '전 코딩할줄 모르는데요???'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '뭐라뭐라뭐라'],
+    ['wait-click'],
+    ['print', '흠.. 이거 안되겠군'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_3 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '휴대폰 이리내놔!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_4 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '흠...(만족)'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '저기요! 이게 무슨짓이에요?!'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '그리고 왜 반말함??? 빨리 잠금풀어!'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '니 알아서해라 ㅃㅇ'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_5 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '야!! 어디가!!'],
+    ['wait-time', 1],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '이게.. 이게 뭐야 진짜?!'],
+    ['wait-click'],
+    ['print', '응..? 이 잠금화면, 일반적인 잠금이랑은 다른 거 같은데....?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage1_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '풀렸다!'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 1],
+  ]
+
+
+  stage3_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 3],
+    ['print', '어떡하지.. '],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '저기..'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage3_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 3],
+    ['print', '뭐? 도와준다고?! 정말 고마워!'],
+    ['wait-click'],
+    ['print', '난 제빵왕 김핑퐁이야. 눈을 떠보니 코딩세계에 갇혀버렸지 뭐야!'],
+    ['wait-click'],
+    ['print', '코딩세계는 빵도 코딩으로 만들더라구?\n하지만 난 코딩을 못해..'],
+    ['wait-click'],
+    ['print', '빵을 딱 25개만 만들어줄래?'],
+    ['wait-click'],
+    ['print', '아! 여기 어딘가 코드조각을 놔뒀는데, 필요하면 찾아봐'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '아..넵..'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+  stage3_3 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 3],
+    ['print', '세상에! 진짜 해냈구나! '],
+    ['wait-click'],
+    ['print', '고마워! 코드조각은 너 가져'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
 
   talk1 = [
     //['loadTextbox'],

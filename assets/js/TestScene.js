@@ -18,16 +18,19 @@ export default class TestScene extends Phaser.Scene {
     preload() {
         /*** FROM Minicode.js***/
 
-        this.load.image("tiles", "./assets/images/map.png");
+        
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
 
-        /** FROM Player.js**/
+        /*
+        this.load.image("tiles", "./assets/images/map.png");
+
+        // FROM Player.js
         this.load.spritesheet('player', './assets/images/heroin.png', {
             frameWidth: 80,
             frameHeight: 140
         });
 
-        /** 텍스트 박스에 사용하는 플러그인 rexUI preload **/
+        // 텍스트 박스에 사용하는 플러그인 rexUI preload 
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
@@ -35,13 +38,13 @@ export default class TestScene extends Phaser.Scene {
         });
         this.load.image('nextPage', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png');
         
-        /** 순차진행에 필요한 플러그인 **/
+        // 순차진행에 필요한 플러그인
         var url;
         url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsequenceplugin.min.js';
         this.load.plugin('rexsequenceplugin', url, true);
+        */
 
         this.onTile = 1;
-
     }
     
     create () {
@@ -50,7 +53,9 @@ export default class TestScene extends Phaser.Scene {
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
         this.keyZ = this.input.keyboard.addKey('Z');
-
+        this.key1 = this.input.keyboard.addKey('ONE');
+        this.key2 = this.input.keyboard.addKey('TWO');
+        this.key3 = this.input.keyboard.addKey('THREE');
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
         
@@ -105,7 +110,7 @@ export default class TestScene extends Phaser.Scene {
 
 
         /*** 명령창 불러오기 ***/
-        this.command = new Command(this, map);
+        this.command = new Command(this, map, "bootgame");
 
         // 드래그앤 드랍할 조각
         /*this.drag_piece = ['printf', 'if'];
@@ -155,7 +160,15 @@ export default class TestScene extends Phaser.Scene {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
-      
+
+         //드래그앤드롭으로 zone에 있는 코드 받아올거임.
+         this.code_zone_1 = "       ";
+         this.code_zone_2 = "       ";
+         this.code_zone_3 = "       ";
+
+         // 테스트씬의 전체코드
+         this.contenttext = "" ;
+         
          /*** Stage Clear! 창 불러오기 ***/
          this.StageClear = new StageClear(this);
         
@@ -165,6 +178,10 @@ export default class TestScene extends Phaser.Scene {
     }
 
     update() {
+        this.contenttext = 
+            "#include <stdio.h> \n int main(){ \n " +  this.code_zone_1 +  "(\"HI\"); \n }" 
+            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
+
         this.player.update();
         this.command.update(this);
         /*** 인벤토리 ***/
@@ -223,7 +240,21 @@ export default class TestScene extends Phaser.Scene {
             this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run("stage1");
         }
-        
+        if(this.key1.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('first_stage');
+        }
+        if(this.key2.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('second_stage');
+        }
+        if(this.key3.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("third_stage");
+        }
     }
 
 
