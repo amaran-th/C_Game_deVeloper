@@ -32,13 +32,17 @@ export default class SecondStage extends Phaser.Scene {
         const tileset = map.addTilesetImage("test", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
 
+        /*** npc_old 불러오기 ***/ 
+        this.npc_old = this.add.image(550,280,'npc7').setOrigin(0,0);
+        this.npc_old.setInteractive();
+
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
-    
+        
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -76,11 +80,41 @@ export default class SecondStage extends Phaser.Scene {
             this.scene.run("minimap");
         },this);
 
+        //stage3의 전체 코드
+        this.contenttext = "" ;
+
+        //코드 실행후 불러올 output값
+        this.out = "";
+
         stagenum = 2;
+
+        //초반 대사
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        this.stage2_1();
         
     }
 
     update() {
+        this.contenttext = 
+            "#include <stdio.h> \n int main(){ \n\n if문 \n}" 
+        
+        //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
+        if (this.out == "#include <stdio.h> \n int main(){ \nint bread = 0;\n for (int i=0; i<25; i++){\n   bread=bread+1;\n}\nprintf(\"%d\",bread);\n}"){
+            console.log("===stage3 클리어!===");
+            this.bread.setVisible(true);
+            this.full_bread_1.setVisible(true);
+            this.full_bread_2.setVisible(true);
+            this.out = "";
+            this.exclamMark.setVisible(true);
+            this.exclamMark.play('exclam');
+
+            this.cameras.main.fadeIn(1000,0,0,0);
+            
+            this.stage3_3();
+            
+        }
+
         this.player.update();
         //this.inventory.update();
         this.command.update(this);
@@ -107,6 +141,15 @@ export default class SecondStage extends Phaser.Scene {
 
     }
 
-
+    stage2_1() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });     
+    }
 
 }

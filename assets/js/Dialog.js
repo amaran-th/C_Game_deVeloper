@@ -258,6 +258,18 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage2_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 3],
+    ['print', '껄껄 '],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '저기..'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  
   stage3_1 = [
     ['visible',true],
     ['place', 40,10],
