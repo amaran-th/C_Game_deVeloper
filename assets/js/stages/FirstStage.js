@@ -272,6 +272,7 @@ export default class FirstStage extends Phaser.Scene {
             .load(this.dialog.stage1_6, this.dialog)
             .start();
             seq.on('complete', () => {
+                this.player.playerPaused = false; 
                 this.tweens.add({
                     targets: phoneUnlocked,
                     x: 1100, //위치 이동

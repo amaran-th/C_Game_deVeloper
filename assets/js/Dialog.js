@@ -272,15 +272,31 @@ visible(visible) {
     ['wait-time', 1],
   ]
 
-  
+
   stage2_1 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 3],
-    ['print', '껄껄 '],
-    ['wait-click'],
     ['setFace', 0],
-    ['print', '저기..'],
+    ['print', '(아, 사람이다!)'],
+    ['wait-click'],
+    ['print', '저기요! 할아버지!!!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage2_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '할아버지! 여긴 대체 어디죠?'],
+    ['wait-click'],
+    ['setFace', 3],
+    ['print', '껄껄 코딩지옥은 처음인가 보구나!'],
+    ['wait-click'],
+    ['print', '내 부탁을 좀 들어주면 묻는 말에 대답해주지'],
+    ['wait-click'],
+    ['print', '여기서 나갈려고하는데 밖에 날씨를 모르니 무슨 옷을 입어야할지 모르겠군'],
+    ['wait-click'],
+    ['print', '밖에 날씨가 어떤지 좀 말해주겠나? 춥다, 덥다 이런식으로'],
     ['wait-click'],
     ['visible',false],
   ]

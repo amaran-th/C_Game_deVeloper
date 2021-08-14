@@ -26,11 +26,25 @@ export default class SecondStage extends Phaser.Scene {
         this.key1 = this.input.keyboard.addKey('ONE');
         this.key3 = this.input.keyboard.addKey('THREE');
 
+        this.anims.create({
+            key: "fire",
+            frames: this.anims.generateFrameNumbers('fireBackground',{ start: 0, end: 2}), 
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.background1 = this.add.sprite( 0, 550, 'fireBackground', 0).setOrigin(0,1);
+        this.background2 = this.add.sprite( 1100, 550, 'fireBackground', 0).setOrigin(0,1);
+
+        this.background1.play('fire',true);
+        this.background2.play('fire',true);
+
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "second_stage" });
         
-        const tileset = map.addTilesetImage("test", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("map_stage2", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
+        this.deco = map.createLayer("deco", tileset, 0, 0);
 
         /*** npc_old 불러오기 ***/ 
         this.npc_old = this.add.image(550,280,'npc7').setOrigin(0,0);
@@ -56,6 +70,17 @@ export default class SecondStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        /*** 퀘스트 말풍선 애니메이션 */
+        this.anims.create({
+            key: "exclam",
+            frames: this.anims.generateFrameNumbers('exp_exclam',{ start: 0, end: 4}), 
+            frameRate: 8,
+            repeat: 0,
+            hideOnComplete: true
+        });
+        
+        this.exclamMark = this.add.sprite( 390, 220, 'exp_exclam', 0);
+        this.exclamMark.setVisible(false);
 
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map, "second_stage");
@@ -97,21 +122,18 @@ export default class SecondStage extends Phaser.Scene {
 
     update() {
         this.contenttext = 
-            "#include <stdio.h> \n int main(){ \n\n if문 \n}" 
+            "#include <stdio.h> \n int main(){ \n\nint myage = 29; if () \n}" 
         
         //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
-        if (this.out == "#include <stdio.h> \n int main(){ \nint bread = 0;\n for (int i=0; i<25; i++){\n   bread=bread+1;\n}\nprintf(\"%d\",bread);\n}"){
-            console.log("===stage3 클리어!===");
-            this.bread.setVisible(true);
-            this.full_bread_1.setVisible(true);
-            this.full_bread_2.setVisible(true);
+        if (this.out == "#include <stdio.h> \n int main(){ \n\nint myage = 29; if () \n}"){
+            console.log("===stage2 클리어!===");
             this.out = "";
             this.exclamMark.setVisible(true);
             this.exclamMark.play('exclam');
 
             this.cameras.main.fadeIn(1000,0,0,0);
-            
-            this.stage3_3();
+            //할아버지 걸어나오는 모션
+           // this.stage2_3();
             
         }
 
@@ -142,14 +164,29 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     stage2_1() {
+        this.time.delayedCall( 1000, () => { 
+            var seq = this.plugins.get('rexsequenceplugin').add(); 
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage2_1, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.npc_old.setFlipX(true);
+                this.exclamMark.setVisible(true);
+                this.exclamMark.play('exclam');
+                this.time.delayedCall( 1000, () => { this.stage2_2() }, [] , this);
+                });   
+            }, [], this);  
+    }
+    stage2_2() {
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
-        .load(this.dialog.stage2_1, this.dialog)
+        .load(this.dialog.stage2_2, this.dialog)
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });     
     }
-
+ 
 }
