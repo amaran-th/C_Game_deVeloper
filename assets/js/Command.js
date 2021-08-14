@@ -25,9 +25,8 @@ export default class Command extends Phaser.GameObjects.Image {
         this.compile_button = scene.add.image(20,170,'compile_button').setOrigin(0,0);
         this.compile_button.setInteractive();
     
-        /*** 명령창, 명령창 내용 zone 미리 add해주기 ***/
+        /*** 명령창, 명령창 내용 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
-        this.zone = scene.add.zone(map.widthInPixels, 100,  360, 550).setOrigin(0).setInteractive();
         text = scene.add.text(map.widthInPixels, 100, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
 
         /*** 폰 앱들 넣어주기 ***/
@@ -45,6 +44,7 @@ export default class Command extends Phaser.GameObjects.Image {
                         // case 0 안으로 들어왔는지 확인용으로 0 띄움
                         scene.add.text(300, 10, '0', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
                         code_on = true;
+                        scene.codeapp_onoff_state = 1; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
                         break;
                     case 1:
                         // case 1 안으로 들어왔는지 확인용으로 1 띄움
@@ -78,6 +78,7 @@ export default class Command extends Phaser.GameObjects.Image {
         });
         */
         this.back_button.on('pointerup', function () {
+            scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
             console.log('out app_on : '+app_on);
             if(app_on == true){
                 console.log("heuhe");
@@ -88,14 +89,6 @@ export default class Command extends Phaser.GameObjects.Image {
                 console.log('code_on : '+code_on);
             }
         });
-
-
-
-        /*** 명령창에 전체코드 띄우고 드래그 할 수 있기위한 설정 ***/
-        this.graphics = scene.make.graphics(); 
-        var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
-        text.setMask(mask);
-
 
         /*** 컴파일 버튼 누를시 컴파일러 동작. ***/ //@@@@@@@@@@@
         this.compile_button.on('pointerdown', () => {
@@ -151,7 +144,10 @@ export default class Command extends Phaser.GameObjects.Image {
 
     }
 
-    preUpdate(time, delta) {
+    update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
+
+        text.setText(scene.contenttext);
+
         //console.log('state' + state);
         /*** 화면 이동시 entire code button 따라가도록 설정***/
         this.entire_code_button.x = this.worldView.x + 5;
@@ -165,6 +161,11 @@ export default class Command extends Phaser.GameObjects.Image {
                 this.back_button.setVisible(true);
                 //this.slidebox(); //슬라이드 기능 수치가 중간에 이상해져서 될 때 있고 안 될 때 있음(일단 빼두겠음)
                 state = 1;
+                
+                // 드래그앤드랍이 호출되어 되어 드랍존과 리셋버튼이 만들어진 이후 드랍존과 리셋버튼 명령창 따라 들어갔다 나왔다 하기 위함 
+                /*if(this.draganddrop_1 != undefined) this.draganddrop_1.updownwithinven(scene);
+                if(this.draganddrop_2 != undefined) this.draganddrop_2.updownwithinven(scene);
+                if(this.draganddrop_3 != undefined) this.draganddrop_3.updownwithinven(scene);*/
             });
         } else {
             this.commandbox.x = this.worldView.x + 715; //화면 이동시 명령창 따라가도록 설정
@@ -178,15 +179,7 @@ export default class Command extends Phaser.GameObjects.Image {
                 }
                 text.setVisible(true);
                 text.x = this.worldView.x + 760;
-                this.graphics.fillRect(text.x -5, 100, 360, 550); // 화면 이동시 글이 보이는 판을 이동
-                this.zone.x = text.x -5;
-                this.zone.on('pointermove', function (pointer) {
-                    if (pointer.isDown){
-                        text.y += (pointer.velocity.y / 5000);
-                        text.y = Phaser.Math.Clamp(text.y, -400, 600);
-                        //this.extext.setVisible(true);
-                    }
-                });
+                
             } else {
                 text.setVisible(false);
                 for(var i=0; i < this.apps.length; i++){
@@ -199,6 +192,7 @@ export default class Command extends Phaser.GameObjects.Image {
                     this.apps[i].setVisible(false);
                 }
                 code_on = false;
+                scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
                 text.setVisible(false);
                 this.back_button.setVisible(false);
                 state = 0;
@@ -215,8 +209,4 @@ export default class Command extends Phaser.GameObjects.Image {
         });
         //console.log("3:"+this.commandbox.x);
     }*/
-    update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
-
-        text.setText(scene.contenttext);
-    }
 }

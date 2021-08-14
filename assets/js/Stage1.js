@@ -97,6 +97,7 @@ export default class Stage1 extends Phaser.Scene {
         this.worldView = this.cameras.main.worldView;
 
         /*** 명령창 불러오기 ***/
+        this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "stage1");
 
 
@@ -113,7 +114,7 @@ export default class Stage1 extends Phaser.Scene {
 
 
         /** 초반 인트로 대사 출력 **/
-        this.cameras.main.fadeIn(1000,0,0,0);
+        /*this.cameras.main.fadeIn(1000,0,0,0);
         this.player.playerPaused = true; //플레이어 얼려두기
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -122,7 +123,7 @@ export default class Stage1 extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
-        });
+        });*/
 
         
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
@@ -149,7 +150,7 @@ export default class Stage1 extends Phaser.Scene {
 
         // 드래그앤드랍
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        this.code_zone_1 = "          ";
+        this.code_zone_1 = "                ";
         this.code_zone_2 = "          ";
         this.code_zone_3 = "          ";
         //this.drag_piece = ['printf', 'if', 'else'];
@@ -159,11 +160,6 @@ export default class Stage1 extends Phaser.Scene {
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
-
-        //드래그앤드롭으로 zone에 있는 코드 받아올거임.
-        this.code_zone_1 = "       ";
-        this.code_zone_2 = "       ";
-        this.code_zone_3 = "       ";
 
         // Stage1 씬의 전체코드
         this.contenttext = "" ;
@@ -216,10 +212,10 @@ export default class Stage1 extends Phaser.Scene {
         */
 
         if(this.invenPlus) {
-            this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 추가
+            this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 텍스트 추가
             //this.inventory.invenSave(this, 'if');
             //his.inventory.invenSave(this, 'else');
-            this.intro2();
+            //this.intro2();
             this.invenPlus = false;
         }
 
