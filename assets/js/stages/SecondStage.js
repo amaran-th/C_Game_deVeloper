@@ -46,9 +46,17 @@ export default class SecondStage extends Phaser.Scene {
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
-        /*** npc_old 불러오기 ***/ 
-        this.npc_old = this.add.image(550,280,'npc7').setOrigin(0,0);
-        this.npc_old.setInteractive();
+        /*** 카페 이미지 불러오기 (코드 실행 후 나오는 카페) */
+        this.cafe = this.add.image(447,114,'cafe').setOrigin(0,0)
+        this.cafe.setVisible(false);
+
+
+        /*** npc 불러오기 ***/ 
+        this.npc = this.add.image(850,380,'npc7').setOrigin(0,0);
+      //  this.npc_old.setVisible(false);
+        this.npc.setInteractive();
+        this.npc_hot = this.add.image(750,380,'npc_hot').setOrigin(0,0);
+        this.npc_cold = this.add.image(650,380,'npc_cold').setOrigin(0,0);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -79,7 +87,7 @@ export default class SecondStage extends Phaser.Scene {
             hideOnComplete: true
         });
         
-        this.exclamMark = this.add.sprite( 390, 220, 'exp_exclam', 0);
+        this.exclamMark = this.add.sprite( 550, 320, 'exp_exclam', 0);
         this.exclamMark.setVisible(false);
 
         /*** 명령창 불러오기 ***/
@@ -122,19 +130,30 @@ export default class SecondStage extends Phaser.Scene {
 
     update() {
         this.contenttext = 
-            "#include <stdio.h> \n int main(){ \n\nint myage = 29; if () \n}" 
+            "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n" +
+            "    printf(\"더워요\");\n  }\n" + //코드조각 
+         //   "  else if (Temp>20){\n" +
+         //   "    printf(\"적당해요\");\n  }\n" + //코드조각
+            "  else {\n" + 
+            "    printf(\"추워요\");\n  }\n}" //코드조각
         
-        //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
-        if (this.out == "#include <stdio.h> \n int main(){ \n\nint myage = 29; if () \n}"){
-            console.log("===stage2 클리어!===");
+        //실제로는 2가지에 나눠서 쨔아함! ("더워요", "추워요")
+        if (this.out == "1_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n    printf(\"더워요\");\n  }\n  else {\n    printf(\"추워요\");\n  }\n}"){
+            console.log("===stage2 성공===");
             this.out = "";
-            this.exclamMark.setVisible(true);
-            this.exclamMark.play('exclam');
-
+            this.cafe.setVisible(true);
+            this.cameras.main.fadeIn(1000,0,0,0);
+            ////할아버지 걸어나오는 모션
+            this.stage2_4();  
+        }
+        else if (this.out == "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n    printf(\"더워요\");\n  }\n  else {\n    printf(\"추워요\");\n  }\n}"){
+            console.log("===stage2 실패===");
+            this.out = "";
+            this.cafe.setVisible(true);
             this.cameras.main.fadeIn(1000,0,0,0);
             //할아버지 걸어나오는 모션
-           // this.stage2_3();
-            
+            this.stage2_3(); 
+       
         }
 
         this.player.update();
@@ -171,7 +190,7 @@ export default class SecondStage extends Phaser.Scene {
             .load(this.dialog.stage2_1, this.dialog)
             .start();
             seq.on('complete', () => {
-                this.npc_old.setFlipX(true);
+           //     this.npc.setFlipX(true);
                 this.exclamMark.setVisible(true);
                 this.exclamMark.play('exclam');
                 this.time.delayedCall( 1000, () => { this.stage2_2() }, [] , this);
@@ -187,6 +206,26 @@ export default class SecondStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });     
+    }
+    stage2_3() { 
+        this.time.delayedCall( 2000, () => {  //걸어나오는 모션뒤, 2초간 멈춤
+            var seq = this.plugins.get('rexsequenceplugin').add(); 
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage2_3, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.cafe.setVisible(false); //다시 할아버지 카페에 앉아있게
+                
+                });   
+            }, [], this);  
+    }
+    stage2_4() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_4, this.dialog)
+        .start();
     }
  
 }
