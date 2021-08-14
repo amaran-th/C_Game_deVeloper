@@ -16,8 +16,7 @@ export default class ThirdStage extends Phaser.Scene {
     }
     
     create () {
-        
-      //  this.inventory = new Inventory(this);
+        this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
         /** x 키 입력 받기**/
@@ -49,24 +48,34 @@ export default class ThirdStage extends Phaser.Scene {
         this.oven_open = this.add.image(851,300,'oven_open').setOrigin(0,0)
         this.oven_open.setVisible(false);
 
+        /*** 카메라가 비추는 화면 변수 선언 ***/
+        this.worldView = this.cameras.main.worldView;
+
+        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
+
+        // 인벤창 팝업 여부를 나타내는 상태변수
+        this.invenIn = false;
+
          /** 아이템 만들기 **/ 
         this.itemfor = this.add.image(930,350,'item');
         this.itemfor.setVisible(false); //오븐 눌러야지 아이템 보이게
 
         /** 아이템 얻었을 때 뜨는 이미지 **/
-        this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemPrintfText = this.add.text(500,270,'printf',{
+        this.itemforget = this.add.image(0,0,'itemGet').setOrigin(0.0);
+        this.itemforText = this.add.text(500 ,270,'for',{
         font: "30px Arial Black", fill: "#000000" 
         }).setOrigin(0,0);
-        this.itemPrintfget.setVisible(false);
-        this.itemPrintfText.setVisible(false);
+        this.itemforget.setVisible(false);
+        this.itemforText.setVisible(false);
         this.beforeItemGet = true; //한 번만 뜨도록
 
         //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
+        this.oven_on = false;
         this.oven.on('pointerup', () => {
             this.oven_open.setVisible(true);
              /** 아이템 만들기 **/
-             this.itemfor.setVisible(true);
+            this.itemfor.setVisible(true);
+            this.oven_on = true;
         });
 
         /***스폰 포인트 설정하기 locate spawn point***/
@@ -85,9 +94,6 @@ export default class ThirdStage extends Phaser.Scene {
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
-
-        /*** 카메라가 비추는 화면 변수 선언 ***/
-        this.worldView = this.cameras.main.worldView;
         
         /*** 퀘스트 말풍선 애니메이션 */
         this.anims.create({
@@ -110,7 +116,7 @@ export default class ThirdStage extends Phaser.Scene {
         //this.draganddrop_3 = new DragAndDrop(this, 700, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
         
         /** 인벤토리 만들기 **/     
-      //  this.inven = this.inventory.create(this);
+        this.inven = this.inventory.create(this);
 
 
         /** 플레이어 위치 확인용 **/
@@ -145,6 +151,29 @@ export default class ThirdStage extends Phaser.Scene {
     }
 
     update() {
+        this.inventory.update(this);
+        /** 아이템 획득하는 경우 **/
+        if (this.oven_on && this.beforeItemGet && this.player.player.x < this.itemfor.x+54 && this.itemfor.x < this.player.player.x) {
+            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
+            this.itemfor.setVisible(false);
+            this.itemforget.x = this.worldView.x
+            this.itemforText.x = this.worldView.x + 500;
+            this.itemforget.setVisible(true);
+            this.itemforText.setVisible(true);
+            this.tweens.add({
+                targets: [this.itemforget, this.itemforText],
+                alpha: 0,
+                duration: 2000,
+                ease: 'Linear',
+                repeat: 0,
+                onComplete: ()=>{this.invenPlus = true;}
+            }, this);
+        }
+        if(this.invenPlus) {
+            this.inventory.invenSave(this, 'for'); //인벤토리에 아이템 추가
+            this.invenPlus = false;
+        }
+
         this.contenttext = 
             "#include <stdio.h> \n int main(){ \nint bread = 0;\n for (int i=0; i<25; i++){\n   bread=bread+1;\n}\nprintf(\"%d\",bread);\n}" 
         
