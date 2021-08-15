@@ -21,7 +21,7 @@ class Start extends Phaser.Scene {
 
       //나중에 지우기 ======================================
               this.load.image("tiles", "./assets/images/map.png");
-
+              
               /** FROM Player.js**/
               this.load.spritesheet('player', './assets/images/heroin.png', {
                 frameWidth: 80,
@@ -81,6 +81,9 @@ class Start extends Phaser.Scene {
       this.load.image("stage_1_button", "./assets/images/map/stage_1.png");
       this.load.image("stage_2_button", "./assets/images/map/stage_2.png");
       this.load.image("stage_3_button", "./assets/images/map/stage_3.png");
+      this.load.image("stage_4_button", "./assets/images/map/stage_4.png");
+      this.load.image("stage_5_button", "./assets/images/map/stage_5.png");
+      this.load.image("stage_6_button", "./assets/images/map/stage_6.png");
 
       /** 불타는 배경 로드 **/
       this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {
