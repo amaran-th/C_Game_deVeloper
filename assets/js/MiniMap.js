@@ -19,6 +19,10 @@ class MiniMap extends Phaser.Scene {
         stage_3.setInteractive();
 
         stage_1.once("pointerup",function(){
+            back.setVisible(false);
+            stage_1.setVisible(false);
+            stage_2.setVisible(false);
+            stage_3.setVisible(false);
             if(stagenum == 0){
                 this.scene.stop('bootgame');
                 this.scene.run('first_stage');
@@ -37,6 +41,10 @@ class MiniMap extends Phaser.Scene {
         },this);
 
         stage_2.once("pointerup",function(){
+            back.setVisible(false);
+            stage_1.setVisible(false);
+            stage_2.setVisible(false);
+            stage_3.setVisible(false);
             if(stagenum == 0){
                 this.scene.stop('bootgame');
                 this.scene.run('second_stage');
@@ -55,6 +63,10 @@ class MiniMap extends Phaser.Scene {
         },this);
 
         stage_3.once("pointerup",function(){
+            back.setVisible(false);
+            stage_1.setVisible(false);
+            stage_2.setVisible(false);
+            stage_3.setVisible(false);
             if(stagenum == 0){
                 this.scene.stop('bootgame');
                 this.scene.run('third_stage');
@@ -75,7 +87,13 @@ class MiniMap extends Phaser.Scene {
         back.on("pointerdown",function(){
             console.log("click");
             console.log(stagenum);
+            back.setVisible(false);
+            stage_1.setVisible(false);
+            stage_2.setVisible(false);
+            stage_3.setVisible(false);
             
+            //this.scene.stop('minimap');
+
             if(stagenum == 0){
                 console.log("back satage0");
                 this.scene.stop('minimap');
