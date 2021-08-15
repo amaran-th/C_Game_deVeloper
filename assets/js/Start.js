@@ -110,8 +110,11 @@ class Start extends Phaser.Scene {
     
     /** 2번째 스테이지의 npc 로드 **/
       this.load.image("npc7", "./assets/images/npc/npc7.png");
-      this.load.image("npc_hot", "./assets/images/stage2/npc_hot.png");
-      this.load.image("npc_cold", "./assets/images/stage2/npc_cold.png");
+ 
+      this.load.spritesheet('npc_cold', './assets/images/stage2/npc_cold.png', {
+        frameWidth: 65,
+        frameHeight: 128,
+      });
     
     /** 2번째 스테이지 이미지 로드 **/
       this.load.image("cafe", "./assets/images/stage2/cafe.png");
