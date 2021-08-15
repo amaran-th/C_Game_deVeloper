@@ -26,11 +26,42 @@ export default class SecondStage extends Phaser.Scene {
         this.key1 = this.input.keyboard.addKey('ONE');
         this.key3 = this.input.keyboard.addKey('THREE');
 
+        this.anims.create({
+            key: "fire",
+            frames: this.anims.generateFrameNumbers('fireBackground',{ start: 0, end: 2}), 
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.background1 = this.add.sprite( 0, 550, 'fireBackground', 0).setOrigin(0,1);
+        this.background2 = this.add.sprite( 1100, 550, 'fireBackground', 0).setOrigin(0,1);
+
+        this.background1.play('fire',true);
+        this.background2.play('fire',true);
+
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "second_stage" });
         
-        const tileset = map.addTilesetImage("test", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("map_stage2", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
+        this.deco = map.createLayer("deco", tileset, 0, 0);
+
+        /*** 카페 이미지 불러오기 (코드 실행 후 나오는 카페) */
+        this.cafe = this.add.image(447,114,'cafe').setOrigin(0,0)
+        this.cafe.setVisible(false);
+
+
+        /*** npc 불러오기 ***/ 
+     //   this.npc_hot = this.add.image(750,380,'npc_hot').setOrigin(0,0);
+     //   this.npc_cold = this.add.image(650,380,'npc_cold').setOrigin(0,0);
+        this.anims.create({
+            key: "npc_cold_walk",
+            frames: this.anims.generateFrameNumbers('npc_cold',{ start: 0, end: 3}), 
+            frameRate: 7,
+            repeat: -1,
+        });
+        this.npc = this.physics.add.sprite(910 ,430,'npc_cold');
+        this.npc.setVisible(false);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -38,7 +69,7 @@ export default class SecondStage extends Phaser.Scene {
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
-    
+        
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -48,10 +79,22 @@ export default class SecondStage extends Phaser.Scene {
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
-
+        this.physics.add.collider(this.npc, this.worldLayer);
+        
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        /*** 퀘스트 말풍선 애니메이션 */
+        this.anims.create({
+            key: "exclam",
+            frames: this.anims.generateFrameNumbers('exp_exclam',{ start: 0, end: 4}), 
+            frameRate: 8,
+            repeat: 0,
+            hideOnComplete: true
+        });
+        
+        this.exclamMark = this.add.sprite( 580, 300, 'exp_exclam', 0);
+        this.exclamMark.setVisible(false);
 
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map, "second_stage");
@@ -76,11 +119,45 @@ export default class SecondStage extends Phaser.Scene {
             this.scene.run("minimap");
         },this);
 
+        //stage3의 전체 코드
+        this.contenttext = "" ;
+
+        //코드 실행후 불러올 output값
+        this.out = "";
+
         stagenum = 2;
+
+        //초반 대사
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        this.stage2_1();
         
     }
 
     update() {
+        this.contenttext = 
+            "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n" +
+            "    printf(\"더워요\");\n  }\n" + //코드조각 
+         //   "  else if (Temp>20){\n" +
+         //   "    printf(\"적당해요\");\n  }\n" + //코드조각
+            "  else {\n" + 
+            "    printf(\"추워요\");\n  }\n}" //코드조각
+        
+        //실제로는 2가지에 나눠서 쨔아함! ( this.out ==  "더워요")
+        if (this.out == "1_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n    printf(\"더워요\");\n  }\n  else {\n    printf(\"추워요\");\n  }\n}"){
+            console.log("===stage2 성공===");
+            this.out = "";
+
+            this.stage2_3_1();  
+        }
+        else if (this.out == "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n    printf(\"더워요\");\n  }\n  else {\n    printf(\"추워요\");\n  }\n}"){
+            console.log("===stage2 실패===");
+            this.out = "";
+         
+            this.stage2_4_1(); 
+       
+        }
+
         this.player.update();
         //this.inventory.update();
         this.command.update(this);
@@ -107,6 +184,114 @@ export default class SecondStage extends Phaser.Scene {
 
     }
 
+    stage2_1() {
+        this.time.delayedCall( 1000, () => { 
+            var seq = this.plugins.get('rexsequenceplugin').add(); 
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage2_1, this.dialog)
+            .start();
+            seq.on('complete', () => {
+           //     this.npc.setFlipX(true);
+                this.exclamMark.setVisible(true);
+                this.exclamMark.play('exclam');
+                this.time.delayedCall( 1000, () => { this.stage2_2() }, [] , this);
+                });   
+            }, [], this);  
+    }
+    stage2_2() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });     
+    }
 
+    stage2_3_1() { //미션 성공
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_3_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.time.delayedCall( 1500, () => { //1.5초간 옷입고
+                this.npc.setFlipX(true);
+                this.npc.setVisible(true);
+                
+                this.npc.play('npc_cold_walk',true);//걸어감
+                this.npc.setVelocityX(-100); 
+                this.cafe.setVisible(true); 
 
+                this.time.delayedCall( 2000, () => { //2초간 걷다가 멈춤.
+                    this.npc.anims.stop();
+                    this.npc.setVelocityX(0); 
+                    this.stage2_3_2();
+                 }, [] , this); 
+             }, [] , this);    
+        
+        });  
+    }
+    stage2_3_2() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_3_2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            
+            //this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });     
+    }
+
+    stage2_4_1() {  //미션 실패. 산타복
+       
+        var seq = this.plugins.get('rexsequenceplugin').add(); 
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_4_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.time.delayedCall( 1500, () => { //1.5초간 옷입고
+                this.npc.setFlipX(true);
+                this.npc.setVisible(true);
+                
+                this.npc.play('npc_cold_walk',true);//걸어감
+                this.npc.setVelocityX(-100); 
+                this.cafe.setVisible(true); 
+
+                this.time.delayedCall( 2000, () => { //2초간 걷다가 멈춤.
+                    this.npc.anims.stop();
+                    this.npc.setVelocityX(0); 
+                    this.stage2_4_2();
+                 }, [] , this); 
+             }, [] , this);    
+        
+        });   
+          
+    }
+    stage2_4_2() {  
+        this.time.delayedCall( 1000, () => {  //걸어나오는 모션뒤, 2초간 멈춤
+            var seq = this.plugins.get('rexsequenceplugin').add(); 
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage2_4_2, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.npc.setFlipX(false);
+                this.npc.play('npc_cold_walk',true);
+                this.npc.setVelocityX(+100); //걸어감
+                
+                this.time.delayedCall( 2000, () => { //2초간 걷다가 
+                    this.npc.anims.stop();
+                    this.npc.setVelocityX(0); 
+                    this.cafe.setVisible(false); //다시 할아버지 카페에 앉아있게
+                    this.npc.setVisible(false);
+                }, [] , this);
+             });   
+            }, [], this);  
+    }
+ 
 }
