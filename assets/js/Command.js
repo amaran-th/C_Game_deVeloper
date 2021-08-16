@@ -16,7 +16,6 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = scene.cameras.main.worldView;
 
-
         /*** 명령창버튼 활성화 ***/
         this.entire_code_button = scene.add.image(20,10,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
@@ -78,6 +77,11 @@ export default class Command extends Phaser.GameObjects.Image {
                         scene.codeapp_onoff_state = 1; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
                         break;
                     case 1:
+                        app_on = false;
+                        code_on = false;
+                        tutorial_on = false;
+                        code_text.setVisible(false);
+                        tutorial_text.setVisible(false);
                         state = 0;
                         console.log('맵이동');
                         scene.scene.sleep(name);
@@ -97,7 +101,6 @@ export default class Command extends Phaser.GameObjects.Image {
         this.back_button = scene.add.image(map.widthInPixels, 538, 'back_button').setOrigin(0).setInteractive();
         this.back_button.on('pointerup', function () {
             scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
-            console.log('out app_on : '+app_on);
             if(app_on == true){
                 app_on = false;
                 code_on = false;
@@ -198,34 +201,38 @@ export default class Command extends Phaser.GameObjects.Image {
             this.back_button.x = this.worldView.x + 980;
             for(var i=0; i < this.apps.length; i++){
                 this.apps[i].x = this.worldView.x + 755 + (i%2)*170;
+                this.apps[i].setVisible(true);
             }
-            if(code_on === true){
-                for(var i=0; i < this.apps.length; i++){
-                    this.apps[i].setVisible(false);
-                }
-                code_text.setVisible(true);
-                code_text.x = this.worldView.x + 750;
-            } else if(tutorial_on === true){
-                for(var i=0; i < this.apps.length; i++){
-                    this.apps[i].setVisible(false);
-                }
-                tutorial_text.setVisible(true);
-                tutorial_text.x = this.worldView.x + 750;
-                this.graphics.fillRect(tutorial_text.x -5, 75, 340, 430); // 화면 이동시 글이 보이는 판을 이동
-                this.zone.x = tutorial_text.x -5;
-                this.zone.on('pointermove', function (pointer) {
-                    if (pointer.isDown){
-                        tutorial_text.y += (pointer.velocity.y / 2000);
-                        tutorial_text.y = Phaser.Math.Clamp(tutorial_text.y, -400, 600);
-                        //this.extext.setVisible(true);
-                    }
-                });
-            } else {
-                tutorial_text.setVisible(false);
-                code_text.setVisible(false);
+            if(app_on === false) {
                 for(var i=0; i < this.apps.length; i++){
                     this.apps[i].setVisible(true);
                 }
+                this.zone.x = this.worldView.x + 1000;
+                tutorial_text.setVisible(false);
+                code_text.setVisible(false);
+            }else{
+                if(code_on === true){
+                    for(var i=0; i < this.apps.length; i++){
+                        this.apps[i].setVisible(false);
+                    }
+                    code_text.setVisible(true);
+                    code_text.x = this.worldView.x + 750;
+                } else if(tutorial_on === true){
+                    for(var i=0; i < this.apps.length; i++){
+                        this.apps[i].setVisible(false);
+                    }
+                    tutorial_text.setVisible(true);
+                    tutorial_text.x = this.worldView.x + 750;
+                    this.graphics.fillRect(tutorial_text.x -5, 75, 340, 430); // 화면 이동시 글이 보이는 판을 이동
+                    this.zone.x = tutorial_text.x -5;
+                    this.zone.on('pointermove', function (pointer) {
+                        if (pointer.isDown){
+                            tutorial_text.y += (pointer.velocity.y / 2000);
+                            tutorial_text.y = Phaser.Math.Clamp(tutorial_text.y, -400, 600);
+                            //this.extext.setVisible(true);
+                        }
+                    });
+                } 
             }
             this.entire_code_button.on('pointerdown', () => {
                 this.commandbox.setVisible(false);
