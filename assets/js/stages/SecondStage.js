@@ -29,6 +29,7 @@ export default class SecondStage extends Phaser.Scene {
         this.key5 = this.input.keyboard.addKey('FIVE');
         this.key6 = this.input.keyboard.addKey('SIX');
 
+
         this.anims.create({
             key: "fire",
             frames: this.anims.generateFrameNumbers('fireBackground',{ start: 0, end: 2}), 
@@ -48,6 +49,18 @@ export default class SecondStage extends Phaser.Scene {
         const tileset = map.addTilesetImage("map_stage2", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
+
+        
+        /**온도계 이미지**/
+        this.anims.create({
+            key: "temperature",
+            frames: this.anims.generateFrameNumbers('temperature',{ start: 0, end: 1}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+        this.temperature = this.add.sprite(200 ,500,'temperature').setOrigin(0,1);  
+        this.temperature.setInteractive();  
+        this.temperature.play('temperature');    
 
         /*** 카페 이미지 불러오기 (코드 실행 후 나오는 카페) */
         this.cafe = this.add.image(447,114,'cafe').setOrigin(0,0)
@@ -72,7 +85,6 @@ export default class SecondStage extends Phaser.Scene {
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
-        
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -152,7 +164,7 @@ export default class SecondStage extends Phaser.Scene {
 
 
         //Second_stage의 전체 코드
-        this.contenttext = "" ;
+        this.contenttext = "" ; 
 
         //코드 실행후 불러올 output값
         this.out = "";
@@ -160,16 +172,70 @@ export default class SecondStage extends Phaser.Scene {
         stagenum = 2;
 
         //초반 대사
-        this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage2_1();
-        
+        //this.cameras.main.fadeIn(1000,0,0,0);
+        //this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        //this.stage2_1();
+
+
+        /** 변수들 드래그 **/
+        var variable = this.add.graphics();
+        variable.lineStyle(3, 0xFFB569, 1);
+        this.var_cage = variable.fillRoundedRect(0, 0, 75, 50, 10).strokeRoundedRect(0, 0, 75, 50, 10).fillStyle(0xFCE5CD, 1); //글자 밖 배경
+
+        this.text_temp = this.add.text(37,25,'temp',{ 
+            fontSize : '30px',
+            fontFamily: ' Courier',
+            color: '#FFB569'
+        });
+        this.text_temp.setInteractive();
+        //var var_temp = this.add.container(100,400, [var_cage,text_temp]).setSize(50,50); //temp 변수
+        //var_temp.setInteractive(new Phaser.Geom.Rectangle(37, 25, 50, 50), Phaser.Geom.Rectangle.Contains); 
+        //var_temp.setName("temp")
+        //이거 37,25 안하면 왼쪽 위 꼭지점 부분 중심으로 50 사이즈로 클릭 범위 잡힘
+
+
+        this.input.setDraggable(this.text_temp);
+
+        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+        });
+        this.input.on('dragend', function (pointer, gameObject,dropped) {
+            //gameObject.clearTint();
+            if (!dropped) //이거 없으면 마우스 놓은 자리에 유지됨
+            {
+                gameObject.x = gameObject.input.dragStartX;
+                gameObject.y = gameObject.input.dragStartY;
+            }
+            else{
+            }
+        });
+        this.input.on('drop', function (pointer, gameObject, dragX, dragY) {
+            //gameObject.setVisible(false);
+            gameObject.x = gameObject.input.dragStartX;
+            gameObject.y = gameObject.input.dragStartY;
+        });
+
+        this.temperature.on('pointerover', function(){
+            //this.text_temp.setVisible(true);
+            this.text_temp.x = this.input.mousePointer.x-10;
+            this.text_temp.y = this.input.mousePointer.y-10;
+        }, this);
+
+
     }
 
     update() {
+
+        //배경이 텍스트 따라다니도록
+        this.var_cage.x = this.text_temp.x;
+        this.var_cage.y = this.text_temp.y;
+        this.var_cage.setVisible(this.text_temp.visible);
+
+
         this.contenttext = 
-            "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n" +
-            "    printf(\"더워요\");\n  }\n" + //코드조각 
+            "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n" + this.code_zone_1 +"(" + this.code_zone_2 + 
+            ">30){\n    " + this.code_zone_3 + "(\"더워요\");\n  }\n" + //코드조각 
          //   "  else if (Temp>20){\n" +
          //   "    printf(\"적당해요\");\n  }\n" + //코드조각
             "  else {\n" + 
@@ -277,6 +343,8 @@ export default class SecondStage extends Phaser.Scene {
             //scene.intro4();
         }, this);
     }   
+
+
     stage2_1() {
         this.time.delayedCall( 1000, () => { 
             var seq = this.plugins.get('rexsequenceplugin').add(); 
