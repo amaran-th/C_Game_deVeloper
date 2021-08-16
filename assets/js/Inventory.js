@@ -47,7 +47,7 @@ export default class inventory {
             if(scene.invenIn) { 
                 this.inven.y = 375;
                 if(this.exclamationIsReal){
-                    //this.exclamation.destroy();
+                    this.exclamation.destroy();
                     this.exclamationIsReal = false;
                 }
 
@@ -66,6 +66,7 @@ export default class inventory {
             }
             //console.log('clicked');
         })
+        // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
         if(scene.draganddrop_1 != undefined) scene.draganddrop_1.onoffwithcommand(scene);
         if(scene.draganddrop_2 != undefined) scene.draganddrop_2.onoffwithcommand(scene);
         if(scene.draganddrop_3 != undefined) scene.draganddrop_3.onoffwithcommand(scene);
@@ -73,20 +74,19 @@ export default class inventory {
 
     invenSave(scene, itemName) {
         //scene.invenPlus = false;  //여러번 불러와지는 거 방지
-        scene.item[scene.item.length] = itemName; // 배열에 아이템을 추가한다.
         /*for(var i=0; i<=scene.item.length; i++ ) {
             const j = i;
             this.newItem = scene.add.text(50 + j*100, 120 , scene.item[i], { font: "30px Arial Black", fill: "#FFB569" });
             this.newItem.setInteractive();
             scene.input.setDraggable(this.newItem);
             this.inven.add(this.newItem);
-        }*/
+        }*/ // 이렇게 하면 드랍존 적용 안 돼서 드랍존에 코드조각 안 들어가고 이상한 위치로 감
 
         // 코드 조각 불러와 배치하기
         console.log('아이템 수:', scene.item.length);
         console.log('아이템 배열: ' + scene.item);
         if(!scene.invenIn) { 
-            //this.exclamation = scene.add.text(this.worldView.x+140, 540,'!', { font: "30px Arial Black", fill: "#ff0000" }); 
+            this.exclamation = scene.add.text(this.worldView.x+140, 540,'!', { font: "30px Arial Black", fill: "#ff0000" }); 
             this.exclamationIsReal = true;
         }
     }
