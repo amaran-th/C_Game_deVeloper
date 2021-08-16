@@ -16,6 +16,7 @@ export default class Stage1 extends Phaser.Scene {
     }
 
     preload() {
+        this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
         /*
         /*** FROM Minicode.js***/
         //this.load.html('input', './assets/js/textInput.html');
@@ -104,8 +105,28 @@ export default class Stage1 extends Phaser.Scene {
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
         
-        //플레이어 위 pressX 생성해두기
+        //플레이어 위 pressX 생성해두기(door)
         this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+
+        //휴대폰 말풍선 애니메이션 설정
+        this.anims.create({
+            key: "phone_icon",
+            frames: this.anims.generateFrameNumbers('phone',{ start: 0, end: 1}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+    
+        //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
+        this.phone = this.add.sprite( 700,210,'phone',0).setOrigin(0,0);
+        this.phone.play('phone_icon');
+        this.myphone=this.add.image(710,290,"myphone").setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(phone)
+        this.getphone = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Get phone', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -163,7 +184,8 @@ export default class Stage1 extends Phaser.Scene {
 
         // Stage1 씬의 전체코드
         this.contenttext = "" ;
-        
+        stagenum=0;
+        this.isdownX=true;
     }
 
     update() {
@@ -234,6 +256,43 @@ export default class Stage1 extends Phaser.Scene {
         }
         else this.pressX.setVisible(false);
 
+
+        
+        //휴대폰 휴대폰 앞에서 x키를 누를 시
+        if(this.player.player.x < 775 && 700 < this.player.player.x ) {
+            this.getphone.x = this.player.player.x-50;
+            this.getphone.y = this.player.player.y-100;
+            this.getphone.setVisible(true);
+   
+            if(this.keyX.isDown) {
+                if(this.isdownX) {
+                this.isdownX=false;
+                console.log('휴대폰 획득');
+                this.phone.setVisible(true);
+                this.myphone.setVisible(true);  ////나중에 애니메이션까지 destroy 시키자
+                var phoneicon=this.add.image(550, 300, "entire_code_button").setOrigin(0,0).setAlpha(0);
+                this.tweens.add({
+                    targets: phoneicon,
+                    alpha:1,
+                    duration: 500,
+                    ease: 'Linear',
+                    repeat: 0,
+                    onComplete: ()=>{this.isgetphone=true;}
+                }, this);
+            }
+        }
+        }
+        else this.getphone.setVisible(false);
+
+
+        if(this.isgetphone) {
+            this.intro1();
+            this.isgetphone = false;
+        }
+
+
+
+
         if(this.key1.isDown) {
             console.log('맵이동');
             this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
@@ -251,7 +310,29 @@ export default class Stage1 extends Phaser.Scene {
         }
 
     }
+    intro1() {
+        this.player.playerPaused = true; //플레이어 얼려두기
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.tweens.add({
+            targets: phoneicon,
+            x:10,
+            y:10,
+            duration: 1000,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{}  ////나중에 트리거 하나 추가하자
+        }, this);
+        });
 
+
+
+        
+    }
     intro2() {
         this.player.playerPaused = true; //플레이어 얼려두기
         var seq = this.plugins.get('rexsequenceplugin').add();

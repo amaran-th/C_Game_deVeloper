@@ -1,3 +1,4 @@
+Stage1 코드 
 #include <stdio.h> 
  int main(){ 
         ("HI"); 

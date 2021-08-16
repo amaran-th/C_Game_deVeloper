@@ -124,17 +124,52 @@ visible(visible) {
     ['wait-time', 1],
     ['visible',true],
     ['setFace', 1],
-    ['print', '.....'],
+    ['print', '(흐암...지금이 몇시지?)'],
     ['wait-click'],
+    ['setFace', 5],
+    ['print', '* [Quest] 휴대전화를 얻자 *'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  intro1 = [
+    ['visible',true],
+    ['setFace', 5],
+    ['print', '*\'휴대전화\'를 얻었습니다.*'],
+    ['wait-click']
+    ['visible',false],
+
+  ]
+  intro2 = [
+    ['visible',true],
     ['setFace', 0],
-    ['print', '(헉목소리가 안나옴 어쩌구저쩌구)'],
+    ['print', '(어디보자...지금 시간이...)'],
     ['wait-click'],
-    ['print', '(무슨일이지??)'],
+    ['print', '(...)'],
+    ['wait-click'],
+    ['print', '(...?)'],
+    ['wait-click'],
+    ['print', '(유튜브랑 카톡...내 앱들이 다 지워졌잖아?!)'],
+    ['wait-click'],
+    ['print', '(이건 뭐야 튜토리얼...C언어?? 이건 무슨 앱이야? 바이러스라도 걸린건가?)'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '(...)'],
+    ['wait-click'],
+    ['print', '(잠깐만...나 왜 목소리가 안 나오지???)'],
     ['wait-click'],
     ['visible',false],
   ]
 
-  intro2 = [
+  intro3 = [
+    ['visible',true],
+    ['setFace', 1],
+    ['print', '(저 보따리는 또 뭐야?)'],
+    ['wait-click'],
+    ['visible',false],
+
+  ]
+
+  intro4 = [
     ['visible',true],
     ['print', '\'printf\'?'],
     ['wait-click'],
@@ -151,7 +186,7 @@ visible(visible) {
 
   ]
 
-  intro3 = [
+  intro5= [
     ['visible',true],
     ['print', '휴대폰에 이건 또 뭐고??'],
     ['wait-click'],
@@ -163,7 +198,7 @@ visible(visible) {
     ['visible',false],
   ]
 
-  intro4 = [
+  intro6 = [
     ['wait-click'],
     ['visible',true],
     ['setFace', 0],
