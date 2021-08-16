@@ -49,6 +49,17 @@ export default class SecondStage extends Phaser.Scene {
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
+        
+        /**온도계 이미지**/
+        this.anims.create({
+            key: "temperature",
+            frames: this.anims.generateFrameNumbers('temperature',{ start: 0, end: 1}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+        this.temperature = this.add.sprite(200 ,500,'temperature').setOrigin(0,1);    
+        this.temperature.play('temperature');    
+
         /*** 카페 이미지 불러오기 (코드 실행 후 나오는 카페) */
         this.cafe = this.add.image(447,114,'cafe').setOrigin(0,0)
         this.cafe.setVisible(false);
@@ -154,7 +165,7 @@ export default class SecondStage extends Phaser.Scene {
         this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
 
         //Second_stage의 전체 코드
-        this.contenttext = "" ;
+        this.contenttext = "" ; 
 
         //코드 실행후 불러올 output값
         this.out = "";
@@ -201,9 +212,12 @@ export default class SecondStage extends Phaser.Scene {
             }
         });
         this.input.on('drop', function (pointer, gameObject, dragX, dragY) {
-            gameObject.setVisible(false);
-            
+            //gameObject.setVisible(false);
+            gameObject.x = gameObject.input.dragStartX;
+            gameObject.y = gameObject.input.dragStartY;
         });
+
+
     }
 
     update() {
@@ -213,7 +227,7 @@ export default class SecondStage extends Phaser.Scene {
         this.var_cage.y = this.text_temp.y;
         this.var_cage.setVisible(this.text_temp.visible);
 
-        
+
 
         this.contenttext = 
             "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n" + this.code_zone_1 +"(" + this.code_zone_2 + 

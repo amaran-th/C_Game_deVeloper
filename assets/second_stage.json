@@ -55,8 +55,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":6,
- "nextobjectid":7,
+ "nextlayerid":7,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.1",
@@ -999,6 +999,11 @@
                          "name":"collides",
                          "type":"bool",
                          "value":false
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"menu"
                         }]
                 }, 
                 {
@@ -1008,6 +1013,11 @@
                          "name":"collides",
                          "type":"bool",
                          "value":false
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"menu"
                         }]
                 }, 
                 {
@@ -1161,6 +1171,11 @@
                          "name":"collides",
                          "type":"bool",
                          "value":false
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"menu"
                         }]
                 }, 
                 {
@@ -1170,6 +1185,11 @@
                          "name":"collides",
                          "type":"bool",
                          "value":false
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"menu"
                         }]
                 }, 
                 {
@@ -1323,6 +1343,11 @@
                          "name":"collides",
                          "type":"bool",
                          "value":false
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"menu"
                         }]
                 }, 
                 {
@@ -1332,6 +1357,11 @@
                          "name":"collides",
                          "type":"bool",
                          "value":false
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"menu"
                         }]
                 }, 
                 {
