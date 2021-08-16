@@ -2,6 +2,7 @@ import Player from "../Player.js";
 import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
+import DragAndDrop from "../DragAndDrop.js";
 
 export default class ThirdStage extends Phaser.Scene {   
     constructor(){ 
@@ -107,7 +108,7 @@ export default class ThirdStage extends Phaser.Scene {
 
         /** 아이템 만들기 **/ 
         this.itemicon = this.add.image(930,350,'item');
-        var item_text = 'for'
+        var item_text = 'for';
         this.itemicon.setVisible(false); //오븐 눌러야지 아이템 보이게
 
         /** 아이템 얻었을 때 뜨는 이미지 **/
@@ -137,9 +138,6 @@ export default class ThirdStage extends Phaser.Scene {
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
         
-        this.draganddrop_1 = new DragAndDrop(this, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
-        this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
-        this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
 
         //Second_stage의 전체 코드
         this.contenttext = "" ;
@@ -219,9 +217,12 @@ export default class ThirdStage extends Phaser.Scene {
         }
 
         if(this.invenPlus) {
-            this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 텍스트 추가
-            this.inventory.invenSave(this, 'if');
-            this.inventory.invenSave(this, 'for');
+            this.item[this.item.length] =  'printf';
+            this.item[this.item.length] =  'if';
+            this.item[this.item.length] =  'for';
+            this.draganddrop_1 = new DragAndDrop(this, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
             //this.intro2();
             this.invenPlus = false;
         }

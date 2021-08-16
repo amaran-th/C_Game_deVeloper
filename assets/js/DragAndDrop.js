@@ -1,9 +1,10 @@
-class DragAndDrop extends Phaser.GameObjects.Zone {
+export default class DragAndDrop extends Phaser.GameObjects.Zone {
     constructor(scene, x, y, width, height) {
         super(scene, x, y, width, height);
         // ...
         scene.add.existing(this);
         
+
         /*** 드래그앤드랍 ***/        
         // 코드 조각 불러와 배치하기
         this.code_piece = [];  // 배열로 줘서 씬에서 할당한 코드조각 만큼을 text 생성 변수로 주어줌
