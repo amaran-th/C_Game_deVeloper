@@ -143,7 +143,7 @@ export default class Command extends Phaser.GameObjects.Image {
                         scene.out = result.output;
                         console.log(result.output);
                         console.log('command 파일 result:', result.output);
-                        stage1.complied(sc, result.output);
+                        stage1.complied(scene, result.output);
                         //document.getElementById('testoutput').value = result.output;
     
                     });

@@ -131,14 +131,17 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
+
+  
   intro1 = [
     ['visible',true],
     ['setFace', 5],
-    ['print', '*\'휴대전화\'를 얻었습니다.*'],
-    ['wait-click']
+    ['print', '* \'휴대전화\'를 얻었습니다. *'],
+    ['wait-click'],
     ['visible',false],
 
   ]
+
   intro2 = [
     ['visible',true],
     ['setFace', 0],
@@ -178,6 +181,23 @@ visible(visible) {
     ['wait-click'],
     ['setFace', 0],
     ['print', '(그것보다 이게 왜 우리집에?)'],
+    ['wait-click'],
+    ['setFace', 5],
+    ['print', '* 자세히 보니 보따리에는 작은 쪽지가 들어있었다. *'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '(쪽지...?)'],
+    ['wait-click'],
+    ['print', '* 코딩 지옥에 오신 걸 환영합니다!\n이 곳은 모든 일이 당신이 만든 C 코드에 의해 일어나는 공간입니다. '],
+    ['wait-click'],
+    ['print', '이 보따리에 들어있던 코드조각들은 처음 이곳에 온 당신에게 드리는 선물입니다!'],
+    ['wait-click'],
+    ['print', '휴대전화의 튜토리얼을 통해 코딩에 필요한 기본적인 정보를 얻을 수 있습니다!'],
+    ['wait-click'],
+    ['print', 'hint : printf를 사용할 땐 C 코드 상단에 #include<stdio.h>를 적는 걸 잊지 말아주세요!'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '...이게 대체 뭔 소리야?'],
     ['wait-click'],
     ['setExtraFace', 'entire_code_button', 0],
     ['print', '띠링띠링!'],
