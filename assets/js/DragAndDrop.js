@@ -25,11 +25,12 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
                 code_piece.clearTint();
             });
         }
-
+        
         // 드랍 영역 선으로 임시 표시
-        var graphics = scene.add.graphics();
-        graphics.lineStyle(2, 0xffff00);
-        graphics.strokeRect(x - width / 2, y - height / 2, width, height);
+        this.graphics = scene.add.graphics();
+        var graphics = this.graphics; // 함수에서도 graphics를 쓰기 위해 this.graphics 썼으나 input 안에서 this 적용 안 돼서 따로 변수 둠.
+        this.graphics.lineStyle(2, 0x7e80a7);
+        this.graphics.strokeRect(x - width / 2, y - height / 2, width, height);
         
         // 드래그 하려고 선택한 거 맨 위로 올림
         scene.input.on('dragstart', function (pointer, gameObject) { 
@@ -49,7 +50,7 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         // 영역 벗어났을 때 원래 색으로
         scene.input.on('dragleave', function (pointer, gameObject, dropZone) { 
             graphics.clear();
-            graphics.lineStyle(2, 0xffff00);
+            graphics.lineStyle(2, 0x7e80a7);
             graphics.strokeRect(x - width / 2, y - height / 2, width, height);
         });
         // 영역안에서도 지정된 부분에만 고정되는 듯
@@ -66,7 +67,7 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
             }
             else if (dropZone.name == "3"){
                 scene.code_zone_3 = gameObject._text;
-                this.dropzone = 3;
+                this.dropzone = 3;0
             }
             //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
         });
@@ -106,18 +107,20 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
                     }, 1000);
                     break;
                 default:
-                    console.log('DragAndDrop부분 dragend 부분 원래 이 부분 뜨면 안 되는데.. 클래스 이름 바로 받아와야 하는데 풀 받아오면서 이부분으로 온다.. 일단 작동되는 건 이상 없게 딴 코드 추가 해둠..');
+                    console.log('dropzone 호출 안 된 부분');
                     gameObject.x = gameObject.input.dragStartX;
                     gameObject.y = gameObject.input.dragStartY;
             }
             
             graphics.clear();
-            graphics.lineStyle(2, 0xffff00);
+            //this.graphics.lineStyle(30, 0x36385c);
+            graphics.lineStyle(2, 0x7e80a7);
             graphics.strokeRect(x - width / 2, y - height / 2, width, height);
         });
         
         //초기화 시키기
-        var reset_button = scene.add.image(710, 55, 'reset_button');
+        this.reset_button = scene.add.image(980, 115, 'reset_button'); // 함수에서도 변수 쓰기 위해 this로 함
+        var reset_button = this.reset_button;
         reset_button.setInteractive();
         reset_button.on('pointerover', function () {
             reset_button.setTint(0x4A6BD6);
@@ -125,21 +128,21 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         reset_button.on('pointerout', function () {
             reset_button.clearTint();
         });
+        var code_piece2 = this.code_piece; // 리셋 버튼 안에서 this.code_piece를 가져오지 못해서 따로 변수로 둠(앞에서 code_piece로 변수 둬서 충돌하길래 2로 둠)
         reset_button.on('pointerup', function () {
             console.log('reset');
             var code_piece_reset_x = 50;
-            /*for (var i = 0; i < scene.item.length; i++){
-                var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
-                this.code_piece[i].x = code_piece_reset_x;
-                this.code_piece[i].y = 490;
+            for (var i = 0; i < scene.item.length; i++){
+                code_piece2[i].x = code_piece_reset_x;
+                code_piece2[i].y = 490;
                 code_piece_reset_x += 100;
-            }*/
+            }
             //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
             scene.drop_state_1 = 0;
             scene.drop_state_2 = 0;
             scene.drop_state_3 = 0;
 
-            scene.code_zone_1 = "";
+            scene.code_zone_1 = "                ";
             scene.code_zone_2 = "";
             scene.code_zone_3 = "";
         });
@@ -170,6 +173,17 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
                     }
                 }
             }
+        }
+    }
+    onoffwithcommand(scene) {
+        if (scene.codeapp_onoff_state) { // 명령창이 나와있을 때 드랍존과 리셋버튼 나와 있도록
+            //console.log('there');
+            this.graphics.setVisible(true);
+            this.reset_button.setVisible(true);
+        } else { // 명령창이 들어가있을 때 드랍존과 리셋버튼 들어가 있도록
+            //console.log('here');
+            this.graphics.setVisible(false);
+            this.reset_button.setVisible(false);
         }
     }
 }
