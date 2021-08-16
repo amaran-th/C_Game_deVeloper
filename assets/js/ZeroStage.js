@@ -158,6 +158,10 @@ export default class ZeroStage extends Phaser.Scene {
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
+        
+        this.draganddrop_1 = new DragAndDrop(this, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
 
         // zero_stage 씬의 전체코드
         this.contenttext = "" ;

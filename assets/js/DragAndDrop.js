@@ -176,6 +176,7 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         }
     }
     onoffwithcommand(scene) {
+        //console.log("폰 열림상태 > "+scene.codeapp_onoff_state);
         if (scene.codeapp_onoff_state) { // 명령창이 나와있을 때 드랍존과 리셋버튼 나와 있도록
             //console.log('there');
             this.graphics.setVisible(true);
