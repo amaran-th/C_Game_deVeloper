@@ -47,7 +47,7 @@ export default class inventory {
             if(scene.invenIn) { 
                 this.inven.y = 375;
                 if(this.exclamationIsReal){
-                    this.exclamation.destroy();
+                    //this.exclamation.destroy();
                     this.exclamationIsReal = false;
                 }
 
@@ -86,7 +86,7 @@ export default class inventory {
         console.log('아이템 수:', scene.item.length);
         console.log('아이템 배열: ' + scene.item);
         if(!scene.invenIn) { 
-            this.exclamation = scene.add.text(this.worldView.x+140, 540,'!', { font: "30px Arial Black", fill: "#ff0000" }); 
+            //this.exclamation = scene.add.text(this.worldView.x+140, 540,'!', { font: "30px Arial Black", fill: "#ff0000" }); 
             this.exclamationIsReal = true;
         }
     }
