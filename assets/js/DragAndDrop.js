@@ -119,7 +119,7 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
         });
         
         //초기화 시키기
-        this.reset_button = scene.add.image(920, 115, 'reset_button'); // 함수에서도 변수 쓰기 위해 this로 함
+        this.reset_button = scene.add.image(980, 115, 'reset_button'); // 함수에서도 변수 쓰기 위해 this로 함
         var reset_button = this.reset_button;
         reset_button.setInteractive();
         reset_button.on('pointerover', function () {
@@ -142,7 +142,7 @@ class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.drop_state_2 = 0;
             scene.drop_state_3 = 0;
 
-            scene.code_zone_1 = "";
+            scene.code_zone_1 = "                ";
             scene.code_zone_2 = "";
             scene.code_zone_3 = "";
         });

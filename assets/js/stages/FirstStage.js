@@ -92,15 +92,8 @@ export default class FirstStage extends Phaser.Scene {
 
 
         /*** 명령창 불러오기 ***/
+        this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "first_stage");
-
-        // 드래그앤드랍
-        //this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
-        //this.draganddrop_2 = new DragAndDrop(this, 500, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
-        //this.draganddrop_3 = new DragAndDrop(this, 700, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
-        
-        /** 인벤토리 만들기 **/     
-        //this.inven = this.inventory.create(this);
 
 
         /** 플레이어 위치 확인용 **/
@@ -114,12 +107,43 @@ export default class FirstStage extends Phaser.Scene {
             this.scene.run("minimap");
         },this);
 
-        //드래그앤드롭으로 zone에 있는 코드 받아올거임.
-        this.code_zone_1 = "       ";
-        this.code_zone_2 = "       ";
-        this.code_zone_3 = "       ";
 
-        //stage1의 전체 코드
+        //this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
+
+        // 인벤창 팝업 여부를 나타내는 상태변수
+        //this.invenIn = false;
+        
+        /** 아이템 만들기 **/
+        //this.itemicon = this.add.image(360,330,'item');
+        //var item_text = 'if'
+        /** 아이템 얻었을 때 뜨는 이미지 **/
+        /*this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
+        this.itemText = this.add.text(500,270,item_text,{
+        font: "30px Arial Black", fill: "#000000" 
+        }).setOrigin(0,0);
+        this.itemget.setVisible(false);
+        this.itemText.setVisible(false);
+        this.beforeItemGet = true; //한 번만 뜨도록*/
+
+        /** 인벤토리 만들기 **/     
+        //this.inven = this.inventory.create(this);
+
+        //console.log('item 위치', this.itemicon.x);
+
+        // 드래그앤드랍
+        //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
+        /*this.code_zone_1 = "                ";
+        this.code_zone_2 = "          ";
+        this.code_zone_3 = "          ";
+        //this.drag_piece = ['printf', 'if', 'else'];
+        // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
+        this.code_piece_add_state = 0;
+        // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
+        this.drop_state_1 = 0;
+        this.drop_state_2 = 0;
+        this.drop_state_3 = 0;*/
+
+        //first_stage의 전체 코드
         this.contenttext = "" ;
 
         stagenum = 1;
@@ -138,7 +162,7 @@ export default class FirstStage extends Phaser.Scene {
             + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
 
         this.player.update();
-        //this.inventory.update();
+        //this.inventory.update(this);
         this.command.update(this);
                 
          /* 플레이어 위치 알려줌*/
@@ -149,6 +173,31 @@ export default class FirstStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
+
+        /** 아이템 획득하는 경우 **/
+        /*if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
+            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
+            this.itemicon.setVisible(false);
+            this.itemget.setVisible(true);
+            this.itemText.setVisible(true);
+            this.tweens.add({
+                targets: [this.itemget, this.itemText],
+                alpha: 0,
+                duration: 2000,
+                ease: 'Linear',
+                repeat: 0,
+                onComplete: ()=>{this.invenPlus = true;}
+            }, this);
+        }
+
+        if(this.invenPlus) {
+            this.inventory.invenSave(this, 'if'); //인벤토리에 아이템 텍스트 추가
+            //this.inventory.invenSave(this, 'if');
+            //his.inventory.invenSave(this, 'else');
+            //this.intro2();
+            this.invenPlus = false;
+        }*/
+
 
         if(this.key2.isDown) {
             console.log('맵이동');

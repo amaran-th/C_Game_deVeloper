@@ -16,8 +16,7 @@ export default class ThirdStage extends Phaser.Scene {
     }
     
     create () {
-        
-      //  this.inventory = new Inventory(this);
+        this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
         /** x 키 입력 받기**/
@@ -49,25 +48,6 @@ export default class ThirdStage extends Phaser.Scene {
         this.oven_open = this.add.image(851,300,'oven_open').setOrigin(0,0)
         this.oven_open.setVisible(false);
 
-         /** 아이템 만들기 **/ 
-        this.itemfor = this.add.image(930,350,'item');
-        this.itemfor.setVisible(false); //오븐 눌러야지 아이템 보이게
-
-        /** 아이템 얻었을 때 뜨는 이미지 **/
-        this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemPrintfText = this.add.text(500,270,'printf',{
-        font: "30px Arial Black", fill: "#000000" 
-        }).setOrigin(0,0);
-        this.itemPrintfget.setVisible(false);
-        this.itemPrintfText.setVisible(false);
-        this.beforeItemGet = true; //한 번만 뜨도록
-
-        //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
-        this.oven.on('pointerup', () => {
-            this.oven_open.setVisible(true);
-             /** 아이템 만들기 **/
-             this.itemfor.setVisible(true);
-        });
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -102,15 +82,8 @@ export default class ThirdStage extends Phaser.Scene {
         this.exclamMark.setVisible(false);
 
         /*** 명령창 불러오기 ***/
+        this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "third_stage");
-
-        // 드래그앤드랍
-        //this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");
-        //this.draganddrop_2 = new DragAndDrop(this, 500, 20, 100, 30).setRectangleDropZone(100, 30).setName("2");
-        //this.draganddrop_3 = new DragAndDrop(this, 700, 20, 100, 30).setRectangleDropZone(100, 30).setName("3");
-        
-        /** 인벤토리 만들기 **/     
-      //  this.inven = this.inventory.create(this);
 
 
         /** 플레이어 위치 확인용 **/
@@ -124,13 +97,54 @@ export default class ThirdStage extends Phaser.Scene {
             this.scene.run("minimap");
         },this);
 
-        //드래그앤드롭으로 zone에 있는 코드 받아올거임.
-        this.code_zone_1 = "       ";
-        this.code_zone_2 = "       ";
-        this.code_zone_3 = "       ";
+        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
 
-        //stage3의 전체 코드
+        // 인벤창 팝업 여부를 나타내는 상태변수
+        this.invenIn = false;
+
+        /** 아이템 만들기 **/ 
+        this.itemicon = this.add.image(930,350,'item');
+        var item_text = 'for'
+        this.itemicon.setVisible(false); //오븐 눌러야지 아이템 보이게
+
+        /** 아이템 얻었을 때 뜨는 이미지 **/
+        this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
+        this.itemText = this.add.text(500,270,item_text,{
+        font: "30px Arial Black", fill: "#000000" 
+        }).setOrigin(0,0);
+        this.itemget.setVisible(false);
+        this.itemText.setVisible(false);
+        this.beforeItemGet = true; //한 번만 뜨도록
+
+        /** 인벤토리 만들기 **/     
+        this.inven = this.inventory.create(this);
+
+        //console.log('item 위치', this.itemicon.x);
+
+        // 드래그앤드랍
+        //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
+        this.code_zone_1 = "                ";
+        this.code_zone_2 = "          ";
+        this.code_zone_3 = "          ";
+        //this.drag_piece = ['printf', 'if', 'else'];
+        // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
+        this.code_piece_add_state = 0;
+        // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
+        this.drop_state_1 = 0;
+        this.drop_state_2 = 0;
+        this.drop_state_3 = 0;
+
+        //Second_stage의 전체 코드
         this.contenttext = "" ;
+        
+        
+        //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
+        this.oven.on('pointerup', () => {
+            this.oven_open.setVisible(true);
+             /** 아이템 만들기 **/
+             this.itemicon.setVisible(true);
+        });
+
 
         //코드 실행후 불러올 output값
         this.out = "";
@@ -165,7 +179,7 @@ export default class ThirdStage extends Phaser.Scene {
         }
 
         this.player.update();
-      //  this.inventory.update();
+        this.inventory.update(this);
         this.command.update(this);
         
          /* 플레이어 위치 알려줌*/
@@ -176,6 +190,30 @@ export default class ThirdStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
+
+        /** 아이템 획득하는 경우 **/
+        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
+            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
+            this.itemicon.setVisible(false);
+            this.itemget.setVisible(true);
+            this.itemText.setVisible(true);
+            this.tweens.add({
+                targets: [this.itemget, this.itemText],
+                alpha: 0,
+                duration: 2000,
+                ease: 'Linear',
+                repeat: 0,
+                onComplete: ()=>{this.invenPlus = true;}
+            }, this);
+        }
+
+        if(this.invenPlus) {
+            this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 텍스트 추가
+            this.inventory.invenSave(this, 'if');
+            this.inventory.invenSave(this, 'else');
+            //this.intro2();
+            this.invenPlus = false;
+        }
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -227,5 +265,26 @@ export default class ThirdStage extends Phaser.Scene {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });     
     }
+
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 zero_stage을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
+        var script = scene.add.text(textBox.x + 200, textBox.y +50, msg, {
+        fontFamily: 'Arial', 
+         fill: '#000000',
+         fontSize: '30px', 
+         wordWrap: { width: 450, useAdvancedWrap: true }
+        }).setOrigin(0,0);
+
+        var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+
+        scene.input.once('pointerdown', function() {
+            textBox.setVisible(false);
+            script.setVisible(false);
+            playerFace.setVisible(false);
+
+            //scene.intro4();
+        }, this);
+    }   
 
 }

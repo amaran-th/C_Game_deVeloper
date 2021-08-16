@@ -92,7 +92,7 @@ class Start extends Phaser.Scene {
     this.load.spritesheet('exp_exclam', './assets/images/exp_exclam.png', {
       frameWidth: 55,
       frameHeight: 50
-  });
+    });
 
     /** 첫번째 스테이지의 집 이미지 로드 **/
       this.load.image("house", "./assets/images/house.png");

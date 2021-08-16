@@ -8,11 +8,9 @@ const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-var state = 0;
-
-export default class Stage1 extends Phaser.Scene {   
+export default class ZeroStage extends Phaser.Scene {   
     constructor(){ 
-        super("stage1"); //identifier for the scene
+        super("zero_stage"); //identifier for the scene
     }
 
     preload() {
@@ -98,7 +96,7 @@ export default class Stage1 extends Phaser.Scene {
 
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
-        this.command = new Command(this, map, "stage1");
+        this.command = new Command(this, map, "zero_stage");
 
 
         /** 플레이어 위치 확인용 **/
@@ -132,21 +130,21 @@ export default class Stage1 extends Phaser.Scene {
         this.invenIn = false;
         
         /** 아이템 만들기 **/
-        this.itemPrintf = this.add.image(360,330,'item'); 
-        
+        this.itemicon = this.add.image(360,330,'item'); 
+        var item_text = 'printf'
         /** 아이템 얻었을 때 뜨는 이미지 **/
-        this.itemPrintfget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemPrintfText = this.add.text(500,270,'printf',{
+        this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
+        this.itemText = this.add.text(500, 270, item_text, {
         font: "30px Arial Black", fill: "#000000" 
         }).setOrigin(0,0);
-        this.itemPrintfget.setVisible(false);
-        this.itemPrintfText.setVisible(false);
+        this.itemget.setVisible(false);
+        this.itemText.setVisible(false);
         this.beforeItemGet = true; //한 번만 뜨도록
 
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
 
-        //console.log('item 위치', this.itemPrintf.x);
+        //console.log('item 위치', this.itemicon.x);
 
         // 드래그앤드랍
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -161,15 +159,15 @@ export default class Stage1 extends Phaser.Scene {
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
 
-        // Stage1 씬의 전체코드
+        // zero_stage 씬의 전체코드
         this.contenttext = "" ;
         
     }
 
     update() {
         this.contenttext = 
-            "Stage1 코드 \n#include <stdio.h> \n int main(){ \n " +  this.code_zone_1 +  "(\"HI\"); \n }" 
-            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
+            "ZERO STAGE \n#include <stdio.h> \n int main(){ \n " +  this.code_zone_1 +  "(\"HI\"); \n }";
+            // + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
 
         this.player.update();
         this.inventory.update(this);
@@ -186,13 +184,13 @@ export default class Stage1 extends Phaser.Scene {
 
 
         /** 아이템 획득하는 경우 **/
-        if (this.beforeItemGet && this.player.player.x < this.itemPrintf.x+54 && this.itemPrintf.x < this.player.player.x) {
+        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-            this.itemPrintf.setVisible(false);
-            this.itemPrintfget.setVisible(true);
-            this.itemPrintfText.setVisible(true);
+            this.itemicon.setVisible(false);
+            this.itemget.setVisible(true);
+            this.itemText.setVisible(true);
             this.tweens.add({
-                targets: [this.itemPrintfget, this.itemPrintfText],
+                targets: [this.itemget, this.itemText],
                 alpha: 0,
                 duration: 2000,
                 ease: 'Linear',
@@ -201,16 +199,6 @@ export default class Stage1 extends Phaser.Scene {
             }, this);
         }
 
-
-        /* x 키 눌렀을 때 바로 사라지게 하는 건데 대사 많이 출력하는 오류있음
-        if(this.itemPrintfget.visible && this.keyX.isDown) {
-            this.itemPrintfget.setVisible(false);
-            this.itemPrintfText.setVisible(false);
-            this.beforeItemGet = false;
-            this.invenPlus = true;
-        }
-        */
-
         if(this.invenPlus) {
             this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 텍스트 추가
             //this.inventory.invenSave(this, 'if');
@@ -218,6 +206,16 @@ export default class Stage1 extends Phaser.Scene {
             //this.intro2();
             this.invenPlus = false;
         }
+
+        /* x 키 눌렀을 때 바로 사라지게 하는 건데 대사 많이 출력하는 오류있음
+        if(this.itemget.visible && this.keyX.isDown) {
+            this.itemget.setVisible(false);
+            this.itemText.setVisible(false);
+            this.beforeItemGet = false;
+            this.invenPlus = true;
+        }
+        */
+
 
         /* 플레이어가 문 앞에 서면 작동하도록 함 */
         if(this.player.player.x < 175 && 100 < this.player.player.x ) {
@@ -228,7 +226,7 @@ export default class Stage1 extends Phaser.Scene {
             if(this.keyX.isDown) {
                 this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
                 console.log('맵이동');
-                this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
                 this.scene.run("first_stage");
             }
         }
@@ -236,17 +234,17 @@ export default class Stage1 extends Phaser.Scene {
 
         if(this.key1.isDown) {
             console.log('맵이동');
-            this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run('first_stage');
         }
         if(this.key2.isDown) {
             console.log('맵이동');
-            this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run('second_stage');
         }
         if(this.key3.isDown) {
             console.log('맵이동');
-            this.scene.sleep('stage1'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run("third_stage");
         }
 
@@ -275,7 +273,7 @@ export default class Stage1 extends Phaser.Scene {
     }
 
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
-        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 zero_stage을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
         var script = scene.add.text(textBox.x + 200, textBox.y +50, msg, {
         fontFamily: 'Arial', 
