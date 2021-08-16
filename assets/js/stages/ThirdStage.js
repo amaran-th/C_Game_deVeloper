@@ -127,9 +127,10 @@ export default class ThirdStage extends Phaser.Scene {
 
         // 드래그앤드랍
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        this.code_zone_1 = "                ";
-        this.code_zone_2 = "          ";
-        this.code_zone_3 = "          ";
+        this.code_zone_1 = "           "; //10칸
+        this.code_zone_2 = "           ";
+        this.code_zone_3 = "           "
+        //>, = , - 같은 작은 코드조각위해서 code_zone_mini같은거 만들어도 좋을듯, 왜냐면 쟤네 공간 차지 너무함
         //this.drag_piece = ['printf', 'if', 'else'];
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;
@@ -160,17 +161,27 @@ export default class ThirdStage extends Phaser.Scene {
 
         //초반 대사
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage3_1();
+    //   this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+    //   this.stage3_1();
         
     }
 
     update() {
-        this.contenttext = 
-            "#include <stdio.h> \n int main(){ \nint bread = 0;\n for (int i=0; i<25; i++){\n   bread=bread+1;\n}\nprintf(\"%d\",bread);\n}" 
-        
+      this.contenttext = 
+      "#include <stdio.h>\n" + 
+      "int main(){ \n\n" +
+
+      "   {int bread = 1;} \n\n   " +
+      this.code_zone_1 + 
+      "(int i=0; i" + this.code_zone_2 + 
+      "25; i++){\n" +
+      "      {bread} = {bread} + 1 ; \n" +
+      "   }\n\n" +
+
+      "   printf(\"%d\", {bread} );\n}"
+
         //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
-        if (this.out == "#include <stdio.h> \n int main(){ \nint bread = 0;\n for (int i=0; i<25; i++){\n   bread=bread+1;\n}\nprintf(\"%d\",bread);\n}"){
+        if (this.out == "#include <stdio.h>\nint main(){ \n\n   {int bread = 1;} \n\n   for(int i=0; i<25; i++){\n      {bread} = {bread} + 1 ; \n   }\n\n   printf(\"%d\", {bread} );\n}"){
             console.log("===stage3 클리어!===");
             this.bread.setVisible(true);
             this.full_bread_1.setVisible(true);
@@ -217,12 +228,12 @@ export default class ThirdStage extends Phaser.Scene {
         }
 
         if(this.invenPlus) {
-            this.item[this.item.length] =  'printf';
+            this.item[this.item.length] =  '<';
             this.item[this.item.length] =  'if';
             this.item[this.item.length] =  'for';
-            this.draganddrop_1 = new DragAndDrop(this, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
+            this.draganddrop_1 = new DragAndDrop(this, 805, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, 980, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, 670, 20, 80, 25).setRectangleDropZone(80, 25).setName("3");
             //this.intro2();
             this.invenPlus = false;
         }

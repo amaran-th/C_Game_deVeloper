@@ -149,9 +149,9 @@ export default class ZeroStage extends Phaser.Scene {
 
         // 드래그앤드랍
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        this.code_zone_1 = "                ";
-        this.code_zone_2 = "          ";
-        this.code_zone_3 = "          ";
+        this.code_zone_1 = "           "; //11칸
+        this.code_zone_2 = "           ";
+        this.code_zone_3 = "           ";
         //this.drag_piece = ['printf', 'if', 'else'];
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;
@@ -168,8 +168,10 @@ export default class ZeroStage extends Phaser.Scene {
 
     update() {
         this.contenttext = 
-            "ZERO STAGE \n#include <stdio.h> \n int main(){ \n " +  this.code_zone_1 +  "(\"HI\"); \n }";
-            // + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
+            "#include <stdio.h>\n" + 
+            "int main(){\n\   " +
+            this.code_zone_1 + 
+            "(\"HI\");\n}";
 
         this.player.update();
         this.inventory.update(this);
@@ -203,9 +205,9 @@ export default class ZeroStage extends Phaser.Scene {
 
         if(this.invenPlus) {
             this.item[this.item.length] =  'printf';
-            this.draganddrop_1 = new DragAndDrop(this, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
+            this.draganddrop_1 = new DragAndDrop(this, 805, 150, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, 570, 20, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, 670, 20, 80, 25).setRectangleDropZone(80, 25).setName("3");
             //this.intro2();
             this.invenPlus = false;
         }
