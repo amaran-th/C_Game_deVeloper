@@ -218,7 +218,7 @@ export default class SecondStage extends Phaser.Scene {
             gameObject.y = gameObject.input.dragStartY;
         });
 
-        this.temperature.on('pointerup', function(){
+        this.temperature.on('pointerover', function(){
             //this.text_temp.setVisible(true);
             this.text_temp.x = this.input.mousePointer.x-10;
             this.text_temp.y = this.input.mousePointer.y-10;
@@ -229,14 +229,10 @@ export default class SecondStage extends Phaser.Scene {
 
     update() {
 
-        console.log(this.input.mousePointer.x); 
-
         //배경이 텍스트 따라다니도록
         this.var_cage.x = this.text_temp.x;
         this.var_cage.y = this.text_temp.y;
         this.var_cage.setVisible(this.text_temp.visible);
-
-
 
 
         this.contenttext = 
