@@ -57,7 +57,8 @@ export default class SecondStage extends Phaser.Scene {
             frameRate: 2,
             repeat: -1,
         });
-        this.temperature = this.add.sprite(200 ,500,'temperature').setOrigin(0,1);    
+        this.temperature = this.add.sprite(200 ,500,'temperature').setOrigin(0,1);  
+        this.temperature.setInteractive();  
         this.temperature.play('temperature');    
 
         /*** 카페 이미지 불러오기 (코드 실행 후 나오는 카페) */
@@ -187,7 +188,7 @@ export default class SecondStage extends Phaser.Scene {
             fontSize : '30px',
             fontFamily: ' Courier',
             color: '#FFB569'
-        }).setOrigin(0,0);
+        });
         this.text_temp.setInteractive();
         //var var_temp = this.add.container(100,400, [var_cage,text_temp]).setSize(50,50); //temp 변수
         //var_temp.setInteractive(new Phaser.Geom.Rectangle(37, 25, 50, 50), Phaser.Geom.Rectangle.Contains); 
@@ -217,15 +218,24 @@ export default class SecondStage extends Phaser.Scene {
             gameObject.y = gameObject.input.dragStartY;
         });
 
+        this.temperature.on('pointerup', function(){
+            //this.text_temp.setVisible(true);
+            this.text_temp.x = this.input.mousePointer.x-10;
+            this.text_temp.y = this.input.mousePointer.y-10;
+        }, this);
+
 
     }
 
     update() {
 
+        console.log(this.input.mousePointer.x); 
+
         //배경이 텍스트 따라다니도록
         this.var_cage.x = this.text_temp.x;
         this.var_cage.y = this.text_temp.y;
         this.var_cage.setVisible(this.text_temp.visible);
+
 
 
 
@@ -337,6 +347,8 @@ export default class SecondStage extends Phaser.Scene {
             //scene.intro4();
         }, this);
     }   
+
+
     stage2_1() {
         this.time.delayedCall( 1000, () => { 
             var seq = this.plugins.get('rexsequenceplugin').add(); 
