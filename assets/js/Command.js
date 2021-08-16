@@ -77,6 +77,11 @@ export default class Command extends Phaser.GameObjects.Image {
                         scene.codeapp_onoff_state = 1; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
                         break;
                     case 1:
+                        app_on = false;
+                        code_on = false;
+                        tutorial_on = false;
+                        code_text.setVisible(false);
+                        tutorial_text.setVisible(false);
                         state = 0;
                         console.log('맵이동');
                         scene.scene.sleep(name);
