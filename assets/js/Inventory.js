@@ -6,6 +6,9 @@ export default class inventory {
 
     }
     create(scene) {
+        /*** 카메라가 비추는 화면 변수 선언 ***/
+        this.worldView = scene.cameras.main.worldView;
+
         /** 인벤창 만들기 **/
         this.inventory = scene.add.graphics();
         this.inventory.lineStyle(3, 0xFFB569, 1);
@@ -38,8 +41,9 @@ export default class inventory {
     }
     update(scene) {
         //console.log(scene.invenIn); 
-
+        this.inven.x = this.worldView.x + 5;
         this.inven.on('pointerdown', () => {
+            scene.invenIn = !scene.invenIn;
             if(scene.invenIn) { 
                 this.inven.y = 375;
                 if(this.exclamationIsReal){
@@ -61,7 +65,6 @@ export default class inventory {
                 if(this.draganddrop_3 != undefined) this.draganddrop_3.updownwithinven(scene);
             }
             //console.log('clicked');
-            scene.invenIn = !scene.invenIn;
         })
         if(this.draganddrop_1 != undefined) this.draganddrop_1.onoffwithcommand(scene);
         if(this.draganddrop_2 != undefined) this.draganddrop_2.onoffwithcommand(scene);
@@ -71,6 +74,13 @@ export default class inventory {
     invenSave(scene, itemName) {
         //scene.invenPlus = false;  //여러번 불러와지는 거 방지
         scene.item[scene.item.length] = itemName; // 배열에 아이템을 추가한다.
+        /*for(var i=0; i<=scene.item.length; i++ ) {
+            const j = i;
+            this.newItem = scene.add.text(50 + j*100, 120 , scene.item[i], { font: "30px Arial Black", fill: "#FFB569" });
+            this.newItem.setInteractive();
+            scene.input.setDraggable(this.newItem);
+            this.inven.add(this.newItem);
+        }*/
 
         // 코드 조각 불러와 배치하기
         console.log('아이템 수:', scene.item.length);
@@ -79,7 +89,7 @@ export default class inventory {
         this.draganddrop_2 = new DragAndDrop(scene, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
         this.draganddrop_3 = new DragAndDrop(scene, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
         if(!scene.invenIn) { 
-            this.exclamation = scene.add.text(140, 540,'!', { font: "30px Arial Black", fill: "#ff0000" }); 
+            this.exclamation = scene.add.text(this.worldView.x+140, 540,'!', { font: "30px Arial Black", fill: "#ff0000" }); 
             this.exclamationIsReal = true;
         }
     }

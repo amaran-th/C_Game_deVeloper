@@ -23,6 +23,9 @@ export default class ThirdStage extends Phaser.Scene {
         this.keyX = this.input.keyboard.addKey('X');
         this.key1 = this.input.keyboard.addKey('ONE');
         this.key2 = this.input.keyboard.addKey('TWO');
+        this.key4 = this.input.keyboard.addKey('FOUR');
+        this.key5 = this.input.keyboard.addKey('FIVE');
+        this.key6 = this.input.keyboard.addKey('SIX');
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "third_stage" });
@@ -65,9 +68,6 @@ export default class ThirdStage extends Phaser.Scene {
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
-
-        /*** 카메라가 비추는 화면 변수 선언 ***/
-        this.worldView = this.cameras.main.worldView;
         
         /*** 퀘스트 말풍선 애니메이션 */
         this.anims.create({
@@ -80,6 +80,9 @@ export default class ThirdStage extends Phaser.Scene {
         
         this.exclamMark = this.add.sprite( 390, 220, 'exp_exclam', 0);
         this.exclamMark.setVisible(false);
+
+        /*** 카메라가 비추는 화면 변수 선언 ***/
+        this.worldView = this.cameras.main.worldView;
 
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
@@ -210,7 +213,7 @@ export default class ThirdStage extends Phaser.Scene {
         if(this.invenPlus) {
             this.inventory.invenSave(this, 'printf'); //인벤토리에 아이템 텍스트 추가
             this.inventory.invenSave(this, 'if');
-            this.inventory.invenSave(this, 'else');
+            this.inventory.invenSave(this, 'for');
             //this.intro2();
             this.invenPlus = false;
         }
@@ -224,6 +227,21 @@ export default class ThirdStage extends Phaser.Scene {
             console.log('맵이동');
             this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run('second_stage');
+        }
+        if(this.key4.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('fourth_stage');
+        }
+        if(this.key5.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('fifth_stage');
+        }
+        if(this.key6.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run('sixth_stage');
         }
         
       

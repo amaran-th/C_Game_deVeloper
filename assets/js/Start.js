@@ -21,7 +21,7 @@ class Start extends Phaser.Scene {
 
       //나중에 지우기 ======================================
               this.load.image("tiles", "./assets/images/map.png");
-
+              
               /** FROM Player.js**/
               this.load.spritesheet('player', './assets/images/heroin.png', {
                 frameWidth: 80,
@@ -81,6 +81,9 @@ class Start extends Phaser.Scene {
       this.load.image("stage_1_button", "./assets/images/map/stage_1.png");
       this.load.image("stage_2_button", "./assets/images/map/stage_2.png");
       this.load.image("stage_3_button", "./assets/images/map/stage_3.png");
+      this.load.image("stage_4_button", "./assets/images/map/stage_4.png");
+      this.load.image("stage_5_button", "./assets/images/map/stage_5.png");
+      this.load.image("stage_6_button", "./assets/images/map/stage_6.png");
 
       /** 불타는 배경 로드 **/
       this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {
@@ -106,7 +109,19 @@ class Start extends Phaser.Scene {
       this.load.image('unlocked', './assets/images/commandbox_unlocked.png')
 
     /** 2번째 스테이지 타일 **/
-      this.load.image("stage2_tiles", "./assets/images/test.png");
+      this.load.image("stage2_tiles", "./assets/images/stage2/map_stage2.png");
+    
+    /** 2번째 스테이지의 npc 로드 **/
+      this.load.image("npc7", "./assets/images/npc/npc7.png");
+ 
+      this.load.spritesheet('npc_cold', './assets/images/stage2/npc_cold.png', {
+        frameWidth: 65,
+        frameHeight: 128,
+      });
+    
+    /** 2번째 스테이지 이미지 로드 **/
+      this.load.image("cafe", "./assets/images/stage2/cafe.png");
+
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");
       this.load.image("stage3_tiles", "./assets/images/stage3/map_stage3.png");

@@ -20,6 +20,9 @@ export default class FirstStage extends Phaser.Scene {
         this.keyX = this.input.keyboard.addKey('X');
         this.key2 = this.input.keyboard.addKey('TWO');
         this.key3 = this.input.keyboard.addKey('THREE');
+        this.key4 = this.input.keyboard.addKey('FOUR');
+        this.key5 = this.input.keyboard.addKey('FIVE');
+        this.key6 = this.input.keyboard.addKey('SIX');
 
         this.anims.create({
             key: "fire",
@@ -208,6 +211,18 @@ export default class FirstStage extends Phaser.Scene {
             console.log('맵이동');
             this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run("third_stage");
+        }if(this.key4.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("fourth_stage");
+        }if(this.key5.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("fifth_stage");
+        }if(this.key6.isDown) {
+            console.log('맵이동');
+            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            this.scene.run("sixth_stage");
         }
 
         if(!this.scene.isActive('quiz') && this.quiz_running ) this.stage1_6();

@@ -1,6 +1,8 @@
 var state = 0;
-var text;
+var code_text;
+var tutorial_text;
 var code_on = false;
+var tutorial_on = false;
 var app_on = false;
 import ZeroStage from "./ZeroStage.js";
 
@@ -25,7 +27,43 @@ export default class Command extends Phaser.GameObjects.Image {
     
         /*** 명령창, 명령창 내용 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
-        text = scene.add.text(map.widthInPixels, 100, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+        //text = scene.add.text(map.widthInPixels, 100, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
+        code_text = scene.add.text(map.widthInPixels, 75, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
+        // 튜토리얼 설명 
+        var content = [
+            "비교 연산자",
+            "==, >, <, >=, <=",
+            "",
+            "<<조건문의 종류>>",
+            "if문, switch-case문",
+            "",
+            "if문 문법",
+            "if( 조건식 ){",
+            "   실행문;",
+            "}",
+            "",
+            "<<반복문의 종류>>",
+            "while문, for문",
+            "",
+            "while문 문법",
+            "while( ①조건식 ){",
+            "   ②실행문;",
+            "}",
+            "실행 순서",
+            "①조건식을 평가합니다. 평가 결과가 true이면 ②실행문을 실행합니다.",
+            "②실행문이 모두 실행되면 다시 ①조건식으로 되돌아가서 다시 검사합니다. ",
+            "만약 ①조건식이 true라면 1,2번 순서를 다시 반복하고 아니면 while문을 종료합니다. ",
+            "",
+            "for문 문법",
+            "for( ①초기화식; ②조건식; ④증감식){",
+            "   ③실행문;",
+            "}",
+            "실행 순서",
+            "①초기화식이 제일 먼저 실행됩니다. 그 뒤 ②조건식을 평가해서 true이면 ③실행문을 실행시키고 false이면 for문을 종료합니다. 만약 실행문이 실행되었다면 블록 내부의 ③실행문을 모두 실행시키고 ④증감식을 실행 시킨 뒤 다시 ②조건식을 평가하게 됩니다.",
+            "",
+            ""
+        ];
+        tutorial_text = scene.add.text(map.widthInPixels, 75, content, {  font: "16px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
 
         /*** 폰 앱들 넣어주기 ***/
         var app_names = ['app_code', 'app_map', 'app_tutorial'];
@@ -35,26 +73,19 @@ export default class Command extends Phaser.GameObjects.Image {
             this.apps[j] = scene.add.image(map.widthInPixels, 80 + (parseInt(i / 2))*130, app_names[j]).setOrigin(0).setInteractive();
             this.apps[j].on('pointerup', function () { 
                 app_on = true;
-                //눌려졌는지 확인용으로 클릭됐다는 메시지 띄움
-                var text_ex = scene.add.text(200, 100 + j*20, app_names[j]+' is click!', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
                 switch(j){
                     case 0:
-                        // case 0 안으로 들어왔는지 확인용으로 0 띄움
-                        scene.add.text(300, 10, '0', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
                         code_on = true;
                         scene.codeapp_onoff_state = 1; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
                         break;
                     case 1:
-                        // case 1 안으로 들어왔는지 확인용으로 1 띄움
-                        scene.add.text(310, 10, '1', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
-                        // HELP HELP 맵 이동 어떻게 하는지 모르겠음.. 
-                        scene.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                        state = 0;
                         console.log('맵이동');
-                        scene.scene.sleep(name); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                        scene.scene.sleep(name);
                         scene.scene.run("minimap");
                         break;
                     case 2:
-                        scene.add.text(350, 100, '음... 튜토리얼 뭘 넣어야 하는거징..', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
+                        tutorial_on = true;
                         break;
                     default:
                         scene.add.text(400, 300, 'default zone... why?', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
@@ -65,28 +96,26 @@ export default class Command extends Phaser.GameObjects.Image {
 
         /*** 뒤로가기 버튼 ***/
         this.back_button = scene.add.image(map.widthInPixels, 538, 'back_button').setOrigin(0).setInteractive();
-        /*
-        this.back_button.on('pointerover', function () {
-            this.back_button.destroy();
-            this.back_button = scene.add.image(map.widthInPixels, 550, 'back_button_on').setOrigin(0).setInteractive();
-        });
-        this.back_button.on('pointerout', function () { 
-            this.back_button.destroy();
-            this.back_button = scene.add.image(map.widthInPixels, 550, 'back_button').setOrigin(0).setInteractive();
-        });
-        */
         this.back_button.on('pointerup', function () {
             scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
             console.log('out app_on : '+app_on);
             if(app_on == true){
-                console.log("heuhe");
                 app_on = false;
                 code_on = false;
-                text.setVisible(false);
-                console.log('in app_on : '+app_on);
-                console.log('code_on : '+code_on);
+                tutorial_on = false;
+                code_text.setVisible(false);
+                tutorial_text.setVisible(false);
             }
         });
+
+
+
+        /*** 튜토리얼앱 드래그 할 수 있기위한 설정 ***/
+        this.zone = scene.add.zone(map.widthInPixels, 75,  360, 450).setOrigin(0).setInteractive();
+        this.graphics = scene.make.graphics(); 
+        var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
+        tutorial_text.setMask(mask);
+
 
         /*** 컴파일 버튼 누를시 컴파일러 동작. ***/ //@@@@@@@@@@@
         this.compile_button.on('pointerdown', () => {
@@ -129,7 +158,7 @@ export default class Command extends Phaser.GameObjects.Image {
                 {
                     //  Flash the prompt 이거 뭔지 모르겠음 다른 곳에서 긁어옴
                     this.scene.tweens.add({
-                        targets: text,
+                        targets: code_text,
                         alpha: 0.2,
                         duration: 250,
                         ease: 'Power3',
@@ -144,7 +173,7 @@ export default class Command extends Phaser.GameObjects.Image {
 
     update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
 
-        text.setText(scene.contenttext);
+        code_text.setText(scene.contenttext);
 
         //console.log('state' + state);
         /*** 화면 이동시 entire code button 따라가도록 설정***/
@@ -175,11 +204,28 @@ export default class Command extends Phaser.GameObjects.Image {
                 for(var i=0; i < this.apps.length; i++){
                     this.apps[i].setVisible(false);
                 }
-                text.setVisible(true);
-                text.x = this.worldView.x + 760;
-                
+                /*text.setVisible(true);
+                text.x = this.worldView.x + 760;*/
+                code_text.setVisible(true);
+                code_text.x = this.worldView.x + 750;
+            } else if(tutorial_on === true){
+                for(var i=0; i < this.apps.length; i++){
+                    this.apps[i].setVisible(false);
+                }
+                tutorial_text.setVisible(true);
+                tutorial_text.x = this.worldView.x + 750;
+                this.graphics.fillRect(tutorial_text.x -5, 75, 340, 430); // 화면 이동시 글이 보이는 판을 이동
+                this.zone.x = tutorial_text.x -5;
+                this.zone.on('pointermove', function (pointer) {
+                    if (pointer.isDown){
+                        tutorial_text.y += (pointer.velocity.y / 2000);
+                        tutorial_text.y = Phaser.Math.Clamp(tutorial_text.y, -400, 600);
+                        //this.extext.setVisible(true);
+                    }
+                });
             } else {
-                text.setVisible(false);
+                tutorial_text.setVisible(false);
+                code_text.setVisible(false);
                 for(var i=0; i < this.apps.length; i++){
                     this.apps[i].setVisible(true);
                 }
@@ -189,9 +235,14 @@ export default class Command extends Phaser.GameObjects.Image {
                 for(var i=0; i < this.apps.length; i++){
                     this.apps[i].setVisible(false);
                 }
-                code_on = false;
+
                 scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
-                text.setVisible(false);
+                
+                code_on = false;
+                tutorial_on = false;
+                //text.setVisible(false);
+                code_text.setVisible(false);
+                tutorial_text.setVisible(false);
                 this.back_button.setVisible(false);
                 state = 0;
             });
@@ -206,5 +257,10 @@ export default class Command extends Phaser.GameObjects.Image {
             ease: 'Power3'
         });
         //console.log("3:"+this.commandbox.x);
+    }*/
+
+    /*update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
+
+        code_text.setText(scene.contenttext);
     }*/
 }

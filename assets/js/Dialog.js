@@ -261,6 +261,7 @@ visible(visible) {
     ['visible',false],
   ]
 
+
   stage1_6 = [
     ['visible',true],
     ['place', 40,10],
@@ -269,6 +270,74 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
     ['wait-time', 1],
+  ]
+
+
+  stage2_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '(아, 사람이다!)'],
+    ['wait-click'],
+    ['print', '저기요! 할아버지!!!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage2_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '할아버지! 여긴 대체 어디죠?'],
+    ['wait-click'],
+    ['setFace', 4],
+    ['print', '껄껄 코딩지옥은 처음인가 보구나!'],
+    ['wait-click'],
+    ['print', '내 부탁을 좀 들어주면 묻는 말에 대답해주지'],
+    ['wait-click'],
+    ['print', '여기서 나가려고하는데 무슨 옷을 입어야할지 모르겠군'],
+    ['wait-click'],
+    ['print', '밖에 날씨가 어떤지 좀 말해주겠나? 춥다, 덥다 이런식으로'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage2_3_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 4],
+    ['wait-click'],
+    ['print', '날이 덥다고? 알겠네 조금만 기다리게'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage2_3_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 4],
+    ['print', '그래 이거야!'],
+    ['wait-click'],
+    ['print', '이제 코딩지옥에 대해 설명해주지 솰라솰라~~ '],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage2_4_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 4],
+    ['wait-click'],
+    ['print', '날이 춥다고? 알겠네 조금만 기다리게'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage2_4_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 4],
+    ['print', '자네! 이 옷차림은 아닌것 같은데?'],
+    ['wait-click'],
+    ['print', '다시 한번 말해주게!!!'],
+    ['wait-click'],
+    ['visible',false],
   ]
 
 
@@ -307,6 +376,7 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 3],
+    ['wait-click'],
     ['print', '세상에! 진짜 해냈구나! '],
     ['wait-click'],
     ['print', '고마워! 코드조각은 너 가져'],
