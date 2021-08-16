@@ -163,21 +163,24 @@ export default class SecondStage extends Phaser.Scene {
         //this.stage2_1();
 
 
-        //변수들 드래그
+        /** 변수들 드래그 **/
         var variable = this.add.graphics();
         variable.lineStyle(3, 0xFFB569, 1);
-        var var_cage = variable.fillRoundedRect(0, 0, 75, 50, 10).strokeRoundedRect(0, 0, 75, 50, 10).fillStyle(0xFCE5CD, 1); //글자 밖 배경
+        this.var_cage = variable.fillRoundedRect(0, 0, 75, 50, 10).strokeRoundedRect(0, 0, 75, 50, 10).fillStyle(0xFCE5CD, 1); //글자 밖 배경
 
-        var text_temp = this.add.text(37,25,'온도',{ 
+        this.text_temp = this.add.text(37,25,'temp',{ 
             fontSize : '30px',
             fontFamily: ' Courier',
             color: '#FFB569'
         }).setOrigin(0,0);
-        //text_temp.setInteractive();
-        var var_temp = this.add.container(100,400, [var_cage,text_temp]).setSize(50,50); //temp 변수
-        var_temp.setInteractive(new Phaser.Geom.Rectangle(37, 25, 50, 50), Phaser.Geom.Rectangle.Contains); 
+        this.text_temp.setInteractive();
+        //var var_temp = this.add.container(100,400, [var_cage,text_temp]).setSize(50,50); //temp 변수
+        //var_temp.setInteractive(new Phaser.Geom.Rectangle(37, 25, 50, 50), Phaser.Geom.Rectangle.Contains); 
+        //var_temp.setName("temp")
         //이거 37,25 안하면 왼쪽 위 꼭지점 부분 중심으로 50 사이즈로 클릭 범위 잡힘
-        this.input.setDraggable(var_temp);
+
+
+        this.input.setDraggable(this.text_temp);
 
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.x = dragX;
@@ -193,16 +196,24 @@ export default class SecondStage extends Phaser.Scene {
             else{
             }
         });
+        this.input.on('drop', function (pointer, gameObject, dragX, dragY) {
+            gameObject.setVisible(false);
+            
+        });
     }
 
     update() {
-        
-        
 
+        //배경이 텍스트 따라다니도록
+        this.var_cage.x = this.text_temp.x;
+        this.var_cage.y = this.text_temp.y;
+        this.var_cage.setVisible(this.text_temp.visible);
+
+        
 
         this.contenttext = 
-            "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n" +
-            "    printf(\"더워요\");\n  }\n" + //코드조각 
+            "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n" + this.code_zone_1 +"(" + this.code_zone_2 + 
+            ">30){\n    " + this.code_zone_3 + "(\"더워요\");\n  }\n" + //코드조각 
          //   "  else if (Temp>20){\n" +
          //   "    printf(\"적당해요\");\n  }\n" + //코드조각
             "  else {\n" + 
