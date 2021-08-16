@@ -136,14 +136,20 @@ export default class ThirdStage extends Phaser.Scene {
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
+        
+        this.draganddrop_1 = new DragAndDrop(this, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
 
         //Second_stage의 전체 코드
         this.contenttext = "" ;
         
         
         //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
+        this.oven_on = false; // 오븐이 열려있을때만 아이템 받을수있게 할거임
         this.oven.on('pointerup', () => {
             this.oven_open.setVisible(true);
+            this.oven_on = true;
              /** 아이템 만들기 **/
              this.itemicon.setVisible(true);
         });
@@ -195,9 +201,11 @@ export default class ThirdStage extends Phaser.Scene {
         this.playerCoord.y = this.worldView.y + 10;
 
         /** 아이템 획득하는 경우 **/
-        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
+        if (this.oven_on && this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
             this.itemicon.setVisible(false);
+            this.itemget.x = this.worldView.x
+            this.itemText.x = this.worldView.x + 530;
             this.itemget.setVisible(true);
             this.itemText.setVisible(true);
             this.tweens.add({
