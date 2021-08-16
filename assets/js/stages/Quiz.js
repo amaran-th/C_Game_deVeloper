@@ -1,6 +1,5 @@
 /* 스테이지1의 문제*/
 
-import FirstStage from "./FirstStage.js";
 
 var curve = [];
 var graphics;
@@ -19,7 +18,6 @@ export default class Quiz extends Phaser.Scene {
     }
 
     create(){
-        this.firstStage = new FirstStage();
         console.log('퀴즈 시작!');
         //this.inventory.fillRoundedRect(0, 50, 1094, 173, 20).strokeRoundedRect(0, 50, 1094, 173, 20);
         var screen = this.add.rectangle(150, 100, 10, 10, 0x9966ff).setOrigin(0,0);
