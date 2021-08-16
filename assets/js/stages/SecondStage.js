@@ -76,6 +76,12 @@ export default class SecondStage extends Phaser.Scene {
             frameRate: 7,
             repeat: -1,
         });
+        this.anims.create({
+            key: "npc_hot_walk",
+            frames: this.anims.generateFrameNumbers('npc_cold',{ start: 4, end: 7}), 
+            frameRate: 7,
+            repeat: -1,
+        });
         this.npc = this.physics.add.sprite(910 ,430,'npc_cold');
         this.npc.setVisible(false);
 
@@ -233,7 +239,7 @@ export default class SecondStage extends Phaser.Scene {
         this.var_cage.setVisible(this.text_temp.visible);
 
         this.contenttext = 
-        "2_#include <stdio.h>\n" + 
+        "1_#include <stdio.h>\n" + 
         "int main(){\n\n" +
         "   {int temp = 45;} \n\n   " +
         this.code_zone_1 + "(" + this.code_zone_2 + ">30){\n      " + //if(Temp>30)
@@ -382,7 +388,7 @@ export default class SecondStage extends Phaser.Scene {
                 this.npc.setFlipX(true);
                 this.npc.setVisible(true);
                 
-                this.npc.play('npc_cold_walk',true);//걸어감
+                this.npc.play('npc_hot_walk',true);//걸어감
                 this.npc.setVelocityX(-100); 
                 this.cafe.setVisible(true); 
 
