@@ -27,7 +27,6 @@ export default class Command extends Phaser.GameObjects.Image {
     
         /*** 명령창, 명령창 내용 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
-        //text = scene.add.text(map.widthInPixels, 100, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 350 } }).setOrigin(0,0);
         code_text = scene.add.text(map.widthInPixels, 75, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
         // 튜토리얼 설명 
         var content = [
@@ -152,7 +151,7 @@ export default class Command extends Phaser.GameObjects.Image {
                     //  Hide the login element
                     //this.setVisible(false);
                     //  Populate the text with whatever they typed in
-                    //text.setText('Welcome ' + inputText.value);
+                    //code_text.setText('Welcome ' + inputText.value);
                 }
                 else
                 {
@@ -204,8 +203,6 @@ export default class Command extends Phaser.GameObjects.Image {
                 for(var i=0; i < this.apps.length; i++){
                     this.apps[i].setVisible(false);
                 }
-                /*text.setVisible(true);
-                text.x = this.worldView.x + 760;*/
                 code_text.setVisible(true);
                 code_text.x = this.worldView.x + 750;
             } else if(tutorial_on === true){

@@ -52,23 +52,23 @@ export default class inventory {
                 }
 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                if(this.draganddrop_1 != undefined) this.draganddrop_1.updownwithinven(scene);
-                if(this.draganddrop_2 != undefined) this.draganddrop_2.updownwithinven(scene);
-                if(this.draganddrop_3 != undefined) this.draganddrop_3.updownwithinven(scene);
+                if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
+                if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
+                if(scene.draganddrop_3 != undefined) scene.draganddrop_3.updownwithinven(scene);
             } 
             else { 
                 this.inven.y = 550;
                 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                if(this.draganddrop_1 != undefined) this.draganddrop_1.updownwithinven(scene);
-                if(this.draganddrop_2 != undefined) this.draganddrop_2.updownwithinven(scene);
-                if(this.draganddrop_3 != undefined) this.draganddrop_3.updownwithinven(scene);
+                if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
+                if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
+                if(scene.draganddrop_3 != undefined) scene.draganddrop_3.updownwithinven(scene);
             }
             //console.log('clicked');
         })
-        if(this.draganddrop_1 != undefined) this.draganddrop_1.onoffwithcommand(scene);
-        if(this.draganddrop_2 != undefined) this.draganddrop_2.onoffwithcommand(scene);
-        if(this.draganddrop_3 != undefined) this.draganddrop_3.onoffwithcommand(scene);
+        if(scene.draganddrop_1 != undefined) scene.draganddrop_1.onoffwithcommand(scene);
+        if(scene.draganddrop_2 != undefined) scene.draganddrop_2.onoffwithcommand(scene);
+        if(scene.draganddrop_3 != undefined) scene.draganddrop_3.onoffwithcommand(scene);
     }
 
     invenSave(scene, itemName) {
@@ -85,9 +85,6 @@ export default class inventory {
         // 코드 조각 불러와 배치하기
         console.log('아이템 수:', scene.item.length);
         console.log('아이템 배열: ' + scene.item);
-        this.draganddrop_1 = new DragAndDrop(scene, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
-        this.draganddrop_2 = new DragAndDrop(scene, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
-        this.draganddrop_3 = new DragAndDrop(scene, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
         if(!scene.invenIn) { 
             this.exclamation = scene.add.text(this.worldView.x+140, 540,'!', { font: "30px Arial Black", fill: "#ff0000" }); 
             this.exclamationIsReal = true;
