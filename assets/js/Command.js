@@ -29,7 +29,8 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
         this.compile_button = scene.add.image(1000,70,'compile_button').setOrigin(0,0);
         this.compile_button.setInteractive();
-        this.compile_button.setVisible(false);
+        
+        
 
 
         // 튜토리얼 설명 
@@ -128,7 +129,7 @@ export default class Command extends Phaser.GameObjects.Image {
 
         /*** 컴파일 버튼 누를시 컴파일러 동작. ***/ //@@@@@@@@@@@
         this.compile_button.on('pointerdown', () => {
-           
+           console.log("click");
             if (scene.contenttext !== '')
                 {
                     var data = {
@@ -177,7 +178,7 @@ export default class Command extends Phaser.GameObjects.Image {
             console.log(" compile finish!!!");
            
         });
-
+        //this.compile_button.setVisible(false);
     }
 
     update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.

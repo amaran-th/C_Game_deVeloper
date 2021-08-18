@@ -408,21 +408,25 @@ export default class ZeroStage extends Phaser.Scene {
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
         if(msg==scene.out){
-            var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, msg, {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
+            playerX = this.player.player.x;
+            this.textBox = scene.add.image(playerX-70,170,'bubble').setOrigin(0,0);
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, "아-아- 마이크 테스트-", {
+            fontFamily: 'Arial Black',
+            fontSize: '15px',
+            color: '#000000', //글자색 
+            wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+            boundsAlignH: "center",
+            boundsAlignV: "middle"
+          }).setOrigin(0.5)
+          this.player.playerPaused=true;    //플레이어 얼려두기
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
         scene.input.once('pointerdown', function() {
             if(msg==scene.out){
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                //playerFace.setVisible(false);
                 scene.intro6();
             }
             
@@ -430,7 +434,7 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     intro6() {
-        this.player.playerPaused = true; //플레이어 얼려두기
+        
         this.canexit=true;
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
