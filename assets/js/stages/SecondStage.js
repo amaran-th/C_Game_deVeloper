@@ -178,9 +178,9 @@ export default class SecondStage extends Phaser.Scene {
         stagenum = 2;
 
         //초반 대사
-        //this.cameras.main.fadeIn(1000,0,0,0);
-        //this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        //this.stage2_1();
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        this.stage2_1();
 
 
         /** 변수들 드래그 **/
@@ -194,15 +194,16 @@ export default class SecondStage extends Phaser.Scene {
             color: '#FFB569'
         });
         this.text_temp.setInteractive();
+        this.text_temp.setVisible(false); //아........ 투명도 0으로 하면 입력이 안먹힘...........
         //var var_temp = this.add.container(100,400, [var_cage,text_temp]).setSize(50,50); //temp 변수
         //var_temp.setInteractive(new Phaser.Geom.Rectangle(37, 25, 50, 50), Phaser.Geom.Rectangle.Contains); 
         //var_temp.setName("temp")
         //이거 37,25 안하면 왼쪽 위 꼭지점 부분 중심으로 50 사이즈로 클릭 범위 잡힘
-
-
+        
         this.input.setDraggable(this.text_temp);
 
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+            gameObject.setVisible(true);
             gameObject.x = dragX;
             gameObject.y = dragY;
         });
@@ -210,6 +211,7 @@ export default class SecondStage extends Phaser.Scene {
             //gameObject.clearTint();
             if (!dropped) //이거 없으면 마우스 놓은 자리에 유지됨
             {
+                gameObject.setVisible(false);
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
             }
@@ -217,26 +219,28 @@ export default class SecondStage extends Phaser.Scene {
             }
         });
         this.input.on('drop', function (pointer, gameObject, dragX, dragY) {
-            //gameObject.setVisible(false);
+            gameObject.setVisible(false);
             gameObject.x = gameObject.input.dragStartX;
             gameObject.y = gameObject.input.dragStartY;
         });
-
+        
         this.temperature.on('pointerover', function(){
-            //this.text_temp.setVisible(true);
+            this.text_temp.setVisible(true);
             this.text_temp.x = this.input.mousePointer.x-10;
             this.text_temp.y = this.input.mousePointer.y-10;
+        }, this);
+        this.temperature.on('pointerout', function(){
+            this.text_temp.setVisible(false)
         }, this);
 
 
     }
 
     update() {
-
-        //배경이 텍스트 따라다니도록
+        //변수의 배경이 텍스트 따라다니도록
         this.var_cage.x = this.text_temp.x;
         this.var_cage.y = this.text_temp.y;
-        this.var_cage.setVisible(this.text_temp.visible);
+        this.var_cage.visible = this.text_temp.visible;
 
         this.contenttext = 
         "1_#include <stdio.h>\n" + 
@@ -362,18 +366,55 @@ export default class SecondStage extends Phaser.Scene {
            //     this.npc.setFlipX(true);
                 this.exclamMark.setVisible(true);
                 this.exclamMark.play('exclam');
-                this.time.delayedCall( 1000, () => { this.stage2_2() }, [] , this);
+                this.time.delayedCall( 1000, () => { this.stage2_2_1() }, [] , this);
                 });   
             }, [], this);  
     }
-    stage2_2() {
+    stage2_2_1() {
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
-        .load(this.dialog.stage2_2, this.dialog)
+        .load(this.dialog.stage2_2_1, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage2_2_2();
+        });     
+    }
+
+    stage2_2_2() {
+        this.player.player.setVelocityX(-300);
+        this.cameras.main.shake(500, 0.01);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_2_2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.stage2_2_3();
+        });     
+    }
+
+    stage2_2_3() {
+        this.cameras.main.shake(500, 0.01);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_2_3, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.stage2_2_4();
+        });     
+    }
+
+    stage2_2_4() {
+        this.cameras.main.shake(500, 0.01);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_2_4, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
         });     
     }
 

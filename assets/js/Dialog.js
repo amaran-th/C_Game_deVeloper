@@ -370,17 +370,17 @@ visible(visible) {
   stage2_1 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 0],
+    ['setFace', 1],
     ['print', '(아, 사람이다!)'],
     ['wait-click'],
     ['print', '저기요! 할아버지!!!'],
     ['wait-click'],
     ['visible',false],
   ]
-  stage2_2 = [
+  stage2_2_1 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 0],
+    ['setFace', 1],
     ['print', '할아버지! 여긴 대체 어디죠?'],
     ['wait-click'],
     ['setFace', 4],
@@ -392,8 +392,57 @@ visible(visible) {
     ['wait-click'],
     ['print', '밖에 날씨가 어떤지 좀 말해주겠나? 춥다, 덥다 이런식으로'],
     ['wait-click'],
+    ['setFace', 1],
+    ['print', '어엄.... 지금 날씨는요...'],
+    ['wait-click'],
     ['visible',false],
   ]
+
+  stage2_2_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 5],
+    ['print', '예끼 이놈!!!!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  
+  stage2_2_3= [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 5],
+    ['print', '코딩 지옥에서는 그렇게 하는 게 아니여!!!!!!!!!!!'],
+    ['wait-click'],
+    ['print', '코오-딩을 해야한단 말이다 코오-딩을!!!! 알간?!?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '.............................................'],
+    ['wait-click'],
+    ['setFace', 4],
+    ['print', '이래서 요새 신참들은... 에잉 쯧쯧쯧쯧쯧....'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '...............................'],
+    ['wait-click'],
+    ['setFace', 4],
+    ['print', '...............................'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage2_2_4 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 5],
+    ['print', '멀뚱히 서서 뭐 하는 것이여?!?! 얼릉 코오-딩하지 못혀?!?!?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '네.....넵....!!!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
   stage2_3_1 = [
     ['visible',true],
     ['place', 40,10],
