@@ -259,9 +259,18 @@ export default class TestScene extends Phaser.Scene {
             this.scene.run("zero_stage");
         }
         if(this.key1.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('first_stage');
+            //console.log('맵이동');
+            //this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+            //this.scene.run('first_stage');
+            playerX = this.player.player.x;
+            //console.log('playerX:', playerX);
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadbubblebox(this);
+            seq
+            .load(this.dialog.bubbleExample, this.dialog)
+            .start();
+            console.log("1번키 눌림: 대사출력");
+
         }
         if(this.key2.isDown) {
             console.log('맵이동');
