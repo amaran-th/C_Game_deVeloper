@@ -76,6 +76,12 @@ export default class SecondStage extends Phaser.Scene {
             frameRate: 7,
             repeat: -1,
         });
+        this.anims.create({
+            key: "npc_hot_walk",
+            frames: this.anims.generateFrameNumbers('npc_cold',{ start: 4, end: 7}), 
+            frameRate: 7,
+            repeat: -1,
+        });
         this.npc = this.physics.add.sprite(910 ,430,'npc_cold');
         this.npc.setVisible(false);
 
@@ -151,9 +157,9 @@ export default class SecondStage extends Phaser.Scene {
 
         // 드래그앤드랍
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        this.code_zone_1 = "                ";
-        this.code_zone_2 = "          ";
-        this.code_zone_3 = "          ";
+        this.code_zone_1 = "           "; //11칸
+        this.code_zone_2 = "           ";
+        this.code_zone_3 = "           ";
         //this.drag_piece = ['printf', 'if', 'else'];
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;
@@ -232,23 +238,23 @@ export default class SecondStage extends Phaser.Scene {
         this.var_cage.y = this.text_temp.y;
         this.var_cage.setVisible(this.text_temp.visible);
 
-
         this.contenttext = 
-            "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n" + this.code_zone_1 +"(" + this.code_zone_2 + 
-            ">30){\n    " + this.code_zone_3 + "(\"더워요\");\n  }\n" + //코드조각 
-         //   "  else if (Temp>20){\n" +
-         //   "    printf(\"적당해요\");\n  }\n" + //코드조각
-            "  else {\n" + 
-            "    printf(\"추워요\");\n  }\n}" //코드조각
+        "1_#include <stdio.h>\n" + 
+        "int main(){\n\n" +
+        "   {int temp = 45;} \n\n   " +
+        this.code_zone_1 + "(" + this.code_zone_2 + ">30){\n      " + //if(Temp>30)
+        this.code_zone_3 + "(\"더워요\");\n"  +//printf("더워요");
+        "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
+
         
         //실제로는 2가지에 나눠서 쨔아함! ( this.out ==  "더워요")
-        if (this.out == "1_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n    printf(\"더워요\");\n  }\n  else {\n    printf(\"추워요\");\n  }\n}"){
+        if (this.out == "1_#include <stdio.h>\nint main(){\n\n   {int temp = 45;} \n\n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
             console.log("===stage2 성공===");
             this.out = "";
 
             this.stage2_3_1();  
         }
-        else if (this.out == "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n    printf(\"더워요\");\n  }\n  else {\n    printf(\"추워요\");\n  }\n}"){
+        else if (this.out == "2_#include <stdio.h>\nint main(){\n\n   {int temp = 45;} \n\n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
             console.log("===stage2 실패===");
             this.out = "";
          
@@ -288,9 +294,9 @@ export default class SecondStage extends Phaser.Scene {
         if(this.invenPlus) {
             this.item[this.item.length] =  'printf';  
             this.item[this.item.length] =  'if';   
-            this.draganddrop_1 = new DragAndDrop(this, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
+            this.draganddrop_1 = new DragAndDrop(this, 805, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, 895, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, 828, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
 
             this.invenPlus = false;
         }
@@ -382,7 +388,7 @@ export default class SecondStage extends Phaser.Scene {
                 this.npc.setFlipX(true);
                 this.npc.setVisible(true);
                 
-                this.npc.play('npc_cold_walk',true);//걸어감
+                this.npc.play('npc_hot_walk',true);//걸어감
                 this.npc.setVelocityX(-100); 
                 this.cafe.setVisible(true); 
 

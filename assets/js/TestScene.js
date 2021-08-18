@@ -1,4 +1,3 @@
-
 import Player from "./Player.js";
 import Dialog from "./Dialog.js";
 import StageClear from "./StageClear.js";
@@ -63,10 +62,9 @@ export default class TestScene extends Phaser.Scene {
         this.worldLayer = map.createLayer("ground", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
-        //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
-        this.phone = this.add.image(700,210,'phone').setOrigin(0,0);
+
         
-        this.phone.setInteractive();
+
 
         /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
@@ -128,7 +126,27 @@ export default class TestScene extends Phaser.Scene {
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
+        //휴대폰 말풍선 애니메이션 설정
+        this.anims.create({
+            key: "phone_icon",
+            frames: this.anims.generateFrameNumbers('phone',{ start: 0, end: 1}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+    
+        //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
+        this.phone = this.add.sprite( 700,210,'phone',0).setOrigin(0,0);
+        this.phone.play('phone_icon');
+        this.myphone=this.add.image(710,290,"myphone").setOrigin(0,0);
 
+        //플레이어 위 pressX 생성해두기(phone)
+        this.getphone = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Get phone', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+
+        
         /** 초반 인트로 대사 출력 **/
         /*
         this.cameras.main.fadeIn(1000,0,0,0);
@@ -155,7 +173,7 @@ export default class TestScene extends Phaser.Scene {
         this.invenGra.lineStyle(4, 0x00ff00);
 
 
-        //플레이어 위 pressX 생성해두기
+        //플레이어 위 pressX 생성해두기(door)
         this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
             color: '#000000'
@@ -264,6 +282,20 @@ export default class TestScene extends Phaser.Scene {
             this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run("third_stage");
         }
+        //휴대폰 휴대폰 앞에서 x키를 누를 시
+        if(this.player.player.x < 775 && 700 < this.player.player.x ) {
+            this.getphone.x = this.player.player.x-50;
+            this.getphone.y = this.player.player.y-100;
+            this.getphone.setVisible(true);
+
+            if(this.keyX.isDown) {
+                console.log('휴대폰 획득');
+                
+            }
+        }
+        else this.getphone.setVisible(false);
+        
+        
     }
 
 

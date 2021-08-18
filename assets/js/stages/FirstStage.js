@@ -110,45 +110,6 @@ export default class FirstStage extends Phaser.Scene {
             this.scene.run("minimap");
         },this);
 
-
-        //this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
-
-        // 인벤창 팝업 여부를 나타내는 상태변수
-        //this.invenIn = false;
-        
-        /** 아이템 만들기 **/
-        //this.itemicon = this.add.image(360,330,'item');
-        //var item_text = 'if'
-        /** 아이템 얻었을 때 뜨는 이미지 **/
-        /*this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemText = this.add.text(500,270,item_text,{
-        font: "30px Arial Black", fill: "#000000" 
-        }).setOrigin(0,0);
-        this.itemget.setVisible(false);
-        this.itemText.setVisible(false);
-        this.beforeItemGet = true; //한 번만 뜨도록*/
-
-        /** 인벤토리 만들기 **/     
-        //this.inven = this.inventory.create(this);
-
-        //console.log('item 위치', this.itemicon.x);
-
-        // 드래그앤드랍
-        //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        /*this.code_zone_1 = "                ";
-        this.code_zone_2 = "          ";
-        this.code_zone_3 = "          ";
-        //this.drag_piece = ['printf', 'if', 'else'];
-        // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
-        this.code_piece_add_state = 0;
-        // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
-        this.drop_state_1 = 0;
-        this.drop_state_2 = 0;
-        this.drop_state_3 = 0;*/
-
-        //first_stage의 전체 코드
-        this.contenttext = "" ;
-
         stagenum = 1;
 
         /** 초반 대사 **/
@@ -160,10 +121,6 @@ export default class FirstStage extends Phaser.Scene {
     }
 
     update() {
-        this.contenttext = 
-            "#include <stdio.h> \n int main(){ \n " + "이건 1번째 스테이지"  +this.code_zone_1 
-            + "2번째 코드 : " +  this.code_zone_2 + "\n3번째 코드 : " + this.code_zone_3 ;
-
         this.player.update();
         //this.inventory.update(this);
         this.command.update(this);
@@ -231,6 +188,7 @@ export default class FirstStage extends Phaser.Scene {
 
     stage1_1() {
         this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
+
         this.time.delayedCall( 1000, () => {  
             var seq = this.plugins.get('rexsequenceplugin').add();
             this.dialog.loadTextbox(this);
@@ -286,7 +244,7 @@ export default class FirstStage extends Phaser.Scene {
             targets: this.phoneLocked,
             x: 350, //위치 이동
             duration: 500,
-            ease: 'Power1',
+            ease: 'Power1', 
             repeat: 0,
             onComplete: ()=>{console.log('done')}
         }, this);
