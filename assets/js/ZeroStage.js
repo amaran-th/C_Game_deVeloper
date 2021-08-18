@@ -239,6 +239,8 @@ export default class ZeroStage extends Phaser.Scene {
             console.log('맵이동');
             this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run('first_stage');
+
+
         }
         if(this.key2.isDown) {
             console.log('맵이동');

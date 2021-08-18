@@ -1,4 +1,5 @@
 var stagenum;
+var playerX;
 
 class Start extends Phaser.Scene {
     constructor() {
@@ -8,7 +9,8 @@ class Start extends Phaser.Scene {
 
     preload() {
       
-
+      this.load.image("bubble","./assets/images/bubble.png");
+ 
       
       /*** 시작화면 image 로드 ***/
       this.load.image("title_menu", "./assets/images/menu/title_menu.png");
