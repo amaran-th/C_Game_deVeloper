@@ -20,13 +20,18 @@ export default class Command extends Phaser.GameObjects.Image {
         this.entire_code_button = scene.add.image(20,10,'entire_code_button').setOrigin(0,0);
         this.entire_code_button.setInteractive();
 
-        /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
-        this.compile_button = scene.add.image(20,170,'compile_button').setOrigin(0,0);
-        this.compile_button.setInteractive();
+        
     
         /*** 명령창, 명령창 내용 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
         code_text = scene.add.text(map.widthInPixels, 75, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
+
+        /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
+        this.compile_button = scene.add.image(1000,70,'compile_button').setOrigin(0,0);
+        this.compile_button.setInteractive();
+        this.compile_button.setVisible(false);
+
+
         // 튜토리얼 설명 
         var content = [
             "비교 연산자",
@@ -81,6 +86,7 @@ export default class Command extends Phaser.GameObjects.Image {
                         code_on = false;
                         tutorial_on = false;
                         code_text.setVisible(false);
+                        this.compile_button.setVisible(false);
                         tutorial_text.setVisible(false);
                         state = 0;
                         console.log('맵이동');
@@ -94,7 +100,7 @@ export default class Command extends Phaser.GameObjects.Image {
                         scene.add.text(400, 300, 'default zone... why?', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
                         break;
                 }
-            });
+            },this);
         }
 
         /*** 뒤로가기 버튼 ***/
@@ -106,9 +112,10 @@ export default class Command extends Phaser.GameObjects.Image {
                 code_on = false;
                 tutorial_on = false;
                 code_text.setVisible(false);
+                this.compile_button.setVisible(false);
                 tutorial_text.setVisible(false);
             }
-        });
+        },this);
 
 
 
@@ -210,12 +217,14 @@ export default class Command extends Phaser.GameObjects.Image {
                 this.zone.x = this.worldView.x + 1000;
                 tutorial_text.setVisible(false);
                 code_text.setVisible(false);
+                this.compile_button.setVisible(false);
             }else{
                 if(code_on === true){
                     for(var i=0; i < this.apps.length; i++){
                         this.apps[i].setVisible(false);
                     }
                     code_text.setVisible(true);
+                    this.compile_button.setVisible(true);
                     code_text.x = this.worldView.x + 750;
                 } else if(tutorial_on === true){
                     for(var i=0; i < this.apps.length; i++){
@@ -246,6 +255,7 @@ export default class Command extends Phaser.GameObjects.Image {
                 tutorial_on = false;
                 //text.setVisible(false);
                 code_text.setVisible(false);
+                this.compile_button.setVisible(false);
                 tutorial_text.setVisible(false);
                 this.back_button.setVisible(false);
                 state = 0;
