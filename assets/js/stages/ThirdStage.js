@@ -20,6 +20,7 @@ export default class ThirdStage extends Phaser.Scene {
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
+
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
         this.key1 = this.input.keyboard.addKey('ONE');
@@ -69,6 +70,7 @@ export default class ThirdStage extends Phaser.Scene {
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
+        
         
         /*** 퀘스트 말풍선 애니메이션 */
         this.anims.create({
@@ -163,7 +165,15 @@ export default class ThirdStage extends Phaser.Scene {
         this.cameras.main.fadeIn(1000,0,0,0);
     //   this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
     //   this.stage3_1();
+
+    this.breadGroup = this.physics.add.group();
+    //this.breadGroup.friction.x = 0.5;
+    this.physics.add.collider(this.breadGroup, this.worldLayer);
+    this.physics.add.collider(this.player.player, this.breadGroup);
+    this.physics.add.collider(this.breadGroup, this.breadGroup);
+
         
+    
     }
 
     update() {
@@ -174,26 +184,37 @@ export default class ThirdStage extends Phaser.Scene {
       "   {int bread = 1;} \n\n   " +
       this.code_zone_1 + 
       "(int i=0; i" + this.code_zone_2 + 
-      "25; i++){\n" +
+      "100; i++){\n" +
       "      {bread} = {bread} + 1 ; \n" +
       "   }\n\n" +
 
       "   printf(\"%d\", {bread} );\n}"
 
         //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
-        if (this.out == "#include <stdio.h>\nint main(){ \n\n   {int bread = 1;} \n\n   for(int i=0; i<25; i++){\n      {bread} = {bread} + 1 ; \n   }\n\n   printf(\"%d\", {bread} );\n}"){
+        if (this.out == "#include <stdio.h>\nint main(){ \n\n   {int bread = 1;} \n\n   for(int i=0; i<100; i++){\n      {bread} = {bread} + 1 ; \n   }\n\n   printf(\"%d\", {bread} );\n}"){
             console.log("===stage3 클리어!===");
             this.bread.setVisible(true);
-            this.full_bread_1.setVisible(true);
-            this.full_bread_2.setVisible(true);
-            this.out = "";
-            this.exclamMark.setVisible(true);
-            this.exclamMark.play('exclam');
 
-            this.cameras.main.fadeIn(1000,0,0,0);
-            
-            this.stage3_3();
-            
+            for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
+                (x => {
+                    setTimeout(() => {
+                        console.log('빵');
+                        var bread = this.breadGroup.create(Phaser.Math.Between(this.player.player.x -100, this.player.player.x +100), 0, 'bread');
+                        bread.setFrictionX(1); //이거 마찰인데... 안 먹히는 듯ㅠㅠ
+                    },100*x) //이러면 1초 간격으로 실행됨
+                  })(i)
+            }
+            //this.full_bread_1.setVisible(true);
+            //this.full_bread_2.setVisible(true);
+            this.out = "";
+
+
+            //this.cameras.main.fadeIn(1000,0,0,0);
+            this.time.delayedCall(3000, function() {
+                this.exclamMark.setVisible(true);
+                this.exclamMark.play('exclam');
+                this.stage3_3();
+            }, [], this);
         }
 
         this.player.update();
