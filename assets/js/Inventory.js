@@ -2,9 +2,6 @@
 //inven.y 위치가 넣었을때랑 뺐을 때 값을 내가 입력한 값이랑 다르게 인식하나봄... 넣은 상태에서 아이템 추가했을 때 위치랑 뺀 상태에서 아이템 추가했을 때 위치가 다름
 
 export default class inventory {
-    preload() {
-
-    }
     create(scene) {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = scene.cameras.main.worldView;
@@ -26,8 +23,6 @@ export default class inventory {
         this.inven.setSize(200, 100);
 
         this.inven.setInteractive();
-
-        scene.invenIn = false; //인벤토리 창이 내려가있는지 올라가있는지
 
         //console.log('인덱스:', scene.item.length);
 
@@ -52,16 +47,16 @@ export default class inventory {
                 }
 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
-                if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
+                //if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
+                //if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
                 if(scene.draganddrop_3 != undefined) scene.draganddrop_3.updownwithinven(scene);
             } 
             else { 
                 this.inven.y = 550;
                 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
-                if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
+                //if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
+                //if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
                 if(scene.draganddrop_3 != undefined) scene.draganddrop_3.updownwithinven(scene);
             }
             //console.log('clicked');
@@ -72,16 +67,7 @@ export default class inventory {
         if(scene.draganddrop_3 != undefined) scene.draganddrop_3.onoffwithcommand(scene);
     }
 
-    invenSave(scene, itemName) {
-        //scene.invenPlus = false;  //여러번 불러와지는 거 방지
-        /*for(var i=0; i<=scene.item.length; i++ ) {
-            const j = i;
-            this.newItem = scene.add.text(50 + j*100, 120 , scene.item[i], { font: "30px Arial Black", fill: "#FFB569" });
-            this.newItem.setInteractive();
-            scene.input.setDraggable(this.newItem);
-            this.inven.add(this.newItem);
-        }*/ // 이렇게 하면 드랍존 적용 안 돼서 드랍존에 코드조각 안 들어가고 이상한 위치로 감
-
+    invenSave(scene, itemName) { // 이부분 내용 draganddrop으로 옮겨서 함수 이름 바꾸던지 아래 내용 create나 update로 이동할까 싶음
         // 코드 조각 불러와 배치하기
         console.log('아이템 수:', scene.item.length);
         console.log('아이템 배열: ' + scene.item);

@@ -173,9 +173,7 @@ export default class ZeroStage extends Phaser.Scene {
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
 
-        //console.log('item 위치', this.itemicon.x);
-
-        // 드래그앤드랍
+        /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
         this.code_zone_1 = "           "; //11칸
         this.code_zone_2 = "           ";
@@ -231,17 +229,21 @@ export default class ZeroStage extends Phaser.Scene {
                 onComplete: ()=>{this.invenPlus = true;}
             }, this);
         }
-
+        console.log(this.draganddrop_1);
         if(this.invenPlus) {
             this.item[this.item.length] =  '#include';
             this.item[this.item.length] =  '<stdio.h>';
             this.item[this.item.length] =  'printf';
-            this.draganddrop_1 = new DragAndDrop(this, 805, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 1000, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 805, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_1 = new DragAndDrop(this, this.worldView.x + 805, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.worldView.x + 1000, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.worldView.x + 805, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
             this.intro4();
             this.invenPlus = false;
         }
+
+        if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
+        if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
+        if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
 
         /* x 키 눌렀을 때 바로 사라지게 하는 건데 대사 많이 출력하는 오류있음
         if(this.itemget.visible && this.keyX.isDown) {
