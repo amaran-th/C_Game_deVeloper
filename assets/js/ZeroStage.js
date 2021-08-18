@@ -15,6 +15,7 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     preload() {
+        this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
         /*
         /*** FROM Minicode.js***/
         //this.load.html('input', './assets/js/textInput.html');
@@ -65,6 +66,23 @@ export default class ZeroStage extends Phaser.Scene {
         this.worldLayer = map.createLayer("ground", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
+        //휴대폰 말풍선 애니메이션 설정
+        this.anims.create({
+            key: "phone_icon",
+            frames: this.anims.generateFrameNumbers('phone',{ start: 0, end: 1}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+    
+        //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
+        this.phone = this.add.sprite( 700,210,'phone',0).setOrigin(0,0);
+        this.table = this.add.image(680,300,"table").setOrigin(0,0);
+        this.phone.play('phone_icon');
+        this.myphone=this.add.image(710,295,"myphone").setOrigin(0,0);
+
+
+
+
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
 
@@ -99,17 +117,23 @@ export default class ZeroStage extends Phaser.Scene {
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "zero_stage");
 
+        this.command.entire_code_button.setVisible(false);  //처음 시작시 휴대전화 아이콘이 보이지 않게 설정
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
         
-        //플레이어 위 pressX 생성해두기
+        //플레이어 위 pressX 생성해두기(door)
         this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
 
+        //플레이어 위 pressX 생성해두기(phone)
+        this.getphone = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Get phone', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
 
 
         /** 초반 인트로 대사 출력 **/
@@ -131,8 +155,11 @@ export default class ZeroStage extends Phaser.Scene {
         this.invenIn = false;
         
         /** 아이템 만들기 **/
-        this.itemicon = this.add.image(360,330,'item'); 
+        
         var item_text = 'printf';
+        this.itemPrintf = this.add.image(360,330,'item'); 
+        this.itemPrintf.setVisible(false);
+        
         /** 아이템 얻었을 때 뜨는 이미지 **/
         this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
         this.itemText = this.add.text(500, 270, item_text, {
@@ -163,16 +190,17 @@ export default class ZeroStage extends Phaser.Scene {
 
         // zero_stage 씬의 전체코드
         this.contenttext = "" ;
+        stagenum=0;
+        this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
+        this.canexit=false; //문 밖으로 나갈 수 있는지 여부
+        this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
+
+        this.out=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\"아-아- 마이크 테스트\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
         
     }
 
     update() {
-        this.contenttext = 
-            "#include <stdio.h>\n" + 
-            "int main(){\n\   " +
-            this.code_zone_1 + 
-            "(\"HI\");\n}";
-
+        this.contenttext = this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\"아-아- 마이크 테스트\"); \n }" ;
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
@@ -188,7 +216,7 @@ export default class ZeroStage extends Phaser.Scene {
 
 
         /** 아이템 획득하는 경우 **/
-        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
+        if (this.beforeItemGet && this.player.player.x < this.itemPrintf.x+54 && this.itemPrintf.x < this.player.player.x&&this.cangetItem) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
             this.itemicon.setVisible(false);
             this.itemget.setVisible(true);
@@ -221,9 +249,16 @@ export default class ZeroStage extends Phaser.Scene {
         }
         */
 
+        if(this.invenPlus) {
+            this.inventory.invenSave(this, '#include'); //인벤토리에 아이템 추가
+            this.inventory.invenSave(this, '<stdio.h>');
+            this.inventory.invenSave(this, 'printf');
+            this.intro4();
+            this.invenPlus = false;
+        }
 
         /* 플레이어가 문 앞에 서면 작동하도록 함 */
-        if(this.player.player.x < 175 && 100 < this.player.player.x ) {
+        if(this.player.player.x < 175 && 100 < this.player.player.x && this.canexit ) {
             this.pressX.x = this.player.player.x-50;
             this.pressX.y = this.player.player.y-100;
             this.pressX.setVisible(true);
@@ -236,6 +271,51 @@ export default class ZeroStage extends Phaser.Scene {
             }
         }
         else this.pressX.setVisible(false);
+
+
+        
+        //휴대폰 앞에서 x키를 누를 시
+        if(this.player.player.x < 775 && 700 < this.player.player.x ) {
+            this.getphone.x = this.player.player.x-50;
+            this.getphone.y = this.player.player.y-100;
+            this.getphone.setVisible(true);
+   
+            if(this.keyX.isDown) {
+                if(this.isdownX) {
+                this.isdownX=false;
+                console.log('휴대폰 획득');
+                this.phone.setVisible(false);
+                this.myphone.setVisible(false);
+                this.getphone.destroy();    ////나중에 애니메이션까지 destroy 시키자
+                this.phoneicon=this.add.image(550, 300, "entire_code_button").setOrigin(0,0).setAlpha(0);
+                this.tweens.add({
+                    targets: this.phoneicon,
+                    alpha:1,
+                    duration: 500,
+                    ease: 'Linear',
+                    repeat: 0,
+                    onComplete: ()=>{this.isintro=1;}
+                }, this);
+            }
+        }
+        }
+        else this.getphone.setVisible(false);
+
+
+        //상태 변수 isintro 값에 따라 함수를 실행시킨다.(이벤트를 순차적으로 실행시키기 위해)
+        if(this.isintro==1) {
+            this.intro1();
+            this.isintro = 0;
+        }else if(this.isintro==2){
+            this.intro2();
+            this.isintro = 0;
+        }else if(this.isintro==3){
+            this.intro3();
+            this.isintro = 0;
+        }
+
+
+
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -255,48 +335,55 @@ export default class ZeroStage extends Phaser.Scene {
 
     }
 
-    intro2() {
+    intro1() {
         this.player.playerPaused = true; //플레이어 얼려두기
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.tweens.add({
+                targets: this.phoneicon,
+                x:5,
+                y:10,
+                duration: 1000,
+                ease: 'Power1',
+                repeat: 0,
+                onComplete: ()=>{
+                    this.phoneicon.destroy();
+                    this.command.entire_code_button.setVisible(true);
+                    this.itemPrintf.setVisible(true);
+                    this.cangetItem=true;
+                    this.player.player.setFlipX(false);
+                    this.isintro=2;
+                }
+            }, this);
+        });
+    }
+    intro2() {
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.intro2, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
-            this.time.delayedCall( 1000, () => {  this.intro3(); }, [], this);
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.player.player.setFlipX(true);
+            this.isintro=3;
         });
     }
-
     intro3() {
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.intro3, this.dialog)
         .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });
     }
 
-    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
-        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 zero_stage을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
-        var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
-        var script = scene.add.text(textBox.x + 200, textBox.y +50, msg, {
-        fontFamily: 'Arial', 
-         fill: '#000000',
-         fontSize: '30px', 
-         wordWrap: { width: 450, useAdvancedWrap: true }
-        }).setOrigin(0,0);
 
-        var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
-
-        scene.input.once('pointerdown', function() {
-            textBox.setVisible(false);
-            script.setVisible(false);
-            playerFace.setVisible(false);
-
-            scene.intro4();
-        }, this);
-    }
 
     intro4() {
         this.player.playerPaused = true; //플레이어 얼려두기
@@ -304,6 +391,54 @@ export default class ZeroStage extends Phaser.Scene {
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.intro4, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
+            this.time.delayedCall( 1000, () => {  this.intro5(); }, [], this);
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });
+    }
+
+    intro5() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro5, this.dialog)
+        .start();
+    }
+
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        //console.log(scene.out);
+        if(msg==scene.out){
+            var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, msg, {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }
+        scene.input.once('pointerdown', function() {
+            if(msg==scene.out){
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+                scene.intro6();
+            }
+            
+        }, this);
+    }
+
+    intro6() {
+        this.player.playerPaused = true; //플레이어 얼려두기
+        this.canexit=true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro6, this.dialog)
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
