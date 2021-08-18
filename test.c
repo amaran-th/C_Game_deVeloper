@@ -1,12 +1,12 @@
-#include <stdio.h> 
+1_#include <stdio.h>
+int main(){
 
-int main(){ 
+   {int temp = 45;} 
 
-  int Temp = 45;
-if(printf>30){
-    if("더워요");
-  }
-  else {
-    printf("추워요");
-  }
+   if(temp>30){
+      printf("더워요");
+   }
+   else{
+      printf("추워요");
+   }
 }
