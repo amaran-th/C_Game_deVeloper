@@ -192,7 +192,7 @@ export default class Stage1 extends Phaser.Scene {
         this.canexit=false; //문 밖으로 나갈 수 있는지 여부
         this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
 
-        this.goalmsg=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\"아-아- 마이크 테스트\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
+        this.out=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\"아-아- 마이크 테스트\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
         
     }
 
@@ -398,8 +398,8 @@ export default class Stage1 extends Phaser.Scene {
 
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
-        //console.log(scene.goalmsg);
-        if(msg==scene.goalmsg){
+        //console.log(scene.out);
+        if(msg==scene.out){
             var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
             var script = scene.add.text(textBox.x + 200, textBox.y +50, msg, {
                 fontFamily: 'Arial', 
@@ -411,7 +411,7 @@ export default class Stage1 extends Phaser.Scene {
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
         scene.input.once('pointerdown', function() {
-            if(msg==scene.goalmsg){
+            if(msg==scene.out){
                 textBox.setVisible(false);
                 script.setVisible(false);
                 playerFace.setVisible(false);
