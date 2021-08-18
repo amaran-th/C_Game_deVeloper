@@ -13,10 +13,12 @@ export default class Dialog extends Phaser.Events.EventEmitter {
 
       //this['loadTextbox'] = this.loadTextbox;
       this['place'] = this.place;
+      this['placeAbovePlayer'] = this.placeAbovePlayer;
       this['wait-click'] = this.waitClick;
       this['wait-time'] = this.waitTime;
       this['console'] = this.consoleOut;
       this['visible'] = this.visible;
+      this['bubbleVisible'] = this.bubbleVisible;
       this['setFace'] = this.setFace;
       this['setExtraFace'] = this.setFaceact;
       this.testScene = new TestScene();
@@ -68,6 +70,26 @@ loadTextbox(scene) { //현재 장면을 가져와야함
 
     }
 
+loadbubblebox(scene) {
+      this.scene = scene; //이거 없으면 callback 함수들이 this.scene을 못읽음
+      this.textBox = scene.add.image(0,0,'bubble').setOrigin(0,0);
+      this.script = scene.add.text(this.textBox.x + 2.5, this.textBox.y +2.5, '', {
+           fontFamily: 'Arial Black',
+           fontSize: '15px',
+           color: '#000000', //글자색 
+           wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+           boundsAlignH: "center",
+           boundsAlignV: "middle"
+          }).setOrigin(0.5)
+  
+  }
+
+bubbleVisible(visible){
+  this.textBox.setVisible(visible);
+  this.script.setVisible(visible);
+
+}
+
 visible(visible) {
     this.textBox.setVisible(visible);
     this.script.setVisible(visible);
@@ -111,12 +133,29 @@ visible(visible) {
     this.playerFace.setFrame(i);
   }
 
+  placeAbovePlayer(y) {
+    //console.log('dialog에서 인식하는 말풍선 위치:', playerX, y);
+    this.textBox.x = playerX-70;
+    this.textBox.y = y;
+    this.script.x = playerX-70 + 71.5;
+    this.script.y = y + 33.5;
+  }
+
   setFaceact(extraFace,i) { //key , 프래임
     this.playerFace.setVisible(false);
     var extraFace = this.scene.add.sprite(this.script.x + 600 ,this.script.y+50, extraFace , 0);
     extraFace.setFrame(i);
     this.scene.input.once('pointerup', function () {extraFace.destroy(); this.playerFace.setVisible(true);} , this);
   }
+
+  bubbleExample = [
+    ['bubbleVisible',true],
+    ['placeAbovePlayer',200],
+    ['print', '대사대ㅏ'],
+    ['wait-time', 1],
+    ['bubbleVisible',false],
+
+  ]
 
 
   intro = [
