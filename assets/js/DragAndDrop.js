@@ -140,9 +140,9 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.drop_state_2 = 0;
             scene.drop_state_3 = 0;
 
-            scene.code_zone_1 = "                ";
-            scene.code_zone_2 = "                ";
-            scene.code_zone_3 = "                ";
+            scene.code_zone_1 = "           "; //11칸
+            scene.code_zone_2 = "           ";
+            scene.code_zone_3 = "           ";
         });
         
         if (scene.code_piece_add_state != 2) {

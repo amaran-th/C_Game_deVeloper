@@ -13,10 +13,12 @@ export default class Dialog extends Phaser.Events.EventEmitter {
 
       //this['loadTextbox'] = this.loadTextbox;
       this['place'] = this.place;
+      this['placeAbovePlayer'] = this.placeAbovePlayer;
       this['wait-click'] = this.waitClick;
       this['wait-time'] = this.waitTime;
       this['console'] = this.consoleOut;
       this['visible'] = this.visible;
+      this['bubbleVisible'] = this.bubbleVisible;
       this['setFace'] = this.setFace;
       this['setExtraFace'] = this.setFaceact;
       this.testScene = new TestScene();
@@ -68,6 +70,26 @@ loadTextbox(scene) { //현재 장면을 가져와야함
 
     }
 
+loadbubblebox(scene) {
+      this.scene = scene; //이거 없으면 callback 함수들이 this.scene을 못읽음
+      this.textBox = scene.add.image(0,0,'bubble').setOrigin(0,0);
+      this.script = scene.add.text(this.textBox.x + 2.5, this.textBox.y +2.5, '', {
+           fontFamily: 'Arial Black',
+           fontSize: '15px',
+           color: '#000000', //글자색 
+           wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+           boundsAlignH: "center",
+           boundsAlignV: "middle"
+          }).setOrigin(0.5)
+  
+  }
+
+bubbleVisible(visible){
+  this.textBox.setVisible(visible);
+  this.script.setVisible(visible);
+
+}
+
 visible(visible) {
     this.textBox.setVisible(visible);
     this.script.setVisible(visible);
@@ -111,6 +133,14 @@ visible(visible) {
     this.playerFace.setFrame(i);
   }
 
+  placeAbovePlayer(y) {
+    //console.log('dialog에서 인식하는 말풍선 위치:', playerX, y);
+    this.textBox.x = playerX-70;
+    this.textBox.y = y;
+    this.script.x = playerX-70 + 71.5;
+    this.script.y = y + 33.5;
+  }
+
   setFaceact(extraFace,i) { //key , 프래임
     this.playerFace.setVisible(false);
     var extraFace = this.scene.add.sprite(this.script.x + 600 ,this.script.y+50, extraFace , 0);
@@ -118,23 +148,70 @@ visible(visible) {
     this.scene.input.once('pointerup', function () {extraFace.destroy(); this.playerFace.setVisible(true);} , this);
   }
 
+  bubbleExample = [
+    ['bubbleVisible',true],
+    ['placeAbovePlayer',200],
+    ['print', '대사대ㅏ'],
+    ['wait-time', 1],
+    ['bubbleVisible',false],
+
+  ]
+
 
   intro = [
     ['visible',false],
     ['wait-time', 1],
     ['visible',true],
     ['setFace', 1],
-    ['print', '.....'],
+    ['print', '(흐암...지금이 몇시지?)'],
     ['wait-click'],
-    ['setFace', 0],
-    ['print', '(헉목소리가 안나옴 어쩌구저쩌구)'],
-    ['wait-click'],
-    ['print', '(무슨일이지??)'],
+    ['setFace', 5],
+    ['print', '* [Quest] 휴대전화를 얻자 *'],
     ['wait-click'],
     ['visible',false],
   ]
 
+  
+  intro1 = [
+    ['visible',true],
+    ['setFace', 5],
+    ['print', '* \'휴대전화\'를 얻었습니다. *'],
+    ['wait-click'],
+    ['visible',false],
+
+  ]
+
   intro2 = [
+    ['visible',true],
+    ['setFace', 0],
+    ['print', '(어디보자...지금 시간이...)'],
+    ['wait-click'],
+    ['print', '(...)'],
+    ['wait-click'],
+    ['print', '(...?)'],
+    ['wait-click'],
+    ['print', '(유튜브랑 카톡...내 앱들이 다 지워졌잖아?!)'],
+    ['wait-click'],
+    ['print', '(이건 뭐야 튜토리얼...C언어?? 이건 무슨 앱이야? 바이러스라도 걸린건가?)'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '(...)'],
+    ['wait-click'],
+    ['print', '(잠깐만...나 왜 목소리가 안 나오지???)'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  intro3 = [
+    ['visible',true],
+    ['setFace', 1],
+    ['print', '(저 보따리는 또 뭐야?)'],
+    ['wait-click'],
+    ['visible',false],
+
+  ]
+
+  intro4 = [
     ['visible',true],
     ['print', '\'printf\'?'],
     ['wait-click'],
@@ -144,6 +221,23 @@ visible(visible) {
     ['setFace', 0],
     ['print', '(그것보다 이게 왜 우리집에?)'],
     ['wait-click'],
+    ['setFace', 5],
+    ['print', '* 자세히 보니 보따리에는 작은 쪽지가 들어있었다. *'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '(쪽지...?)'],
+    ['wait-click'],
+    ['print', '* 코딩 지옥에 오신 걸 환영합니다!\n이 곳은 모든 일이 당신이 만든 C 코드에 의해 일어나는 공간입니다. '],
+    ['wait-click'],
+    ['print', '이 보따리에 들어있던 코드조각들은 처음 이곳에 온 당신에게 드리는 선물입니다!'],
+    ['wait-click'],
+    ['print', '휴대전화의 튜토리얼을 통해 코딩에 필요한 기본적인 정보를 얻을 수 있습니다!'],
+    ['wait-click'],
+    ['print', 'hint : printf를 사용할 땐 C 코드 상단에 #include<stdio.h>를 적는 걸 잊지 말아주세요!'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '...이게 대체 뭔 소리야?'],
+    ['wait-click'],
     ['setExtraFace', 'entire_code_button', 0],
     ['print', '띠링띠링!'],
     ['wait-click'],
@@ -151,7 +245,7 @@ visible(visible) {
 
   ]
 
-  intro3 = [
+  intro5= [
     ['visible',true],
     ['print', '휴대폰에 이건 또 뭐고??'],
     ['wait-click'],
@@ -163,7 +257,7 @@ visible(visible) {
     ['visible',false],
   ]
 
-  intro4 = [
+  intro6 = [
     ['wait-click'],
     ['visible',true],
     ['setFace', 0],
@@ -276,17 +370,17 @@ visible(visible) {
   stage2_1 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 0],
+    ['setFace', 1],
     ['print', '(아, 사람이다!)'],
     ['wait-click'],
     ['print', '저기요! 할아버지!!!'],
     ['wait-click'],
     ['visible',false],
   ]
-  stage2_2 = [
+  stage2_2_1 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 0],
+    ['setFace', 1],
     ['print', '할아버지! 여긴 대체 어디죠?'],
     ['wait-click'],
     ['setFace', 4],
@@ -298,8 +392,57 @@ visible(visible) {
     ['wait-click'],
     ['print', '밖에 날씨가 어떤지 좀 말해주겠나? 춥다, 덥다 이런식으로'],
     ['wait-click'],
+    ['setFace', 1],
+    ['print', '어엄.... 지금 날씨는요...'],
+    ['wait-click'],
     ['visible',false],
   ]
+
+  stage2_2_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 5],
+    ['print', '예끼 이놈!!!!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  
+  stage2_2_3= [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 5],
+    ['print', '코딩 지옥에서는 그렇게 하는 게 아니여!!!!!!!!!!!'],
+    ['wait-click'],
+    ['print', '코오-딩을 해야한단 말이다 코오-딩을!!!! 알간?!?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '.............................................'],
+    ['wait-click'],
+    ['setFace', 4],
+    ['print', '이래서 요새 신참들은... 에잉 쯧쯧쯧쯧쯧....'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '...............................'],
+    ['wait-click'],
+    ['setFace', 4],
+    ['print', '...............................'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage2_2_4 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 5],
+    ['print', '멀뚱히 서서 뭐 하는 것이여?!?! 얼릉 코오-딩하지 못혀?!?!?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '네.....넵....!!!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
   stage2_3_1 = [
     ['visible',true],
     ['place', 40,10],

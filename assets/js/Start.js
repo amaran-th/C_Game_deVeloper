@@ -1,4 +1,5 @@
-var stagenum;
+var playerX;
+var stagenum=0;
 
 class Start extends Phaser.Scene {
     constructor() {
@@ -8,7 +9,8 @@ class Start extends Phaser.Scene {
 
     preload() {
       
-
+      this.load.image("bubble","./assets/images/bubble.png");
+ 
       
       /*** 시작화면 image 로드 ***/
       this.load.image("title_menu", "./assets/images/menu/title_menu.png");
@@ -18,6 +20,9 @@ class Start extends Phaser.Scene {
       this.load.image("commandbox", "./assets/images/command/commandbox.png");
       this.load.image("compile_button", "./assets/images/command/execute_button.png");  //==============================================
       this.load.image("map_button", "./assets/images/command/map_button.png");
+
+      this.load.image("tutorial", "./assets/images/tutorial.png");
+      this.load.image("ok_button", "./assets/images/OK_button.png");
 
       //나중에 지우기 ======================================
               this.load.image("tiles", "./assets/images/map.png");
@@ -62,7 +67,12 @@ class Start extends Phaser.Scene {
       this.load.image("itemGet", "./assets/images/itemget.png");
 
       /**휴대폰, npc 로드 */
-      this.load.image("phone", "./assets/images/phone.png");
+      this.load.spritesheet("phone", "./assets/images/phone.png", {
+        frameWidth: 100,
+        frameHeight: 100
+    });
+      this.load.image("table","./assets/images/table.png");
+      this.load.image("myphone","./assets/images/myphone.png");
       this.load.image("npc3", "./assets/images/npc/npc3.png");
 
       /*** 휴대폰 앱 로드 ***/
@@ -121,7 +131,10 @@ class Start extends Phaser.Scene {
     
     /** 2번째 스테이지 이미지 로드 **/
       this.load.image("cafe", "./assets/images/stage2/cafe.png");
-
+      this.load.spritesheet("temperature", "./assets/images/stage2/temperature.png", {
+        frameWidth: 214,
+        frameHeight: 354,
+      });
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");
       this.load.image("stage3_tiles", "./assets/images/stage3/map_stage3.png");
@@ -174,12 +187,13 @@ class Start extends Phaser.Scene {
         graphics.strokeRect(380, 415, 202, 50);
       });
 
+      this.isnewgame=false;
       // 클릭하면 게임 시작
       this.NEW_GAME_button.once("pointerup", function () {
-        this.scene.start("bootGame");
+        this.isnewgame=true;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("quiz");
+        this.scene.start("minimap");
       }, this);
 
     }
@@ -196,6 +210,14 @@ class Start extends Phaser.Scene {
 
       if (this.i === 360) {
         this.i = 0;
+      }
+      if(this.isnewgame){
+        this.tutorial = this.add.image(0,0,"tutorial").setOrigin(0,0);
+        this.ok_button = this.add.image(550,450,"ok_button");
+        this.ok_button.setInteractive();
+        this.ok_button.once("pointerdown",function(){
+          this.scene.start("zero_stage");
+        },this);
       }
     }
 }

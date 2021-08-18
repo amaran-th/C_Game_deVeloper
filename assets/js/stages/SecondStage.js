@@ -29,6 +29,7 @@ export default class SecondStage extends Phaser.Scene {
         this.key5 = this.input.keyboard.addKey('FIVE');
         this.key6 = this.input.keyboard.addKey('SIX');
 
+
         this.anims.create({
             key: "fire",
             frames: this.anims.generateFrameNumbers('fireBackground',{ start: 0, end: 2}), 
@@ -49,6 +50,18 @@ export default class SecondStage extends Phaser.Scene {
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
+        
+        /**온도계 이미지**/
+        this.anims.create({
+            key: "temperature",
+            frames: this.anims.generateFrameNumbers('temperature',{ start: 0, end: 1}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+        this.temperature = this.add.sprite(200 ,500,'temperature').setOrigin(0,1);  
+        this.temperature.setInteractive();  
+        this.temperature.play('temperature');    
+
         /*** 카페 이미지 불러오기 (코드 실행 후 나오는 카페) */
         this.cafe = this.add.image(447,114,'cafe').setOrigin(0,0)
         this.cafe.setVisible(false);
@@ -63,6 +76,12 @@ export default class SecondStage extends Phaser.Scene {
             frameRate: 7,
             repeat: -1,
         });
+        this.anims.create({
+            key: "npc_hot_walk",
+            frames: this.anims.generateFrameNumbers('npc_cold',{ start: 4, end: 7}), 
+            frameRate: 7,
+            repeat: -1,
+        });
         this.npc = this.physics.add.sprite(910 ,430,'npc_cold');
         this.npc.setVisible(false);
 
@@ -72,7 +91,6 @@ export default class SecondStage extends Phaser.Scene {
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
-        
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -139,9 +157,9 @@ export default class SecondStage extends Phaser.Scene {
 
         // 드래그앤드랍
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        this.code_zone_1 = "                ";
-        this.code_zone_2 = "          ";
-        this.code_zone_3 = "          ";
+        this.code_zone_1 = "           "; //11칸
+        this.code_zone_2 = "           ";
+        this.code_zone_3 = "           ";
         //this.drag_piece = ['printf', 'if', 'else'];
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;
@@ -152,7 +170,7 @@ export default class SecondStage extends Phaser.Scene {
 
 
         //Second_stage의 전체 코드
-        this.contenttext = "" ;
+        this.contenttext = "" ; 
 
         //코드 실행후 불러올 output값
         this.out = "";
@@ -163,26 +181,84 @@ export default class SecondStage extends Phaser.Scene {
         this.cameras.main.fadeIn(1000,0,0,0);
         this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
         this.stage2_1();
+
+
+        /** 변수들 드래그 **/
+        var variable = this.add.graphics();
+        variable.lineStyle(3, 0xFFB569, 1);
+        this.var_cage = variable.fillRoundedRect(0, 0, 75, 50, 10).strokeRoundedRect(0, 0, 75, 50, 10).fillStyle(0xFCE5CD, 1); //글자 밖 배경
+
+        this.text_temp = this.add.text(37,25,'temp',{ 
+            fontSize : '30px',
+            fontFamily: ' Courier',
+            color: '#FFB569'
+        });
+        this.text_temp.setInteractive();
+        this.text_temp.setVisible(false); //아........ 투명도 0으로 하면 입력이 안먹힘...........
+        //var var_temp = this.add.container(100,400, [var_cage,text_temp]).setSize(50,50); //temp 변수
+        //var_temp.setInteractive(new Phaser.Geom.Rectangle(37, 25, 50, 50), Phaser.Geom.Rectangle.Contains); 
+        //var_temp.setName("temp")
+        //이거 37,25 안하면 왼쪽 위 꼭지점 부분 중심으로 50 사이즈로 클릭 범위 잡힘
         
+        this.input.setDraggable(this.text_temp);
+
+        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+            gameObject.setVisible(true);
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+        });
+        this.input.on('dragend', function (pointer, gameObject,dropped) {
+            //gameObject.clearTint();
+            if (!dropped) //이거 없으면 마우스 놓은 자리에 유지됨
+            {
+                gameObject.setVisible(false);
+                gameObject.x = gameObject.input.dragStartX;
+                gameObject.y = gameObject.input.dragStartY;
+            }
+            else{
+            }
+        });
+        this.input.on('drop', function (pointer, gameObject, dragX, dragY) {
+            gameObject.setVisible(false);
+            gameObject.x = gameObject.input.dragStartX;
+            gameObject.y = gameObject.input.dragStartY;
+        });
+        
+        this.temperature.on('pointerover', function(){
+            this.text_temp.setVisible(true);
+            this.text_temp.x = this.input.mousePointer.x-10;
+            this.text_temp.y = this.input.mousePointer.y-10;
+        }, this);
+        this.temperature.on('pointerout', function(){
+            this.text_temp.setVisible(false)
+        }, this);
+
+
     }
 
     update() {
+        //변수의 배경이 텍스트 따라다니도록
+        this.var_cage.x = this.text_temp.x;
+        this.var_cage.y = this.text_temp.y;
+        this.var_cage.visible = this.text_temp.visible;
+
         this.contenttext = 
-            "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n" +
-            "    printf(\"더워요\");\n  }\n" + //코드조각 
-         //   "  else if (Temp>20){\n" +
-         //   "    printf(\"적당해요\");\n  }\n" + //코드조각
-            "  else {\n" + 
-            "    printf(\"추워요\");\n  }\n}" //코드조각
+        "1_#include <stdio.h>\n" + 
+        "int main(){\n\n" +
+        "   {int temp = 45;} \n\n   " +
+        this.code_zone_1 + "(" + this.code_zone_2 + ">30){\n      " + //if(Temp>30)
+        this.code_zone_3 + "(\"더워요\");\n"  +//printf("더워요");
+        "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
+
         
         //실제로는 2가지에 나눠서 쨔아함! ( this.out ==  "더워요")
-        if (this.out == "1_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n    printf(\"더워요\");\n  }\n  else {\n    printf(\"추워요\");\n  }\n}"){
+        if (this.out == "1_#include <stdio.h>\nint main(){\n\n   {int temp = 45;} \n\n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
             console.log("===stage2 성공===");
             this.out = "";
 
             this.stage2_3_1();  
         }
-        else if (this.out == "2_#include <stdio.h> \n\nint main(){ \n\n  int Temp = 45;\n  if (Temp>30){\n    printf(\"더워요\");\n  }\n  else {\n    printf(\"추워요\");\n  }\n}"){
+        else if (this.out == "2_#include <stdio.h>\nint main(){\n\n   {int temp = 45;} \n\n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
             console.log("===stage2 실패===");
             this.out = "";
          
@@ -222,9 +298,9 @@ export default class SecondStage extends Phaser.Scene {
         if(this.invenPlus) {
             this.item[this.item.length] =  'printf';  
             this.item[this.item.length] =  'if';   
-            this.draganddrop_1 = new DragAndDrop(this, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
+            this.draganddrop_1 = new DragAndDrop(this, 805, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, 895, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, 828, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
 
             this.invenPlus = false;
         }
@@ -277,6 +353,8 @@ export default class SecondStage extends Phaser.Scene {
             //scene.intro4();
         }, this);
     }   
+
+
     stage2_1() {
         this.time.delayedCall( 1000, () => { 
             var seq = this.plugins.get('rexsequenceplugin').add(); 
@@ -288,18 +366,55 @@ export default class SecondStage extends Phaser.Scene {
            //     this.npc.setFlipX(true);
                 this.exclamMark.setVisible(true);
                 this.exclamMark.play('exclam');
-                this.time.delayedCall( 1000, () => { this.stage2_2() }, [] , this);
+                this.time.delayedCall( 1000, () => { this.stage2_2_1() }, [] , this);
                 });   
             }, [], this);  
     }
-    stage2_2() {
+    stage2_2_1() {
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
-        .load(this.dialog.stage2_2, this.dialog)
+        .load(this.dialog.stage2_2_1, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage2_2_2();
+        });     
+    }
+
+    stage2_2_2() {
+        this.player.player.setVelocityX(-300);
+        this.cameras.main.shake(500, 0.01);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_2_2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.stage2_2_3();
+        });     
+    }
+
+    stage2_2_3() {
+        this.cameras.main.shake(500, 0.01);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_2_3, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.stage2_2_4();
+        });     
+    }
+
+    stage2_2_4() {
+        this.cameras.main.shake(500, 0.01);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_2_4, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
         });     
     }
 
@@ -314,7 +429,7 @@ export default class SecondStage extends Phaser.Scene {
                 this.npc.setFlipX(true);
                 this.npc.setVisible(true);
                 
-                this.npc.play('npc_cold_walk',true);//걸어감
+                this.npc.play('npc_hot_walk',true);//걸어감
                 this.npc.setVelocityX(-100); 
                 this.cafe.setVisible(true); 
 
