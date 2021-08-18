@@ -12,17 +12,16 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         
         //console.log('코드조각 수 : ' + scene.item.length);
         for (var i = 0; i < scene.item.length; i++){
-            const j = i;
-            this.code_piece[j] = scene.add.text(code_piece_x, 600, scene.item[i], { font: "30px Arial Black", fill: "#f9cb9c" }).setInteractive();
-            scene.input.setDraggable(this.code_piece[j]); // 드래그 가능하도록
+            this.code_piece[i] = scene.add.text(code_piece_x, 600, scene.item[i], { font: "30px Arial Black", fill: "#f9cb9c" }).setInteractive();
+            scene.input.setDraggable(this.code_piece[i]); // 드래그 가능하도록
             code_piece_x += 100; // 각 코드 조각 위치 설정
             var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
-            this.code_piece[j].on('pointerover', function () { 
+            this.code_piece[i].on('pointerover', function () { 
                 //console.log('조각 수' + this.code_piece.length);
                 code_piece.setTint(0xf9cb9c);
             });
             // 마우스가 코드 조각 벗어났을때 원래 색으로!
-            this.code_piece[j].on('pointerout', function () { 
+            this.code_piece[i].on('pointerout', function () { 
                 code_piece.clearTint();
             });
         }
@@ -56,8 +55,8 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         });
         // 영역안에서도 지정된 부분에만 고정되는 듯
         scene.input.on('drop', function (pointer, gameObject, dropZone) {
-            gameObject.x = dropZone.x - 50; // 이거 왜 위치 중앙이 아니라 오른쪽 밑에 치우치는 지 모르겠음.. 임의로 위치 조정해둠
-            gameObject.y = dropZone.y - 15;
+            gameObject.x = dropZone.x - width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
+            gameObject.y = dropZone.y - height / 2 - 5; // 위치 왜 이런지 궁금한 사람 은지한테 문의 바람 그림 그려줌
             if(dropZone.name == "1"){
                 scene.code_zone_1 = gameObject._text;
                 this.dropzone = 1; // dragend부분에서 쓰려하는데 거긴 파라미터에 dropZone없어서 여기서 지정해줌
@@ -68,7 +67,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             }
             else if (dropZone.name == "3"){
                 scene.code_zone_3 = gameObject._text;
-                this.dropzone = 3;0
+                this.dropzone = 3;
             }
             //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
         });
@@ -108,13 +107,11 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                     }, 1000);
                     break;
                 default:
-                    console.log('dropzone 호출 안 된 부분');
                     gameObject.x = gameObject.input.dragStartX;
                     gameObject.y = gameObject.input.dragStartY;
             }
             
             graphics.clear();
-            //this.graphics.lineStyle(30, 0x36385c);
             graphics.lineStyle(2, 0x7e80a7);
             graphics.strokeRect(x - width / 2, y - height / 2, width, height);
         });
@@ -144,8 +141,8 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.drop_state_3 = 0;
 
             scene.code_zone_1 = "                ";
-            scene.code_zone_2 = "";
-            scene.code_zone_3 = "";
+            scene.code_zone_2 = "                ";
+            scene.code_zone_3 = "                ";
         });
         
         if (scene.code_piece_add_state != 2) {
@@ -157,6 +154,10 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.code_piece_add_state += 1;
         }        
     } 
+
+    update(scene) {
+        this.reset_button.x = scene.worldView.x + 980; // 리턴 버튼 플레이어 따라 이동
+    }
 
     // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
     updownwithinven(scene) {
@@ -182,10 +183,22 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             //console.log('there');
             this.graphics.setVisible(true);
             this.reset_button.setVisible(true);
+            for (var i = 0; i < scene.item.length; i++){
+                this.code_piece[i].setVisible(true);
+            }
         } else { // 명령창이 들어가있을 때 드랍존과 리셋버튼 들어가 있도록
             //console.log('here');
             this.graphics.setVisible(false);
             this.reset_button.setVisible(false);
+            if (!scene.invenIn) {
+                for (var i = 0; i < scene.item.length; i++){
+                    this.code_piece[i].setVisible(false);
+                }
+            } else {
+                for (var i = 0; i < scene.item.length; i++){
+                    this.code_piece[i].setVisible(true);
+                }
+            }
         }
     }
 }

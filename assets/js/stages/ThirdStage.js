@@ -188,6 +188,7 @@ export default class ThirdStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+
         
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
@@ -220,12 +221,17 @@ export default class ThirdStage extends Phaser.Scene {
             this.item[this.item.length] =  'printf';
             this.item[this.item.length] =  'if';
             this.item[this.item.length] =  'for';
-            this.draganddrop_1 = new DragAndDrop(this, 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
+            this.draganddrop_1 = new DragAndDrop(this, this.worldView.x + 815, 198, 100, 25).setRectangleDropZone(100, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.worldView.x + 570, 20, 100, 25).setRectangleDropZone(100, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.worldView.x + 670, 20, 100, 25).setRectangleDropZone(100, 25).setName("3");
             //this.intro2();
             this.invenPlus = false;
         }
+
+        if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
+        if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
+        if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
+
 
         if(this.key1.isDown) {
             console.log('맵이동');
