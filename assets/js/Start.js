@@ -1,4 +1,4 @@
-var stagenum;
+var stagenum=0;
 
 class Start extends Phaser.Scene {
     constructor() {
