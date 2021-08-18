@@ -137,7 +137,7 @@ export default class ZeroStage extends Phaser.Scene {
 
 
         /** 초반 인트로 대사 출력 **/
-        /*this.cameras.main.fadeIn(1000,0,0,0);
+        this.cameras.main.fadeIn(1000,0,0,0);
         this.player.playerPaused = true; //플레이어 얼려두기
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -146,7 +146,7 @@ export default class ZeroStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
-        });*/
+        });
 
         
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
@@ -160,6 +160,7 @@ export default class ZeroStage extends Phaser.Scene {
         this.itemPrintf = this.add.image(360,330,'item'); 
         this.itemPrintf.setVisible(false);
         
+
         /** 아이템 얻었을 때 뜨는 이미지 **/
         this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
         this.itemText = this.add.text(500, 270, item_text, {
@@ -218,7 +219,7 @@ export default class ZeroStage extends Phaser.Scene {
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemPrintf.x+54 && this.itemPrintf.x < this.player.player.x&&this.cangetItem) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-            this.itemicon.setVisible(false);
+            this.itemPrintf.setVisible(false);
             this.itemget.setVisible(true);
             this.itemText.setVisible(true);
             this.tweens.add({
@@ -232,11 +233,13 @@ export default class ZeroStage extends Phaser.Scene {
         }
 
         if(this.invenPlus) {
+            this.item[this.item.length] =  '#include';
+            this.item[this.item.length] =  '<stdio.h>';
             this.item[this.item.length] =  'printf';
-            this.draganddrop_1 = new DragAndDrop(this, 805, 150, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 570, 20, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 670, 20, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            //this.intro2();
+            this.draganddrop_1 = new DragAndDrop(this, 805, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, 1000, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, 805, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.intro4();
             this.invenPlus = false;
         }
 
@@ -248,14 +251,6 @@ export default class ZeroStage extends Phaser.Scene {
             this.invenPlus = true;
         }
         */
-
-        if(this.invenPlus) {
-            this.inventory.invenSave(this, '#include'); //인벤토리에 아이템 추가
-            this.inventory.invenSave(this, '<stdio.h>');
-            this.inventory.invenSave(this, 'printf');
-            this.intro4();
-            this.invenPlus = false;
-        }
 
         /* 플레이어가 문 앞에 서면 작동하도록 함 */
         if(this.player.player.x < 175 && 100 < this.player.player.x && this.canexit ) {

@@ -211,7 +211,7 @@ class Start extends Phaser.Scene {
         this.ok_button = this.add.image(550,450,"ok_button");
         this.ok_button.setInteractive();
         this.ok_button.once("pointerdown",function(){
-          this.scene.start("stage1");
+          this.scene.start("zero_stage");
         },this);
       }
     }
