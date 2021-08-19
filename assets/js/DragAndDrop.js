@@ -206,21 +206,24 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
 
     update(scene) {
         this.reset_button.x = scene.worldView.x + 980; // 리턴 버튼 플레이어 따라 이동
+        for (var i = 0; i < scene.item.length; i++){
+            this.code_piece[i].x = scene.worldView.x + 15;
+        }
     }
 
     // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
     updownwithinven(scene) {
         if(scene.drop_state_1 == 0){ // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
             if (this.code_piece.length > 0) {
-                if (scene.invenIn) { // 인벤창이 나와있을 때 코드도 나와 있도록
+                if (scene.invenIn) { // 인벤창이 나와있을 때 코드 보이도록
                     //console.log('there');
                     for (var i = 0; i < scene.item.length; i++){
-                        this.code_piece[i].x = 15;
+                        this.code_piece[i].setVisible(true);
                     }
-                } else { // 인벤창이 들어가있을 때 코드도 들어가 있도록
+                } else { // 인벤창이 들어가있을 때 코드 안 보이도록
                     //console.log('here');
                     for (var i = 0; i < scene.item.length; i++){
-                        this.code_piece[i].x = 1050;
+                        this.code_piece[i].setVisible(false);
                     }
                 }
             }
