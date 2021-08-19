@@ -44,11 +44,12 @@ export default class inventory {
     }
     update(scene) {
         this.inven_button.x = this.worldView.x + 5;
+        this.inventoryBody.x = this.worldView.x;
 
         if(!scene.invenIn) { 
             this.inven_button.on('pointerdown', () => {
                 this.inventoryBody.y = 120;
-                
+
                 if(this.exclamationIsReal){
                     this.exclamation.destroy();
                     this.exclamationIsReal = false;
