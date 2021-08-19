@@ -1,6 +1,17 @@
 var playerX;
 var stagenum=0;
 var isErr;
+var username='AAA';
+
+var xhr = new XMLHttpRequest();
+xhr.open('POST', '/get_session', true);
+xhr.setRequestHeader('Content-type', 'application/json');
+xhr.send();
+xhr.addEventListener('load', function() {
+  var result = JSON.parse(xhr.responseText);
+  console.log("nickname : "+result.nick);
+  username=result.nick;
+ });
 
 class Start extends Phaser.Scene {
     constructor() {
@@ -101,6 +112,11 @@ class Start extends Phaser.Scene {
         frameWidth: 1100,
         frameHeight: 552
     });
+    /** 도서관 불빛 로드 **/
+    this.load.spritesheet('librarylight', './assets/images/stage5/librarylight.png', {
+      frameWidth: 200,
+      frameHeight: 200
+  });
 
     /** 느낌표 말풍선 로드 **/
     this.load.spritesheet('exp_exclam', './assets/images/exp_exclam.png', {
@@ -145,7 +161,24 @@ class Start extends Phaser.Scene {
       this.load.image("full_bread", "./assets/images/stage3/full_bread.png");
       this.load.image("oven", "./assets/images/stage3/oven.png");
       this.load.image("oven_open", "./assets/images/stage3/oven_open.png");
+    
+      //5번째 스테이지의 desk 이미지 로드
+      this.load.image("library_desk", "./assets/images/stage5/desk.png");
+
+      /**5번째 스테이지 npc 로드  **/
+      this.load.spritesheet('librarian1', './assets/images/stage5/librarian1.png', {
+        frameWidth: 80,
+        frameHeight: 110,
+      });
+
+      //5번째 스테이지의 회원증 이미지 로드
+      this.load.image("library_membership", "./assets/images/stage5/membership.png");
+
+
+
     } 
+    
+    
 
     create() {
       this.hsv = Phaser.Display.Color.HSVColorWheel();
@@ -194,7 +227,7 @@ class Start extends Phaser.Scene {
         this.isnewgame=true;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("minimap");
+        this.scene.start("fifth_stage");
       }, this);
 
     }
