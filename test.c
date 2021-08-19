@@ -1,11 +1,12 @@
-#include <stdio.h>
-int main(){ 
+1_#include <stdio.h>
+int main(){
 
-   {int bread = 1;} 
+   {int temp = 45;} 
 
-   for(int i=0; i<100; i++){
-      {bread} = {bread} + 1 ; 
+              (           >30){
+                 ("더워요");
    }
-
-   printf("%d", {bread} );
+   else{
+      printf("추워요");
+   }
 }

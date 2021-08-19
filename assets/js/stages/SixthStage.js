@@ -3,6 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
+import Select from "../Select.js";
 
 
 export default class SixthStage extends Phaser.Scene {   
@@ -119,7 +120,12 @@ export default class SixthStage extends Phaser.Scene {
 
 
         stagenum = 6;
-        
+
+
+        var msgArr= ['msg1aaaaaaaaaaaaaaaaaaaaaaaaaasdasdsadadas','msg2','mgs3'];
+        //var selecAnswer = new Select();
+        this.scene.run('selection',{ msgArr: msgArr, num: msgArr.length });
+        this.player.playerPaused = true;
     }
 
     update() {

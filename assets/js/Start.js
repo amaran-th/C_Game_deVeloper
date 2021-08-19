@@ -1,5 +1,6 @@
 var playerX;
 var stagenum=0;
+var isErr;
 var username='AAA';
 
 var xhr = new XMLHttpRequest();
