@@ -24,7 +24,7 @@ export default class Command extends Phaser.GameObjects.Image {
     
         /*** 명령창, 명령창 내용 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
-        code_text = scene.add.text(map.widthInPixels, 75, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
+        code_text = scene.add.text(map.widthInPixels, 75, scene.app_code_text, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
 
         /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
         this.compile_button = scene.add.image(1000,70,'compile_button').setOrigin(0,0);
@@ -191,9 +191,7 @@ export default class Command extends Phaser.GameObjects.Image {
     }
 
     update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
-
-
-        code_text.setText(scene.contenttext);
+        code_text.setText(scene.app_code_text);
 
         //console.log('state' + state);
         /*** 화면 이동시 entire code button 따라가도록 설정***/

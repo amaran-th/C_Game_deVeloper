@@ -8,6 +8,7 @@ import FourthStage from "./stages/FourthStage.js";
 import FifthStage from "./stages/FifthStage.js";
 import SixthStage from "./stages/SixthStage.js";
 import Quiz from "./stages/Quiz.js";
+import Select from "./select.js";
 
 
 var gameSettings = {
@@ -32,7 +33,7 @@ var config = {
   },
 
   //backgroundColor: 0x9cbbd8,
-  scene: [Start, TestScene, ZeroStage, MiniMap, FirstStage, Quiz, SecondStage, ThirdStage, FourthStage, FifthStage, SixthStage] //class name
+  scene: [Start, TestScene, ZeroStage, MiniMap, FirstStage, Quiz, SecondStage, ThirdStage, FourthStage, FifthStage, SixthStage, Select] //class name
 };
 
 var game = new Phaser.Game(config); //게임을 생성
