@@ -43,12 +43,12 @@ export default class inventory {
         }*/
     }
     update(scene) {
-        //console.log(scene.invenIn); 
         this.inven_button.x = this.worldView.x + 5;
-        this.inven_button.on('pointerdown', () => {
-            scene.invenIn = !scene.invenIn;
-            if(scene.invenIn) { 
+
+        if(!scene.invenIn) { 
+            this.inven_button.on('pointerdown', () => {
                 this.inventoryBody.y = 120;
+                
                 if(this.exclamationIsReal){
                     this.exclamation.destroy();
                     this.exclamationIsReal = false;
@@ -61,8 +61,11 @@ export default class inventory {
                 if(scene.draganddrop_4 != undefined) scene.draganddrop_4.updownwithinven(scene);
                 if(scene.draganddrop_5 != undefined) scene.draganddrop_5.updownwithinven(scene);
                 if(scene.draganddrop_6 != undefined) scene.draganddrop_6.updownwithinven(scene);
-            } 
-            else { 
+
+                scene.invenIn = true;
+            });
+        } else { 
+            this.inven_button.on('pointerdown', () => {
                 this.inventoryBody.y = 600;
                 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
@@ -72,9 +75,11 @@ export default class inventory {
                 if(scene.draganddrop_4 != undefined) scene.draganddrop_4.updownwithinven(scene);
                 if(scene.draganddrop_5 != undefined) scene.draganddrop_5.updownwithinven(scene);
                 if(scene.draganddrop_6 != undefined) scene.draganddrop_6.updownwithinven(scene);
-            }
-            //console.log('clicked');
-        })
+
+                scene.invenIn = false;
+            });
+        }
+
         // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
         if(scene.draganddrop_1 != undefined) scene.draganddrop_1.onoffwithcommand(scene);
         if(scene.draganddrop_2 != undefined) scene.draganddrop_2.onoffwithcommand(scene);
