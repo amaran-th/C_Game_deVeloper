@@ -8,21 +8,29 @@ export default class inventory {
 
         /** 인벤창 만들기 **/
         this.inventory = scene.add.graphics();
+        this.inventory_button = scene.add.graphics();
+
         this.inventory.lineStyle(3, 0xFFB569, 1);
-        this.inventoryHandle = this.inventory.fillRoundedRect(0, 0, 150, 50, 5).strokeRoundedRect(0, 0, 150, 50, 5);
-        this.inventoryBody = this.inventory.fillRoundedRect(0, 50, 1094, 173, 20).strokeRoundedRect(0, 50, 1094, 173, 20);
+        this.inventory_button.lineStyle(3, 0xFFB569, 1);
+
+        this.inventoryHandle = this.inventory_button.fillRoundedRect(0, 0, 150, 40, 5).strokeRoundedRect(0, 0, 150, 40, 5); // 인벤창 버튼
+        this.inventoryBody = this.inventory.fillRoundedRect(5, 0, 150, 440, 10).strokeRoundedRect(5, 0, 150, 440, 10); // 인벤창
+        this.inventoryBody.y = 600;
+        
+        this.inventory_button.fillStyle(0xFCE5CD, 1);
         this.inventory.fillStyle(0xFCE5CD, 1);
-        this.invenText = scene.add.text(5,10,'Inventory',{
+
+        this.invenText = scene.add.text(5,5,'Inventory',{
             fontSize : '25px',
             fontFamily: ' Courier',
             color: '#FFB569'
         }).setOrigin(0,0);
 
-        //인벤창을 모두 하나의 오브젝트로 묶기
-        this.inven = scene.add.container(3,550, [this.inventoryHandle,this.inventoryBody, this.invenText]);
-        this.inven.setSize(200, 100);
-
-        this.inven.setInteractive();
+        //인벤창버튼 배경과 인벤토리 텍스트 묶어줌
+        this.inven_button = scene.add.container(3,560, [this.inventoryHandle, this.invenText]);
+        this.inven_button.setSize(200, 100);
+        this.inven_button.setInteractive();
+        
 
         //console.log('인덱스:', scene.item.length);
 
@@ -36,11 +44,11 @@ export default class inventory {
     }
     update(scene) {
         //console.log(scene.invenIn); 
-        this.inven.x = this.worldView.x + 5;
-        this.inven.on('pointerdown', () => {
+        this.inven_button.x = this.worldView.x + 5;
+        this.inven_button.on('pointerdown', () => {
             scene.invenIn = !scene.invenIn;
             if(scene.invenIn) { 
-                this.inven.y = 375;
+                this.inventoryBody.y = 120;
                 if(this.exclamationIsReal){
                     this.exclamation.destroy();
                     this.exclamationIsReal = false;
@@ -55,7 +63,7 @@ export default class inventory {
                 if(scene.draganddrop_6 != undefined) scene.draganddrop_6.updownwithinven(scene);
             } 
             else { 
-                this.inven.y = 550;
+                this.inventoryBody.y = 600;
                 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
                 if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
