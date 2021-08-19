@@ -455,6 +455,16 @@ export default class ZeroStage extends Phaser.Scene {
           this.player.playerPaused=true;    //플레이어 얼려두기
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "뭔가 잘못된 것 같아...", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
         scene.input.once('pointerdown', function() {
             if(msg==scene.out){
@@ -462,6 +472,10 @@ export default class ZeroStage extends Phaser.Scene {
                 this.script.setVisible(false);
                 //playerFace.setVisible(false);
                 scene.intro6();
+            }else{
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
             }
             
         }, this);
