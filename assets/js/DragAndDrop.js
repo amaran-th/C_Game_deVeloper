@@ -184,13 +184,13 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.drop_state_6 = 0;
 
 
-
-            scene.code_zone_1 = "           "; //11칸
+            // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
+            /*scene.code_zone_1 = "           "; //11칸
             scene.code_zone_2 = "           ";
             scene.code_zone_3 = "           ";
             scene.code_zone_4 = "           ";
             scene.code_zone_5 = "           ";
-            scene.code_zone_6 = "           ";
+            scene.code_zone_6 = "           ";*/
 
         });
         

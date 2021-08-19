@@ -175,12 +175,13 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        this.code_zone_1 = "           "; //11칸
+        // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
+        /*this.code_zone_1 = "           "; //11칸
         this.code_zone_2 = "           ";
         this.code_zone_3 = "           ";
         this.code_zone_4 = "           ";
         this.code_zone_5 = "           ";
-        this.code_zone_6 = "           ";
+        this.code_zone_6 = "           ";*/
         
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;
