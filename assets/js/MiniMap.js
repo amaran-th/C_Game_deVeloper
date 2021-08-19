@@ -248,7 +248,7 @@ class MiniMap extends Phaser.Scene {
             if(stagenum == 0){
                 console.log("back satage0");
                 this.scene.stop('minimap');
-                this.scene.run('bootGame');
+                this.scene.run('zero_stage');
             }else if(stagenum==1){
                 console.log("back satage1");
                 this.scene.stop('minimap');
