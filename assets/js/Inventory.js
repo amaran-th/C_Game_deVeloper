@@ -47,17 +47,23 @@ export default class inventory {
                 }
 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                //if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
-                //if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
+                if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
+                if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
                 if(scene.draganddrop_3 != undefined) scene.draganddrop_3.updownwithinven(scene);
+                if(scene.draganddrop_4 != undefined) scene.draganddrop_4.updownwithinven(scene);
+                if(scene.draganddrop_5 != undefined) scene.draganddrop_5.updownwithinven(scene);
+                if(scene.draganddrop_6 != undefined) scene.draganddrop_6.updownwithinven(scene);
             } 
             else { 
                 this.inven.y = 550;
                 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                //if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
-                //if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
+                if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
+                if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
                 if(scene.draganddrop_3 != undefined) scene.draganddrop_3.updownwithinven(scene);
+                if(scene.draganddrop_4 != undefined) scene.draganddrop_4.updownwithinven(scene);
+                if(scene.draganddrop_5 != undefined) scene.draganddrop_5.updownwithinven(scene);
+                if(scene.draganddrop_6 != undefined) scene.draganddrop_6.updownwithinven(scene);
             }
             //console.log('clicked');
         })
@@ -65,6 +71,9 @@ export default class inventory {
         if(scene.draganddrop_1 != undefined) scene.draganddrop_1.onoffwithcommand(scene);
         if(scene.draganddrop_2 != undefined) scene.draganddrop_2.onoffwithcommand(scene);
         if(scene.draganddrop_3 != undefined) scene.draganddrop_3.onoffwithcommand(scene);
+        if(scene.draganddrop_4 != undefined) scene.draganddrop_4.onoffwithcommand(scene);
+        if(scene.draganddrop_5 != undefined) scene.draganddrop_5.onoffwithcommand(scene);
+        if(scene.draganddrop_6 != undefined) scene.draganddrop_6.onoffwithcommand(scene);
     }
 
     invenSave(scene, itemName) { // 이부분 내용 draganddrop으로 옮겨서 함수 이름 바꾸던지 아래 내용 create나 update로 이동할까 싶음

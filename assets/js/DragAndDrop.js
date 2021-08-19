@@ -68,7 +68,20 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             else if (dropZone.name == "3"){
                 scene.code_zone_3 = gameObject._text;
                 this.dropzone = 3;
-            }
+            } 
+            else if (dropZone.name == "4"){
+                scene.code_zone_4 = gameObject._text;
+                this.dropzone = 4;
+            } 
+            else if (dropZone.name == "5"){
+                scene.code_zone_5 = gameObject._text;
+                this.dropzone = 5;
+            } 
+            else if (dropZone.name == "6"){
+                scene.code_zone_6 = gameObject._text;
+                this.dropzone = 6;
+            } 
+
             //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
         });
 
@@ -106,6 +119,33 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                         scene.drop_state_3 = 1;
                     }, 1000);
                     break;
+                case 4:
+                    if (!dropped || scene.drop_state_4) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_4 = 1;
+                    }, 1000);
+                    break;
+                case 5:
+                    if (!dropped || scene.drop_state_5) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_5 = 1;
+                    }, 1000);
+                    break;
+                case 6:
+                    if (!dropped || scene.drop_state_6) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_6 = 1;
+                    }, 1000);
+                    break;
                 default:
                     gameObject.x = gameObject.input.dragStartX;
                     gameObject.y = gameObject.input.dragStartY;
@@ -139,13 +179,22 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.drop_state_1 = 0;
             scene.drop_state_2 = 0;
             scene.drop_state_3 = 0;
+            scene.drop_state_4 = 0;
+            scene.drop_state_5 = 0;
+            scene.drop_state_6 = 0;
+
+
 
             scene.code_zone_1 = "           "; //11칸
             scene.code_zone_2 = "           ";
             scene.code_zone_3 = "           ";
+            scene.code_zone_4 = "           ";
+            scene.code_zone_5 = "           ";
+            scene.code_zone_6 = "           ";
+
         });
         
-        if (scene.code_piece_add_state != 2) {
+        if (scene.code_piece_add_state != scene.dropzon_su - 1) {
             for (var i = 0; i < scene.item.length; i++){
                 this.code_piece[i].destroy();
             }
