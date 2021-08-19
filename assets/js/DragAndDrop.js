@@ -206,9 +206,9 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
 
     update(scene) {
         this.reset_button.x = scene.worldView.x + 980; // 리턴 버튼 플레이어 따라 이동
-        for (var i = 0; i < scene.item.length; i++){
+        /*for (var i = 0; i < scene.item.length; i++){
             this.code_piece[i].x = scene.worldView.x + 15;
-        }
+        }*/
     }
 
     // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
