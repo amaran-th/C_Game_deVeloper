@@ -141,6 +141,7 @@ export default class SecondStage extends Phaser.Scene {
         /** 아이템 만들기 **/
         this.itemicon = this.add.image(360,430,'item');
         var item_text = 'if';
+        
         /** 아이템 얻었을 때 뜨는 이미지 **/
         this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
         this.itemText = this.add.text(500,270,item_text,{
@@ -153,24 +154,38 @@ export default class SecondStage extends Phaser.Scene {
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
 
-        //console.log('item 위치', this.itemicon.x);
-
-        // 드래그앤드랍
+        /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        this.code_zone_1 = "           "; //11칸
+        // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
+        /*this.code_zone_1 = "           "; //11칸
         this.code_zone_2 = "           ";
         this.code_zone_3 = "           ";
-        //this.drag_piece = ['printf', 'if', 'else'];
+        this.code_zone_4 = "           ";
+        this.code_zone_5 = "           ";
+        this.code_zone_6 = "           ";*/
+        
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;
         // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
+        this.drop_state_4 = 0;
+        this.drop_state_5 = 0;
+        this.drop_state_6 = 0;
 
 
         //Second_stage의 전체 코드
         this.contenttext = "" ; 
+
+        // Second_stage의 앱에 들어가는 코드
+        this.app_code_text =
+        "1_#include <stdio.h>\n" + 
+        "int main(){\n\n" +
+        "   {int temp = 45;} \n\n   " +
+        "           " + "(" + "           " + ">30){\n      " + //if(Temp>30)
+        "           " + "(\"더워요\");\n"  +//printf("더워요");
+        "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
 
         //코드 실행후 불러올 output값
         this.out = "";
@@ -298,6 +313,7 @@ export default class SecondStage extends Phaser.Scene {
         if(this.invenPlus) {
             this.item[this.item.length] =  'printf';  
             this.item[this.item.length] =  'if';   
+            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             this.draganddrop_1 = new DragAndDrop(this, 805, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, 895, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
             this.draganddrop_3 = new DragAndDrop(this, 828, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");

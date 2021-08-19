@@ -133,7 +133,8 @@ export default class Quiz extends Phaser.Scene {
                 this.scene.stop('quiz');
             }
             else {
-            
+                this.cameras.main.shake(500, 0.01);
+                player_answer = [3,3,3,3];
                 this.problem0.x = 300;
                 this.problem0.y = 170;
                 this.problem0.data.get('vector').set(this.problem0.x, this.problem0.y);
