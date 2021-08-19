@@ -153,6 +153,7 @@ export default class ThirdStage extends Phaser.Scene {
             this.oven_on = true;
              /** 아이템 만들기 **/
              this.itemicon.setVisible(true);
+             this.oven.destroy()
         });
 
 
@@ -233,6 +234,7 @@ export default class ThirdStage extends Phaser.Scene {
         /** 아이템 획득하는 경우 **/
         if (this.oven_on && this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
+
             this.itemicon.setVisible(false);
             this.itemget.x = this.worldView.x
             this.itemText.x = this.worldView.x + 530;

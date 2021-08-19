@@ -1,5 +1,6 @@
 var playerX;
 var stagenum=0;
+var isErr;
 
 class Start extends Phaser.Scene {
     constructor() {

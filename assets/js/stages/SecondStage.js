@@ -21,6 +21,7 @@ export default class SecondStage extends Phaser.Scene {
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
+
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
         this.key1 = this.input.keyboard.addKey('ONE');
@@ -120,6 +121,13 @@ export default class SecondStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "second_stage");
+        /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+        this.command.commandbox.setVisible(false);
+        for(var i=0; i < this.command.apps.length; i++){
+            this.command.apps[i].setVisible(this.command.commandbox.visible);
+            console.log(this.command.apps[i].visible);
+        }
+        this.command.back_button.setVisible(this.command.commandbox.visible);
 
 
         /** 플레이어 위치 확인용 **/
@@ -258,7 +266,7 @@ export default class SecondStage extends Phaser.Scene {
 
             this.stage2_3_1();  
         }
-        else if (this.out == "2_#include <stdio.h>\nint main(){\n\n   {int temp = 45;} \n\n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
+        else if (isErr){
             console.log("===stage2 실패===");
             this.out = "";
          
