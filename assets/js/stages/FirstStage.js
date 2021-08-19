@@ -13,6 +13,7 @@ export default class FirstStage extends Phaser.Scene {
     }
     
     create () {
+
         //this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -97,7 +98,12 @@ export default class FirstStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "first_stage");
-
+        /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+        this.command.commandbox.setVisible(false);
+        for(var i=0; i < this.command.apps.length; i++){
+            this.command.apps[i].visible == this.command.commandbox.visible;
+        }
+        this.command.back_button.visible == this.command.commandbox.visible;
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
@@ -216,7 +222,7 @@ export default class FirstStage extends Phaser.Scene {
                 this.devil.setVelocityX(-200);
                 this.time.delayedCall( 1000, () => {
                     this.devil.anims.stop();
-                    this.devil.setVelocityX(0);
+                    this.devil.setVelocityX(0); 
                     this.stage1_3();
                  }, [] , this);
             });  
@@ -229,6 +235,7 @@ export default class FirstStage extends Phaser.Scene {
         .load(this.dialog.stage1_3, this.dialog)
         .start();
         seq.on('complete', () => {
+            this.command.entire_code_button.setVisible(false);//휴대폰 없엠
             this.devil.play('devil_touch_phone',true);
             this.time.delayedCall( 2000, () => {
                 this.stage1_4();
@@ -273,9 +280,10 @@ export default class FirstStage extends Phaser.Scene {
             this.devil.destroy();
             console.log('대화 끝');
             this.click = this.add.text(500, 400, 'Click!', { font: 'Courier', fill: '#ffffff', fontSize: '100px' })
-            this.phoneLocked.on('pointerdown', function() {
+            this.phoneLocked.once('pointerdown', function() {
                 this.scene.run('quiz');
                 this.quiz_running = true;
+                this.phoneLocked.input.enabled = false;
             }, this);
         }); 
     }
@@ -293,14 +301,17 @@ export default class FirstStage extends Phaser.Scene {
             seq
             .load(this.dialog.stage1_6, this.dialog)
             .start();
-            seq.on('complete', () => {
+            seq.on('complete', () => {      
                 this.tweens.add({
                     targets: phoneUnlocked,
                     x: 1100, //위치 이동
                     duration: 500,
                     ease: 'Power1',
                     repeat: 0,
-                    onComplete: ()=>{phoneUnlocked.destroy();}
+                    onComplete: ()=>{
+                        this.command.entire_code_button.setVisible(true);//휴대폰 생김
+                        phoneUnlocked.destroy();
+                    }
                 }, this);
             }); 
         }, [], this);

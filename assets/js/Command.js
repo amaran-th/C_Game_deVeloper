@@ -29,7 +29,7 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
         this.compile_button = scene.add.image(1000,70,'compile_button').setOrigin(0,0);
         this.compile_button.setInteractive();
-        
+
         
 
 
@@ -149,7 +149,11 @@ export default class Command extends Phaser.GameObjects.Image {
                         
                         var result = JSON.parse(xhr.responseText);
     
-                        if (result.result != 'ok') return;
+                        if (result.result != 'ok') {
+                            isErr = true;
+                            return;
+                        }
+                        else isErr = false;
                         scene.out = result.output;
                         console.log(result.output);
                         console.log('command 파일 result:', result.output);
@@ -179,6 +183,11 @@ export default class Command extends Phaser.GameObjects.Image {
            
         });
         //this.compile_button.setVisible(false);
+
+
+
+
+
     }
 
     update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
@@ -188,13 +197,15 @@ export default class Command extends Phaser.GameObjects.Image {
         /*** 화면 이동시 entire code button 따라가도록 설정***/
         this.entire_code_button.x = this.worldView.x + 5;
         /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
+        for(var i=0; i < this.apps.length; i++){
+            this.apps[i].visible == this.commandbox.visible;
+        }
+        this.back_button.visible == this.commandbox.visible;
+
         if(state == 0) {
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
-                for(var i=0; i < this.apps.length; i++){
-                    this.apps[i].setVisible(true);
-                }
-                this.back_button.setVisible(true);
+
                 //this.slidebox(); //슬라이드 기능 수치가 중간에 이상해져서 될 때 있고 안 될 때 있음(일단 빼두겠음)
                 state = 1;
                 
