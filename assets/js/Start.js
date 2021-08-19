@@ -3,6 +3,7 @@ var stagenum=0;
 var isErr;
 var username='AAA';
 
+//데이터베이스에 접속해서 닉네임 불러와서 username 변수에 저장
 var xhr = new XMLHttpRequest();
 xhr.open('POST', '/get_session', true);
 xhr.setRequestHeader('Content-type', 'application/json');
@@ -227,7 +228,7 @@ class Start extends Phaser.Scene {
         this.isnewgame=true;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("fifth_stage");
+        this.scene.start("minimap");
       }, this);
 
     }

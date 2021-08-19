@@ -5,7 +5,6 @@ import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 import Select from "../Select.js";
 
-
 export default class SixthStage extends Phaser.Scene {   
     constructor(){ 
         super("sixth_stage"); //identifier for the scene
@@ -66,14 +65,14 @@ export default class SixthStage extends Phaser.Scene {
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
-        /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
+        /*** 미니맵버튼 활성화  //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
         this.minimap_button.setInteractive();
         this.minimap_button.on("pointerdown",function(){
             this.scene.sleep('sixth_stage'); 
             this.scene.run("minimap");
         },this);
-
+***/
 
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
 
@@ -122,9 +121,6 @@ export default class SixthStage extends Phaser.Scene {
         stagenum = 6;
 
 
-        var msgArr= ['msg1aaaaaaaaaaaaaaaaaaaaaaaaaasdasdsadadas','msg2','mgs3'];
-        //var selecAnswer = new Select();
-        this.scene.run('selection',{ msgArr: msgArr, num: msgArr.length });
         this.player.playerPaused = true;
     }
 

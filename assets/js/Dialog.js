@@ -365,6 +365,36 @@ visible(visible) {
     ['visible',false],
     ['wait-time', 1],
   ]
+  stage1_7 = [
+    ['visible',true],
+    ['place', 340,10],
+    ['setFace', 0],
+    ['print', '야!!남의 폰에 이게 뭐하는 짓이야!!'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 1],
+  ]
+  stage1_8 = [
+    ['visible',true],
+    ['place', 340,10],
+    ['setFace', 0],
+    ['print', '오, 풀었네?? 제법인데?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '아니 그러니까 이게 뭐하는거냐고.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '뭐긴 너가 초짜인 것 같아서 도와주려고 그러지~!'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '지금 뭐라고 한거야?? 아니 그것보다 여긴 대체 뭐하는 곳인데?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '일단 진정해~~ 여긴 코딩지옥이야.'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 1],
+  ]
 
 
   stage2_1 = [
