@@ -8,7 +8,7 @@ import FourthStage from "./stages/FourthStage.js";
 import FifthStage from "./stages/FifthStage.js";
 import SixthStage from "./stages/SixthStage.js";
 import Quiz from "./stages/Quiz.js";
-import Select from "./select.js";
+import Select from "./Select.js";
 
 
 var gameSettings = {
