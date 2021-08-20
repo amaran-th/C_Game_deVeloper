@@ -155,11 +155,11 @@ class Start extends Phaser.Scene {
         frameHeight: 354,
       });
       this.load.spritesheet("waterWball", "./assets/images/stage2/waterWball.png", {
-        frameWidth: 100,
+        frameWidth: 200,
         frameHeight: 100,
       });
       this.load.spritesheet("water", "./assets/images/stage2/water.png", {
-        frameWidth: 100,
+        frameWidth: 200,
         frameHeight: 100,
       });
       this.load.spritesheet("cry", "./assets/images/stage2/cry.png", {
