@@ -162,6 +162,10 @@ class Start extends Phaser.Scene {
         frameWidth: 100,
         frameHeight: 100,
       });
+      this.load.spritesheet("cry", "./assets/images/stage2/cry.png", {
+        frameWidth: 125,
+        frameHeight: 75,
+      });
 
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");

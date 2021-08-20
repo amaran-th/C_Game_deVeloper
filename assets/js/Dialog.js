@@ -522,6 +522,15 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage2_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '저쪽에서 무슨 소리가 들렸는데?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
 
   stage3_1 = [
     ['visible',true],

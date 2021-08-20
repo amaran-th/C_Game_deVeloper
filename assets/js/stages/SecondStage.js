@@ -118,6 +118,17 @@ export default class SecondStage extends Phaser.Scene {
         this.exclamMark = this.add.sprite( 580, 300, 'exp_exclam', 0);
         this.exclamMark.setVisible(false);
 
+        /** 으아앙 말풍선 애니메이션 **/
+        this.anims.create({
+            key: "shake",
+            frames: this.anims.generateFrameNumbers('cry',{ start: 0, end: 3}), 
+            frameRate: 10,
+            repeat: 2,
+            hideOnComplete: true
+        })
+        this.cry = this.add.sprite( 900, 300, 'cry', 0);
+        this.cry.setVisible(false);
+
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "second_stage");
@@ -256,7 +267,8 @@ export default class SecondStage extends Phaser.Scene {
             this.text_temp.setVisible(false)
         }, this);
 
-        this.mission1Complete = false;
+        //this.mission1Complete = false;
+        this.mission1Complete = true;
         this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
 
     }
@@ -378,7 +390,8 @@ export default class SecondStage extends Phaser.Scene {
         */
 
         if(this.mission1Complete) {
-            
+            this.stage2_6()
+            this.mission1Complete = undefined;
         }
     }
 
@@ -551,4 +564,27 @@ export default class SecondStage extends Phaser.Scene {
             }, [], this);  
     }
  
+    stage2_6() {
+        this.playerPaused = true;
+
+        this.cry.setVisible(true);
+        this.cry.play('shake');
+
+        this.exclamMark.x = this.player.player.x;
+        this.exclamMark.setVisible(true);
+        this.exclamMark.play('exclam');
+
+        var seq = this.plugins.get('rexsequenceplugin').add(); 
+        this.time.delayedCall( 300, () => {
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage2_6, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            });     
+        }, [] , this);
+        
+
+    }
 }
