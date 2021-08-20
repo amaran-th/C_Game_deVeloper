@@ -4,7 +4,7 @@ var tutorial_text;
 var code_on = false;
 var tutorial_on = false;
 var app_on = false;
-import ZeroStage from "./ZeroStage.js";
+//import ZeroStage from "./ZeroStage.js";
 
 export default class Command extends Phaser.GameObjects.Image {
     constructor(scene, map, name) {
@@ -24,12 +24,12 @@ export default class Command extends Phaser.GameObjects.Image {
     
         /*** 명령창, 명령창 내용 미리 add해주기 ***/
         this.commandbox = scene.add.image(map.widthInPixels, 5,'commandbox').setOrigin(0,0);
-        code_text = scene.add.text(map.widthInPixels, 75, scene.contenttext, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
+        code_text = scene.add.text(map.widthInPixels, 75, scene.app_code_text, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
 
         /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
         this.compile_button = scene.add.image(1000,70,'compile_button').setOrigin(0,0);
         this.compile_button.setInteractive();
-        
+
         
 
 
@@ -83,14 +83,24 @@ export default class Command extends Phaser.GameObjects.Image {
                         scene.codeapp_onoff_state = 1; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
                         break;
                     case 1:
+                        console.log('맵이동');
+
                         app_on = false;
+                        /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+                        this.commandbox.setVisible(false);
+                        for(var i=0; i < this.apps.length; i++){
+                            this.apps[i].setVisible(false);
+                        }
+                        scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
                         code_on = false;
                         tutorial_on = false;
                         code_text.setVisible(false);
                         this.compile_button.setVisible(false);
                         tutorial_text.setVisible(false);
+                        this.back_button.setVisible(false);
                         state = 0;
-                        console.log('맵이동');
+
+
                         scene.scene.sleep(name);
                         scene.scene.run("minimap");
                         break;
@@ -126,16 +136,13 @@ export default class Command extends Phaser.GameObjects.Image {
         var mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
         tutorial_text.setMask(mask);
 
-
+        
         /*** 컴파일 버튼 누를시 컴파일러 동작. ***/ //@@@@@@@@@@@
         this.compile_button.on('pointerdown', () => {
            console.log("click");
-            if (scene.contenttext !== '')
-                {
+            if (scene.contenttext !== ''){
                     var data = {
-
                         'code': scene.contenttext
-    
                     };
                     data = JSON.stringify(data);
 
@@ -146,16 +153,17 @@ export default class Command extends Phaser.GameObjects.Image {
                     xhr.setRequestHeader('Content-type', 'application/json');
                     xhr.send(data);
                     xhr.addEventListener('load', function() {
-                        
+                        console.log(xhr.responseText);
                         var result = JSON.parse(xhr.responseText);
-    
-                        if (result.result != 'ok') return;
+                        if (result.result != 'ok') {
+                            console.log("error!!!");
+                            scene.printerr(scene);
+                        }else{
                         scene.out = result.output;
-                        console.log(result.output);
                         console.log('command 파일 result:', result.output);
                         scene.complied(scene, result.output);
+                        }
                         //document.getElementById('testoutput').value = result.output;
-    
                     });
                     //  Turn off the click events
                     //this.removeListener('click');
@@ -179,23 +187,29 @@ export default class Command extends Phaser.GameObjects.Image {
            
         });
         //this.compile_button.setVisible(false);
+
+
+
+
+
     }
 
     update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
-
-        code_text.setText(scene.contenttext);
+        code_text.setText(scene.app_code_text);
 
         //console.log('state' + state);
         /*** 화면 이동시 entire code button 따라가도록 설정***/
         this.entire_code_button.x = this.worldView.x + 5;
         /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
+        for(var i=0; i < this.apps.length; i++){
+            this.apps[i].visible == this.commandbox.visible;
+        }
+        this.back_button.visible == this.commandbox.visible;
+
         if(state == 0) {
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
-                for(var i=0; i < this.apps.length; i++){
-                    this.apps[i].setVisible(true);
-                }
-                this.back_button.setVisible(true);
+
                 //this.slidebox(); //슬라이드 기능 수치가 중간에 이상해져서 될 때 있고 안 될 때 있음(일단 빼두겠음)
                 state = 1;
                 

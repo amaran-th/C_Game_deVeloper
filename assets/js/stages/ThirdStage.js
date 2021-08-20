@@ -125,25 +125,43 @@ export default class ThirdStage extends Phaser.Scene {
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
 
-        //console.log('item 위치', this.itemicon.x);
-
-        // 드래그앤드랍
+        /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        this.code_zone_1 = "           "; //10칸
+        // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
+        /*this.code_zone_1 = "           "; //11칸
         this.code_zone_2 = "           ";
-        this.code_zone_3 = "           "
-        //>, = , - 같은 작은 코드조각위해서 code_zone_mini같은거 만들어도 좋을듯, 왜냐면 쟤네 공간 차지 너무함
-        //this.drag_piece = ['printf', 'if', 'else'];
+        this.code_zone_3 = "           ";
+        this.code_zone_4 = "           ";
+        this.code_zone_5 = "           ";
+        this.code_zone_6 = "           ";*/
+        
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;
         // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
+        this.drop_state_4 = 0;
+        this.drop_state_5 = 0;
+        this.drop_state_6 = 0;
         
 
         //Second_stage의 전체 코드
         this.contenttext = "" ;
+
+        //Second_stage의 앱에 들어가는 코드
+        this.app_code_text = 
+        "#include <stdio.h>\n" + 
+        "int main(){ \n\n" +
+  
+        "   {int bread = 1;} \n\n   " +
+        "           " + 
+        "(int i=0; i" + "           " + 
+        "100; i++){\n" +
+        "      {bread} = {bread} + 1 ; \n" +
+        "   }\n\n" +
+  
+        "   printf(\"%d\", {bread} );\n}";
         
         
         //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
@@ -153,6 +171,7 @@ export default class ThirdStage extends Phaser.Scene {
             this.oven_on = true;
              /** 아이템 만들기 **/
              this.itemicon.setVisible(true);
+             this.oven.destroy()
         });
 
 
@@ -234,6 +253,7 @@ export default class ThirdStage extends Phaser.Scene {
         /** 아이템 획득하는 경우 **/
         if (this.oven_on && this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
+
             this.itemicon.setVisible(false);
             this.itemget.x = this.worldView.x
             this.itemText.x = this.worldView.x + 530;
@@ -253,16 +273,15 @@ export default class ThirdStage extends Phaser.Scene {
             this.item[this.item.length] =  '<';
             this.item[this.item.length] =  'if';
             this.item[this.item.length] =  'for';
+            this.dropzon_su = 2; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             this.draganddrop_1 = new DragAndDrop(this, this.worldView.x + 805, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.worldView.x + 980, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.worldView.x + 670, 20, 80, 25).setRectangleDropZone(80, 25).setName("3");
             //this.intro2();
             this.invenPlus = false;
         }
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
-        if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
 
 
         if(this.key1.isDown) {

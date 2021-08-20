@@ -8,21 +8,29 @@ export default class inventory {
 
         /** 인벤창 만들기 **/
         this.inventory = scene.add.graphics();
+        this.inventory_button = scene.add.graphics();
+
         this.inventory.lineStyle(3, 0xFFB569, 1);
-        this.inventoryHandle = this.inventory.fillRoundedRect(0, 0, 150, 50, 5).strokeRoundedRect(0, 0, 150, 50, 5);
-        this.inventoryBody = this.inventory.fillRoundedRect(0, 50, 1094, 173, 20).strokeRoundedRect(0, 50, 1094, 173, 20);
+        this.inventory_button.lineStyle(3, 0xFFB569, 1);
+
+        this.inventoryHandle = this.inventory_button.fillRoundedRect(0, 0, 150, 40, 5).strokeRoundedRect(0, 0, 150, 40, 5); // 인벤창 버튼
+        this.inventoryBody = this.inventory.fillRoundedRect(5, 0, 150, 440, 10).strokeRoundedRect(5, 0, 150, 440, 10); // 인벤창
+        this.inventoryBody.y = 600;
+        
+        this.inventory_button.fillStyle(0xFCE5CD, 1);
         this.inventory.fillStyle(0xFCE5CD, 1);
-        this.invenText = scene.add.text(5,10,'Inventory',{
+
+        this.invenText = scene.add.text(5,5,'Inventory',{
             fontSize : '25px',
             fontFamily: ' Courier',
             color: '#FFB569'
         }).setOrigin(0,0);
 
-        //인벤창을 모두 하나의 오브젝트로 묶기
-        this.inven = scene.add.container(3,550, [this.inventoryHandle,this.inventoryBody, this.invenText]);
-        this.inven.setSize(200, 100);
-
-        this.inven.setInteractive();
+        //인벤창버튼 배경과 인벤토리 텍스트 묶어줌
+        this.inven_button = scene.add.container(3,560, [this.inventoryHandle, this.invenText]);
+        this.inven_button.setSize(200, 100);
+        this.inven_button.setInteractive();
+        
 
         //console.log('인덱스:', scene.item.length);
 
@@ -35,36 +43,51 @@ export default class inventory {
         }*/
     }
     update(scene) {
-        //console.log(scene.invenIn); 
-        this.inven.x = this.worldView.x + 5;
-        this.inven.on('pointerdown', () => {
-            scene.invenIn = !scene.invenIn;
-            if(scene.invenIn) { 
-                this.inven.y = 375;
+        this.inven_button.x = this.worldView.x + 5;
+        this.inventoryBody.x = this.worldView.x;
+
+        if(!scene.invenIn) { 
+            this.inven_button.on('pointerdown', () => {
+                this.inventoryBody.y = 120;
+
                 if(this.exclamationIsReal){
                     this.exclamation.destroy();
                     this.exclamationIsReal = false;
                 }
 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                //if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
-                //if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
+                if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
+                if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
                 if(scene.draganddrop_3 != undefined) scene.draganddrop_3.updownwithinven(scene);
-            } 
-            else { 
-                this.inven.y = 550;
+                if(scene.draganddrop_4 != undefined) scene.draganddrop_4.updownwithinven(scene);
+                if(scene.draganddrop_5 != undefined) scene.draganddrop_5.updownwithinven(scene);
+                if(scene.draganddrop_6 != undefined) scene.draganddrop_6.updownwithinven(scene);
+
+                scene.invenIn = true;
+            });
+        } else { 
+            this.inven_button.on('pointerdown', () => {
+                this.inventoryBody.y = 600;
                 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                //if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
-                //if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
+                if(scene.draganddrop_1 != undefined) scene.draganddrop_1.updownwithinven(scene);
+                if(scene.draganddrop_2 != undefined) scene.draganddrop_2.updownwithinven(scene);
                 if(scene.draganddrop_3 != undefined) scene.draganddrop_3.updownwithinven(scene);
-            }
-            //console.log('clicked');
-        })
+                if(scene.draganddrop_4 != undefined) scene.draganddrop_4.updownwithinven(scene);
+                if(scene.draganddrop_5 != undefined) scene.draganddrop_5.updownwithinven(scene);
+                if(scene.draganddrop_6 != undefined) scene.draganddrop_6.updownwithinven(scene);
+
+                scene.invenIn = false;
+            });
+        }
+
         // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
         if(scene.draganddrop_1 != undefined) scene.draganddrop_1.onoffwithcommand(scene);
         if(scene.draganddrop_2 != undefined) scene.draganddrop_2.onoffwithcommand(scene);
         if(scene.draganddrop_3 != undefined) scene.draganddrop_3.onoffwithcommand(scene);
+        if(scene.draganddrop_4 != undefined) scene.draganddrop_4.onoffwithcommand(scene);
+        if(scene.draganddrop_5 != undefined) scene.draganddrop_5.onoffwithcommand(scene);
+        if(scene.draganddrop_6 != undefined) scene.draganddrop_6.onoffwithcommand(scene);
     }
 
     invenSave(scene, itemName) { // 이부분 내용 draganddrop으로 옮겨서 함수 이름 바꾸던지 아래 내용 create나 update로 이동할까 싶음

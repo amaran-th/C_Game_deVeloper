@@ -8,13 +8,13 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         /*** 드래그앤드랍 ***/        
         // 코드 조각 불러와 배치하기
         this.code_piece = [];  // 배열로 줘서 씬에서 할당한 코드조각 만큼을 text 생성 변수로 주어줌
-        var code_piece_x = 50; // 처음 코드조각 x좌표 위치 이건 나중에 inventory 창 부분에 맞게 수정 예정
+        var code_piece_y = 130; // 처음 코드조각 x좌표 위치 이건 나중에 inventory 창 부분에 맞게 수정 예정
         
         //console.log('코드조각 수 : ' + scene.item.length);
         for (var i = 0; i < scene.item.length; i++){
-            this.code_piece[i] = scene.add.text(code_piece_x, 600, scene.item[i], { font: "30px Arial Black", fill: "#f9cb9c" }).setInteractive();
+            this.code_piece[i] = scene.add.text(15, code_piece_y, scene.item[i], { font: "25px Arial Black", fill: "#f9cb9c" }).setInteractive();
             scene.input.setDraggable(this.code_piece[i]); // 드래그 가능하도록
-            code_piece_x += 100; // 각 코드 조각 위치 설정
+            code_piece_y += 30; // 각 코드 조각 위치 설정
             var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
             this.code_piece[i].on('pointerover', function () { 
                 //console.log('조각 수' + this.code_piece.length);
@@ -68,7 +68,20 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             else if (dropZone.name == "3"){
                 scene.code_zone_3 = gameObject._text;
                 this.dropzone = 3;
-            }
+            } 
+            else if (dropZone.name == "4"){
+                scene.code_zone_4 = gameObject._text;
+                this.dropzone = 4;
+            } 
+            else if (dropZone.name == "5"){
+                scene.code_zone_5 = gameObject._text;
+                this.dropzone = 5;
+            } 
+            else if (dropZone.name == "6"){
+                scene.code_zone_6 = gameObject._text;
+                this.dropzone = 6;
+            } 
+
             //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
         });
 
@@ -106,6 +119,33 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                         scene.drop_state_3 = 1;
                     }, 1000);
                     break;
+                case 4:
+                    if (!dropped || scene.drop_state_4) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_4 = 1;
+                    }, 1000);
+                    break;
+                case 5:
+                    if (!dropped || scene.drop_state_5) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_5 = 1;
+                    }, 1000);
+                    break;
+                case 6:
+                    if (!dropped || scene.drop_state_6) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_6 = 1;
+                    }, 1000);
+                    break;
                 default:
                     gameObject.x = gameObject.input.dragStartX;
                     gameObject.y = gameObject.input.dragStartY;
@@ -129,23 +169,32 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         var code_piece2 = this.code_piece; // 리셋 버튼 안에서 this.code_piece를 가져오지 못해서 따로 변수로 둠(앞에서 code_piece로 변수 둬서 충돌하길래 2로 둠)
         reset_button.on('pointerup', function () {
             console.log('reset');
-            var code_piece_reset_x = 50;
+            var code_piece_reset_y = 130;
             for (var i = 0; i < scene.item.length; i++){
-                code_piece2[i].x = code_piece_reset_x;
-                code_piece2[i].y = 490;
-                code_piece_reset_x += 100;
+                code_piece2[i].x = 15;
+                code_piece2[i].y = code_piece_reset_y;
+                code_piece_reset_y += 30;
             }
             //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
             scene.drop_state_1 = 0;
             scene.drop_state_2 = 0;
             scene.drop_state_3 = 0;
+            scene.drop_state_4 = 0;
+            scene.drop_state_5 = 0;
+            scene.drop_state_6 = 0;
 
-            scene.code_zone_1 = "           "; //11칸
+
+            // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
+            /*scene.code_zone_1 = "           "; //11칸
             scene.code_zone_2 = "           ";
             scene.code_zone_3 = "           ";
+            scene.code_zone_4 = "           ";
+            scene.code_zone_5 = "           ";
+            scene.code_zone_6 = "           ";*/
+
         });
         
-        if (scene.code_piece_add_state != 2) {
+        if (scene.code_piece_add_state != scene.dropzon_su - 1) {
             for (var i = 0; i < scene.item.length; i++){
                 this.code_piece[i].destroy();
             }
@@ -157,21 +206,24 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
 
     update(scene) {
         this.reset_button.x = scene.worldView.x + 980; // 리턴 버튼 플레이어 따라 이동
+        /*for (var i = 0; i < scene.item.length; i++){
+            this.code_piece[i].x = scene.worldView.x + 15;
+        }*/
     }
 
     // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
     updownwithinven(scene) {
         if(scene.drop_state_1 == 0){ // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
             if (this.code_piece.length > 0) {
-                if (scene.invenIn) { // 인벤창이 나와있을 때 코드도 나와 있도록
+                if (scene.invenIn) { // 인벤창이 나와있을 때 코드 보이도록
                     //console.log('there');
                     for (var i = 0; i < scene.item.length; i++){
-                        this.code_piece[i].y = 490;
+                        this.code_piece[i].setVisible(true);
                     }
-                } else { // 인벤창이 들어가있을 때 코드도 들어가 있도록
+                } else { // 인벤창이 들어가있을 때 코드 안 보이도록
                     //console.log('here');
                     for (var i = 0; i < scene.item.length; i++){
-                        this.code_piece[i].y = 600;
+                        this.code_piece[i].setVisible(false);
                     }
                 }
             }

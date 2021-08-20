@@ -157,8 +157,8 @@ export default class ZeroStage extends Phaser.Scene {
         /** 아이템 만들기 **/
         
         var item_text = 'printf';
-        this.itemPrintf = this.add.image(360,330,'item'); 
-        this.itemPrintf.setVisible(false);
+        this.itemicon = this.add.image(360,330,'item'); 
+        this.itemicon.setVisible(false);
         
 
         /** 아이템 얻었을 때 뜨는 이미지 **/
@@ -175,20 +175,30 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        this.code_zone_1 = "           "; //11칸
+        // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
+        /*this.code_zone_1 = "           "; //11칸
         this.code_zone_2 = "           ";
         this.code_zone_3 = "           ";
-        //this.drag_piece = ['printf', 'if', 'else'];
+        this.code_zone_4 = "           ";
+        this.code_zone_5 = "           ";
+        this.code_zone_6 = "           ";*/
+        
         // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
         this.code_piece_add_state = 0;
         // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
         this.drop_state_3 = 0;
+        this.drop_state_4 = 0;
+        this.drop_state_5 = 0;
+        this.drop_state_6 = 0;
         
-
         // zero_stage 씬의 전체코드
         this.contenttext = "" ;
+
+        // zero_stage의 앱에 들어가는 코드
+        this.app_code_text = "           " + "           " + " \n int main(){ \n " +  "           " + "(\"아-아- 마이크 테스트\"); \n }"
+
         stagenum=0;
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
         this.canexit=false; //문 밖으로 나갈 수 있는지 여부
@@ -215,9 +225,9 @@ export default class ZeroStage extends Phaser.Scene {
 
 
         /** 아이템 획득하는 경우 **/
-        if (this.beforeItemGet && this.player.player.x < this.itemPrintf.x+54 && this.itemPrintf.x < this.player.player.x&&this.cangetItem) {
+        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x&&this.cangetItem) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-            this.itemPrintf.setVisible(false);
+            this.itemicon.setVisible(false);
             this.itemget.setVisible(true);
             this.itemText.setVisible(true);
             this.tweens.add({
@@ -229,11 +239,12 @@ export default class ZeroStage extends Phaser.Scene {
                 onComplete: ()=>{this.invenPlus = true;}
             }, this);
         }
-        console.log(this.draganddrop_1);
+        
         if(this.invenPlus) {
             this.item[this.item.length] =  '#include';
             this.item[this.item.length] =  '<stdio.h>';
             this.item[this.item.length] =  'printf';
+            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             this.draganddrop_1 = new DragAndDrop(this, this.worldView.x + 805, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.worldView.x + 1000, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
             this.draganddrop_3 = new DragAndDrop(this, this.worldView.x + 805, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
@@ -263,6 +274,26 @@ export default class ZeroStage extends Phaser.Scene {
             if(this.keyX.isDown) {
                 this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
                 console.log('맵이동');
+
+
+                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+                this.commandbox.setVisible(false);
+                for(var i=0; i < this.apps.length; i++){
+                    this.apps[i].setVisible(false);
+                }
+
+                scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
+                    
+                code_on = false;
+                tutorial_on = false;
+                //text.setVisible(false);
+                code_text.setVisible(false);
+                this.compile_button.setVisible(false);
+                tutorial_text.setVisible(false);
+                this.back_button.setVisible(false);
+                state = 0;
+
+
                 this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
                 this.scene.run("first_stage");
             }
@@ -352,7 +383,7 @@ export default class ZeroStage extends Phaser.Scene {
                 onComplete: ()=>{
                     this.phoneicon.destroy();
                     this.command.entire_code_button.setVisible(true);
-                    this.itemPrintf.setVisible(true);
+                    this.itemicon.setVisible(true);
                     this.cangetItem=true;
                     this.player.player.setFlipX(false);
                     this.isintro=2;
@@ -409,6 +440,7 @@ export default class ZeroStage extends Phaser.Scene {
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
+        console.log("compiled");
         if(msg==scene.out){
             playerX = this.player.player.x;
             this.textBox = scene.add.image(playerX-70,170,'bubble').setOrigin(0,0);
@@ -423,6 +455,16 @@ export default class ZeroStage extends Phaser.Scene {
           this.player.playerPaused=true;    //플레이어 얼려두기
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "뭔가 잘못된 것 같아...", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
         scene.input.once('pointerdown', function() {
             if(msg==scene.out){
@@ -430,10 +472,36 @@ export default class ZeroStage extends Phaser.Scene {
                 this.script.setVisible(false);
                 //playerFace.setVisible(false);
                 scene.intro6();
+            }else{
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
             }
             
         }, this);
+    
     }
+
+    printerr(scene){
+        console.log("printerr");
+        var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "뭔가 잘못된 것 같아...", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        
+        scene.input.once('pointerdown', function() {
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+        }, this);
+    }
+
+
 
     intro6() {
         

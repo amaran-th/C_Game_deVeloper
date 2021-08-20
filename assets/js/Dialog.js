@@ -365,6 +365,36 @@ visible(visible) {
     ['visible',false],
     ['wait-time', 1],
   ]
+  stage1_7 = [
+    ['visible',true],
+    ['place', 340,10],
+    ['setFace', 0],
+    ['print', '야!!남의 폰에 이게 뭐하는 짓이야!!'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 1],
+  ]
+  stage1_8 = [
+    ['visible',true],
+    ['place', 340,10],
+    ['setFace', 0],
+    ['print', '오, 풀었네?? 제법인데?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '아니 그러니까 이게 뭐하는거냐고.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '뭐긴 너가 초짜인 것 같아서 도와주려고 그러지~!'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '지금 뭐라고 한거야?? 아니 그것보다 여긴 대체 뭐하는 곳인데?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '일단 진정해~~ 여긴 코딩지옥이야.'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 1],
+  ]
 
 
   stage2_1 = [
@@ -519,7 +549,6 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 3],
-    ['wait-click'],
     ['print', '세상에! 진짜 해냈구나! '],
     ['wait-click'],
     ['print', '고마워! 코드조각은 너 가져'],
@@ -527,6 +556,133 @@ visible(visible) {
 
     ['visible',false],
   ]
+
+  //독백
+  stage5_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '(뭐야 여기는?? 분위기가....도서관인가?)'],
+    ['wait-click'],
+    ['print', '(저기 사람이 있어....! 한 번 물어보자.)'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '저기...'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_3 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '...아, 도서관이 처음이신가요?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '네, 어떻게 아셨어요?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '그 복장을 보면 딱 봐도 알 수 있죠. 저도 처음 여기 왔을 땐 적응하기 힘들었어요.'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '다들 그렇구나...'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '도서관에서는 말 그대로 책을 빌릴 수도 있고, \'라이브러리\'를 빌릴 수도 있어요.'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '라이브러리요?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '라이브러리는 ~~~~한거에요. 프로그램을 짜는 걸 더욱 편리하게 해주죠.'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '오... 저도 빌릴 수 있나요?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '당신도 이제 코딩지옥의 주민이니, 회원증을 만드신다면 얼마든지요.'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '(여기 더 오래 있고싶은 생각은 없지만...일단 만들어두는 게 좋겠지.)'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '그럼 저도 회원증을 만들게요.'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '넵 잠시만요...성함이?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage5_4 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '여기 회원증입니다. 빌리고 싶은 책이나 라이브러리가 있으시면 회원증을 들고 저에게 와주시면 됩니다.'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '네, 감사합니다!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage5_5 = [
+    ['visible',true],
+    ['setFace', 1],
+    ['print', '* [회원증]을 얻었습니다. *'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage5_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '(여기서 빨리 탈출하려면, 일단 라이브러리인가하는 걸 좀 다뤄보는 게 좋겠어.)'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '(사서님한테 라이브러리를 빌려서 사용해보자.)'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '*Quest : 사서1에게 말을 걸어 라이브러리를 대여하자. *'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_7 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '안녕하세요. 라이브러리를 대여하려고 하는데요.'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '네. 현재 대여 가능하신 라이브러리는 이렇게 있는데, 어떤 걸 대여하시겠어요?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_8 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', ''],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', ''],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+
+  
+
 
   talk1 = [
     //['loadTextbox'],
