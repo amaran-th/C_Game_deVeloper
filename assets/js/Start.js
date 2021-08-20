@@ -141,6 +141,7 @@ class Start extends Phaser.Scene {
     
     /** 2번째 스테이지의 npc 로드 **/
       this.load.image("npc7", "./assets/images/npc/npc7.png");
+      this.load.image("npc6", "./assets/images/npc/npc6.png");
  
       this.load.spritesheet('npc_cold', './assets/images/stage2/npc_cold.png', {
         frameWidth: 65,
@@ -153,6 +154,19 @@ class Start extends Phaser.Scene {
         frameWidth: 214,
         frameHeight: 354,
       });
+      this.load.spritesheet("waterWball", "./assets/images/stage2/waterWball.png", {
+        frameWidth: 200,
+        frameHeight: 100,
+      });
+      this.load.spritesheet("water", "./assets/images/stage2/water.png", {
+        frameWidth: 200,
+        frameHeight: 100,
+      });
+      this.load.spritesheet("cry", "./assets/images/stage2/cry.png", {
+        frameWidth: 125,
+        frameHeight: 75,
+      });
+
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");
       this.load.image("stage3_tiles", "./assets/images/stage3/map_stage3.png");

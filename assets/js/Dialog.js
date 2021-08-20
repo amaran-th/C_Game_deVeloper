@@ -513,6 +513,76 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage2_5 = [
+    ['visible',true],
+    ['place', 300,10],
+    ['setFace', 1],
+    ['print', '할아버지의 부탁을 먼저 해결하자'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage2_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '저쪽에서 무슨 소리가 들렸는데?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage2_7 = [
+    ['visible',true],
+    ['place', 800,10],
+    ['setFace', 0],
+    ['print', '무슨 일이니 꼬마야?'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '(훌쩍훌쩍)'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '왜 울고있어?'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '공이.......'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage2_8 = [
+    ['visible',true],
+    ['place', 800,10],
+    ['setFace', 1],
+    ['print', '이런! 팔이 안 닿나 보구나!'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '내가 도와줄게!'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '......'],
+    ['wait-click'],
+    ['wait-time', 1],
+    ['setFace', 1],
+    ['print', '이럴수가.. 내 팔은 너무 짧아...'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', 'while문을 사용하면 꺼낼 수 있을텐데...'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '응? 뭔 문?'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '학원에선 아직 while문까지 진도를 나가지 않아서...'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '.....'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '(유치원생이 나보다 더 잘 아는군.)'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
 
   stage3_1 = [
     ['visible',true],
