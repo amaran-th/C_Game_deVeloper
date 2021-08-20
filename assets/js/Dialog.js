@@ -680,6 +680,70 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage6_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '여긴 어디지? 도서관?'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 3],
+    ['print', '어? 여긴 어떻게?'],
+    ['wait-click'],
+    ['print', '아무튼 잘됐다! 책 정리하는 것 좀 도와줘!'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_3 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 5],
+    ['print', '우당당탕?'],
+    ['wait-click'],
+    ['setFace', 3],
+    ['print', '으아아악 이게 뭐야!'],
+    ['wait-click'],
+    ['print', '다 어지럽혀졌잖아!ㅜㅜ'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_4 = [
+    ['visible',true],
+    ['setFace', 0],
+    ['print', '어? 근데 이건 무슨 책이에요....'],
+    ['wait-click'],
+    ['setFace', 3],
+    ['print', '이건 배열에 관한건데.. 블라블라 대사 모르겠음.. 어떻게 좀..'],
+    ['wait-click'],
+    ['print', '아하하하하하'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_5 = [
+    ['visible',true],
+    ['setFace', 3],
+    ['setFace', 3],
+    ['print', '배열 설명...'],
+    ['wait-click'],
+    ['print', '아하하하하하'],
+    ['wait-click'],
+    ['print', '그럼 이제 퀴즈를 풀어보자!'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
 
   
 
