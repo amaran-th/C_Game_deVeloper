@@ -3,7 +3,6 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
-import Select from "../Select.js";
 
 
 export default class SixthStage extends Phaser.Scene {   
@@ -121,14 +120,33 @@ export default class SixthStage extends Phaser.Scene {
 
         stagenum = 6;
 
-
-        var msgArr= ['msg1aaaaaaaaaaaaaaaaaaaaaaaaaasdasdsadadas','msg2','mgs3'];
+        this.finAnswer = { //주소
+            answer: 0 //값
+        };
+        var msgArr= ['msg1aaaaaaaaaaaaaaaaaaaaaaaaaasdasdsadadas','msg2','mgs3']; //msgArr.length = 3
         //var selecAnswer = new Select();
-        this.scene.run('selection',{ msgArr: msgArr, num: msgArr.length });
+        this.scene.run('selection',{ msgArr: msgArr, num: msgArr.length, finAnswer: this.finAnswer });
+        //정답(1 ~ maxnum)은 this.finAnswer.andswer에 들어감
         this.player.playerPaused = true;
     }
 
     update() {
+
+        if(!this.scene.isVisible('selection' && this.finAnswer.answer)){ //selection 화면이 꺼졌다면
+            switch(this.finAnswer.answer) {
+                case 1: console.log('1의 선택지로 대답 했을때');
+                    this.finAnswer.answer = 0;
+                    return;
+                case 2: console.log('2의 선택지로 대답 했을때');
+                    this.finAnswer.answer = 0;
+                    return;
+                case 3: console.log('3의 선택지로 대답 했을때');
+                    this.finAnswer.answer = 0;
+                    return;
+            }
+            
+        }
+
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
@@ -144,7 +162,7 @@ export default class SixthStage extends Phaser.Scene {
 
 
         /** 아이템 획득하는 경우 **/
-        console.log(this.itemicon.x + "<" + this.player.player.x +'<' +(this.itemicon.x+54));
+        //console.log(this.itemicon.x + "<" + this.player.player.x +'<' +(this.itemicon.x+54));
         if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
             this.itemicon.setVisible(false);
