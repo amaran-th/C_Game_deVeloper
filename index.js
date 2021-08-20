@@ -68,7 +68,10 @@ app.post('/form_receive',function(req,res) { //웹컴파일러
         console.log('stdout: '+data);
     });
     compile.stderr.on('data',function(data){
+        console.log("ERROR!!!");
         console.log(String(data));
+        var responseData ={'result': 'compile_error'};
+        res.json(responseData);
     });
     compile.on('close',function(data){
         if(data ==0) {
@@ -80,6 +83,8 @@ app.post('/form_receive',function(req,res) { //웹컴파일러
             });
             run.stderr.on('data', function (output) {
                 console.log(String(output));
+                console.log('error!!!');
+                var responseData ={'result': 'runtime_error'};
                 res.json(responseData);
             });
             run.on('close', function (output) {

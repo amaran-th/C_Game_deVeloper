@@ -79,6 +79,12 @@ export default class FirstStage extends Phaser.Scene {
         });
         this.devil = this.physics.add.sprite(600 ,430,'npc_devil');
         this.devil.setFrame(1);
+
+        //플레이어 위 talktext 생성해두기(talk with librarian)
+        this.talktext = this.add.text(1100, 300, 'Press X to have a talk', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
         
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -98,24 +104,36 @@ export default class FirstStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "first_stage");
-        /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-        this.command.commandbox.setVisible(false);
-        for(var i=0; i < this.command.apps.length; i++){
-            this.command.apps[i].visible == this.command.commandbox.visible;
-        }
-        this.command.back_button.visible == this.command.commandbox.visible;
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
-        /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
+        /*** 미니맵버튼 활성화  //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
         this.minimap_button.setInteractive();
         this.minimap_button.on("pointerdown",function(){
+            // 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록
+            this.commandbox.setVisible(false);
+            for(var i=0; i < this.apps.length; i++){
+                this.apps[i].setVisible(false);
+            }
+
+            scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
+                
+            code_on = false;
+            tutorial_on = false;
+            //text.setVisible(false);
+            code_text.setVisible(false);
+            this.compile_button.setVisible(false);
+            tutorial_text.setVisible(false);
+            this.back_button.setVisible(false);
+            state = 0;
+
+
             this.scene.sleep('first_stage'); 
             this.scene.run("minimap");
         },this);
-
+***/
         stagenum = 1;
 
         /** 초반 대사 **/
@@ -124,6 +142,15 @@ export default class FirstStage extends Phaser.Scene {
         this.stage1_1();
 
         this.quiz_running = false;
+
+        //npc에게 말을 걸 수 있는지 여부
+        this.cantalk=false;
+
+        //npc에게 말을 건 횟수(순차적 실행을 위함)
+        this.talk_num=0
+        
+        //이벤트 실행을 위한 플래그 변수
+        this.function=0;
     }
 
     update() {
@@ -163,6 +190,48 @@ export default class FirstStage extends Phaser.Scene {
             //this.intro2();
             this.invenPlus = false;
         }*/
+
+        //퀴즈 해결 후 악마에게 말을 걸 때
+        if(this.cantalk&&this.player.player.x<1100&&this.player.player.x>1000){
+            this.talktext.setVisible(true);
+            if(this.keyX.isDown&&this.talk_num==0) {
+                if(this.cantalk){
+                    //devil에게 처음 말을 걸었을 때
+                    console.log('first talk with devil');
+                    this.player.player.setFlipX(false);
+                    this.cantalk=false;
+                    this.function=1;
+                    this.player.playerPaused = true;
+                }
+            }else if(this.keyX.isDown&&this.talknum==1){
+                //devil에게 말을 건 이후에 또 말을 걸 때
+                if(this.cantalk){
+                    console.log('second talk with devil');
+                    this.player.player.setFlipX(false);
+                    this.cantalk=false;
+                    this.function=6;
+                    this.player.playerPaused = true;
+                }
+            }
+        }else this.talktext.setVisible(false);
+
+
+        if(this.function==1){
+            this.stage1_7();
+            this.function=0;
+        }else if(this.function==2){
+            this.stage1_8();
+            this.function=0;
+        }else if(this.function==3){
+            this.stage1_9();
+            this.function=0;
+        }else if(this.function==4){
+            this.stage1_10();
+            this.function=0;
+        }else if(this.function==5){
+            this.stage1_11();
+            this.function=0;
+        }
 
 
         if(this.key2.isDown) {
@@ -277,7 +346,11 @@ export default class FirstStage extends Phaser.Scene {
         .load(this.dialog.stage1_5, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.devil.destroy();
+            this.devil.setVelocityX(0);
+            this.devil.x=1100;
+            this.devil.anims.stop();
+            this.devil.setFrame(1);
+            
             console.log('대화 끝');
             this.click = this.add.text(500, 400, 'Click!', { font: 'Courier', fill: '#ffffff', fontSize: '100px' })
             this.phoneLocked.once('pointerdown', function() {
@@ -304,19 +377,55 @@ export default class FirstStage extends Phaser.Scene {
             seq.on('complete', () => {      
                 this.tweens.add({
                     targets: phoneUnlocked,
-                    x: 1100, //위치 이동
+                    x: 1200, //위치 이동
                     duration: 500,
                     ease: 'Power1',
                     repeat: 0,
                     onComplete: ()=>{
                         this.command.entire_code_button.setVisible(true);//휴대폰 생김
                         phoneUnlocked.destroy();
+                        this.player.playerPaused = false;
+                        this.cantalk=true;
+                        this.devil.play('devil_touch_phone',true);
                     }
                 }, this);
             }); 
         }, [], this);
+    }
+    stage1_7(){
+        this.exclamMark.x=1200;
 
-       
-        
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_7, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.exclamMark.setVisible(true);
+            this.exclamMark.play('exclam');
+            this.time.delayedCall( 1000, () => {
+                this.devil.anims.stop();
+                this.devil.setFrame(1);
+                this.devil.setFlipX(true);
+                this.function=2;
+            }, [] , this);
+
+        });
+    }
+
+    stage1_8(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_8, this.dialog)
+        .start();
+        seq.on('complete', () => {
+                this.function=3;
+            
+
+        });
+    }
+    stage1_9(){
+
     }
 }
