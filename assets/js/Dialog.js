@@ -513,6 +513,15 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage2_5 = [
+    ['visible',true],
+    ['place', 300,10],
+    ['setFace', 1],
+    ['print', '할아버지의 부탁을 먼저 해결하자'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
 
   stage3_1 = [
     ['visible',true],

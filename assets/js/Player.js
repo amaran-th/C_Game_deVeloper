@@ -13,7 +13,7 @@ export default class Player extends Phaser.Scene {
         this.player = scene.physics.add.sprite(x ,y, 'player', 0); // x,y좌표, source
 
         this.cursorsKeys = scene.input.keyboard.createCursorKeys();
-        this.player.setCollideWorldBounds(true); //make player don't escape the screen
+        //this.player.setCollideWorldBounds(true); //make player don't escape the screen
        
         console.log("construction of Player");
 

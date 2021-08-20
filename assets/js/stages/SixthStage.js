@@ -137,16 +137,6 @@ export default class SixthStage extends Phaser.Scene {
 
         stagenum = 6;
 
-        this.finAnswer = { //주소
-            answer: 0 //값
-        };
-        var msgArr= ['msg1aaaaaaaaaaaaaaaaaaaaaaaaaasdasdsadadas','msg2','mgs3']; //msgArr.length = 3
-        //var selecAnswer = new Select();
-        this.scene.run('selection',{ msgArr: msgArr, num: msgArr.length, finAnswer: this.finAnswer });
-        //정답(1 ~ maxnum)은 this.finAnswer.andswer에 들어감
-
-        this.player.playerPaused = true;
-
         /** 초반 대사 **/
         this.cameras.main.fadeIn(1000,0,0,0);
         this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
@@ -267,6 +257,18 @@ export default class SixthStage extends Phaser.Scene {
                 }
             },this);
         }
+
+
+                /** 임시로 만들어둔 선택지 예시 **/
+
+        this.finAnswer = { //주소
+            answer: 0 //값
+        };
+        var msgArr= ['msg1aaaaaaaaaaaaaaaaaaaaaaaaaasdasdsadadas','msg2','mgs3']; //msgArr.length = 3
+        this.scene.run('selection',{ msgArr: msgArr, num: msgArr.length, finAnswer: this.finAnswer });
+        //정답(1 ~ maxnum)은 this.finAnswer.andswer에 들어감
+        
+        this.player.playerPaused = true;
     }
 
     update() {
@@ -283,7 +285,6 @@ export default class SixthStage extends Phaser.Scene {
                     this.finAnswer.answer = 0;
                     return;
             }
-            
         }
 
         this.player.update();

@@ -202,8 +202,8 @@ export default class SecondStage extends Phaser.Scene {
 
         //초반 대사
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage2_1();
+        //this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        //this.stage2_1();
 
 
         /** 변수들 드래그 **/
@@ -256,6 +256,8 @@ export default class SecondStage extends Phaser.Scene {
             this.text_temp.setVisible(false)
         }, this);
 
+        this.mission1Complete = false;
+        this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
 
     }
 
@@ -355,6 +357,29 @@ export default class SecondStage extends Phaser.Scene {
             this.scene.run("sixth_stage");
         }
 
+        
+        /** 미션1 안끝났는데 넘어가려고 할 때 **/
+        /*
+        if(!this.mission1Complete && this.player.player.x >= 1100) {
+            if(this.cantGoFarther) {
+                this.cantGoFarther = false;
+                this.player.playerPaused = true;
+                var seq = this.plugins.get('rexsequenceplugin').add(); 
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.stage2_5, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                }, [], this); 
+            }   
+         }
+        else this.cantGoFarther = true;
+        */
+
+        if(this.mission1Complete) {
+            
+        }
     }
 
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
@@ -473,7 +498,7 @@ export default class SecondStage extends Phaser.Scene {
         .load(this.dialog.stage2_3_2, this.dialog)
         .start();
         seq.on('complete', () => {
-            
+            this.mission1Complete = true;
             //this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });     
     }
