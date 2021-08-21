@@ -292,23 +292,9 @@ export default class ZeroStage extends Phaser.Scene {
                 this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
                 console.log('맵이동');
 
-
+                
                 /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-           /*     this.commandbox.setVisible(false);
-                for(var i=0; i < this.apps.length; i++){
-                    this.apps[i].setVisible(false);
-                }
-
-                scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
-                    
-                code_on = false;
-                tutorial_on = false;
-                //text.setVisible(false);
-                code_text.setVisible(false);
-                this.compile_button.setVisible(false);
-                tutorial_text.setVisible(false);
-                this.back_button.setVisible(false);
-                state = 0;*/
+                this.command.remove_phone(this);
 
 
                 this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)

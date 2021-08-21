@@ -100,6 +100,8 @@ export default class Command extends Phaser.GameObjects.Image {
                         this.back_button.setVisible(false);
                         state = 0;
 
+                        
+
 
                         scene.scene.sleep(name);
                         scene.scene.run("minimap");
@@ -276,6 +278,24 @@ export default class Command extends Phaser.GameObjects.Image {
                 state = 0;
             });
         }
+    }
+
+    remove_phone(scene){
+
+        /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+        this.commandbox.setVisible(false);
+        for(var i=0; i < this.apps.length; i++){
+            this.apps[i].setVisible(false);
+        }
+        scene.codeapp_onoff_state = 0; // 코드앱이 켜지고 꺼짐에 따라 드랍존도 생기고 없어지고 하기위한 상태변수
+        code_on = false;
+        tutorial_on = false;
+        code_text.setVisible(false);
+        this.compile_button.setVisible(false);
+        tutorial_text.setVisible(false);
+        this.back_button.setVisible(false);
+        state = 0;
+
     }
     /*** 명령창 슬라이드 함수 ***/
     //js 파일 분리 후 method?들 적용 안 돼서 에러 뜸 (어차피 지금 slide기능 제대로 작동 안되니 나중에 추가기능 넣을때 마저 수정해보겠음)
