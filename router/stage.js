@@ -29,4 +29,19 @@ router.route('/')
     }
 });
 
+router.route('/check') //세션의 stage값 가져오는거. 위에껄로 해도 상관없는데
+//위에는 db갔다가 왔다갔다 하기땜에 stage값만 확인할거면 세션값 가져오자!
+    .post(async (req, res, next) => {
+
+    if(req.session.is_logined){
+
+        var responseData = {'is_logined':true, 'stage': req.session.stage};
+        
+        res.json(responseData);
+    }
+    else{
+        var responseData={'is_logined':false};
+        res.json(responseData);
+    }
+});
 module.exports = router;

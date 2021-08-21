@@ -4,7 +4,7 @@ import Dialog from "./Dialog.js";
 import Command from "./Command.js";
 import DragAndDrop from "./DragAndDrop.js";
 
-
+var stage = 0;
 const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
@@ -15,6 +15,18 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+        
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("========홈뇨뇨 현재 스테이지는 : " + result.stage)
+        stage = result.stage;
+        });
+
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
         /*
         /*** FROM Minicode.js***/
@@ -49,6 +61,7 @@ export default class ZeroStage extends Phaser.Scene {
     }
     
     create () {
+        console.log("야 이 자식아!:",stage);
 
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
@@ -75,10 +88,19 @@ export default class ZeroStage extends Phaser.Scene {
         });
     
         //휴대폰, 서랍장 이미지 위치. 휴대폰 말풍선 클릭하면 휴대폰이미지 띄어주게 할것임.
-        this.phone = this.add.sprite( 700,210,'phone',0).setOrigin(0,0);
-        this.table = this.add.image(680,300,"table").setOrigin(0,0);
-        this.phone.play('phone_icon');
-        this.myphone=this.add.image(710,295,"myphone").setOrigin(0,0);
+        this.table = this.add.image(680,300,"table").setOrigin(0,0);//table 맵으로 만들기!!!!
+
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22
+        if (stage==0){ //stage가 1일때만 서랍위 폰, 폰 말풍선 띄우기
+            this.phone = this.add.sprite( 700,210,'phone',0).setOrigin(0,0);
+            this.phone.play('phone_icon');
+            this.myphone=this.add.image(710,295,"myphone").setOrigin(0,0);
+
+        }
+
+        //this.phone = this.add.sprite( 700,210,'phone',0).setOrigin(0,0);
+        //this.phone.play('phone_icon');
+        //this.myphone=this.add.image(710,295,"myphone").setOrigin(0,0);
 
 
 
@@ -138,15 +160,10 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 초반 인트로 대사 출력 **/
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //플레이어 얼려두기
-        var seq = this.plugins.get('rexsequenceplugin').add();
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.intro, this.dialog)
-        .start();
-        seq.on('complete', () => {
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
-        });
+        if (stage==0){
+            this.intro();
+        }
+        
 
         
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
@@ -201,7 +218,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         stagenum=0;
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
-        this.canexit=false; //문 밖으로 나갈 수 있는지 여부
+        //this.canexit=false; //문 밖으로 나갈 수 있는지 여부
         this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
 
         this.out=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\"아-아- 마이크 테스트\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
@@ -266,7 +283,7 @@ export default class ZeroStage extends Phaser.Scene {
         */
 
         /* 플레이어가 문 앞에 서면 작동하도록 함 */
-        if(this.player.player.x < 175 && 100 < this.player.player.x && this.canexit ) {
+        if(this.player.player.x < 175 && 100 < this.player.player.x && stage>0 ) {
             this.pressX.x = this.player.player.x-50;
             this.pressX.y = this.player.player.y-100;
             this.pressX.setVisible(true);
@@ -277,7 +294,7 @@ export default class ZeroStage extends Phaser.Scene {
 
 
                 /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-                this.commandbox.setVisible(false);
+           /*     this.commandbox.setVisible(false);
                 for(var i=0; i < this.apps.length; i++){
                     this.apps[i].setVisible(false);
                 }
@@ -291,7 +308,7 @@ export default class ZeroStage extends Phaser.Scene {
                 this.compile_button.setVisible(false);
                 tutorial_text.setVisible(false);
                 this.back_button.setVisible(false);
-                state = 0;
+                state = 0;*/
 
 
                 this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
@@ -302,8 +319,8 @@ export default class ZeroStage extends Phaser.Scene {
 
 
         
-        //휴대폰 앞에서 x키를 누를 시
-        if(this.player.player.x < 775 && 700 < this.player.player.x ) {
+        //휴대폰 앞에서 x키를 누를 시 stage0일때만 할거임. 1,2,3 ~ 일경우 필요없음 
+        if(this.player.player.x < 775 && 700 < this.player.player.x && stage==0) {
             this.getphone.x = this.player.player.x-50;
             this.getphone.y = this.player.player.y-100;
             this.getphone.setVisible(true);
@@ -363,6 +380,17 @@ export default class ZeroStage extends Phaser.Scene {
             this.scene.run("third_stage");
         }
 
+    }
+    intro() {
+        this.player.playerPaused = true; //플레이어 얼려두기
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+        });
     }
 
     intro1() {
@@ -504,8 +532,20 @@ export default class ZeroStage extends Phaser.Scene {
 
 
     intro6() {
+        /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
         
-        this.canexit=true;
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        
+            console.log("========stage 추가된다!: " + result.stage)
+            stage = result.stage;          
+        });
+        
+        //this.canexit=true;
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
