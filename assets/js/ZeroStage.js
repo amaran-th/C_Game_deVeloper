@@ -95,7 +95,6 @@ export default class ZeroStage extends Phaser.Scene {
             this.phone = this.add.sprite( 700,210,'phone',0).setOrigin(0,0);
             this.phone.play('phone_icon');
             this.myphone=this.add.image(710,295,"myphone").setOrigin(0,0);
-
         }
 
         //this.phone = this.add.sprite( 700,210,'phone',0).setOrigin(0,0);
@@ -139,7 +138,7 @@ export default class ZeroStage extends Phaser.Scene {
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "zero_stage");
 
-        this.command.entire_code_button.setVisible(false);  //처음 시작시 휴대전화 아이콘이 보이지 않게 설정
+        //this.command.entire_code_button.setVisible(false);  //처음 시작시 휴대전화 아이콘이 보이지 않게 설정
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
@@ -162,6 +161,10 @@ export default class ZeroStage extends Phaser.Scene {
         this.cameras.main.fadeIn(1000,0,0,0);
         if (stage==0){
             this.intro();
+            this.command.entire_code_button.setVisible(false);
+        }
+        else {
+            this.command.entire_code_button.setVisible(true);
         }
         
 

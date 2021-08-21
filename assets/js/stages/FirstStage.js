@@ -2,13 +2,24 @@ import Player from "../Player.js";
 import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
-
+var stage;
 export default class FirstStage extends Phaser.Scene {   
     constructor(){ 
         super("first_stage"); //identifier for the scene
     }
 
     preload() {
+        /***  stage값 가져오기 ***/
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+        
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("========홈뇨뇨 현재 스테이지는 : " + result.stage)
+        stage = result.stage;
+        });
         this.load.tilemapTiledJSON("stage1", "./assets/stage1.json");
     }
     
@@ -86,6 +97,10 @@ export default class FirstStage extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
         
+        this.talktext2 = this.add.text(500, 300, 'Press X to have a talk', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -138,19 +153,23 @@ export default class FirstStage extends Phaser.Scene {
 
         /** 초반 대사 **/
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage1_1();
+        if (stage==1){
+            this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage1_1();
 
-        this.quiz_running = false;
+            this.quiz_running = false;
 
-        //npc에게 말을 걸 수 있는지 여부
-        this.cantalk=false;
+            //npc에게 말을 걸 수 있는지 여부
+            this.cantalk=false;
 
-        //npc에게 말을 건 횟수(순차적 실행을 위함)
-        this.talk_num=0
-        
-        //이벤트 실행을 위한 플래그 변수
-        this.function=0;
+            //npc에게 말을 건 횟수(순차적 실행을 위함)
+            this.talk_num=0
+            
+            //이벤트 실행을 위한 플래그 변수
+            this.function=0;
+        }
+
+            
     }
 
     update() {
@@ -190,6 +209,14 @@ export default class FirstStage extends Phaser.Scene {
             //this.intro2();
             this.invenPlus = false;
         }*/
+        //stage1 이상일때, 퀴즈 한번 더 하기위해서
+        if (stage>1 && this.player.player.x<650&&this.player.player.x>550){
+            this.talktext2.setVisible(true);
+            if(this.keyX.isDown){
+                this.stage1_x();
+            }
+        }
+        else{this.talktext2.setVisible(false);}
 
         //퀴즈 해결 후 악마에게 말을 걸 때
         if(this.cantalk&&this.player.player.x<1100&&this.player.player.x>1000){
@@ -421,11 +448,34 @@ export default class FirstStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
                 this.function=3;
-            
+                /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/stage', true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send();
+                
+                xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
+                
+                    console.log("========stage 추가된다!: " + result.stage)
+                    stage = result.stage;          
+                });
+
 
         });
     }
     stage1_9(){
 
+    }
+
+    stage1_x() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_x, this.dialog)
+        .start();
+        seq.on('complete', () => {
+           
+        });  
     }
 }
