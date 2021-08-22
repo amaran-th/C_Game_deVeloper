@@ -356,12 +356,21 @@ export default class SecondStage extends Phaser.Scene {
             this.item[this.item.length] =  'printf';  
             this.item[this.item.length] =  'if';   
             this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-            this.draganddrop_1 = new DragAndDrop(this, 805, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 895, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 828, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            
+            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 895;
+            this.dropzone3_x = 828;
+
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
 
             this.invenPlus = false;
         }
+
+        if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
+        if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
+        if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
 
         if(this.key1.isDown) {
             console.log('맵이동');

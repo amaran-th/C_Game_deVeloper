@@ -91,7 +91,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             //console.log('scene.drop_state_1 > '+ scene.drop_state_1);
             //console.log('scene.drop_state_2 > '+ scene.drop_state_2);
             //console.log('scene.drop_state_3 > '+ scene.drop_state_3);
-            switch (this.dropzone) {
+            switch (this.dropzone) { // (this.name으로 수정해도 될듯!)
                 case 1:
                     if (!dropped || scene.drop_state_1) {
                         gameObject.x = gameObject.input.dragStartX;
@@ -201,14 +201,20 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             //console.log('code piece destroyed');
                 
             scene.code_piece_add_state += 1;
-        }        
+        }   
     } 
 
     update(scene) {
         this.reset_button.x = scene.worldView.x + 980; // 리턴 버튼 플레이어 따라 이동
-        /*for (var i = 0; i < scene.item.length; i++){
-            this.code_piece[i].x = scene.worldView.x + 15;
-        }*/
+        
+        if(scene.draganddrop_1!=undefined) scene.draganddrop_1.x = scene.worldView.x+scene.dropzone1_x; // 드랍존 플레이어 따라 이동
+        if(scene.draganddrop_2!=undefined) scene.draganddrop_2.x = scene.worldView.x+scene.dropzone2_x;
+        if(scene.draganddrop_3!=undefined) scene.draganddrop_3.x = scene.worldView.x+scene.dropzone3_x;
+        if(scene.draganddrop_4!=undefined) scene.draganddrop_4.x = scene.worldView.x+scene.dropzone4_x;
+        if(scene.draganddrop_5!=undefined) scene.draganddrop_5.x = scene.worldView.x+scene.dropzone5_x;
+        if(scene.draganddrop_6!=undefined) scene.draganddrop_6.x = scene.worldView.x+scene.dropzone6_x;
+        this.graphics.x = scene.worldView.x; // 드랍존 틀 플레이어 따라 이동
+        
     }
 
     // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기

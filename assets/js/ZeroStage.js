@@ -245,9 +245,14 @@ export default class ZeroStage extends Phaser.Scene {
             this.item[this.item.length] =  '<stdio.h>';
             this.item[this.item.length] =  'printf';
             this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-            this.draganddrop_1 = new DragAndDrop(this, this.worldView.x + 805, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.worldView.x + 1000, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.worldView.x + 805, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
+
+            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 1000;
+            this.dropzone3_x = 805;
+
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
             this.intro4();
             this.invenPlus = false;
         }
