@@ -3,6 +3,7 @@ var stagenum=0;
 var isErr;
 var username='AAA';
 
+//데이터베이스에 접속해서 닉네임 불러와서 username 변수에 저장
 var xhr = new XMLHttpRequest();
 xhr.open('POST', '/get_session', true);
 xhr.setRequestHeader('Content-type', 'application/json');
@@ -140,6 +141,7 @@ class Start extends Phaser.Scene {
     
     /** 2번째 스테이지의 npc 로드 **/
       this.load.image("npc7", "./assets/images/npc/npc7.png");
+      this.load.image("npc6", "./assets/images/npc/npc6.png");
  
       this.load.spritesheet('npc_cold', './assets/images/stage2/npc_cold.png', {
         frameWidth: 65,
@@ -152,6 +154,19 @@ class Start extends Phaser.Scene {
         frameWidth: 214,
         frameHeight: 354,
       });
+      this.load.spritesheet("waterWball", "./assets/images/stage2/waterWball.png", {
+        frameWidth: 200,
+        frameHeight: 100,
+      });
+      this.load.spritesheet("water", "./assets/images/stage2/water.png", {
+        frameWidth: 200,
+        frameHeight: 100,
+      });
+      this.load.spritesheet("cry", "./assets/images/stage2/cry.png", {
+        frameWidth: 125,
+        frameHeight: 75,
+      });
+
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");
       this.load.image("stage3_tiles", "./assets/images/stage3/map_stage3.png");
@@ -173,7 +188,25 @@ class Start extends Phaser.Scene {
 
       //5번째 스테이지의 회원증 이미지 로드
       this.load.image("library_membership", "./assets/images/stage5/membership.png");
-
+      
+      /** 6번째 스테이지 이미지 로드 **/
+      this.load.image("page1", "./assets/images/stage6/bookPage1.png");
+      this.load.image("page2", "./assets/images/stage6/bookPage2.png");
+      this.load.image("page3", "./assets/images/stage6/bookPage3.png");
+      this.load.image("books", "./assets/images/stage6/books.png");
+      this.load.image("bookswhy", "./assets/images/stage6/bookswhy.png");
+      this.load.image("sadari", "./assets/images/stage6/sadari.png");
+      this.load.image("indexQuiz", "./assets/images/stage6/indexQuiz.png");
+      this.load.image("quiz11", "./assets/images/stage6/quiz11.png");
+      this.load.image("quiz12", "./assets/images/stage6/quiz12.png");
+      this.load.image("quiz13", "./assets/images/stage6/quiz13.png");
+      this.load.image("quiz14", "./assets/images/stage6/quiz14.png");
+      this.load.image("quiz15", "./assets/images/stage6/quiz15.png");
+      this.load.image("quiz21", "./assets/images/stage6/quiz21.png");
+      this.load.image("quiz22", "./assets/images/stage6/quiz22.png");
+      this.load.image("quiz23", "./assets/images/stage6/quiz23.png");
+      this.load.image("quiz24", "./assets/images/stage6/quiz24.png");
+      this.load.image("quiz25", "./assets/images/stage6/quiz25.png");
 
 
     } 
@@ -227,7 +260,7 @@ class Start extends Phaser.Scene {
         this.isnewgame=true;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("fifth_stage");
+        this.scene.start("minimap");
       }, this);
 
     }

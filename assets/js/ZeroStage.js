@@ -274,6 +274,12 @@ export default class ZeroStage extends Phaser.Scene {
             if(this.keyX.isDown) {
                 this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
                 console.log('맵이동');
+
+                
+                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+                this.command.remove_phone(this);
+
+
                 this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
                 this.scene.run("first_stage");
             }
@@ -420,6 +426,7 @@ export default class ZeroStage extends Phaser.Scene {
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
+        console.log("compiled");
         if(msg==scene.out){
             playerX = this.player.player.x;
             this.textBox = scene.add.image(playerX-70,170,'bubble').setOrigin(0,0);
@@ -434,6 +441,16 @@ export default class ZeroStage extends Phaser.Scene {
           this.player.playerPaused=true;    //플레이어 얼려두기
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "뭔가 잘못된 것 같아...", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
         scene.input.once('pointerdown', function() {
             if(msg==scene.out){
@@ -441,10 +458,36 @@ export default class ZeroStage extends Phaser.Scene {
                 this.script.setVisible(false);
                 //playerFace.setVisible(false);
                 scene.intro6();
+            }else{
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
             }
             
         }, this);
+    
     }
+
+    printerr(scene){
+        console.log("printerr");
+        var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "뭔가 잘못된 것 같아...", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        
+        scene.input.once('pointerdown', function() {
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+        }, this);
+    }
+
+
 
     intro6() {
         

@@ -107,13 +107,14 @@ export default class FifthStage extends Phaser.Scene {
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
-        /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
+        /*** 미니맵버튼 활성화/ //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
         this.minimap_button.setInteractive();
         this.minimap_button.on("pointerdown",function(){
             this.scene.sleep('fifth_stage'); 
             this.scene.run("minimap");
         },this);
+        */
 
         //플레이어 위 talktext 생성해두기(talk with librarian)
         this.talktext = this.add.text(600, 300, 'Press X to have a talk', {
