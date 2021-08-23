@@ -12,7 +12,7 @@ export default class FifthStage extends Phaser.Scene {
 
     preload() {
 
-        this.load.image("stage5_tiles", "./assets/images/test.png");
+        this.load.image("stage5_tiles", "./assets/images/stage5/map_stage5.png");
         this.load.tilemapTiledJSON("fifth_stage", "./assets/fifth_stage.json");
     
     }
@@ -34,9 +34,9 @@ export default class FifthStage extends Phaser.Scene {
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "fifth_stage" });
         
-        const tileset = map.addTilesetImage("test", "stage5_tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("map_stage5", "stage5_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
-        
+        this.deco = map.createLayer("deco", tileset, 0, 0);
         //도서관의 배경 불빛 애니메이션 생성
         this.anims.create({
             key: "light",
@@ -45,11 +45,13 @@ export default class FifthStage extends Phaser.Scene {
             repeat: -1
         });
 
-        this.background1 = this.add.sprite( 400, 400, 'librarylight', 0).setOrigin(0,1);
-        this.background2 = this.add.sprite( 800, 400, 'librarylight', 0).setOrigin(0,1);
+        this.background1 = this.add.sprite( 600, 200, 'librarylight', 0).setOrigin(0,1);
+        this.background2 = this.add.sprite( 600, 400, 'librarylight', 0).setOrigin(0,1);
+        this.background3 = this.add.sprite( 100, 250, 'librarylight', 0).setOrigin(0,1);
 
         this.background1.play('light',true);
         this.background2.play('light',true);
+        this.background3.play('light',true);
 
         //desk 이미지 add
         this.add.image(400,500,"library_desk").setOrigin(0,1);
@@ -72,7 +74,7 @@ export default class FifthStage extends Phaser.Scene {
             frameRate: 7,
             repeat: -1,
         });
-        this.librarian1 = this.add.sprite(600 ,350,'librarian1');
+        this.librarian1 = this.add.sprite(595 ,375,'librarian1');
         this.librarian1.play('working_librarian1',true);
 
         //회원증 이미지
