@@ -665,7 +665,43 @@ export default class SecondStage extends Phaser.Scene {
         .load(this.dialog.stage2_8, this.dialog)
         .start();
         seq.on('complete', () => {
-            //this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage2_9();
         });     
     }
+
+    
+    stage2_9(){
+        var itemget = this.add.image(700,0,'itemGet').setOrigin(0.0);
+        var itemText = this.add.text(1200,270,'While',{
+        font: "30px Arial Black", fill: "#000000" 
+        }).setOrigin(0,0);
+        this.time.delayedCall( 1000, () => { 
+            this.tweens.add({
+                targets: [itemget, itemText],
+                alpha: 0,
+                duration: 2000,
+                ease: 'Linear',
+                repeat: 0,
+                onComplete: ()=>{
+                    this.invenPlus2 = true;
+                    itemget.destroy();
+                    itemText.destroy();
+                }
+            }, this);
+        }, [] , this);
+       
+        if(this.invenPlus2) {
+            //this.item[this.item.length] =  'printf';  
+            //this.item[this.item.length] =  'if';   
+            this.item[this.item.length] =  'while';  
+            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.draganddrop_1 = new DragAndDrop(this, 805, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, 895, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, 828, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
+
+            this.invenPlus2 = undefined;
+        }
+
+    }
 }
+
