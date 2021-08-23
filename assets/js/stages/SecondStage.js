@@ -279,8 +279,8 @@ export default class SecondStage extends Phaser.Scene {
         
         this.temperature.on('pointerover', function(){
             this.text_temp.setVisible(true);
-            this.text_temp.x = this.input.mousePointer.x-10;
-            this.text_temp.y = this.input.mousePointer.y-10;
+            this.text_temp.x = this.input.mousePointer.x-20;
+            this.text_temp.y = this.input.mousePointer.y-20;
         }, this);
         this.temperature.on('pointerout', function(){
             this.text_temp.setVisible(false)
@@ -291,6 +291,7 @@ export default class SecondStage extends Phaser.Scene {
         this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
         this.firstTalk = true; //플레이어가 유치원생과 한 번만 대화할 수 있도록
 
+        this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
     }
 
     update() {
@@ -299,20 +300,28 @@ export default class SecondStage extends Phaser.Scene {
         this.var_cage.y = this.text_temp.y;
         this.var_cage.visible = this.text_temp.visible;
 
-        this.contenttext = 
-        "1_#include <stdio.h>\n" + 
-        "int main(){\n\n" +
-        "   {int temp = 45;} \n\n   " +
-        this.code_zone_1 + "(" + this.code_zone_2 + ">30){\n      " + //if(Temp>30)
-        this.code_zone_3 + "(\"더워요\");\n"  +//printf("더워요");
-        "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
+        if(this.mission1) {
+            this.contenttext = 
+            "1_#include <stdio.h>\n" + 
+            "int main(){\n\n" +
+            "   {int temp = 45;} \n\n   " +
+            this.code_zone_1 + "(" + this.code_zone_2 + ">30){\n      " + //if(Temp>30)
+            this.code_zone_3 + "(\"더워요\");\n"  +//printf("더워요");
+            "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
+        }
+
+        if(this.mission2) {
+            this.contenttext = 'asdadasda'
+            
+        }
 
         
         //실제로는 2가지에 나눠서 쨔아함! ( this.out ==  "더워요")
         if (this.out == "1_#include <stdio.h>\nint main(){\n\n   {int temp = 45;} \n\n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
             console.log("===stage2 성공===");
             this.out = "";
-
+            this.mission1 = undefined;
+            this.mission2 = true;
             this.stage2_3_1();  
         }
         else if (isErr){
@@ -352,6 +361,7 @@ export default class SecondStage extends Phaser.Scene {
             }, this);
         }
 
+        
         if(this.invenPlus) {
             this.item[this.item.length] =  'printf';  
             this.item[this.item.length] =  'if';   
@@ -366,6 +376,23 @@ export default class SecondStage extends Phaser.Scene {
             this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
 
             this.invenPlus = false;
+        }
+        
+
+        if(this.invenPlus2) {
+            console.log('inven2')
+            this.item[this.item.length] =  'while';  
+            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            
+            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 895;
+            this.dropzone3_x = 828;
+
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
+
+            this.invenPlus2 = undefined;
         }
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
@@ -695,22 +722,11 @@ export default class SecondStage extends Phaser.Scene {
                     this.invenPlus2 = true;
                     itemget.destroy();
                     itemText.destroy();
+                    this.playerPaused = false;
                 }
             }, this);
         }, [] , this);
        
-        if(this.invenPlus2) {
-            //this.item[this.item.length] =  'printf';  
-            //this.item[this.item.length] =  'if';   
-            this.item[this.item.length] =  'while';  
-            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-            this.draganddrop_1 = new DragAndDrop(this, 805, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 895, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 828, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
-
-            this.invenPlus2 = undefined;
-        }
-
     }
 }
 
