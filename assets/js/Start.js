@@ -260,7 +260,7 @@ class Start extends Phaser.Scene {
         this.isnewgame=true;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("minimap");
+        this.scene.start("fifth_stage");
       }, this);
 
     }

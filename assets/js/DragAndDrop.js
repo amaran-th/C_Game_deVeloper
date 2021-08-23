@@ -91,7 +91,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             //console.log('scene.drop_state_1 > '+ scene.drop_state_1);
             //console.log('scene.drop_state_2 > '+ scene.drop_state_2);
             //console.log('scene.drop_state_3 > '+ scene.drop_state_3);
-            switch (this.dropzone) {
+            switch (this.dropzone) { // (this.name으로 수정해도 될듯!)
                 case 1:
                     if (!dropped || scene.drop_state_1) {
                         gameObject.x = gameObject.input.dragStartX;
@@ -171,7 +171,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             console.log('reset');
             var code_piece_reset_y = 130;
             for (var i = 0; i < scene.item.length; i++){
-                code_piece2[i].x = 15;
+                code_piece2[i].x = scene.worldView.x + 15;
                 code_piece2[i].y = code_piece_reset_y;
                 code_piece_reset_y += 30;
             }
@@ -183,14 +183,12 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.drop_state_5 = 0;
             scene.drop_state_6 = 0;
 
-
-            // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
-            /*scene.code_zone_1 = "           "; //11칸
-            scene.code_zone_2 = "           ";
-            scene.code_zone_3 = "           ";
-            scene.code_zone_4 = "           ";
-            scene.code_zone_5 = "           ";
-            scene.code_zone_6 = "           ";*/
+            scene.code_zone_1 = undefined; // 리셋했을 때 비워주기
+            scene.code_zone_2 = undefined;
+            scene.code_zone_3 = undefined;
+            scene.code_zone_4 = undefined;
+            scene.code_zone_5 = undefined;
+            scene.code_zone_6 = undefined;
 
         });
         
@@ -201,28 +199,63 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             //console.log('code piece destroyed');
                 
             scene.code_piece_add_state += 1;
-        }        
+        }   
     } 
 
     update(scene) {
         this.reset_button.x = scene.worldView.x + 980; // 리턴 버튼 플레이어 따라 이동
-        /*for (var i = 0; i < scene.item.length; i++){
-            this.code_piece[i].x = scene.worldView.x + 15;
-        }*/
+        
+        if (scene.worldView.x != this.preworldview_x) { // 코드 조각 플레이어 따라 이동
+            for (var i = 0; i < scene.item.length; i++) {
+                switch (this.code_piece[i]._text) { // 드랍존에 들어가지 않은 코드 조각은 그냥 플레이어 따라가고
+                    case scene.code_zone_1:         // 드랍존에 들어간 코드조각은 어는 드랍존인 지 구분하여 해당 드랍존 위치에 맞게 플레이어를 따라가도록 함
+                        this.code_piece[i].x = scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5;
+                        break;
+                    case scene.code_zone_2:
+                        this.code_piece[i].x = scene.draganddrop_2.x - (scene.draganddrop_2.width / 2) + 5;
+                        break;
+                    case scene.code_zone_3:
+                        this.code_piece[i].x = scene.draganddrop_3.x - (scene.draganddrop_3.width / 2) + 5;
+                        break;
+                    case scene.code_zone_4:
+                        this.code_piece[i].x = scene.draganddrop_4.x - (scene.draganddrop_4.width / 2) + 5;
+                        break;
+                    case scene.code_zone_5:
+                        this.code_piece[i].x = scene.draganddrop_5.x - (scene.draganddrop_5.width / 2) + 5;
+                        break;
+                    case scene.code_zone_6:
+                        this.code_piece[i].x = scene.draganddrop_6.x - (scene.draganddrop_6.width / 2) + 5;
+                        break;
+                    default:
+                        this.code_piece[i].x = scene.worldView.x + 15;
+                }
+            }
+            this.preworldview_x = scene.worldView.x;
+        }
+
+        if(scene.draganddrop_1!=undefined) scene.draganddrop_1.x = scene.worldView.x + scene.dropzone1_x; // 드랍존 플레이어 따라 이동
+        if(scene.draganddrop_2!=undefined) scene.draganddrop_2.x = scene.worldView.x + scene.dropzone2_x;
+        if(scene.draganddrop_3!=undefined) scene.draganddrop_3.x = scene.worldView.x + scene.dropzone3_x;
+        if(scene.draganddrop_4!=undefined) scene.draganddrop_4.x = scene.worldView.x + scene.dropzone4_x;
+        if(scene.draganddrop_5!=undefined) scene.draganddrop_5.x = scene.worldView.x + scene.dropzone5_x;
+        if(scene.draganddrop_6!=undefined) scene.draganddrop_6.x = scene.worldView.x + scene.dropzone6_x;
+        this.graphics.x = scene.worldView.x; // 드랍존 틀 플레이어 따라 이동
+        
     }
 
     // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
     updownwithinven(scene) {
-        if(scene.drop_state_1 == 0){ // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
+        //console.log(scene.invenIn);
+        if (scene.drop_state_1 == 0) { // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
             if (this.code_piece.length > 0) {
                 if (scene.invenIn) { // 인벤창이 나와있을 때 코드 보이도록
                     //console.log('there');
-                    for (var i = 0; i < scene.item.length; i++){
+                    for (var i = 0; i < scene.item.length; i++) {
                         this.code_piece[i].setVisible(true);
                     }
                 } else { // 인벤창이 들어가있을 때 코드 안 보이도록
                     //console.log('here');
-                    for (var i = 0; i < scene.item.length; i++){
+                    for (var i = 0; i < scene.item.length; i++) {
                         this.code_piece[i].setVisible(false);
                     }
                 }
@@ -235,7 +268,8 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             //console.log('there');
             this.graphics.setVisible(true);
             this.reset_button.setVisible(true);
-            for (var i = 0; i < scene.item.length; i++){
+            //console.log(scene.code_zone_1 + " + " + this.code_piece[0]._text);
+            for (var i = 0; i < scene.item.length; i++){ // 이거 없으면 코드앱 닫아도 드랍존에 들어간 코드조각 남음, 있으면 인벤토리 닫아도 코드 보임...뱌아ㅏ아ㅏㅏ
                 this.code_piece[i].setVisible(true);
             }
         } else { // 명령창이 들어가있을 때 드랍존과 리셋버튼 들어가 있도록

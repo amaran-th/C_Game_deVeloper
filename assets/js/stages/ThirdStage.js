@@ -274,8 +274,12 @@ export default class ThirdStage extends Phaser.Scene {
             this.item[this.item.length] =  'if';
             this.item[this.item.length] =  'for';
             this.dropzon_su = 2; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-            this.draganddrop_1 = new DragAndDrop(this, this.worldView.x + 805, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.worldView.x + 980, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
+
+            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 980;
+
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
             //this.intro2();
             this.invenPlus = false;
         }
@@ -310,7 +314,6 @@ export default class ThirdStage extends Phaser.Scene {
             this.scene.run('sixth_stage');
         }
         
-      
 
     }
     stage3_1() {
