@@ -131,8 +131,8 @@ class Start extends Phaser.Scene {
     });
     /** 도서관 불빛 로드 **/
     this.load.spritesheet('librarylight', './assets/images/stage5/librarylight.png', {
-      frameWidth: 200,
-      frameHeight: 200
+      frameWidth: 102,
+      frameHeight: 100
   });
 
     /** 느낌표 말풍선 로드 **/
@@ -198,8 +198,8 @@ class Start extends Phaser.Scene {
 
       /**5번째 스테이지 npc 로드  **/
       this.load.spritesheet('librarian1', './assets/images/stage5/librarian1.png', {
-        frameWidth: 80,
-        frameHeight: 110,
+        frameWidth: 100,
+        frameHeight: 120,
       });
 
       //5번째 스테이지의 회원증 이미지 로드
