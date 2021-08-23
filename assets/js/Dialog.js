@@ -580,6 +580,9 @@ visible(visible) {
     ['setFace', 0],
     ['print', '(유치원생이 나보다 더 잘 아는군.)'],
     ['wait-click'],
+    ['setFace', 2],
+    ['print', '언니 이거 받으세요.'],
+    ['wait-click'],
     ['visible',false],
   ]
 
