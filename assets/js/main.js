@@ -32,7 +32,7 @@ var config = {
       }
   },
 
-  //backgroundColor: 0x9cbbd8,
+  backgroundColor: 0xffffff,
   scene: [Start, TestScene, ZeroStage, MiniMap, FirstStage, Quiz, SecondStage, ThirdStage, FourthStage, FifthStage, SixthStage, Select] //class name
 };
 

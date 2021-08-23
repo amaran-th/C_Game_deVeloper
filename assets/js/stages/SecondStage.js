@@ -287,7 +287,7 @@ export default class SecondStage extends Phaser.Scene {
         }, this);
 
         //this.mission1Complete = false;
-        this.mission1Complete = true;
+        this.mission1Complete = true;   
         this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
         this.firstTalk = true; //플레이어가 유치원생과 한 번만 대화할 수 있도록
 

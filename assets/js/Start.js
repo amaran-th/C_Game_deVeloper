@@ -21,12 +21,28 @@ class Start extends Phaser.Scene {
     }
 
     preload() {
+
       
       this.load.image("bubble","./assets/images/bubble.png");
  
       
       /*** 시작화면 image 로드 ***/
       this.load.image("title_menu", "./assets/images/menu/title_menu.png");
+      this.load.spritesheet('logo', './assets/images/menu/logo.png', {
+        frameWidth: 1100,
+        frameHeight: 290,
+      });
+
+      this.load.spritesheet('start', './assets/images/menu/start.png', {
+        frameWidth: 320,
+        frameHeight: 267,
+      });
+
+      this.load.spritesheet('load', './assets/images/menu/load.png', {
+        frameWidth: 306.6,
+        frameHeight: 320,
+      });
+
     
       /*** command 관련 image 로드 ***/
       this.load.image("entire_code_button", "./assets/images/command/entire_code_button.png");
@@ -214,6 +230,32 @@ class Start extends Phaser.Scene {
     
 
     create() {
+
+      this.anims.create({
+        key: "logo",
+        frames: this.anims.generateFrameNumbers('logo',{ start: 0, end: 2}), 
+        frameRate: 3,
+        repeat: -1,
+    });
+    this.anims.create({
+      key: "start",
+      frames: this.anims.generateFrameNumbers('start',{ start: 0, end: 2}), 
+      frameRate: 2,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "load",
+      frames: this.anims.generateFrameNumbers('load',{ start: 0, end: 1}), 
+      frameRate: 3,
+      repeat: -1,
+  });
+
+    var title = this.add.sprite(0, 10, 'logo').setOrigin(0, 0);
+    this.NEW_GAME_button = this.add.sprite(180, 600, 'start').setOrigin(0, 1).setInteractive();
+    this.CONTINUE_button = this.add.sprite(550, 600,'load').setOrigin(0, 1).setInteractive();
+
+    title.play('logo');
+    /*
       this.hsv = Phaser.Display.Color.HSVColorWheel();
 
       var title = this.add.image(170, 100, 'title_menu').setOrigin(0, 0);
@@ -235,23 +277,24 @@ class Start extends Phaser.Scene {
       graphics.lineStyle(3, 0x483D8B);
       graphics.strokeRect(380, 340, 202, 50);
       graphics.strokeRect(380, 415, 202, 50);
+      */
+
       // 마우스 올렸을 때 색변화
-      this.NEW_GAME_button.on('pointerover', function () {
-        graphics.lineStyle(3, 0x00ffff);
-        graphics.strokeRect(380, 340, 202, 50);
+      this.NEW_GAME_button.on('pointerover', function (pointer) {
+        this.anims.stop();
+        this.setFrame(3);
       });
-      this.CONTINUE_button.on('pointerover', function () {
-        graphics.lineStyle(3, 0x00ffff);
-        graphics.strokeRect(380, 415, 202, 50);
+      this.CONTINUE_button.on('pointerover', function (pointer) {
+        this.anims.stop();
+        this.setFrame(2);
       });
       // 마우스 안 올렸을 때 원래 색으로
       this.NEW_GAME_button.on('pointerout', function () {
-        graphics.lineStyle(3, 0x483D8B);
-        graphics.strokeRect(380, 340, 202, 50);
+        this.play('start');
+
       });
       this.CONTINUE_button.on('pointerout', function () {
-        graphics.lineStyle(3, 0x483D8B);
-        graphics.strokeRect(380, 415, 202, 50);
+        this.play('load');
       });
 
       this.isnewgame=false;
@@ -265,8 +308,10 @@ class Start extends Phaser.Scene {
 
     }
 
+
     // 색 그라데이션 계속해서 바뀜
     update() {
+      /*
       const top = this.hsv[this.i].color;
       const bottom = this.hsv[359 - this.i].color;
 
@@ -278,6 +323,9 @@ class Start extends Phaser.Scene {
       if (this.i === 360) {
         this.i = 0;
       }
+      */
+
+
       if(this.isnewgame){
         this.tutorial = this.add.image(0,0,"tutorial").setOrigin(0,0);
         this.ok_button = this.add.image(550,450,"ok_button");
@@ -287,4 +335,5 @@ class Start extends Phaser.Scene {
         },this);
       }
     }
+  
 }
