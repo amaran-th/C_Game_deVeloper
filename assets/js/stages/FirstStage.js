@@ -347,7 +347,8 @@ export default class FirstStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.devil.setVelocityX(0);
-            this.devil.x=1100;
+            this.devil.x=1200;
+            this.devil.y=110;
             this.devil.anims.stop();
             this.devil.setFrame(1);
             
