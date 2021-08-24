@@ -289,14 +289,11 @@ export default class SecondStage extends Phaser.Scene {
             gameObject.y = dragY;
         });
         this.input.on('dragend', function (pointer, gameObject,dropped) {
-            //gameObject.clearTint();
             if (!dropped) //이거 없으면 마우스 놓은 자리에 유지됨
             {
                 gameObject.setVisible(false);
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
-            }
-            else{
             }
         });
         this.input.on('drop', function (pointer, gameObject, dragX, dragY) {

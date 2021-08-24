@@ -3,6 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
+import ThirdStage from "./ThirdStage.js";
 
 
 export default class FourthStage extends Phaser.Scene {   
@@ -12,10 +13,8 @@ export default class FourthStage extends Phaser.Scene {
 
     preload() {
 
-        this.load.image("stage4_tiles", "./assets/images/test.png");
+        this.load.image("stage4_tiles", "./assets/images/stage4/map_stage4.png");
         this.load.tilemapTiledJSON("fourth_stage", "./assets/fourth_stage.json");
-        
-    
     }
     
     create () {
@@ -36,13 +35,33 @@ export default class FourthStage extends Phaser.Scene {
         
         const tileset = map.addTilesetImage("test", "stage4_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
+        this.decoLayer = map.createLayer("deco", tileset, 0, 0);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+        this.player = new Player(this, 800, spawnPoint.y);
+
+        /*** npc 만들기 ***/
+        this.anims.create({
+            key: "devil_touch_phone",
+            frames: this.anims.generateFrameNumbers('npc_devil',{ start: 4, end: 5}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.devil = this.physics.add.sprite(910 ,230,'npc_devil');
+        this.devil.setFlipX(true);
+        this.devil.play('devil_touch_phone');
+
+        this.pressX = this.add.text(this.devil.x-50, this.devil.y-10, 'press X to\nattemp the test', {
+            fontFamily: ' Courier',
+            color: '#ffffff',
+            boundsAlignH: "center",
+            boundsAlignV: "middle"
+        });
     
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -53,6 +72,7 @@ export default class FourthStage extends Phaser.Scene {
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
+        this.physics.add.collider(this.devil, this.worldLayer); //충돌 하도록 만들기
 
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
@@ -96,6 +116,9 @@ export default class FourthStage extends Phaser.Scene {
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
 
+
+
+
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
         // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
@@ -116,12 +139,80 @@ export default class FourthStage extends Phaser.Scene {
         this.drop_state_5 = 0;
         this.drop_state_6 = 0;
 
+         //4_stage의 전체 코드
+         this.contenttext = "" ; 
+
+         // 4_stage의 앱에 들어가는 코드
+         this.app_code_text =
+         "#include <stdio.h>\n" +
+         "int main(){\n\n" +
+         "  for (int i=10; i>0; i--) {\n" +
+		 "      if (i%2==1){\n" +
+		 "          printf('%d',i);\n" +
+		 "      }\n" +
+	     "  }\n" +
+         "}\n"
+
+ 
+         //코드 실행후 불러올 output값
+         this.out = "";
+
 
         stagenum = 4;
+
+        console.log(this.devil.x);
         
+
+        this.firstTalk = true ;//악마 앞에서 x키 누를때 필요
+        this.quiz1 = true;
+        this.quiz2 = false;
+        this.quiz3 = false;
+        this.quiz4 = false;
+        this.quizOver = false;
+
+
+        this.code_zone_1 = "           " //이거 어떻게 작동하는 건지 모르겠어서 일단 빈칸 만들기 위해 임시로 해둠
     }
 
     update() {
+
+        if(this.quiz1) {
+        this.contenttext = 
+        "#include <stdio.h>\n" +
+        "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+        }
+
+        if(this.quiz2) {
+            this.contenttext = 
+            "#include <stdio.h>\n" +
+            "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+        }
+
+        if(this.quiz3) {
+            this.contenttext = 
+            "#include <stdio.h>\n" +
+            "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+        }
+        
+        if(this.quiz4) {
+            this.contenttext = 
+            "#include <stdio.h>\n" +
+            "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+        }
+        
+        if(this.quizOver) {
+        this.contenttext =
+        "#include <stdio.h>\n" +
+        "int main(){\n\n" +
+        "  "+ this.code_zone_1 +"(int i=10; i>0; i--) {\n" +
+        "      "+this.code_zone_2+" (i%2==1){\n" +
+        "          printf(\'"+ this.code_zone_3 +"\',i);\n" +
+        "      }\n" +
+        "  }\n" +
+        "}\n"
+        }
+
+
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
@@ -177,6 +268,20 @@ export default class FourthStage extends Phaser.Scene {
         if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
 
 
+        /* 시험 시작! */
+        if(this.player.player.x >=this.devil.x -100 && this.devil.x +100 >= this.player.player.x ){
+            this.pressX.setVisible(true);
+            if(this.keyX.isDown){
+                if(this.firstTalk) {
+                    this.firstTalk = undefined;
+                    this.player.playerPaused = true;
+                    this.stage4_2();
+                }
+            }
+        }
+        else this.pressX.setVisible(false);
+
+
         if(this.key1.isDown) {
             console.log('맵이동');
             this.scene.sleep('fourth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
@@ -203,6 +308,15 @@ export default class FourthStage extends Phaser.Scene {
             this.scene.run("sixth_stage");
         }
 
+    }
+
+    stage4_2() {
+        console.log('대사 나오고 시험 시작하도록');
+        this.dialog.loadTextbox(this);
+        this.dialog.place(40,10);
+        this.dialog.setFace(2);
+        this.dialog.print(this.contenttext);
+        this.draganddrop_1 = new DragAndDrop(this, 500, 100, 80, 25).setRectangleDropZone(80, 25).setName("1");
     }
 
 
