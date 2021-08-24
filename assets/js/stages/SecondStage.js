@@ -346,17 +346,17 @@ export default class SecondStage extends Phaser.Scene {
     update() {
         console.log(isDragging);
 
-        this.text_ground.x = this.input.mousePointer.x + 400;
-        this.text_ground.y = this.input.mousePointer.y - 15;
 
         if(this.input.mousePointer.y >= 500 && this.input.mousePointer.x <= 1600  && this.input.mousePointer.x >= this.worldView.x + 50 ) {
             if(this.pointerUnderGround){ //계속 불러와지면서 깜빡거리지 않도록
                 this.text_ground.setVisible(true);
                 this.pointerUnderGround = false
             }
+            this.text_ground.x = this.input.mousePointer.x + 400;
+            this.text_ground.y = this.input.mousePointer.y - 15;
         }
         else if(!isDragging) {
-            this.text_ground.setVisible(false);
+           // this.text_ground.setVisible(false);
             this.pointerUnderGround = true;
         }
 
