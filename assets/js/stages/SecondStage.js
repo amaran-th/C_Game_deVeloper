@@ -4,6 +4,7 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
+var temp_drop_state = false; // temp 가 드랍존에 들어가면 텍스트 오브젝트만 남도록
 
 export default class SecondStage extends Phaser.Scene {   
     constructor(){ 
@@ -264,7 +265,6 @@ export default class SecondStage extends Phaser.Scene {
             //gameObject.clearTint();
             if (!dropped) //이거 없으면 마우스 놓은 자리에 유지됨
             {
-                gameObject.setVisible(false);
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
             }
@@ -272,18 +272,22 @@ export default class SecondStage extends Phaser.Scene {
             }
         });
         this.input.on('drop', function (pointer, gameObject, dragX, dragY) {
-            gameObject.setVisible(false);
+            temp_drop_state = true;
             gameObject.x = gameObject.input.dragStartX;
             gameObject.y = gameObject.input.dragStartY;
         });
         
         this.temperature.on('pointerover', function(){
-            this.text_temp.setVisible(true);
-            this.text_temp.x = this.input.mousePointer.x-10;
-            this.text_temp.y = this.input.mousePointer.y-10;
+            if (temp_drop_state == false) {
+                this.text_temp.setVisible(true);
+                this.text_temp.x = this.input.mousePointer.x-10;
+                this.text_temp.y = this.input.mousePointer.y-10;
+            }
         }, this);
         this.temperature.on('pointerout', function(){
-            this.text_temp.setVisible(false)
+            if (temp_drop_state == false) {
+                this.text_temp.setVisible(false)
+            }
         }, this);
 
         //this.mission1Complete = false;
@@ -291,13 +295,24 @@ export default class SecondStage extends Phaser.Scene {
         this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
         this.firstTalk = true; //플레이어가 유치원생과 한 번만 대화할 수 있도록
 
+        this.temp_drop_state = true;
     }
 
     update() {
         //변수의 배경이 텍스트 따라다니도록
+        if (this.temp_drop_state == false) {
+            temp_drop_state = false;
+            this.temp_drop_state = true;
+            this.text_temp.setVisible(false);
+        }
+        //console.log(temp_drop_state);
         this.var_cage.x = this.text_temp.x;
         this.var_cage.y = this.text_temp.y;
-        this.var_cage.visible = this.text_temp.visible;
+        if(temp_drop_state == false) {
+            this.var_cage.visible = this.text_temp.visible;
+        } else {
+            this.var_cage.setVisible(false);
+        }
 
         this.contenttext = 
         "1_#include <stdio.h>\n" + 

@@ -190,6 +190,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.code_zone_5 = undefined;
             scene.code_zone_6 = undefined;
 
+            scene.temp_drop_state = false;
         });
         
         if (scene.code_piece_add_state != scene.dropzon_su - 1) {
