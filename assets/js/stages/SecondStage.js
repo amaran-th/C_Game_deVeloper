@@ -217,14 +217,6 @@ export default class SecondStage extends Phaser.Scene {
         //Second_stage의 전체 코드
         this.contenttext = "" ; 
 
-        // Second_stage의 앱에 들어가는 코드
-        this.app_code_text =
-        "1_#include <stdio.h>\n" + 
-        "int main(){\n\n" +
-        "   {int temp = 45;} \n\n   " +
-        "           " + "(" + "           " + ">30){\n      " + //if(Temp>30)
-        "           " + "(\"더워요\");\n"  +//printf("더워요");
-        "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
 
         //코드 실행후 불러올 output값
         this.out = "";
@@ -274,6 +266,18 @@ export default class SecondStage extends Phaser.Scene {
         this.text_water.setInteractive();
         this.text_water.setVisible(false);
 
+
+        this.temperature.on('pointerover', function(){
+            if (temp_drop_state == false) {
+                this.text_temp.setVisible(true);
+            }
+        }, this);
+        this.temperature.on('pointerout', function(){
+            if (temp_drop_state == false) {
+                this.text_temp.setVisible(false)
+            }
+        }, this);
+
         this.waterWball.on('pointerover', function(){
             this.text_water.setVisible(true);
         }, this);
@@ -281,6 +285,7 @@ export default class SecondStage extends Phaser.Scene {
             this.text_water.setVisible(false)
         }, this);
         
+
         this.input.setDraggable(this.text_temp);
         this.input.setDraggable(this.text_water);
 
@@ -303,18 +308,7 @@ export default class SecondStage extends Phaser.Scene {
         });
         
 
-        this.temperature.on('pointerover', function(){
-            if (temp_drop_state == false) {
-                this.text_temp.setVisible(true);
-                this.text_temp.x = this.input.mousePointer.x-10;
-                this.text_temp.y = this.input.mousePointer.y-10;
-            }
-        }, this);
-        this.temperature.on('pointerout', function(){
-            if (temp_drop_state == false) {
-                this.text_temp.setVisible(false)
-            }
-        }, this);
+
 
         //this.mission1Complete = false;
         this.mission1Complete = true;   
@@ -334,16 +328,24 @@ export default class SecondStage extends Phaser.Scene {
             this.text_temp.setVisible(false);
         }
         //console.log(temp_drop_state);
-        this.var_cage.x = this.text_temp.x;
-        this.var_cage.y = this.text_temp.y;
+        this.var_cage1.x = this.text_temp.x;
+        this.var_cage1.y = this.text_temp.y-10;
+
+        this.var_cage2.x = this.text_water.x;
+        this.var_cage2.y = this.text_water.y-10;
+
         if(temp_drop_state == false) {
-            this.var_cage.visible = this.text_temp.visible;
+            this.var_cage1.visible = this.text_temp.visible;
+            this.var_cage2.visible = this.text_water.visible;
         } else {
-            this.var_cage.setVisible(false);
+            this.var_cage1.setVisible(false);
+            this.var_cage2.setVisible(false);
             if (this.codeapp_onoff_state == 0) {
                 this.text_temp.setVisible(false);
+                this.text_water.setVisible(false);
             } else {
                 this.text_temp.setVisible(true);
+                this.text_water.setVisible(true);
                 switch (this.text_temp._text) { // 드랍존에 들어간 temp 어는 드랍존인 지 구분하여 해당 드랍존 위치에 맞게 플레이어를 따라가도록 함
                     case this.code_zone_1:
                         this.text_temp.x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
@@ -364,10 +366,40 @@ export default class SecondStage extends Phaser.Scene {
                         this.text_temp.x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
                         break;
                 }
+
+                switch (this.text_water._text) { // 드랍존에 들어간 temp 어는 드랍존인 지 구분하여 해당 드랍존 위치에 맞게 플레이어를 따라가도록 함
+                    case this.code_zone_1:
+                        this.text_water.x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
+                        break;
+                    case this.code_zone_2:
+                        this.text_water.x = this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5;
+                        break;
+                    case this.code_zone_3:
+                        this.text_water.x = this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5;
+                        break;
+                    case this.code_zone_4:
+                        this.text_water.x = this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5;
+                        break;
+                    case this.code_zone_5:
+                        this.text_water.x = this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5;
+                        break;
+                    case this.code_zone_6:
+                        this.text_water.x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
+                        break;
+                }
             }
         }
 
         if(this.mission1) {
+             // Second_stage의 앱에 들어가는 코드
+            this.app_code_text =
+            "1_#include <stdio.h>\n" + 
+            "int main(){\n\n" +
+            "   {int temp = 45;} \n\n   " +
+            "           " + "(" + "           " + ">30){\n      " + //if(Temp>30)
+            "           " + "(\"더워요\");\n"  +//printf("더워요");
+            "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
+            
             this.contenttext = 
             "1_#include <stdio.h>\n" + 
             "int main(){\n\n" +
@@ -379,7 +411,10 @@ export default class SecondStage extends Phaser.Scene {
 
         if(this.mission2) {
             this.contenttext = 'asdadasda'
-            
+
+             // Second_stage의 앱에 들어가는 코드
+            this.app_code_text =
+            "1_#include <stdio.h>\n";
         }
 
         
@@ -789,7 +824,7 @@ export default class SecondStage extends Phaser.Scene {
                     this.invenPlus2 = true;
                     itemget.destroy();
                     itemText.destroy();
-                    this.playerPaused = false;
+                    this.mission2 = true;
                 }
             }, this);
         }, [] , this);
