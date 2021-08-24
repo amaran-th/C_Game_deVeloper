@@ -54,6 +54,11 @@ export default class FirstStage extends Phaser.Scene {
         const tileset = map.addTilesetImage("map", "tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("world", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
 
+        //플레이어 위 pressX 생성해두기(door)
+        this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
 
         this.anims.create({
             key: "exclam",
@@ -259,6 +264,26 @@ export default class FirstStage extends Phaser.Scene {
 
         if(!this.scene.isActive('quiz') && this.quiz_running ) this.stage1_6();
 
+        /* 플레이어가 문 앞에 서면 작동하도록 함 */
+        if(this.player.player.x < 175 && 0 < this.player.player.x ) {
+            this.pressX.x = this.player.player.x-50;
+            this.pressX.y = this.player.player.y-100;
+            this.pressX.setVisible(true);
+        
+            if(this.keyX.isDown) {
+                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                console.log('맵이동');
+
+                
+                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+                this.command.remove_phone(this);
+
+
+                this.scene.stop('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                this.scene.run("zero_stage");
+            }
+        }
+        else this.pressX.setVisible(false);
     }
 
     stage1_1() {
