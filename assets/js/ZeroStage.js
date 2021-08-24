@@ -285,7 +285,7 @@ export default class ZeroStage extends Phaser.Scene {
                 this.command.remove_phone(this);
 
 
-                this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                this.scene.stop('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
                 this.scene.run("first_stage");
             }
         }

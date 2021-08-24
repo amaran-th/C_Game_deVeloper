@@ -48,10 +48,12 @@ export default class FifthStage extends Phaser.Scene {
         this.background1 = this.add.sprite( 600, 200, 'librarylight', 0).setOrigin(0,1);
         this.background2 = this.add.sprite( 600, 400, 'librarylight', 0).setOrigin(0,1);
         this.background3 = this.add.sprite( 100, 250, 'librarylight', 0).setOrigin(0,1);
+        this.background4 = this.add.sprite( 1100, 250, 'librarylight', 0).setOrigin(0,1);
 
         this.background1.play('light',true);
         this.background2.play('light',true);
         this.background3.play('light',true);
+        this.background4.play('light',true);
 
         //desk 이미지 add
         this.add.image(400,500,"library_desk").setOrigin(0,1);
@@ -77,6 +79,16 @@ export default class FifthStage extends Phaser.Scene {
         this.librarian1 = this.add.sprite(595 ,375,'librarian1');
         this.librarian1.play('working_librarian1',true);
 
+        //학생이 공부하는 애니메이션
+        this.anims.create({
+            key: "working_student",
+            frames: this.anims.generateFrameNumbers('student',{ start: 0, end: 1}), 
+            frameRate: 3,
+            repeat: -1,
+        });
+        this.student = this.add.sprite(1280 ,408,'student');
+        this.student.play('working_student',true);
+
         //회원증 이미지
         this.membership_card=this.add.image(350,0,"library_membership").setOrigin(0,1);
 
@@ -100,6 +112,17 @@ export default class FifthStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        //플레이어 위 pressX 생성해두기(door)
+        this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(door)
+        this.pressX_2 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
 
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
@@ -440,6 +463,48 @@ export default class FifthStage extends Phaser.Scene {
             this.scene.sleep('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run("sixth_stage");
         }
+
+        /* 문앞에 가서 stage4감. */
+        if(this.player.player.x < 200 && 0 < this.player.player.x ) {
+            this.pressX_1.x = this.player.player.x-50;
+            this.pressX_1.y = this.player.player.y-100;
+            this.pressX_1.setVisible(true);
+        
+            if(this.keyX.isDown) {
+                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                console.log('stage4로 맵이동');
+
+                
+                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+                this.command.remove_phone(this);
+
+
+                this.scene.stop('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                this.scene.run("fourth_stage");
+            }
+        }
+        else this.pressX_1.setVisible(false);
+
+        /* 문앞에 가서 stage6감. */
+        if(1650 < this.player.player.x ) {
+            this.pressX_2.x = this.player.player.x-50;
+            this.pressX_2.y = this.player.player.y-100;
+            this.pressX_2.setVisible(true);
+        
+            if(this.keyX.isDown) {
+                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                console.log('stage5로 맵이동');
+
+                
+                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+                this.command.remove_phone(this);
+
+
+                this.scene.stop('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                this.scene.run("sixth_stage");
+            }
+        }
+        else this.pressX_2.setVisible(false);
 
     }
     stage5_1(){
