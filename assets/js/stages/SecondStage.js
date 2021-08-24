@@ -4,6 +4,7 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
+var temp_drop_state = false; // temp 가 드랍존에 들어가면 텍스트 오브젝트만 남도록
 
 export default class SecondStage extends Phaser.Scene {   
     constructor(){ 
@@ -291,35 +292,80 @@ export default class SecondStage extends Phaser.Scene {
         this.input.on('dragend', function (pointer, gameObject,dropped) {
             if (!dropped) //이거 없으면 마우스 놓은 자리에 유지됨
             {
-                gameObject.setVisible(false);
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
             }
         });
         this.input.on('drop', function (pointer, gameObject, dragX, dragY) {
-            gameObject.setVisible(false);
+            temp_drop_state = true;
             gameObject.x = gameObject.input.dragStartX;
             gameObject.y = gameObject.input.dragStartY;
         });
         
 
+        this.temperature.on('pointerover', function(){
+            if (temp_drop_state == false) {
+                this.text_temp.setVisible(true);
+                this.text_temp.x = this.input.mousePointer.x-10;
+                this.text_temp.y = this.input.mousePointer.y-10;
+            }
+        }, this);
+        this.temperature.on('pointerout', function(){
+            if (temp_drop_state == false) {
+                this.text_temp.setVisible(false)
+            }
+        }, this);
 
         //this.mission1Complete = false;
         this.mission1Complete = true;   
         this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
         this.firstTalk = true; //플레이어가 유치원생과 한 번만 대화할 수 있도록
 
+        this.temp_drop_state = true; // 리턴 버튼 눌렀을 때 drop존에서 temp 빼기 위한 상태변수
+
         this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
     }
 
     update() {
         //변수의 배경이 텍스트 따라다니도록
-        this.var_cage1.x = this.text_temp.x;
-        this.var_cage1.y = this.text_temp.y-10;
-        this.var_cage1.visible = this.text_temp.visible;
-        this.var_cage2.x = this.text_water.x;
-        this.var_cage2.y = this.text_water.y-10;
-        this.var_cage2.visible = this.text_water.visible;
+        if (this.temp_drop_state == false) {
+            temp_drop_state = false;
+            this.temp_drop_state = true;
+            this.text_temp.setVisible(false);
+        }
+        //console.log(temp_drop_state);
+        this.var_cage.x = this.text_temp.x;
+        this.var_cage.y = this.text_temp.y;
+        if(temp_drop_state == false) {
+            this.var_cage.visible = this.text_temp.visible;
+        } else {
+            this.var_cage.setVisible(false);
+            if (this.codeapp_onoff_state == 0) {
+                this.text_temp.setVisible(false);
+            } else {
+                this.text_temp.setVisible(true);
+                switch (this.text_temp._text) { // 드랍존에 들어간 temp 어는 드랍존인 지 구분하여 해당 드랍존 위치에 맞게 플레이어를 따라가도록 함
+                    case this.code_zone_1:
+                        this.text_temp.x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
+                        break;
+                    case this.code_zone_2:
+                        this.text_temp.x = this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5;
+                        break;
+                    case this.code_zone_3:
+                        this.text_temp.x = this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5;
+                        break;
+                    case this.code_zone_4:
+                        this.text_temp.x = this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5;
+                        break;
+                    case this.code_zone_5:
+                        this.text_temp.x = this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5;
+                        break;
+                    case this.code_zone_6:
+                        this.text_temp.x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
+                        break;
+                }
+            }
+        }
 
         if(this.mission1) {
             this.contenttext = 
