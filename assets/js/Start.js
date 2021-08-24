@@ -211,6 +211,8 @@ class Start extends Phaser.Scene {
       this.load.image("library_membership", "./assets/images/stage5/membership.png");
       
       /** 6번째 스테이지 이미지 로드 **/
+      this.load.image("librarian2", "./assets/images/stage6/librarian2.png");
+
       this.load.image("page1", "./assets/images/stage6/bookPage1.png");
       this.load.image("page2", "./assets/images/stage6/bookPage2.png");
       this.load.image("page3", "./assets/images/stage6/bookPage3.png");
