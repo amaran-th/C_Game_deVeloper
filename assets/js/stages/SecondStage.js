@@ -5,6 +5,7 @@ import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
 var temp_drop_state = false; // temp 가 드랍존에 들어가면 텍스트 오브젝트만 남도록
+var isDragging = false;
 
 export default class SecondStage extends Phaser.Scene {   
     constructor(){ 
@@ -266,6 +267,19 @@ export default class SecondStage extends Phaser.Scene {
         this.text_water.setInteractive();
         this.text_water.setVisible(false);
 
+        /** 변수들 드래그3 **/
+        var variable3 = this.add.graphics();
+        variable3.lineStyle(3, 0xFFB569, 1);
+        this.var_cage3 = variable3.fillRoundedRect(0, 0, 75, 50, 10).strokeRoundedRect(0, 0, 75, 50, 10).fillStyle(0xFCE5CD, 1); //글자 밖 배경
+
+        this.text_ground = this.add.text(1000,500,'ground',{ 
+            fontSize : '28px',
+            fontFamily: ' Courier',
+            color: '#FFB569'
+        });
+        this.text_ground.setInteractive();
+        this.text_ground.setVisible(false);
+
 
         this.temperature.on('pointerover', function(){
             if (temp_drop_state == false) {
@@ -288,23 +302,30 @@ export default class SecondStage extends Phaser.Scene {
 
         this.input.setDraggable(this.text_temp);
         this.input.setDraggable(this.text_water);
+        this.input.setDraggable(this.text_ground);
 
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.setVisible(true);
             gameObject.x = dragX;
             gameObject.y = dragY;
+
+            isDragging = true; //현재 드래그 하고 있는 중인지 디텍트하도록
         });
         this.input.on('dragend', function (pointer, gameObject,dropped) {
             if (!dropped) //이거 없으면 마우스 놓은 자리에 유지됨
             {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
+
+                isDragging = false;
             }
         });
         this.input.on('drop', function (pointer, gameObject, dragX, dragY) {
             temp_drop_state = true;
             gameObject.x = gameObject.input.dragStartX;
             gameObject.y = gameObject.input.dragStartY;
+
+            isDragging = false;
         });
         
 
@@ -317,15 +338,41 @@ export default class SecondStage extends Phaser.Scene {
 
         this.temp_drop_state = true; // 리턴 버튼 눌렀을 때 drop존에서 temp 빼기 위한 상태변수
 
+        this.pointerUnderGround = true //태그가 번쩍거리지 않도록 setvisible true를 한번만 선언해줌
+
         this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
     }
 
     update() {
+        console.log(isDragging);
+
+        this.text_ground.x = this.input.mousePointer.x + 400;
+        this.text_ground.y = this.input.mousePointer.y - 15;
+
+        if(this.input.mousePointer.y >= 500 && this.input.mousePointer.x <= 1600  && this.input.mousePointer.x >= this.worldView.x + 50 ) {
+            if(this.pointerUnderGround){ //계속 불러와지면서 깜빡거리지 않도록
+                this.text_ground.setVisible(true);
+                this.pointerUnderGround = false
+            }
+        }
+        else if(!isDragging) {
+            this.text_ground.setVisible(false);
+            this.pointerUnderGround = true;
+        }
+
+        if(this.input.mousePointer.y >= 500 && this.input.mousePointer.x <= 1600  && this.input.mousePointer.x >= this.worldView.x + 50 && isDragging) {
+            if(this.pointerUnderGround){ //계속 불러와지면서 깜빡거리지 않도록
+                this.text_ground.setVisible(true);
+                this.pointerUnderGround = false
+            }
+        }
+
         //변수의 배경이 텍스트 따라다니도록
         if (this.temp_drop_state == false) {
             temp_drop_state = false;
             this.temp_drop_state = true;
             this.text_temp.setVisible(false);
+            this.text_water.setVisible(false);
         }
         //console.log(temp_drop_state);
         this.var_cage1.x = this.text_temp.x;
@@ -334,18 +381,26 @@ export default class SecondStage extends Phaser.Scene {
         this.var_cage2.x = this.text_water.x;
         this.var_cage2.y = this.text_water.y-10;
 
+        this.var_cage3.x = this.text_ground.x;
+        this.var_cage3.y = this.text_ground.y-10;
+
+
         if(temp_drop_state == false) {
             this.var_cage1.visible = this.text_temp.visible;
             this.var_cage2.visible = this.text_water.visible;
+            this.var_cage3.visible = this.text_ground.visible;
         } else {
             this.var_cage1.setVisible(false);
             this.var_cage2.setVisible(false);
+            this.var_cage3.setVisible(false);
             if (this.codeapp_onoff_state == 0) {
                 this.text_temp.setVisible(false);
                 this.text_water.setVisible(false);
+                this.text_ground.setVisible(false);
             } else {
                 this.text_temp.setVisible(true);
                 this.text_water.setVisible(true);
+                this.text_ground.setVisible(true);
                 switch (this.text_temp._text) { // 드랍존에 들어간 temp 어는 드랍존인 지 구분하여 해당 드랍존 위치에 맞게 플레이어를 따라가도록 함
                     case this.code_zone_1:
                         this.text_temp.x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
@@ -387,6 +442,27 @@ export default class SecondStage extends Phaser.Scene {
                         this.text_water.x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
                         break;
                 }
+
+                switch (this.text_ground._text) { // 드랍존에 들어간 temp 어는 드랍존인 지 구분하여 해당 드랍존 위치에 맞게 플레이어를 따라가도록 함
+                    case this.code_zone_1:
+                        this.text_ground.x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
+                        break;
+                    case this.code_zone_2:
+                        this.text_ground.x = this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5;
+                        break;
+                    case this.code_zone_3:
+                        this.text_ground.x = this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5;
+                        break;
+                    case this.code_zone_4:
+                        this.text_ground.x = this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5;
+                        break;
+                    case this.code_zone_5:
+                        this.text_ground.x = this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5;
+                        break;
+                    case this.code_zone_6:
+                        this.text_ground.x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
+                        break;
+                }
             }
         }
 
@@ -410,16 +486,26 @@ export default class SecondStage extends Phaser.Scene {
         }
 
         if(this.mission2) {
-            this.contenttext = 'asdadasda'
+            this.contenttext =             
+            "1_#include <stdio.h>\n" +
+            "int main(){\n\n" +
+            "   "+ this.code_zone_5 +"( "+this.code_zone_1+" <= " + this.code_zone_2 + " ) {\n" +
+            "       " + this.code_zone_3 + " = " + this.code_zone_4 + " + 1;\n" +
+            "   }\n" +
+            "}"
 
              // Second_stage의 앱에 들어가는 코드
             this.app_code_text =
-            "1_#include <stdio.h>\n";
+            "1_#include <stdio.h>\n" +
+            "int main(){\n\n" +
+            "              (             <=             )\n" +
+            "   {\n"+
+            "               =             + 1;\n" +
+            "   }\n" +
+            "}"
         }
 
-        while(water == 1) {
-            water = water + 1;
-        }
+
 
         
         //실제로는 2가지에 나눠서 쨔아함! ( this.out ==  "더워요")
@@ -437,6 +523,23 @@ export default class SecondStage extends Phaser.Scene {
             this.stage2_4_1(); 
        
         }
+
+        if (this.out ==             "1_#include <stdio.h>\n" +
+        "int main(){\n\n" +
+        "   "+ "while" +"( "+"water"+" <= " + "ground" + " ) {\n" +
+        "       " + "water" + " = " + "water" + " + 1;\n" +
+        "   }\n" +
+        "}"){
+            console.log("===stage2 성공===");
+            this.out = "";
+            this.mission2 = undefined;
+        }
+        else if (isErr){
+            console.log("===stage2 실패===");
+            this.out = "";
+       
+        }
+
 
         this.player.update();
         this.inventory.update(this);
@@ -490,13 +593,17 @@ export default class SecondStage extends Phaser.Scene {
             this.item[this.item.length] =  'while';  
             this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             
-            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 895;
-            this.dropzone3_x = 828;
+            this.dropzone1_x = 810;
+            this.dropzone2_x = 900; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone3_x = 1020;
+            this.dropzone4_x = 810;
+            this.dropzone5_x = 900;
 
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 170, 80, 25).setRectangleDropZone(80, 25).setName("5");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 170, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 170, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 230, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 230, 80, 25).setRectangleDropZone(80, 25).setName("4");
 
             this.invenPlus2 = undefined;
         }
