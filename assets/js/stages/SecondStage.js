@@ -58,7 +58,7 @@ export default class SecondStage extends Phaser.Scene {
             frameRate: 4,
             repeat: -1,
         });
-        this.waterWball = this.add.sprite( 1600, 630, 'waterWball', 0).setOrigin(0,1);
+        this.waterWball = this.add.sprite( 1600, 630, 'waterWball', 0).setOrigin(0,1).setInteractive();
         this.waterWball.play('waterWball');
 
         /*** 맵 만들기 Create Map ***/
@@ -236,24 +236,52 @@ export default class SecondStage extends Phaser.Scene {
         //this.stage2_1();
 
 
-        /** 변수들 드래그 **/
+        /** 변수들 드래그1 **/
         var variable = this.add.graphics();
         variable.lineStyle(3, 0xFFB569, 1);
-        this.var_cage = variable.fillRoundedRect(0, 0, 75, 50, 10).strokeRoundedRect(0, 0, 75, 50, 10).fillStyle(0xFCE5CD, 1); //글자 밖 배경
+        this.var_cage1 = variable.fillRoundedRect(0, 0, 75, 50, 10).strokeRoundedRect(0, 0, 75, 50, 10).fillStyle(0xFCE5CD, 1); //글자 밖 배경
 
-        this.text_temp = this.add.text(37,25,'temp',{ 
+        this.text_temp = this.add.text(this.temperature.x+50,200,'temp',{ 
             fontSize : '30px',
             fontFamily: ' Courier',
             color: '#FFB569'
         });
         this.text_temp.setInteractive();
-        this.text_temp.setVisible(false); //아........ 투명도 0으로 하면 입력이 안먹힘...........
-        //var var_temp = this.add.container(100,400, [var_cage,text_temp]).setSize(50,50); //temp 변수
+        this.text_temp.setVisible(false);
+        //var var_temp = this.add.container(100,400, [var_cage1,text_temp]).setSize(50,50); //temp 변수
         //var_temp.setInteractive(new Phaser.Geom.Rectangle(37, 25, 50, 50), Phaser.Geom.Rectangle.Contains); 
         //var_temp.setName("temp")
         //이거 37,25 안하면 왼쪽 위 꼭지점 부분 중심으로 50 사이즈로 클릭 범위 잡힘
+
+        this.temperature.on('pointerover', function(){
+            this.text_temp.setVisible(true);
+        }, this);
+        this.temperature.on('pointerout', function(){
+            this.text_temp.setVisible(false)
+        }, this);
+
+        /** 변수들 드래그2 **/
+        var variable2 = this.add.graphics();
+        variable2.lineStyle(3, 0xFFB569, 1);
+        this.var_cage2 = variable2.fillRoundedRect(0, 0, 75, 50, 10).strokeRoundedRect(0, 0, 75, 50, 10).fillStyle(0xFCE5CD, 1); //글자 밖 배경
+
+        this.text_water = this.add.text(1600,550,'water',{ 
+            fontSize : '28px',
+            fontFamily: ' Courier',
+            color: '#FFB569'
+        });
+        this.text_water.setInteractive();
+        this.text_water.setVisible(false);
+
+        this.waterWball.on('pointerover', function(){
+            this.text_water.setVisible(true);
+        }, this);
+        this.waterWball.on('pointerout', function(){
+            this.text_water.setVisible(false)
+        }, this);
         
         this.input.setDraggable(this.text_temp);
+        this.input.setDraggable(this.text_water);
 
         this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.setVisible(true);
@@ -277,14 +305,7 @@ export default class SecondStage extends Phaser.Scene {
             gameObject.y = gameObject.input.dragStartY;
         });
         
-        this.temperature.on('pointerover', function(){
-            this.text_temp.setVisible(true);
-            this.text_temp.x = this.input.mousePointer.x-20;
-            this.text_temp.y = this.input.mousePointer.y-20;
-        }, this);
-        this.temperature.on('pointerout', function(){
-            this.text_temp.setVisible(false)
-        }, this);
+
 
         //this.mission1Complete = false;
         this.mission1Complete = true;   
@@ -296,9 +317,12 @@ export default class SecondStage extends Phaser.Scene {
 
     update() {
         //변수의 배경이 텍스트 따라다니도록
-        this.var_cage.x = this.text_temp.x;
-        this.var_cage.y = this.text_temp.y;
-        this.var_cage.visible = this.text_temp.visible;
+        this.var_cage1.x = this.text_temp.x;
+        this.var_cage1.y = this.text_temp.y-10;
+        this.var_cage1.visible = this.text_temp.visible;
+        this.var_cage2.x = this.text_water.x;
+        this.var_cage2.y = this.text_water.y-10;
+        this.var_cage2.visible = this.text_water.visible;
 
         if(this.mission1) {
             this.contenttext = 
