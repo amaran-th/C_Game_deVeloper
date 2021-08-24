@@ -417,6 +417,10 @@ export default class SecondStage extends Phaser.Scene {
             "1_#include <stdio.h>\n";
         }
 
+        while(water == 1) {
+            water = water + 1;
+        }
+
         
         //실제로는 2가지에 나눠서 쨔아함! ( this.out ==  "더워요")
         if (this.out == "1_#include <stdio.h>\nint main(){\n\n   {int temp = 45;} \n\n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
