@@ -202,6 +202,11 @@ class Start extends Phaser.Scene {
         frameHeight: 120,
       });
 
+      this.load.spritesheet('student', './assets/images/stage5/student.png', {
+        frameWidth: 90,
+        frameHeight: 140,
+      });
+
       //5번째 스테이지의 회원증 이미지 로드
       this.load.image("library_membership", "./assets/images/stage5/membership.png");
       

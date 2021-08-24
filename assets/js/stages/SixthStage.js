@@ -11,7 +11,7 @@ export default class SixthStage extends Phaser.Scene {
 
     preload() {
 
-        this.load.image("stage6_tiles", "./assets/images/test.png");
+        this.load.image("stage6_tiles", "./assets/images/stage6/map_stage6.png");
         this.load.tilemapTiledJSON("sixth_stage", "./assets/sixth_stage.json");
     
     }
@@ -33,7 +33,7 @@ export default class SixthStage extends Phaser.Scene {
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "sixth_stage" });
         
-        const tileset = map.addTilesetImage("test", "stage6_tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("map_stage6", "stage6_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
 
         /*** npc 불러오기 ***/ //npc가 필요해서... 일단 ㅎㅎ 
