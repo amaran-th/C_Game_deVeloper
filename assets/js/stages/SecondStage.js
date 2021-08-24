@@ -314,6 +314,26 @@ export default class SecondStage extends Phaser.Scene {
             this.var_cage.visible = this.text_temp.visible;
         } else {
             this.var_cage.setVisible(false);
+            switch (this.text_temp._text) { // 드랍존에 들어간 temp 어는 드랍존인 지 구분하여 해당 드랍존 위치에 맞게 플레이어를 따라가도록 함
+                case this.code_zone_1:
+                    this.text_temp.x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
+                    break;
+                case this.code_zone_2:
+                    this.text_temp.x = this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5;
+                    break;
+                case this.code_zone_3:
+                    this.text_temp.x = this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5;
+                    break;
+                case this.code_zone_4:
+                    this.text_temp.x = this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5;
+                    break;
+                case this.code_zone_5:
+                    this.text_temp.x = this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5;
+                    break;
+                case this.code_zone_6:
+                    this.text_temp.x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
+                    break;
+            }
         }
 
         if(this.mission1) {
