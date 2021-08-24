@@ -161,7 +161,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         });
         
         //초기화 시키기
-        this.reset_button = scene.add.image(980, 115, 'reset_button'); // 함수에서도 변수 쓰기 위해 this로 함
+        this.reset_button = scene.add.image(800, 450, 'reset_button'); // 함수에서도 변수 쓰기 위해 this로 함
         var reset_button = this.reset_button;
         reset_button.setInteractive();
         reset_button.on('pointerover', function () {
@@ -209,7 +209,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
 
     update(scene) {
         
-        this.reset_button.x = scene.worldView.x + 980; // 리턴 버튼 플레이어 따라 이동
+        this.reset_button.x = scene.worldView.x + 800; // 리턴 버튼 플레이어 따라 이동
         
         if (scene.worldView.x != this.preworldview_x) { // 코드 조각 플레이어 따라 이동
             for (var i = 0; i < scene.item.length; i++) {
