@@ -27,7 +27,7 @@ export default class Command extends Phaser.GameObjects.Image {
         code_text = scene.add.text(map.widthInPixels, 75, scene.app_code_text, {  font: "25px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
 
         /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
-        this.compile_button = scene.add.image(1000,70,'compile_button').setOrigin(0,0);
+        this.compile_button = scene.add.image(850,425,'compile_button').setOrigin(0,0);
         this.compile_button.setInteractive();
 
         
