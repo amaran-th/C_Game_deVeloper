@@ -161,7 +161,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         });
         
         //초기화 시키기
-        this.reset_button = scene.add.image(980, 115, 'reset_button'); // 함수에서도 변수 쓰기 위해 this로 함
+        this.reset_button = scene.add.image(800, 450, 'reset_button'); // 함수에서도 변수 쓰기 위해 this로 함
         var reset_button = this.reset_button;
         reset_button.setInteractive();
         reset_button.on('pointerover', function () {
@@ -209,7 +209,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
 
     update(scene) {
         
-        this.reset_button.x = scene.worldView.x + 980; // 리턴 버튼 플레이어 따라 이동
+        this.reset_button.x = scene.worldView.x + 800; // 리턴 버튼 플레이어 따라 이동
         
         if (scene.worldView.x != this.preworldview_x) { // 코드 조각 플레이어 따라 이동
             for (var i = 0; i < scene.item.length; i++) {
@@ -274,21 +274,68 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             //console.log('there');
             this.graphics.setVisible(true);
             this.reset_button.setVisible(true);
-            //console.log(scene.code_zone_1 + " + " + this.code_piece[0]._text);
-            for (var i = 0; i < scene.item.length; i++){ // 이거 없으면 코드앱 닫아도 드랍존에 들어간 코드조각 남음, 있으면 인벤토리 닫아도 코드 보임...뱌아ㅏ아ㅏㅏ
-                this.code_piece[i].setVisible(true);
+            if (!scene.invenIn) { // 인벤 닫혀있을 때
+                for (var i = 0; i < scene.item.length; i++){
+                    switch (this.code_piece[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
+                        case scene.code_zone_1:         
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_2:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_3:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_4:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_5:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_6:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        default:
+                            this.code_piece[i].setVisible(false);
+                    }
+                }
+            } else { // 인벤 열려있을 때
+                for (var i = 0; i < scene.item.length; i++){
+                    this.code_piece[i].setVisible(true);
+                }
             }
         } else { // 명령창이 들어가있을 때 드랍존과 리셋버튼 들어가 있도록
             //console.log('here');
             this.graphics.setVisible(false);
             this.reset_button.setVisible(false);
-            if (!scene.invenIn) {
+            if (!scene.invenIn) { // 인벤 닫혀있을 때
                 for (var i = 0; i < scene.item.length; i++){
                     this.code_piece[i].setVisible(false);
                 }
-            } else {
+            } else { // 인벤 열려있을 때
                 for (var i = 0; i < scene.item.length; i++){
-                    this.code_piece[i].setVisible(true);
+                    switch (this.code_piece[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
+                        case scene.code_zone_1:         
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_2:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_3:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_4:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_5:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_6:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        default:
+                            this.code_piece[i].setVisible(true);
+                    }
                 }
             }
         }
