@@ -5,6 +5,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         scene.add.existing(this);
         
 
+
         /*** 드래그앤드랍 ***/        
         // 코드 조각 불러와 배치하기
         this.code_piece = [];  // 배열로 줘서 씬에서 할당한 코드조각 만큼을 text 생성 변수로 주어줌
@@ -32,6 +33,9 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         this.graphics.lineStyle(2, 0x7e80a7);
         this.graphics.strokeRect(x - width / 2, y - height / 2, width, height);
         
+        console.log('x좌표',x - width / 2);
+
+
         // 드래그 하려고 선택한 거 맨 위로 올림
         scene.input.on('dragstart', function (pointer, gameObject) { 
             scene.children.bringToTop(gameObject);
@@ -204,6 +208,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
     } 
 
     update(scene) {
+        
         this.reset_button.x = scene.worldView.x + 980; // 리턴 버튼 플레이어 따라 이동
         
         if (scene.worldView.x != this.preworldview_x) { // 코드 조각 플레이어 따라 이동

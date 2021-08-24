@@ -12,7 +12,7 @@ export default class FifthStage extends Phaser.Scene {
 
     preload() {
 
-        this.load.image("stage5_tiles", "./assets/images/test.png");
+        this.load.image("stage5_tiles", "./assets/images/stage5/map_stage5.png");
         this.load.tilemapTiledJSON("fifth_stage", "./assets/fifth_stage.json");
     
     }
@@ -34,9 +34,9 @@ export default class FifthStage extends Phaser.Scene {
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "fifth_stage" });
         
-        const tileset = map.addTilesetImage("test", "stage5_tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("map_stage5", "stage5_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
-        
+        this.deco = map.createLayer("deco", tileset, 0, 0);
         //도서관의 배경 불빛 애니메이션 생성
         this.anims.create({
             key: "light",
@@ -45,11 +45,13 @@ export default class FifthStage extends Phaser.Scene {
             repeat: -1
         });
 
-        this.background1 = this.add.sprite( 400, 400, 'librarylight', 0).setOrigin(0,1);
-        this.background2 = this.add.sprite( 800, 400, 'librarylight', 0).setOrigin(0,1);
+        this.background1 = this.add.sprite( 600, 200, 'librarylight', 0).setOrigin(0,1);
+        this.background2 = this.add.sprite( 600, 400, 'librarylight', 0).setOrigin(0,1);
+        this.background3 = this.add.sprite( 100, 250, 'librarylight', 0).setOrigin(0,1);
 
         this.background1.play('light',true);
         this.background2.play('light',true);
+        this.background3.play('light',true);
 
         //desk 이미지 add
         this.add.image(400,500,"library_desk").setOrigin(0,1);
@@ -72,7 +74,7 @@ export default class FifthStage extends Phaser.Scene {
             frameRate: 7,
             repeat: -1,
         });
-        this.librarian1 = this.add.sprite(600 ,350,'librarian1');
+        this.librarian1 = this.add.sprite(595 ,375,'librarian1');
         this.librarian1.play('working_librarian1',true);
 
         //회원증 이미지
@@ -182,15 +184,110 @@ export default class FifthStage extends Phaser.Scene {
         //맵 이동을 위한 스테이지 번호 변수
         stagenum = 5;
         
-        //초기 이벤트를 봤는지 여부
+        //사서1과의 초기 이벤트를 봤는지 여부
         this.firsttalked=false;
+
+        /** 임시로 만들어둔 선택지 예시 **/
+        this.finAnswer = { //주소
+            answer: 0 //값
+        };
+
+        //라이브러리를 대여한 상태변수
+        this.library_state=0;   //0 : 라이브러리 안 빌린 상태, 1 : math빌린 상태, 2 : string 빌린 상태
+        this.present_library="없음";
+        this.change_library=0;  //라이브러리 상태의 변화를 나타내는 변수(1~9)
+        this.dialog_text="";
+        
+        //select 관련 함수 트리거 변수
+        this.select_trigger=false;
+
+        this.select_case0= ['<math.h>','<string.h>','대여하지 않는다.']; //msgArr.length = 3
+        this.select_case1= ['<math.h>을 반납한다.','<math.h>을 반납하고 <string.h>을 대여한다.','아무것도 하지 않는다.'];
+        this.select_case2= ['<string.h>을 반납한다.','<string.h>을 반납하고 <math.h>을 대여한다.','아무것도 하지 않는다.'];
+        
     }
 
     update() {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
-                
+
+        //선택지 선택 결과 처리 코드
+        if(!this.scene.isVisible('selection') && this.finAnswer.answer){ //selection 화면이 꺼졌다면
+            if(this.library_state==0){
+                //case0의 선택지 선택시
+                switch(this.finAnswer.answer) {
+                case 1: console.log('1의 선택지로 대답 했을때(0->1)');
+                    this.library_state=1;
+                    this.change_library=1;
+                    this.present_library="<math.h>";
+                    this.finAnswer.answer = 0;
+                    this.function=7;
+                    return;
+                case 2: console.log('2의 선택지로 대답 했을때(0->2)');
+                    this.library_state=2;
+                    this.change_library=2;
+                    this.present_library="<string.h>";
+                    this.finAnswer.answer = 0;
+                    this.function=7;
+                    return;
+                case 3: console.log('3의 선택지로 대답 했을때(0->0)');
+                    this.change_library=3;
+                    this.finAnswer.answer = 0;
+                    this.function=7;
+                    return;
+                }
+            }else if(this.library_state==1){
+                //case1의 선택지 선택시
+                switch(this.finAnswer.answer) {
+                    case 1: console.log('1의 선택지로 대답 했을때(1->0)');
+                        this.library_state=0;
+                        this.change_library=4;
+                        this.present_library="없음";
+                        this.finAnswer.answer = 0;
+                        this.function=7;
+                        return;
+                    case 2: console.log('2의 선택지로 대답 했을때(1->2)');
+                        this.library_state=2;
+                        this.change_library=5;
+                        this.present_library="<string.h>";
+                        this.finAnswer.answer = 0;
+                        this.function=7;
+                        return;
+                    case 3: console.log('3의 선택지로 대답 했을때(1->1)');
+                        this.change_library=6;
+                        this.finAnswer.answer = 0;
+                        this.function=7;
+                        return;
+                    }
+            }else if(this.library_state==2){
+                //case2의 선택지 선택시
+                switch(this.finAnswer.answer) {
+                    case 1: console.log('1의 선택지로 대답 했을때(2->0)');
+                        this.library_state=0;
+                        this.change_library=7;
+                        this.present_library="없음";
+                        this.finAnswer.answer = 0;
+                        this.function=7;
+                        return;
+                    case 2: console.log('2의 선택지로 대답 했을때(2->1)');
+                        this.library_state=1;
+                        this.change_library=8;
+                        this.present_library="<math.h>";
+                        this.finAnswer.answer = 0;
+                        this.function=7;
+                        return;
+                    case 3: console.log('3의 선택지로 대답 했을때(2->2)');
+                        this.change_library=9;
+                        this.finAnswer.answer = 0;
+                        this.function=7;
+                        return;
+                    }
+            }
+            
+        }
+            
+        
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
             '플레이어 위치',
@@ -259,10 +356,21 @@ export default class FifthStage extends Phaser.Scene {
             this.stage5_11();
             this.function=0;
         }
-        
 
 
-
+        //사서1과 대화 중 선택지 관련 함수 실행을 위한 코드
+        if(this.select_trigger){
+            if(this.library_state==0){
+                this.stage5_select0();
+                this.select_trigger=false;
+            }else if(this.library_state==1){
+                this.stage5_select1();
+                this.select_trigger=false;
+            }else if(this.library_state==2){
+                this.stage5_select2();
+                this.select_trigger=false;
+            }
+        }
 
 
 
@@ -446,12 +554,11 @@ export default class FifthStage extends Phaser.Scene {
                     seq.on('complete', () => {
                         this.tweens.add({
                             targets: this.membership_card,
-                            y: 0, //위치 이동
+                            alpha: 0, //위치 이동
                             duration: 500,
                             ease: 'Power1',
                             repeat: 0,
                             onComplete: ()=>{
-                                this.membership_card.destroy();
                                 this.function=5;
                                 this.librarian1.setFlipX(false);
                                 this.librarian1.play('working_librarian1',true);
@@ -480,6 +587,12 @@ export default class FifthStage extends Phaser.Scene {
     //===========================================================================
 
     stage5_7(){
+        console.log("stage5_7");
+        this.membership_card.setAlpha(0);
+        this.membership_card.y=600;
+        this.librarian1.anims.stop();
+        this.librarian1.setFlipX(true);
+        
         this.player.player.setFlipX(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -487,8 +600,165 @@ export default class FifthStage extends Phaser.Scene {
         .load(this.dialog.stage5_7, this.dialog)
         .start();
         seq.on('complete', () => {
+            //회원증이 스르륵 나타나서 위로 올라가는 애니메이션
+            this.tweens.add({
+                targets: this.membership_card,
+                alpha: 1, //선명해지게
+                duration: 500,
+                ease: 'Power1',
+                repeat: 0,
+                onComplete: ()=>{
+                    this.tweens.add({
+                        targets: this.membership_card,
+                        y: 0, //위치 이동
+                        duration: 500,
+                        ease: 'Power1',
+                        repeat: 0,
+                        onComplete: ()=>{
+                            this.librarian1.setFlipX(false);
+                            this.librarian1.play('working_librarian1',true);
+
+                            this.time.delayedCall( 1000, () => { 
+                                this.librarian1.anims.stop();
+                                this.librarian1.setFlipX(true);
+
+                                this.select_trigger=true;
+                            }, [], this); 
+                            
+                        }
+                    }, this);
+                }
+            }, this);
+            
+            
             
         }); 
+    }
+
+    stage5_select0(){
+        console.log("stage5_select0");
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.select0, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.scene.run('selection',{ msgArr: this.select_case0, num: this.select_case0.length, finAnswer: this.finAnswer });
+        });
+    }
+
+    stage5_select1(){
+        console.log("stage5_select1");
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.select1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.scene.run('selection',{ msgArr: this.select_case1, num: this.select_case1.length, finAnswer: this.finAnswer });
+        });
+    }
+
+    stage5_select2(){
+        console.log("stage5_select2");
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.select2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.scene.run('selection',{ msgArr: this.select_case2, num: this.select_case2.length, finAnswer: this.finAnswer });
+        });
+    }
+    stage5_8(){
+        if(this.change_library==1||this.change_library==2){
+            //추가
+            this.dialog_text=this.present_library+" 라이브러리 인벤토리가 추가되었습니다.";
+            this.change_library=0;
+        }else if(this.change_library==4||this.change_library==7){
+            //제거
+            this.dialog_text=" 라이브러리 인벤토리가 사라졌습니다.";
+            this.change_library=0;
+        }else if(this.change_library==5||this.change_library==8){
+            //전환
+            this.dialog_text="기존 라이브러리 인벤토리가 "+this.present_library+" 라이브러리 인벤토리로 변경되었습니다.";
+            this.change_library=0;
+        }else{
+            //변화x
+            this.dialog_text="라이브러리를 변경하지 않습니다.";
+            this.change_library=0;
+        }
+
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_8_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            console.log("stage5_8");
+            var textBox = this.add.image(40,10,'textbox').setOrigin(0,0); 
+            var script = this.add.text(textBox.x + 200, textBox.y +50, this.dialog_text, {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+            var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 31);
+            
+            this.input.once('pointerdown', function() {
+                console.log("click");
+                    textBox.setVisible(false);
+                    script.setVisible(false);
+                    playerFace.setVisible(false);
+                    this.function=8;       
+            }, this);
+        });
+        
+    }
+
+    
+    
+    stage5_9(){
+        console.log("stage5_9");
+        this.tweens.add({
+            targets: this.membership_card,
+            y: 600, //위치 이동
+            duration: 500,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.stage5_8_2, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.tweens.add({
+                            targets: this.membership_card,
+                            alpha: 0, //투명해지게
+                            duration: 500,
+                            ease: 'Power1',
+                            repeat: 0,
+                            onComplete: ()=>{
+                                var seq = this.plugins.get('rexsequenceplugin').add();
+                                this.dialog.loadTextbox(this);
+                                seq
+                                .load(this.dialog.stage5_8_3, this.dialog)
+                                .start();
+                                seq.on('complete', () => {
+                                    this.librarian1.setFlipX(false);
+                                    this.librarian1.play('working_librarian1',true);
+                                    this.cantalking=true;
+                                    this.player.playerPaused = false;
+                                    this.function=0;
+                                });
+                        
+                            }
+                    }, this);  
+                });
+                             
+            }
+        }, this);
     }
     
 }
