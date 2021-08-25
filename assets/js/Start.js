@@ -185,6 +185,7 @@ class Start extends Phaser.Scene {
 
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");
+      this.load.image("npc_chef2", "./assets/images/stage3/npc_0.png"); //stage3_0
       this.load.image("stage3_tiles", "./assets/images/stage3/map_stage3.png");
 
     /** 3번째 스테이지 이미지 로드 **/
