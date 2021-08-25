@@ -306,6 +306,15 @@ export default class SixthStage extends Phaser.Scene {
         //정답(1 ~ maxnum)은 this.finAnswer.andswer에 들어감
         
         this.player.playerPaused = true;
+
+        this.books.setInteractive();
+        this.books.on("pointerdown",function(){
+            this.books.setVisible(false);
+            this.somethingup = true;
+            console.log("zmf")
+        },this);
+        
+
     }
 
     update() {
@@ -338,14 +347,14 @@ export default class SixthStage extends Phaser.Scene {
         this.playerCoord.y = this.worldView.y + 10;
 
         //1. 책 주변으로 갔을때 X누르면 머리위로 책 얻음!
-        if( this.player.player.x > 650 && this.player.player.x < 730 && this.somethingup == false){
+        if( this.player.player.x > 600 && this.player.player.x < 730 ){
             this.pressX_getbook.x = this.player.player.x-50;
             this.pressX_getbook.y = this.player.player.y-100;
-
             this.pressX_getbook.setVisible(true);
-            if(this.keyX.isDown) {
-                this.somethingup = true;
-            }
+
+            
+            
+    
         }
         else this.pressX_getbook.setVisible(false);
 
@@ -490,7 +499,6 @@ export default class SixthStage extends Phaser.Scene {
             .start();
             seq.on('complete', () => {
                 // 악마를 플레이어 방향을 보게 하고, 그 위에 느낌표 표시를 한 뒤 stage2 대사로 넘어간다
-                this.devil.setFlipX(true);
                 this.exclamMark.setVisible(true);
                 this.exclamMark.play('exclam');
                 this.time.delayedCall( 1000, () => { this.stage6_2() }, [] , this);
@@ -511,7 +519,9 @@ export default class SixthStage extends Phaser.Scene {
     }
     //책을 npc한테 줬을시
     stage6_3() {
+        this.devil.setFlipX(true);
         this.books.destroy();
+        console.log(this.books)
         this.bookswhy = this.add.image(650, 380, 'bookswhy');
         var seq = this.plugins.get('rexsequenceplugin').add();
             this.dialog.loadTextbox(this);
