@@ -805,6 +805,8 @@ visible(visible) {
     ['wait-click'],
     ['print', '아무튼 잘됐다! 책 정리하는 것 좀 도와줘!'],
     ['wait-click'],
+    ['print', '저기 책상위에 책 보이지? 나한테 좀 줘봐!'],
+    ['wait-click'],
 
     ['visible',false],
   ]

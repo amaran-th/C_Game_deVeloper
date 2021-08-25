@@ -44,7 +44,7 @@ class MiniMap extends Phaser.Scene {
                 this.scene.run('first_stage');
             }
             else if(stagenum==3){
-                this.scene.stop('third_stage');
+                this.scene.stop('third_stage_0');
                 this.scene.run('first_stage');
             }else if(stagenum==4){
                 this.scene.stop('fourth_stage');
@@ -78,7 +78,7 @@ class MiniMap extends Phaser.Scene {
                 this.scene.run('second_stage');
             }
             else if(stagenum==3){
-                this.scene.stop('third_stage');
+                this.scene.stop('third_stage_0');
                 this.scene.run('second_stage');
             }
             else if(stagenum==4){
@@ -103,27 +103,27 @@ class MiniMap extends Phaser.Scene {
             stage_6.setVisible(false);
             if(stagenum == 0){
                 this.scene.stop('bootgame');
-                this.scene.run('third_stage');
+                this.scene.run('third_stage_0');
             }else if(stagenum==1){
                 this.scene.stop('first_stage');
-                this.scene.run('third_stage');
+                this.scene.run('third_stage_0');
             }
             else if(stagenum==2){
                 this.scene.stop('second_stage');
-                this.scene.run('third_stage');
+                this.scene.run('third_stage_0');
             }
             else if(stagenum==3){
-                this.scene.stop('third_stage');
-                this.scene.run('third_stage');
+                this.scene.stop('third_stage_0');
+                this.scene.run('third_stage_0');
             }else if(stagenum==4){
                 this.scene.stop('fourth_stage');
-                this.scene.run('third_stage');
+                this.scene.run('third_stage_0');
             }else if(stagenum==5){
                 this.scene.stop('fifth_stage');
-                this.scene.run('third_stage');
+                this.scene.run('third_stage_0');
             }else if(stagenum==6){
                 this.scene.stop('sixth_stage');
-                this.scene.run('third_stage');
+                this.scene.run('third_stage_0');
             }
         },this);
 
@@ -147,7 +147,7 @@ class MiniMap extends Phaser.Scene {
                 this.scene.run('fourth_stage');
             }
             else if(stagenum==3){
-                this.scene.stop('third_stage');
+                this.scene.stop('third_stage_0');
                 this.scene.run('fourth_stage');
             }else if(stagenum==4){
                 this.scene.stop('fourth_stage');
@@ -181,7 +181,7 @@ class MiniMap extends Phaser.Scene {
                 this.scene.run('fifth_stage');
             }
             else if(stagenum==3){
-                this.scene.stop('third_stage');
+                this.scene.stop('third_stage_0');
                 this.scene.run('fifth_stage');
             }else if(stagenum==4){
                 this.scene.stop('fourth_stage');
@@ -215,7 +215,7 @@ class MiniMap extends Phaser.Scene {
                 this.scene.run('sixth_stage');
             }
             else if(stagenum==3){
-                this.scene.stop('third_stage');
+                this.scene.stop('third_stage_0');
                 this.scene.run('sixth_stage');
             }else if(stagenum==4){
                 this.scene.stop('fourth_stage');
@@ -262,7 +262,7 @@ class MiniMap extends Phaser.Scene {
             else if(stagenum==3){
                 console.log("back satage3");
                 this.scene.stop('minimap');
-                this.scene.run('third_stage');
+                this.scene.run('third_stage_0');
             }else if(stagenum==4){
                 console.log("back satage3");
                 this.scene.stop('minimap');
