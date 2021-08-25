@@ -89,7 +89,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
 
         // 드랍 위치가 아니면 원래 자리로 돌아가도록 함 + 색 조정
         scene.input.on('dragend', function (pointer, gameObject, dropped) {
-            //console.log(this.dropzone);
+            //console.log('dropname' + this.dropzone);
             //console.log('scene.drop_state_1 > '+ scene.drop_state_1);
             //console.log('scene.drop_state_2 > '+ scene.drop_state_2);
             //console.log('scene.drop_state_3 > '+ scene.drop_state_3);
