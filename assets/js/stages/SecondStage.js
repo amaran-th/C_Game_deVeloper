@@ -337,7 +337,7 @@ export default class SecondStage extends Phaser.Scene {
         this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
         this.firstTalk = true; //플레이어가 유치원생과 한 번만 대화할 수 있도록
 
-        this.tag_drop_state_for_return = false; // return버튼과 드랍존 태그 플레이어 따라 이동에 필요
+        this.return_state = false; // 태그조각 리턴 버튼과 연동하기 위함
         this.tag_in_dropzone = new Array(); // 드랍존에 들어가는 태그조각 배열 (플레이어 따라 이동하게 하기 위해서는 변수 하나만 하면 마지막 것만 들어와서 안 돼서 배열로 함)
 
         this.pointerUnderGround = true //태그가 번쩍거리지 않도록 setvisible true를 한번만 선언해줌
@@ -372,7 +372,7 @@ export default class SecondStage extends Phaser.Scene {
         if (tag_drop_state) { // 태그가 드랍됐으면 태그조각이 생성될 드랍존 위치를 파악해 태그조각을 생성해줌
             var tag_x; // 태그조각 생성될 x좌표
             var tag_y; // 태그조각 생성될 y좌표
-            if (this.drop_state_1 == 0 && this.code_zone_1 == tag_text) { // 같은 텍스트 여러개면 먼저있는 걸 인식해서 드랍존 먼저있는 부분에만 텍스트 오브젝트 생김
+            if (this.drop_state_1 == 0 && this.code_zone_1 == tag_text) { // 같은 문자열이더라도 드랍존에 이미 생성되어 있으면 해당 부분이 아닌 다른 드랍존에 생성하기 위해 this.drop_state 조건에 포함시켜 줌  
                 //console.log("1");
                 tag_x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
                 tag_y = this.draganddrop_1.y - 10;
@@ -408,7 +408,6 @@ export default class SecondStage extends Phaser.Scene {
             //console.log(this.code_zone_1 + " " + this.code_zone_2 + " " + this.code_zone_3 + " " + this.code_zone_4 + " " + this.code_zone_5 + " " + this.code_zone_6);
             this.tag_in_dropzone[this.tag_in_dropzone.length] = this.add.text(tag_x, tag_y, tag_text, { font: "25px Arial Black", fill: "#eedfbe" }); // 배열에 태그조각 만들어 넣어줌
             tag_drop_state = false; // 다른 태그 드랍할 때도 인식하게 하기 위해 false로 바꿔줌
-            this.tag_drop_state_for_return = true; // return버튼과 드랍존 태그 플레이어 따라 이동에 필요
         }
         
         if (this.worldView.x != this.preworldview_x) { // 플레이어가 이동하면 태그조각도 플레이어 따라 이동
@@ -434,10 +433,15 @@ export default class SecondStage extends Phaser.Scene {
                 //console.log(i + "> " + this.tag_in_dropzone[i].x)
             }
             this.preworldview_x = this.worldView.x;
-        } else {
-            //this.tag_in_dropzone.setVisible(false);
         }
 
+        if (this.return_state) { // 리턴 버튼 눌러졌으면 태그조각 드랍존에서 없애고, 태그조각 배열 비워주기
+            for (var i = 0; i < this.tag_in_dropzone.length; i++) {
+                this.tag_in_dropzone[i].destroy();
+            }
+            this.tag_in_dropzone = [];
+            this.return_state = false;
+        }
 
 
         //변수의 배경이 텍스트 따라다니도록
