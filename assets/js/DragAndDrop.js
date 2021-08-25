@@ -32,8 +32,6 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         var graphics = this.graphics; // 함수에서도 graphics를 쓰기 위해 this.graphics 썼으나 input 안에서 this 적용 안 돼서 따로 변수 둠.
         this.graphics.lineStyle(2, 0x7e80a7);
         this.graphics.strokeRect(x - width / 2, y - height / 2, width, height);
-        
-        console.log('x좌표',x - width / 2);
 
 
         // 드래그 하려고 선택한 거 맨 위로 올림
@@ -91,7 +89,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
 
         // 드랍 위치가 아니면 원래 자리로 돌아가도록 함 + 색 조정
         scene.input.on('dragend', function (pointer, gameObject, dropped) {
-            //console.log(this.dropzone);
+            //console.log('dropname' + this.dropzone);
             //console.log('scene.drop_state_1 > '+ scene.drop_state_1);
             //console.log('scene.drop_state_2 > '+ scene.drop_state_2);
             //console.log('scene.drop_state_3 > '+ scene.drop_state_3);
@@ -194,7 +192,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.code_zone_5 = undefined;
             scene.code_zone_6 = undefined;
 
-            scene.temp_drop_state = false;
+            scene.return_state = true;
         });
         
         if (scene.code_piece_add_state != scene.dropzon_su - 1) {
