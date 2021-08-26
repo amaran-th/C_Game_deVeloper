@@ -336,7 +336,7 @@ export default class SecondStage extends Phaser.Scene {
         this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
         this.firstTalk = true; //플레이어가 유치원생과 한 번만 대화할 수 있도록
 
-        this.return_state = false; // 태그조각 리턴 버튼과 연동하기 위함
+        this.reset_state = false; // 태그조각 리셋 버튼과 연동하기 위함
         this.tag_in_dropzone = new Array(); // 드랍존에 들어가는 태그조각 배열 (플레이어 따라 이동하게 하기 위해서는 변수 하나만 하면 마지막 것만 들어와서 안 돼서 배열로 함)
 
         this.pointerUnderGround = true //태그가 번쩍거리지 않도록 setvisible true를 한번만 선언해줌
@@ -459,12 +459,13 @@ export default class SecondStage extends Phaser.Scene {
             this.preworldview_x = this.worldView.x;
         }
 
-        if (this.return_state) { // 리턴 버튼 눌러졌으면 태그조각 드랍존에서 없애고, 태그조각 배열 비워주기
+        if (this.reset_state) { // 리셋 버튼 눌러졌으면 태그조각 드랍존에서 없애고, 태그조각 배열 비워주기
+            //console.log("here");
             for (var i = 0; i < this.tag_in_dropzone.length; i++) {
                 this.tag_in_dropzone[i].destroy();
             }
             this.tag_in_dropzone = [];
-            this.return_state = false;
+            this.reset_state = false;
         }
 
         if (this.codeapp_onoff_state == 0) { // 코드앱 켜지고 꺼짐에 따라 태그조각 보이고 안 보이고 하기
@@ -599,7 +600,7 @@ export default class SecondStage extends Phaser.Scene {
 
         
         if(this.invenPlus) {
-            console.log("here");
+            //console.log("here");
             this.item[this.item.length] =  'printf';  
             this.item[this.item.length] =  'if';   
             this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
@@ -618,6 +619,9 @@ export default class SecondStage extends Phaser.Scene {
 
         if(this.invenPlus2) {
             console.log('inven2')
+
+            this.reset_before_mission(); // 이전 미션의 드랍은 reset함
+
             this.item[this.item.length] =  'while';  
             this.dropzon_su = 5; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             
@@ -999,6 +1003,19 @@ export default class SecondStage extends Phaser.Scene {
         this.water = this.add.sprite( 1600, 600, 'water', 0).setOrigin(0,1)
         this.water.play('water');
 
+    }
+ 
+    reset_before_mission() {
+        this.draganddrop_1.reset_before_mission(this);
+        this.draganddrop_2.reset_before_mission(this);
+        this.draganddrop_3.reset_before_mission(this);
+        for (var i = 0; i < this.tag_in_dropzone.length; i++) {
+            this.tag_in_dropzone[i].destroy();
+        }
+        this.tag_in_dropzone = [];
+        this.draganddrop_1 = undefined;
+        this.draganddrop_2 = undefined;
+        this.draganddrop_3 = undefined;
     }
 }
 
