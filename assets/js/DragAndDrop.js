@@ -58,7 +58,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         // 영역안에서도 지정된 부분에만 고정되는 듯
         scene.input.on('drop', function (pointer, gameObject, dropZone) {
             gameObject.x = dropZone.x - width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
-            gameObject.y = dropZone.y - height / 2 - 5; // 위치 왜 이런지 궁금한 사람 은지한테 문의 바람 그림 그려줌
+            gameObject.y = dropZone.y - height / 2 - 3; // 위치 왜 이런지 궁금한 사람 은지한테 문의 바람 그림 그려줌
             if(dropZone.name == "1"){
                 scene.code_zone_1 = gameObject._text;
                 this.dropzone = 1; // dragend부분에서 쓰려하는데 거긴 파라미터에 dropZone없어서 여기서 지정해줌
@@ -192,7 +192,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.code_zone_5 = undefined;
             scene.code_zone_6 = undefined;
 
-            scene.temp_drop_state = false;
+            scene.reset_state = true;
         });
         
         if (scene.code_piece_add_state != scene.dropzon_su - 1) {
@@ -337,5 +337,28 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                 }
             }
         }
+    }
+    reset_before_mission(scene) {   
+        for (var i = 0; i < scene.item.length; i++){ // 코드조각 없애줌
+            this.code_piece[i].destroy();
+        }
+
+        this.graphics.destroy(); // 드랍존틀 없애줌
+        this.reset_button.destroy(); // 리셋버튼 없애줌
+
+        //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
+        scene.drop_state_1 = 0;
+        scene.drop_state_2 = 0;
+        scene.drop_state_3 = 0;
+        scene.drop_state_4 = 0;
+        scene.drop_state_5 = 0;
+        scene.drop_state_6 = 0;
+
+        scene.code_zone_1 = undefined; // 리셋했을 때 비워주기
+        scene.code_zone_2 = undefined;
+        scene.code_zone_3 = undefined;
+        scene.code_zone_4 = undefined;
+        scene.code_zone_5 = undefined;
+        scene.code_zone_6 = undefined;
     }
 }

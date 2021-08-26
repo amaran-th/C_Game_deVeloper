@@ -555,7 +555,7 @@ visible(visible) {
 
   stage2_5 = [
     ['visible',true],
-    ['place', 300,10],
+    ['place', 500,10],
     ['setFace', 1],
     ['print', '할아버지의 부탁을 먼저 해결하자'],
     ['wait-click'],
@@ -592,7 +592,6 @@ visible(visible) {
   stage2_8 = [
     ['visible',true],
     ['place', 800,10],
-    /*
     ['setFace', 1],
     ['print', '이런! 팔이 안 닿나 보구나!'],
     ['wait-click'],
@@ -621,12 +620,22 @@ visible(visible) {
     ['setFace', 0],
     ['print', '(유치원생이 나보다 더 잘 아는군.)'],
     ['wait-click'],
-    */
     ['setFace', 2],
     ['print', '언니 이거 받으세요.'],
     ['wait-click'],
     ['visible',false],
   ]
+
+  stage2_10 = [
+    ['visible',true],
+    ['place', 800,10],
+    ['setFace', 2],
+    ['print', '와 감사합니다!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+
 
 
   stage3_1 = [
@@ -932,6 +941,8 @@ visible(visible) {
     ['wait-click'],
     ['print', '아무튼 잘됐다! 책 정리하는 것 좀 도와줘!'],
     ['wait-click'],
+    ['print', '저기 책상위에 책 보이지? 나한테 좀 줘봐!'],
+    ['wait-click'],
 
     ['visible',false],
   ]
@@ -947,19 +958,29 @@ visible(visible) {
     ['wait-click'],
     ['print', '다 어지럽혀졌잖아!ㅜㅜ'],
     ['wait-click'],
+    ['setFace', 0],
+    ['print', '어? 근데 이건 무슨 책이에요....'],
+    ['wait-click'],
 
     ['visible',false],
   ]
 
   stage6_4 = [
     ['visible',true],
-    ['setFace', 0],
-    ['print', '어? 근데 이건 무슨 책이에요....'],
-    ['wait-click'],
     ['setFace', 3],
-    ['print', '이건 배열에 관한건데.. 블라블라 대사 모르겠음.. 어떻게 좀..'],
+    ['print', '이건 배열에 관한건데.. 책 첫장 페이지를 함 봐바'],
     ['wait-click'],
-    ['print', '아하하하하하'],
+    ['print', '페이지가 0부터 시작하지?'],
+    ['wait-click'],
+    ['print', '배열도 똑같아~!~! 0부터 시작하지!, 그 다음이 1이고'],
+    ['wait-click'],
+    ['print', '그럼, 만약에 이 배열이름을 book이라고 둬보자'],
+    ['wait-click'],
+    ['print', '그럼, book[0]은 뭘까? book배열의 1번째 원소를 찾는거야!'],
+    ['wait-click'],
+    ['print', ' \'네모\' 겠지!!'],
+    ['wait-click'],
+    ['print', '다음장을 함 볼까??// 책 넘김'],
     ['wait-click'],
 
     ['visible',false],
@@ -968,12 +989,15 @@ visible(visible) {
   stage6_5 = [
     ['visible',true],
     ['setFace', 3],
-    ['setFace', 3],
-    ['print', '배열 설명...'],
+    ['print', '봐바 0,1 그다음엔 2겠지?'],
     ['wait-click'],
-    ['print', '아하하하하하'],
+    ['print', '그렇다면 book[3] 는 뭘까?'],
     ['wait-click'],
-    ['print', '그럼 이제 퀴즈를 풀어보자!'],
+    ['print', '4번째 요소를 찾는건데 바로 하트 인거죠~!'],
+    ['wait-click'],
+    ['print', '설명 설명..,, 대사'],
+    ['wait-click'],
+    ['print', '그럼 어디한번 퀴즈를 풀어볼래? 준비 됬니?'],
     ['wait-click'],
 
     ['visible',false],

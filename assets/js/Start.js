@@ -186,6 +186,7 @@ class Start extends Phaser.Scene {
 
     /** 3번째 스테이지의 npc 로드 **/
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");
+      this.load.image("npc_chef2", "./assets/images/stage3/npc_0.png"); //stage3_0
       this.load.image("stage3_tiles", "./assets/images/stage3/map_stage3.png");
 
     /** 3번째 스테이지 이미지 로드 **/
@@ -214,7 +215,11 @@ class Start extends Phaser.Scene {
       this.load.image("tests_paper", "./assets/images/stage5/tests_paper.png");
       
       /** 6번째 스테이지 이미지 로드 **/
-      this.load.image("page1", "./assets/images/stage6/bookPage1.png");
+      this.load.image("librarian2", "./assets/images/stage6/librarian2.png");
+      this.load.image("OX_O", "./assets/images/stage6/OX_O.png");
+      this.load.image("OX_X", "./assets/images/stage6/OX_X.png");
+
+      this.load.image("page1", "./assets/images/stage6/bookPage1.png"); //배열 설명 페이지
       this.load.image("page2", "./assets/images/stage6/bookPage2.png");
       this.load.image("page3", "./assets/images/stage6/bookPage3.png");
       this.load.image("books", "./assets/images/stage6/books.png");

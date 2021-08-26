@@ -35,14 +35,35 @@ export default class SixthStage extends Phaser.Scene {
         
         const tileset = map.addTilesetImage("map_stage6", "stage6_tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
+        this.deco = map.createLayer("deco", tileset, 0, 0);
+
+        //도서관의 배경 불빛 애니메이션 생성
+        this.anims.create({
+            key: "light",
+            frames: this.anims.generateFrameNumbers('librarylight',{ start: 0, end: 2}), 
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.background1 = this.add.sprite( 600, 200, 'librarylight', 0).setOrigin(0,1);
+        //this.background2 = this.add.sprite( 600, 400, 'librarylight', 0).setOrigin(0,1);
+        this.background3 = this.add.sprite( 100, 250, 'librarylight', 0).setOrigin(0,1);
+        this.background4 = this.add.sprite( 1100, 250, 'librarylight', 0).setOrigin(0,1);
+
+        this.background1.play('light',true);
+       // this.background2.play('light',true);
+        this.background3.play('light',true);
+        this.background4.play('light',true);
 
         /*** npc 불러오기 ***/ //npc가 필요해서... 일단 ㅎㅎ 
         // this.npc_chef = this.add.image(350,250,'npc_chef').setOrigin(0,0);
         // this.npc_chef.setInteractive();
-        this.sadari = this.add.image(700, 280, 'sadari').setOrigin(0,0);
 
-        this.devil = this.add.image(720,170,'npc_chef').setOrigin(0,0);
-        this.devil.setInteractive();
+        this.npc = this.add.image(214,195,'librarian2').setOrigin(0,0);
+        this.npc.setInteractive();
+        
+        //책 이미지 불러오기
+        this.books = this.add.image(700,380,'books');
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -58,7 +79,7 @@ export default class SixthStage extends Phaser.Scene {
             repeat: 0,
             hideOnComplete: true
         });
-        this.exclamMark = this.add.sprite( 700, 180, 'exp_exclam', 0);
+        this.exclamMark = this.add.sprite( 254, 172, 'exp_exclam', 0);
         this.exclamMark.setVisible(false);
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -73,6 +94,23 @@ export default class SixthStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        //플레이어 위 pressX 생성해두기(door)
+        this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(책 얻기)
+        this.pressX_getbook = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to GET books', {
+            fontFamily: ' Courier',
+            color: '#ffffff'
+        }).setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(책 주기)
+        this.pressX_return_book = this.add.text(200,130, 'Press X to return books', {
+            fontFamily: ' Courier',
+            color: '#ffffff'
+        }).setOrigin(0,0);
 
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
@@ -141,16 +179,20 @@ export default class SixthStage extends Phaser.Scene {
         this.cameras.main.fadeIn(1000,0,0,0);
         this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
         this.stage6_1();
-        this.page3 = this.add.image(580, 170, 'page3');
-        this.page3.setVisible(false); 
 
-        this.presspkey = false;
-        this.somethingup = false;
+        this.somethingup = false; //플래그변수
+        this.bookok = false; // 플래그변수
+
+        this.O = this.add.image(260, 140, 'OX_O');//맞췄을때 말풍선
+        this.X = this.add.image(260, 140, 'OX_X');
+        this.O.setVisible(false);
+        this.X.setVisible(false);
+
         this.quiz1 = false;
         this.quiz2 = false;
         this.quizimage = this.add.image(600, 300, 'indexQuiz');
-        this.quiz1_text = this.add.text(340, 200, 'Quiz1)  index[5]의 값을 고르시오!', { font: "25px Arial Black", fill: "#fff" });
-        this.quiz2_text = this.add.text(340, 200, 'Quiz1)  index[1]의 값을 고르시오!', { font: "25px Arial Black", fill: "#fff" });
+        this.quiz1_text = this.add.text(340, 200, 'Quiz1)  index[1]의 값을 고르시오!', { font: "25px Arial Black", fill: "#fff" });
+        this.quiz2_text = this.add.text(340, 200, 'Quiz2)  index[3]의 값을 고르시오!', { font: "25px Arial Black", fill: "#fff" });
         this.quizimage.setVisible(false);
         this.quiz1_text.setVisible(false);
         this.quiz2_text.setVisible(false);
@@ -164,41 +206,27 @@ export default class SixthStage extends Phaser.Scene {
             this.image1[j].on('pointerup', function () {
                 switch(j){
                     case 0:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '정답아님!', { font: "25px Arial Black", fill: "#9900FF" });
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        this.X.setVisible(true);
+                        this.time.delayedCall( 1000, () => { this.X.setVisible(false);}, [] , this);
                         break;
                     case 1:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '축축!! 정답!!', { font: "25px Arial Black", fill: "#9900FF" });
+                        this.X.setVisible(false);
+                        this.O.setVisible(true);
                         this.quiz1 = false;
                         this.quiz2 = true;
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        this.time.delayedCall( 1000, () => { this.O.setVisible(false);}, [] , this);
                         break;
                     case 2:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '정답아님!', { font: "25px Arial Black", fill: "#9900FF" });
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        this.X.setVisible(true);
+                        this.time.delayedCall( 1000, () => { this.X.setVisible(false);}, [] , this);
                         break;
                     case 3:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '정답아님!', { font: "25px Arial Black", fill: "#9900FF" });
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        this.X.setVisible(true);
+                        this.time.delayedCall( 1000, () => { this.X.setVisible(false);}, [] , this);
                         break;
                     case 4:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '정답아님!', { font: "25px Arial Black", fill: "#9900FF" });
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        this.X.setVisible(true);
+                        this.time.delayedCall( 1000, () => { this.X.setVisible(false);}, [] , this);
                         break;
                     default:
                         scene.add.text(400, 300, 'default zone... why?', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
@@ -216,40 +244,29 @@ export default class SixthStage extends Phaser.Scene {
             this.image2[j].on('pointerup', function () {
                 switch(j){
                     case 0:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '정답아님!', { font: "25px Arial Black", fill: "#9900FF" });
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        this.X.setVisible(true);
+                        this.time.delayedCall( 1000, () => { this.X.setVisible(false);}, [] , this);
                         break;
                     case 1:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '축축!! 정답!!', { font: "25px Arial Black", fill: "#9900FF" });
+                        this.X.setVisible(false);
+                        this.O.setVisible(true);
+                        this.quiz1 = false;
+                        this.quiz2 = true;
+                        this.time.delayedCall( 1000, () => { this.O.setVisible(false);}, [] , this);
                         this.quiz2 = false;
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        
                         break;
                     case 2:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '정답아님!', { font: "25px Arial Black", fill: "#9900FF" });
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        this.X.setVisible(true);
+                        this.time.delayedCall( 1000, () => { this.X.setVisible(false);}, [] , this);
                         break;
                     case 3:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '정답아님!', { font: "25px Arial Black", fill: "#9900FF" });
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        this.X.setVisible(true);
+                        this.time.delayedCall( 1000, () => { this.X.setVisible(false);}, [] , this);
                         break;
                     case 4:
-                        this.armgra = this.add.graphics();
-                        this.armgra.fillStyle(0xCFE2F3, 1);
-                        this.armgra.fillRoundedRect(400, 200, 300, 200, 32);
-                        this.arm = this.add.text(450, 250, '정답아님!', { font: "25px Arial Black", fill: "#9900FF" });
-                        this.time.delayedCall( 1000, () => { this.arm.destroy(); this.armgra.destroy(); }, [] , this);
+                        this.X.setVisible(true);
+                        this.time.delayedCall( 1000, () => { this.X.setVisible(false);}, [] , this);
                         break;
                     default:
                         scene.add.text(400, 300, 'default zone... why?', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
@@ -260,19 +277,21 @@ export default class SixthStage extends Phaser.Scene {
 
 
                 /** 임시로 만들어둔 선택지 예시 **/
-
+/*
         this.finAnswer = { //주소
             answer: 0 //값
         };
         var msgArr= ['msg1aaaaaaaaaaaaaaaaaaaaaaaaaasdasdsadadas','msg2','mgs3']; //msgArr.length = 3
         this.scene.run('selection',{ msgArr: msgArr, num: msgArr.length, finAnswer: this.finAnswer });
         //정답(1 ~ maxnum)은 this.finAnswer.andswer에 들어감
+   */     
+
         
-        this.player.playerPaused = true;
+
     }
 
     update() {
-
+        /*
         if(!this.scene.isVisible('selection' && this.finAnswer.answer)){ //selection 화면이 꺼졌다면
             switch(this.finAnswer.answer) {
                 case 1: console.log('1의 선택지로 대답 했을때');
@@ -285,7 +304,7 @@ export default class SixthStage extends Phaser.Scene {
                     this.finAnswer.answer = 0;
                     return;
             }
-        }
+        }*/
 
         this.player.update();
         this.inventory.update(this);
@@ -300,23 +319,35 @@ export default class SixthStage extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
 
-        if(this.presspkey === true){
-            if(this.keyP.isDown) {
+        //1. 책 주변으로 갔을때 X누르면 머리위로 책 얻음!
+        if( this.player.player.x > 600 && this.player.player.x < 730 && this.bookok == false && this.somethingup == false){
+            this.pressX_getbook.x = this.player.player.x-50;
+            this.pressX_getbook.y = this.player.player.y-100;
+            this.pressX_getbook.setVisible(true);
+            
+            if(this.keyX.isDown) {
                 this.somethingup = true;
-                this.book_text.setVisible(false);
+            }
+    
+        }
+        else this.pressX_getbook.setVisible(false);
+
+        //2. 책 X키로 얻었을때, 책이 머리위로 뜨도록
+        if(this.somethingup === true){
+            this.books.x = this.player.player.x + 5;
+            this.books.y = this.player.player.y - 95;
+        }
+
+        //3.책 얻은 상태로 npc한테 줄때
+        if(this.player.player.x > 300 && this.player.player.x < 400 && this.somethingup === true){
+            this.pressX_return_book.setVisible(true);
+
+            if(this.keyX.isDown) {
+                this.somethingup = false;
+                this.stage6_3();
             }
         }
-        if(this.somethingup === true){
-            this.books.x = this.player.player.x + 40;
-            this.books.y = 330;
-        }
-        if(this.player.player.x >= 400 && this.somethingup === true && this.keyP.isDown === true){
-            this.books.x = this.player.player.x + 40;
-            this.books.y = 330;
-            this.stage6_3();
-            this.presspkey = false;
-            this.somethingup = false;
-        }
+        else this.pressX_return_book.setVisible(false);
 
         if(this.quiz1 === true){
             this.quizimage.setVisible(true);
@@ -324,6 +355,7 @@ export default class SixthStage extends Phaser.Scene {
             for(var i=0; i < this.image1.length; i++){
                 this.image1[i].setVisible(true);
             }
+            
         } else if(this.quiz2 === true){
             this.quiz1_text.setVisible(false);
             this.quiz2_text.setVisible(true);
@@ -408,6 +440,26 @@ export default class SixthStage extends Phaser.Scene {
             this.scene.sleep('sixth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run("fifth_stage");
         }
+        /* 문앞에 가서 stage4감. */
+        if(this.player.player.x < 150 && 0 < this.player.player.x ) {
+            this.pressX_1.x = this.player.player.x-50;
+            this.pressX_1.y = this.player.player.y-100;
+            this.pressX_1.setVisible(true);
+        
+            if(this.keyX.isDown) {
+                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                console.log('stage4로 맵이동');
+
+                
+                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+                this.command.remove_phone(this);
+
+
+                this.scene.stop('sixth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                this.scene.run("fifth_stage");
+            }
+        }
+        else this.pressX_1.setVisible(false);
 
     }
 
@@ -422,11 +474,9 @@ export default class SixthStage extends Phaser.Scene {
             .start();
             seq.on('complete', () => {
                 // 악마를 플레이어 방향을 보게 하고, 그 위에 느낌표 표시를 한 뒤 stage2 대사로 넘어간다
-                this.devil.setFlipX(true);
                 this.exclamMark.setVisible(true);
                 this.exclamMark.play('exclam');
                 this.time.delayedCall( 1000, () => { this.stage6_2() }, [] , this);
-                this.player.playerPaused = false;
             }); 
              
         }, [], this);
@@ -438,25 +488,29 @@ export default class SixthStage extends Phaser.Scene {
             .load(this.dialog.stage6_2, this.dialog)
             .start();
             seq.on('complete', () => {
-                this.books = this.add.image(230,380,'books');
-                this.book_text = this.add.text(230, 330, "이 책들을 npc에게 전달해줍시다! 줍는 키 : p", { font: '16px Courier', fill: '#A81FF7' });
-                this.presspkey = true;
+                this.player.playerPaused = false;
             });
     }
-
+    //책을 npc한테 줬을시
     stage6_3() {
-        this.books.destroy();
-        this.bookswhy = this.add.image(650, 380, 'bookswhy');
+
+        this.cameras.main.fadeIn(500,0,0,0) //화면 한번 깜빡이고
+        this.cameras.main.shake(500, 0.01); //책 무너짐
+        this.npc.setFlipX(true);
+
+        this.books.destroy();  //쌓인 책 이미지 없앰
+        this.bookswhy = this.add.image(340, 478, 'bookswhy'); //책 무너진 이미지 띄움
+        this.bookok = true; //이거 안하면 press x to get book text계속 뜸. 플래그 변수
+
         var seq = this.plugins.get('rexsequenceplugin').add();
             this.dialog.loadTextbox(this);
             seq
             .load(this.dialog.stage6_3, this.dialog)
             .start();
             seq.on('complete', () => {
-                this.bookswhy.destroy();
-                this.page1 = this.add.image(580, 170, 'page1');
-                this.stage6_4()
-            });
+                this.page1 = this.add.image(360, 200, 'page1');//page1 이미지 띄움
+                this.time.delayedCall( 1500, () => { this.stage6_4()}, [] , this);
+            }); 
     }
 
     stage6_4() {
@@ -466,12 +520,7 @@ export default class SixthStage extends Phaser.Scene {
             .load(this.dialog.stage6_4, this.dialog)
             .start();
             seq.on('complete', () => {
-                this.page1.destroy();
-                this.page2 = this.add.image(580, 170, 'page2');
-                this.time.delayedCall( 1000, () => { 
-                    this.page2.destroy();
-                    this.page3.setVisible(true); 
-                }, [] , this);
+                this.page2 = this.add.image(730, 200, 'page2');//page2 이미지 띄움
                 this.stage6_5()
             });
     }
@@ -482,8 +531,9 @@ export default class SixthStage extends Phaser.Scene {
             .load(this.dialog.stage6_5, this.dialog)
             .start();
             seq.on('complete', () => {
-                this.page3.destroy();
-                this.quiz1 = true;
+                this.page1.destroy();
+                this.page2.destroy();
+                this.quiz1 = true; //퀴즈 시작
             });
     }
 
