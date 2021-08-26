@@ -188,7 +188,7 @@ export default class Command extends Phaser.GameObjects.Image {
             console.log(" compile finish!!!");
            
         });
-        //this.compile_button.setVisible(false);
+        
 
 
 
@@ -209,6 +209,7 @@ export default class Command extends Phaser.GameObjects.Image {
         this.back_button.visible = this.commandbox.visible;
 
         if(state == 0) {
+            this.compile_button.setVisible(false);
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
 

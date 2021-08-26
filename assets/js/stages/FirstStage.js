@@ -446,7 +446,10 @@ export default class FirstStage extends Phaser.Scene {
         .load(this.dialog.stage1_8, this.dialog)
         .start();
         seq.on('complete', () => {
-                this.function=3;
+            this.player.playerPaused = false;
+            this.cantalk=true;
+            this.devil.play('devil_touch_phone',true);
+                //this.function=3;
             
 
         });

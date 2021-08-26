@@ -101,12 +101,13 @@ visible(visible) {
   }
 
   place(x,y) {
-      this.textBox.x = x;
-      this.textBox.y = y;
-      this.script.x = x+200;
-      this.script.y = y+50;
-      this.playerFace.x = x+800;
-      this.playerFace.y = y+100;
+      var worldView = this.scene.cameras.main.worldView;
+      this.textBox.x = worldView.x+x;
+      this.textBox.y = worldView.y+y;
+      this.script.x = worldView.x+x+200;
+      this.script.y = worldView.y+y+50;
+      this.playerFace.x = worldView.x+x+800;
+      this.playerFace.y = worldView.y+y+100;
 
   }
   // callbacks
@@ -367,7 +368,7 @@ visible(visible) {
   ]
   stage1_7 = [
     ['visible',true],
-    ['place', 340,10],
+    ['place', 40,10],
     ['setFace', 0],
     ['print', '야!!남의 폰에 이게 뭐하는 짓이야!!'],
     ['wait-click'],
@@ -376,21 +377,60 @@ visible(visible) {
   ]
   stage1_8 = [
     ['visible',true],
-    ['place', 340,10],
+    ['place', 40,10],
     ['setFace', 0],
-    ['print', '오, 풀었네?? 제법인데?'],
+    ['print', '오, 용케 풀었네??'],
     ['wait-click'],
     ['setFace', 0],
     ['print', '아니 그러니까 이게 뭐하는거냐고.'],
     ['wait-click'],
     ['setFace', 0],
-    ['print', '뭐긴 너가 초짜인 것 같아서 도와주려고 그러지~!'],
+    ['print', '뭐긴 뭐겠어. 신입을 도와주려는 선배의 배려지^^'],
     ['wait-click'],
     ['setFace', 0],
-    ['print', '지금 뭐라고 한거야?? 아니 그것보다 여긴 대체 뭐하는 곳인데?'],
+    ['print', '하, 배려?? 그래. 그건 둘째치고, 여긴 대체 뭐하는 곳이야?'],
     ['wait-click'],
     ['setFace', 0],
-    ['print', '일단 진정해~~ 여긴 코딩지옥이야.'],
+    ['print', '여긴 코딩지옥이야. 종종 너 같은 사람들이 불시착하곤 해.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '코딩지옥이라고????'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '너도 폰 있지? 그걸로 너가 코딩을 하면 여기서 너가 하고싶은 일을 다 할 수 있어.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '난 코딩의 코자도 모른단말이야. 원래 살던 곳으로는 어떻게 돌아가는데?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '나가는 법은 나도 몰라~'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '처음에는 다들 나가려고 하는데, 대부분은 여기서 눌러 살더라. 저기 마을도 있어.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '...이거 꿈인가?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '안됐지만 꿈 아니야~'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '넌 그럼 여기 주민이야?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '난 원래 지옥에 살던 악마인데, 인간들이 많이 유입되고 나서 이 근방의 순찰을 맡게 됐지. 지금은 악마보다 인간들이 더 많아.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '그리고 내 이름은 신택스 에러야. 나중에 누가 출신지를 물으면 내 이름을 대면 돼.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '그래...처음엔 당황했는데 그래도 이것저것 알려줘서 고맙다.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '에잉...요즘 애들은 센스도 못 알아본다니깐.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '(하...)'],
     ['wait-click'],
     ['visible',false],
     ['wait-time', 1],
@@ -726,7 +766,7 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 1],
-    ['print', '(여기서 빨리 탈출하려면, 일단 라이브러리인가하는 걸 좀 다뤄보는 게 좋겠어.)'],
+    ['print', '일단은 여길 한 번 둘러볼까'],
     ['wait-click'],
     ['setFace', 1],
     ['print', '(사서님한테 라이브러리를 빌려서 사용해보자.)'],
@@ -796,11 +836,98 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage5_11=[
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '거기 잠옷 입으신 분! 잠시 저 좀 도와주실 수 있으세요??'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_12=[
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '무슨 일인데요?'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '제가 수학 숙제를 하는데, 답안지를 잃어버려서...문제 답이 뭔지 알아봐 줄 수 있을까요?'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '저기, 저도 수학을 그렇게 잘하는 게 아니라서...'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '<math.h> 라이브러리를 사용하면 된다고 들은 것 같아요! 제발 한 번만 도와주세요ㅠㅠ '],
+    ['wait-click'],
+    ['print', '제가 코딩 성적은 맨날 꼴지였어서...ㅠㅠ'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '흠...알았어. 나도 공부하는 셈 치고 도와주지 뭐.'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '와 감사합니다..!!여기 문제에요.'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_13=[
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '(아직 여기서 하지 못한 일이 있는 것 같아.)'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_14=[
+    ['place', 40,10],
+    ['wait-click'],
+    ['visible',true],
+    ['setFace', 0],
+    ['print', '(음, 이게 맞는 것 같긴 한데, 이제 학생 가까이에 가서 말해주면 될 것 같아.)'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_15=[
+    ['place', 40,10],
+    ['wait-click'],
+    ['visible',true],
+    ['setFace', 0],
+    ['print', '와 감사합니다!!!ㅠㅠㅠ 이제 채점 할 수 있겠어요!'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '...'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '왜?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '... ...'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '...'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage5_16=[
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '(공부에 열중하고 있는 것 같네.)'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '(...다시 보니 졸고 있잖아?)'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '* 옆에 이전에 풀었던 수학 문제가 있다. *'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+
   stage6_1 = [
     ['visible',true],
     ['place', 40,10],
     ['setFace', 0],
-    ['print', '여긴 어디지? 도서관?'],
+    ['print', '여긴 아직 정리 중인가보네.'],
     ['wait-click'],
 
     ['visible',false],
@@ -824,7 +951,7 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 5],
-    ['print', '우당당탕?'],
+    ['print', '우당당탕!!'],
     ['wait-click'],
     ['setFace', 3],
     ['print', '으아아악 이게 뭐야!'],

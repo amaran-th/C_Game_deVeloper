@@ -195,9 +195,10 @@ export default class ZeroStage extends Phaser.Scene {
         
         // zero_stage 씬의 전체코드
         this.contenttext = "" ;
-
         // zero_stage의 앱에 들어가는 코드
-        this.app_code_text = "           " + "           " + " \n int main(){ \n " +  "           " + "(\"아-아- 마이크 테스트\"); \n }"
+        this.app_code_text ="";
+        
+        
 
         stagenum=0;
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
@@ -209,7 +210,7 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     update() {
-        this.contenttext = this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\"아-아- 마이크 테스트\"); \n }" ;
+        
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
@@ -241,18 +242,33 @@ export default class ZeroStage extends Phaser.Scene {
         }
         
         if(this.invenPlus) {
+            // zero_stage 씬의 전체코드
+            this.contenttext = 
+            this.code_zone_1+this.code_zone_2+"\n" + 
+                "int main(){ \n " + 
+                "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
+            
+            // zero_stage의 앱에 들어가는 코드
+            this.app_code_text = 
+                "           " + "           " + " \n" + 
+                "int main(){ \n " +  
+                "    " + "           " + "(\"" + "               " + "\"); \n" + 
+                "}";
+
             this.item[this.item.length] =  '#include';
             this.item[this.item.length] =  '<stdio.h>';
             this.item[this.item.length] =  'printf';
-            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
-            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 1000;
-            this.dropzone3_x = 805;
+            this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 880;
+            this.dropzone3_x = 830;
+            this.dropzone4_x = 900;
 
             this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
             this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("4");
             this.intro4();
             this.invenPlus = false;
         }
@@ -260,6 +276,7 @@ export default class ZeroStage extends Phaser.Scene {
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
         if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
+        if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
 
         /* x 키 눌렀을 때 바로 사라지게 하는 건데 대사 많이 출력하는 오류있음
         if(this.itemget.visible && this.keyX.isDown) {
@@ -435,7 +452,7 @@ export default class ZeroStage extends Phaser.Scene {
         if(msg==scene.out){
             playerX = this.player.player.x;
             this.textBox = scene.add.image(playerX-70,170,'bubble').setOrigin(0,0);
-            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, "아-아- 마이크 테스트-", {
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
             fontFamily: 'Arial Black',
             fontSize: '15px',
             color: '#000000', //글자색 
@@ -495,7 +512,6 @@ export default class ZeroStage extends Phaser.Scene {
 
 
     intro6() {
-        
         this.canexit=true;
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
