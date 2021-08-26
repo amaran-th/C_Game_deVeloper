@@ -496,16 +496,16 @@ export default class SecondStage extends Phaser.Scene {
              // Second_stage의 앱에 들어가는 코드
             this.app_code_text =
             "1_#include <stdio.h>\n" + 
-            "int main(){\n\n" +
-            "   {int temp = 45;} \n\n   " +
+            "int main(){\n" +
+            "   {int temp = 45;} \n   " +
             "           " + "(" + "           " + ">30){\n      " + //if(Temp>30)
             "           " + "(\"더워요\");\n"  +//printf("더워요");
             "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
             
             this.contenttext = 
             "1_#include <stdio.h>\n" + 
-            "int main(){\n\n" +
-            "   {int temp = 45;} \n\n   " +
+            "int main(){\n" +
+            "   {int temp = 45;} \n   " +
             this.code_zone_1 + "(" + this.code_zone_2 + ">30){\n      " + //if(Temp>30)
             this.code_zone_3 + "(\"더워요\");\n"  +//printf("더워요");
             "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
@@ -514,7 +514,7 @@ export default class SecondStage extends Phaser.Scene {
         if(this.mission2) {
             this.contenttext =             
             "1_#include <stdio.h>\n" +
-            "int main(){\n\n" +
+            "int main(){\n" +
             "   "+ this.code_zone_1 +"( "+this.code_zone_2+" <= " + this.code_zone_3 + " ) {\n" +
             "       " + this.code_zone_4 + " = " + this.code_zone_5 + " + 1;\n" +
             "   }\n" +
@@ -523,7 +523,7 @@ export default class SecondStage extends Phaser.Scene {
              // Second_stage의 앱에 들어가는 코드
             this.app_code_text =
             "1_#include <stdio.h>\n" +
-            "int main(){\n\n" +
+            "int main(){\n" +
             "              (             <=             )\n" +
             "   {\n"+
             "               =             + 1;\n" +
@@ -535,7 +535,7 @@ export default class SecondStage extends Phaser.Scene {
 
         
         //실제로는 2가지에 나눠서 쨔아함! ( this.out ==  "더워요")
-        if (this.out == "1_#include <stdio.h>\nint main(){\n\n   {int temp = 45;} \n\n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
+        if (this.out == "1_#include <stdio.h>\nint main(){\n   {int temp = 45;} \n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
             console.log("===stage2 성공===");
             this.out = "";
             this.mission1 = undefined;
@@ -551,7 +551,7 @@ export default class SecondStage extends Phaser.Scene {
         }
 
         if (this.out ==             "1_#include <stdio.h>\n" +
-        "int main(){\n\n" +
+        "int main(){\n" +
         "   "+ "while" +"( "+"water"+" <= " + "ground" + " ) {\n" +
         "       " + "water" + " = " + "water" + " + 1;\n" +
         "   }\n" +
@@ -701,7 +701,7 @@ export default class SecondStage extends Phaser.Scene {
 
         }
     }
-
+/*
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 zero_stage을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
@@ -721,7 +721,72 @@ export default class SecondStage extends Phaser.Scene {
 
             //scene.intro4();
         }, this);
-    }   
+    }   */
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        //console.log(scene.out);
+        console.log("compiled");
+        if(msg==scene.out){
+            this.command.remove_phone(this);
+            playerX = this.player.player.x;
+            this.textBox = scene.add.image(playerX-70,270,'bubble').setOrigin(0,0);
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
+                fontFamily: 'Arial Black',
+                fontSize: '15px',
+                color: '#000000', //글자색 
+                wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+                boundsAlignH: "center",
+                boundsAlignV: "middle"
+            }).setOrigin(0.5)
+            this.player.playerPaused=true;    //플레이어 얼려두기
+
+            //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+        }
+        scene.input.once('pointerdown', function() {
+            if(msg==scene.out){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                //playerFace.setVisible(false);
+                
+                
+            }else{
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
+            }
+            
+        }, this);
+    
+    }
+
+    printerr(scene){
+        console.log("printerr");
+        var textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        
+        scene.input.once('pointerdown', function() {
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+        }, this);
+    }
 
 
     stage2_1() {

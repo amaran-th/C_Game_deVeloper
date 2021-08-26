@@ -62,8 +62,7 @@ export default class SixthStage extends Phaser.Scene {
         this.npc = this.add.image(214,195,'librarian2').setOrigin(0,0);
         this.npc.setInteractive();
         
-        //책 이미지 불러오기
-        this.books = this.add.image(700,380,'books');
+        
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -94,6 +93,9 @@ export default class SixthStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        //책 이미지 불러오기
+        this.books = this.add.image(700,380,'books');
+        
         //플레이어 위 pressX 생성해두기(door)
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
