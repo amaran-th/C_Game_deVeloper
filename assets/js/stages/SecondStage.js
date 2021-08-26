@@ -276,6 +276,8 @@ export default class SecondStage extends Phaser.Scene {
         /** 마우스 올리면 태그 생기게! **/
         this.temperature.on('pointerover', function(){
             this.text_temp.setVisible(true);
+            this.text_temp.x = this.worldView.x + this.input.mousePointer.x-10; // 이부분 있어야 드랍존에 들어간 상태에서도 새로 태그 생성 가능!
+            this.text_temp.y = this.input.mousePointer.y-10;
         }, this);
         this.temperature.on('pointerout', function(){
             this.text_temp.setVisible(false);
@@ -283,12 +285,14 @@ export default class SecondStage extends Phaser.Scene {
 
         this.waterWball.on('pointerover', function(){
             this.text_water.setVisible(true);
+            this.text_water.x = this.worldView.x + this.input.mousePointer.x-10;
+            this.text_water.y = this.input.mousePointer.y-10;
         }, this);
         this.waterWball.on('pointerout', function(){
             this.text_water.setVisible(false)
         }, this);
         // this.text_ground 부분 없어도 되는 건가요?? 
-        //특정 이미지에 마우스 가져다 대는게 아니라 마우스가 특정 위치로 이동하면 보이게 만든 거라 읍어도 됩니당
+        //특정 이미지에 마우스 가져다 대는게 아니라 마우스가 특정 위치로 이동하면 보이게 만든 거라 읍어도 됩니당 /오홍~굿!
         
         /** 드래그 활성화 **/
         this.input.setDraggable(this.text_temp);
