@@ -223,6 +223,8 @@ export default class Command extends Phaser.GameObjects.Image {
         } else {
             this.commandbox.x = this.worldView.x + 715; //화면 이동시 명령창 따라가도록 설정
             this.back_button.x = this.worldView.x + 980;
+            this.compile_button.x = this.worldView.x + 850;
+            
             for(var i=0; i < this.apps.length; i++){
                 this.apps[i].x = this.worldView.x + 755 + (i%2)*170;
                 this.apps[i].setVisible(true);
