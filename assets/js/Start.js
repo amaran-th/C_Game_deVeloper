@@ -24,6 +24,7 @@ class Start extends Phaser.Scene {
 
       
       this.load.image("bubble","./assets/images/bubble.png");
+      this.load.image("bubble2","./assets/images/bubble2.png")
  
       
       /*** 시작화면 image 로드 ***/
@@ -209,6 +210,8 @@ class Start extends Phaser.Scene {
 
       //5번째 스테이지의 회원증 이미지 로드
       this.load.image("library_membership", "./assets/images/stage5/membership.png");
+      //5번째 스테이지의 문제지 이미지 로드
+      this.load.image("tests_paper", "./assets/images/stage5/tests_paper.png");
       
       /** 6번째 스테이지 이미지 로드 **/
       this.load.image("page1", "./assets/images/stage6/bookPage1.png");
