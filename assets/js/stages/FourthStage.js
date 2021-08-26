@@ -42,7 +42,7 @@ export default class FourthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, 800, spawnPoint.y);
+        this.player = new Player(this, 800, 430);
 
         /*** npc 만들기 ***/
         this.anims.create({
@@ -52,11 +52,11 @@ export default class FourthStage extends Phaser.Scene {
             repeat: -1,
         });
 
-        this.devil = this.physics.add.sprite(910 ,230,'npc_devil');
+        this.devil = this.physics.add.sprite(910 ,430,'npc_devil');
         this.devil.setFlipX(true);
         this.devil.play('devil_touch_phone');
 
-        this.pressX = this.add.text(this.devil.x-50, this.devil.y-10, 'press X to\nattemp the test', {
+        this.pressX = this.add.text(this.devil.x-50, this.devil.y-100, 'press X to\nattemp the test', {
             fontFamily: ' Courier',
             color: '#ffffff',
             boundsAlignH: "center",
@@ -85,6 +85,9 @@ export default class FourthStage extends Phaser.Scene {
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        /**마우스 위치 확인용 **/
+        this.mouseCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+
 
         /*** 미니맵버튼 활성화  //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
@@ -226,6 +229,16 @@ export default class FourthStage extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
 
+        /* 마우스 위치 알려줌 */
+        this.mouseCoord.setText([
+            '마우스 위치',
+            'x:' + this.input.mousePointer.x + this.worldView.x,
+            'y:' + this.input.mousePointer.y,
+        ]);
+        this.mouseCoord.x = this.playerCoord.x;
+        this.mouseCoord.y = this.worldView.y + 500;
+
+
 
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
@@ -312,11 +325,16 @@ export default class FourthStage extends Phaser.Scene {
 
     stage4_2() {
         console.log('대사 나오고 시험 시작하도록');
+        this.dropzone1_x = 425;
+        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 75, 80, 25).setRectangleDropZone(80, 25).setName("1");
+        var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
-        this.dialog.place(40,10);
-        this.dialog.setFace(2);
-        this.dialog.print(this.contenttext);
-        this.draganddrop_1 = new DragAndDrop(this, 500, 100, 80, 25).setRectangleDropZone(80, 25).setName("1");
+        seq
+        .load(this.dialog.stage4_quiz_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+        });     
+
     }
 
 

@@ -641,6 +641,15 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage4_quiz_1 = [
+    ['visible',true],
+    ['place', 200,10],
+    ['setFace', 2],
+    ['print', "printf('1 + ㅤㅤㅤㅤ = 4', 3 } ?"],
+    //['wait-click'],
+    //['visible',false],
+  ]
+
   //독백
   stage5_1 = [
     ['visible',true],

@@ -3,8 +3,6 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         super(scene, x, y, width, height);
         // ...
         scene.add.existing(this);
-        
-
 
         /*** 드래그앤드랍 ***/        
         // 코드 조각 불러와 배치하기
