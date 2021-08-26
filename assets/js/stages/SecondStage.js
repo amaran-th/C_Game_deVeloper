@@ -447,6 +447,15 @@ export default class SecondStage extends Phaser.Scene {
             this.return_state = false;
         }
 
+        if (this.codeapp_onoff_state == 0) { // 코드앱 켜지고 꺼짐에 따라 태그조각 보이고 안 보이고 하기
+            for (var i = 0; i < this.tag_in_dropzone.length; i++) {
+                this.tag_in_dropzone[i].setVisible(false);
+            }
+        } else {
+            for (var i = 0; i < this.tag_in_dropzone.length; i++) {
+                this.tag_in_dropzone[i].setVisible(true);
+            }
+        }
 
         //변수의 배경이 텍스트 따라다니도록
         this.var_cage1.x = this.text_temp.x;
