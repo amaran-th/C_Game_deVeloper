@@ -407,28 +407,32 @@ export default class SecondStage extends Phaser.Scene {
             //console.log(this.drop_state_1 + " " + this.drop_state_2 + " " + this.drop_state_3 + " " + this.drop_state_4 + " " + this.drop_state_5 + " " + this.drop_state_6);
             //console.log(this.code_zone_1 + " " + this.code_zone_2 + " " + this.code_zone_3 + " " + this.code_zone_4 + " " + this.code_zone_5 + " " + this.code_zone_6);
             this.tag_in_dropzone[this.tag_in_dropzone.length] = this.add.text(tag_x, tag_y, tag_text, { font: "25px Arial Black", fill: "#eedfbe" }); // 배열에 태그조각 만들어 넣어줌
+            
             tag_drop_state = false; // 다른 태그 드랍할 때도 인식하게 하기 위해 false로 바꿔줌
         }
         
         if (this.worldView.x != this.preworldview_x) { // 플레이어가 이동하면 태그조각도 플레이어 따라 이동
             for (var i = 0; i < this.tag_in_dropzone.length; i++) { // 드랍된 드랍존 위치 유지하면서 이동
-                if (this.code_zone_1 == this.tag_in_dropzone[i]._text) { // 코드존에 들어간 거랑 같은 걸 같은 태그조각이 있으니까 동시에 반영되는데,,,, 안되는데,,,,,,아아아아ㅏㅇ가ㅏㄱ마가
-                    this.tag_in_dropzone[i].x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
+                // 조건 설명
+                // (this.code_zone_1 == this.tag_in_dropzone[i]._text) : 태그조각 문자열과 해당 드랍존에 들어간 문자열이 같을 때 (어떤 드랍존에 위치해있는 지 알아야지 그 드랍존에 맞춰서 위치 이동 가능)
+                // (this.tag_in_dropzone[i].x == this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5) : 같은 문자열일 경우 위의 조건에서 걸러지지 않음 -> 드랍존의 이전 위치와 비교해서 그 위치에 태그조각이 있을 경우를 추가 조건으로 줌
+                if ((this.code_zone_1 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone1_x - (this.draganddrop_1.width / 2) + 5; // 현재 드랍존의 위치를 태그 조각에 반영 함.
                 }
-                if (this.code_zone_2 == this.tag_in_dropzone[i]._text) { // 같은 태그라도 플레이어 따라 다 이동해야하므로 elseif 말고 if로 함
-                    this.tag_in_dropzone[i].x = this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5;
+                if ((this.code_zone_2 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5)) { // 같은 태그라도 플레이어 따라 다 이동해야하므로 elseif 말고 if로 함
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone2_x - (this.draganddrop_2.width / 2) + 5;
                 }
-                if (this.code_zone_3 == this.tag_in_dropzone[i]._text) { 
-                    this.tag_in_dropzone[i].x = this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5;
+                if ((this.code_zone_3 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone3_x - (this.draganddrop_3.width / 2) + 5;
                 }
-                if (this.code_zone_4 == this.tag_in_dropzone[i]._text) { 
-                    this.tag_in_dropzone[i].x = this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5;
+                if ((this.code_zone_4 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone4_x - (this.draganddrop_4.width / 2) + 5;
                 }
-                if (this.code_zone_5 == this.tag_in_dropzone[i]._text) { 
-                    this.tag_in_dropzone[i].x = this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5;
+                if ((this.code_zone_5 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone5_x - (this.draganddrop_5.width / 2) + 5;
                 }
-                if (this.code_zone_6 == this.tag_in_dropzone[i]._text) { 
-                    this.tag_in_dropzone[i].x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
+                if ((this.code_zone_6 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone6_x - (this.draganddrop_6.width / 2) + 5;
                 }
                 //console.log(i + "> " + this.tag_in_dropzone[i].x)
             }
