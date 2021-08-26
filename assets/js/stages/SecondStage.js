@@ -113,7 +113,7 @@ export default class SecondStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, 1000, spawnPoint.y);
+        this.player = new Player(this, spawnPoint.x, spawnPoint.y);
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -225,10 +225,7 @@ export default class SecondStage extends Phaser.Scene {
 
         stagenum = 2;
 
-        //초반 대사
-        this.cameras.main.fadeIn(1000,0,0,0);
-        //this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        //this.stage2_1();
+        
 
 
         /** 변수들 드래그1 **/
@@ -279,7 +276,7 @@ export default class SecondStage extends Phaser.Scene {
         /** 마우스 올리면 태그 생기게! **/
         this.temperature.on('pointerover', function(){
             this.text_temp.setVisible(true);
-            this.text_temp.x = this.worldView.x + this.input.mousePointer.x-10;
+            this.text_temp.x = this.worldView.x + this.input.mousePointer.x-10; // 이부분 있어야 드랍존에 들어간 상태에서도 새로 태그 생성 가능!
             this.text_temp.y = this.input.mousePointer.y-10;
         }, this);
         this.temperature.on('pointerout', function(){
@@ -294,7 +291,8 @@ export default class SecondStage extends Phaser.Scene {
         this.waterWball.on('pointerout', function(){
             this.text_water.setVisible(false)
         }, this);
-        // this.text_ground 부분 없어도 되는 건가요??
+        // this.text_ground 부분 없어도 되는 건가요?? 
+        //특정 이미지에 마우스 가져다 대는게 아니라 마우스가 특정 위치로 이동하면 보이게 만든 거라 읍어도 됩니당 /오홍~굿!
         
         /** 드래그 활성화 **/
         this.input.setDraggable(this.text_temp);
@@ -328,12 +326,13 @@ export default class SecondStage extends Phaser.Scene {
             gameObject.y = gameObject.input.dragStartY;
 
             isDragging = false;
+            
         });
         
 
 
-        //this.mission1Complete = false;
-        this.mission1Complete = true;   
+        this.mission1Complete = false;
+        //this.mission1Complete = true;    //두번째 미션 먼저보고싶을때 활성화
         this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
         this.firstTalk = true; //플레이어가 유치원생과 한 번만 대화할 수 있도록
 
@@ -343,18 +342,25 @@ export default class SecondStage extends Phaser.Scene {
         this.pointerUnderGround = true //태그가 번쩍거리지 않도록 setvisible true를 한번만 선언해줌
 
         this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
+
+
+
+        //초반 대사
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        this.stage2_1();
     }
 
     update() {
         //console.log(isDragging);
+        //console.log('마우스 위치', this.input.mousePointer.x + this.worldView.x,' 땅 태그 위치:',this.text_ground.x  )
 
-
-        if(this.input.mousePointer.y >= 500 && this.input.mousePointer.x <= 1600  && this.input.mousePointer.x >= this.worldView.x + 50 ) {
+        if(this.input.mousePointer.y >= 500 && this.input.mousePointer.x + this.worldView.x <= 1500  && this.input.mousePointer.x + this.worldView.x >= this.worldView.x + 50 ) {
             if(this.pointerUnderGround){ //계속 불러와지면서 깜빡거리지 않도록
                 this.text_ground.setVisible(true);
                 this.pointerUnderGround = false
             }
-            this.text_ground.x = this.input.mousePointer.x + 400;
+            this.text_ground.x = this.input.mousePointer.x + this.worldView.x;
             this.text_ground.y = this.input.mousePointer.y - 15;
         }
         else if(!isDragging) {
@@ -362,7 +368,7 @@ export default class SecondStage extends Phaser.Scene {
             this.pointerUnderGround = true;
         }
 
-        if(this.input.mousePointer.y >= 500 && this.input.mousePointer.x <= 1600  && this.input.mousePointer.x >= this.worldView.x + 50 && isDragging) {
+        if(this.input.mousePointer.y >= 500 &&  this.input.mousePointer.x + this.worldView.x <= 1500  && this.input.mousePointer.x + this.worldView.x >= this.worldView.x + 50 && isDragging) {
             if(this.pointerUnderGround){ //계속 불러와지면서 깜빡거리지 않도록
                 this.text_ground.setVisible(true);
                 this.pointerUnderGround = false
@@ -375,60 +381,78 @@ export default class SecondStage extends Phaser.Scene {
             if (this.drop_state_1 == 0 && this.code_zone_1 == tag_text) { // 같은 문자열이더라도 드랍존에 이미 생성되어 있으면 해당 부분이 아닌 다른 드랍존에 생성하기 위해 this.drop_state 조건에 포함시켜 줌  
                 //console.log("1");
                 tag_x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
-                tag_y = this.draganddrop_1.y - 10;
+                tag_y = this.draganddrop_1.y - 15;
                 this.drop_state_1 = 1;
             } else if (this.drop_state_2 == 0 && this.code_zone_2 == tag_text) {
                 //console.log("2");
                 tag_x = this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5;
-                tag_y = this.draganddrop_2.y - 10;
+                tag_y = this.draganddrop_2.y - 15;
                 this.drop_state_2 = 1;
             } else if (this.drop_state_3 == 0 && this.code_zone_3 == tag_text) {
                 //console.log("3");
                 tag_x = this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5;
-                tag_y = this.draganddrop_3.y - 10;
+                tag_y = this.draganddrop_3.y - 15;
                 this.drop_state_3 = 1;
             } else if (this.drop_state_4 == 0 && this.code_zone_4 == tag_text) {
                 //console.log("4");
                 tag_x = this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5;
-                tag_y = this.draganddrop_4.y - 10;
+                tag_y = this.draganddrop_4.y - 15;
                 this.drop_state_4 = 1;
             } else if (this.drop_state_5 == 0 && this.code_zone_5 == tag_text) {
                 //console.log("5");
                 tag_x = this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5;
-                tag_y = this.draganddrop_5.y - 10;
+                tag_y = this.draganddrop_5.y - 15;
                 this.drop_state_5 = 1;
             } else if (this.drop_state_6 == 0 && this.code_zone_6 == tag_text) {
                 //console.log("6");
                 tag_x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
-                tag_y = this.draganddrop_6.y - 10;
+                tag_y = this.draganddrop_6.y - 15;
                 this.drop_state_6 = 1;
             }
 
             //console.log(this.drop_state_1 + " " + this.drop_state_2 + " " + this.drop_state_3 + " " + this.drop_state_4 + " " + this.drop_state_5 + " " + this.drop_state_6);
             //console.log(this.code_zone_1 + " " + this.code_zone_2 + " " + this.code_zone_3 + " " + this.code_zone_4 + " " + this.code_zone_5 + " " + this.code_zone_6);
-            this.tag_in_dropzone[this.tag_in_dropzone.length] = this.add.text(tag_x, tag_y, tag_text, { font: "25px Arial Black", fill: "#eedfbe" }); // 배열에 태그조각 만들어 넣어줌
+            
+            var tag_not_codepiece = true; // 텍스트 오브젝트 tag만 생성하고 codepiece는 생성하지 않기 위한 상태변수
+            
+            for (var code_piece_text of this.item){ 
+                if (tag_text == code_piece_text) {
+                    tag_not_codepiece = false;
+                    break;
+                }
+                
+            //console.log(tag_text + " vs " + code_piece_text);
+            }
+
+            if(tag_not_codepiece){ // 코드조각 아닌 태그만 텍스트 오브젝트 생성
+               this.tag_in_dropzone[this.tag_in_dropzone.length] = this.add.text(tag_x, tag_y, tag_text, { font: "25px Arial Black", fill: "#eedfbe" }); // 배열에 태그조각 만들어 넣어줌
+            }
+
             tag_drop_state = false; // 다른 태그 드랍할 때도 인식하게 하기 위해 false로 바꿔줌
         }
         
         if (this.worldView.x != this.preworldview_x) { // 플레이어가 이동하면 태그조각도 플레이어 따라 이동
             for (var i = 0; i < this.tag_in_dropzone.length; i++) { // 드랍된 드랍존 위치 유지하면서 이동
-                if (this.code_zone_1 == this.tag_in_dropzone[i]._text) { // 코드존에 들어간 거랑 같은 걸 같은 태그조각이 있으니까 동시에 반영되는데,,,, 안되는데,,,,,,아아아아ㅏㅇ가ㅏㄱ마가
-                    this.tag_in_dropzone[i].x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
+                // 조건 설명
+                // (this.code_zone_1 == this.tag_in_dropzone[i]._text) : 태그조각 문자열과 해당 드랍존에 들어간 문자열이 같을 때 (어떤 드랍존에 위치해있는 지 알아야지 그 드랍존에 맞춰서 위치 이동 가능)
+                // (this.tag_in_dropzone[i].x == this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5) : 같은 문자열일 경우 위의 조건에서 걸러지지 않음 -> 드랍존의 이전 위치와 비교해서 그 위치에 태그조각이 있을 경우를 추가 조건으로 줌
+                if ((this.code_zone_1 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone1_x - (this.draganddrop_1.width / 2) + 5; // 현재 드랍존의 위치를 태그 조각에 반영 함.
                 }
-                if (this.code_zone_2 == this.tag_in_dropzone[i]._text) { // 같은 태그라도 플레이어 따라 다 이동해야하므로 elseif 말고 if로 함
-                    this.tag_in_dropzone[i].x = this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5;
+                if ((this.code_zone_2 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5)) { // 같은 태그라도 플레이어 따라 다 이동해야하므로 elseif 말고 if로 함
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone2_x - (this.draganddrop_2.width / 2) + 5;
                 }
-                if (this.code_zone_3 == this.tag_in_dropzone[i]._text) { 
-                    this.tag_in_dropzone[i].x = this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5;
+                if ((this.code_zone_3 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone3_x - (this.draganddrop_3.width / 2) + 5;
                 }
-                if (this.code_zone_4 == this.tag_in_dropzone[i]._text) { 
-                    this.tag_in_dropzone[i].x = this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5;
+                if ((this.code_zone_4 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone4_x - (this.draganddrop_4.width / 2) + 5;
                 }
-                if (this.code_zone_5 == this.tag_in_dropzone[i]._text) { 
-                    this.tag_in_dropzone[i].x = this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5;
+                if ((this.code_zone_5 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone5_x - (this.draganddrop_5.width / 2) + 5;
                 }
-                if (this.code_zone_6 == this.tag_in_dropzone[i]._text) { 
-                    this.tag_in_dropzone[i].x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
+                if ((this.code_zone_6 == this.tag_in_dropzone[i]._text) && (this.tag_in_dropzone[i].x == this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5)) { 
+                    this.tag_in_dropzone[i].x = this.worldView.x + this.dropzone6_x - (this.draganddrop_6.width / 2) + 5;
                 }
                 //console.log(i + "> " + this.tag_in_dropzone[i].x)
             }
@@ -443,6 +467,15 @@ export default class SecondStage extends Phaser.Scene {
             this.return_state = false;
         }
 
+        if (this.codeapp_onoff_state == 0) { // 코드앱 켜지고 꺼짐에 따라 태그조각 보이고 안 보이고 하기
+            for (var i = 0; i < this.tag_in_dropzone.length; i++) {
+                this.tag_in_dropzone[i].setVisible(false);
+            }
+        } else {
+            for (var i = 0; i < this.tag_in_dropzone.length; i++) {
+                this.tag_in_dropzone[i].setVisible(true);
+            }
+        }
 
         //변수의 배경이 텍스트 따라다니도록
         this.var_cage1.x = this.text_temp.x;
@@ -525,6 +558,8 @@ export default class SecondStage extends Phaser.Scene {
             console.log("===stage2 성공===");
             this.out = "";
             this.mission2 = undefined;
+
+            this.stage2_10();
         }
         else if (isErr){
             console.log("===stage2 실패===");
@@ -564,7 +599,7 @@ export default class SecondStage extends Phaser.Scene {
 
         
         if(this.invenPlus) {
-            /*console.log("here");
+            console.log("here");
             this.item[this.item.length] =  'printf';  
             this.item[this.item.length] =  'if';   
             this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
@@ -575,7 +610,7 @@ export default class SecondStage extends Phaser.Scene {
 
             this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");*/
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
 
             this.invenPlus = false;
         }
@@ -635,7 +670,7 @@ export default class SecondStage extends Phaser.Scene {
 
         
         /** 미션1 안끝났는데 넘어가려고 할 때 **/
-        /*
+        
         if(!this.mission1Complete && this.player.player.x >= 1100) {
             if(this.cantGoFarther) {
                 this.cantGoFarther = false;
@@ -643,7 +678,7 @@ export default class SecondStage extends Phaser.Scene {
                 var seq = this.plugins.get('rexsequenceplugin').add(); 
                 this.dialog.loadTextbox(this);
                 seq
-                .load(this.dialog.stage2_5, this.dialog)
+                .load(this.dialog.stage2_5, this.dialog) //할아버지의 부탁을 먼저 해결하자
                 .start();
                 seq.on('complete', () => {
                     this.player.playerPaused = false;
@@ -651,12 +686,7 @@ export default class SecondStage extends Phaser.Scene {
             }   
          }
         else this.cantGoFarther = true;
-        */
-
-        if(this.mission1Complete) {
-            this.stage2_6()
-            this.mission1Complete = undefined;
-        }
+        
 
         if(1300 <= this.player.player.x && this.player.player.x <= 1350) {
             if(this.firstTalk) {
@@ -772,6 +802,8 @@ export default class SecondStage extends Phaser.Scene {
                     this.npc7.anims.stop();
                     this.npc7.setVelocityX(0); 
                     this.stage2_3_2();
+
+                    
                  }, [] , this); 
              }, [] , this);    
         
@@ -784,7 +816,8 @@ export default class SecondStage extends Phaser.Scene {
         .load(this.dialog.stage2_3_2, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.mission1Complete = true;
+            this.mission1Complete = true; //1100이상으로 계속 이동할 수 있도록
+            this.stage2_6() //미션 2 시작
             //this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });     
     }
@@ -873,10 +906,10 @@ export default class SecondStage extends Phaser.Scene {
             .load(this.dialog.stage2_7, this.dialog)
             .start();
             seq.on('complete', () => {
-                this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+                //this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
                 this.npc6.setFlipX(false);
                 this.tweens.add({
-                    targets: this.cameras.main,
+                    targets: this.camera,
                     x: -100,
                     duration: 1000,
                     ease: 'Linear',
@@ -885,7 +918,7 @@ export default class SecondStage extends Phaser.Scene {
                         this.time.delayedCall( 1000, () => {
                             this.npc6.setFlipX(true);
                             this.tweens.add({
-                                targets: this.cameras.main,
+                                targets: this.camera,
                                 x: 0,
                                 duration: 500,
                                 ease: 'Linear',
@@ -927,6 +960,7 @@ export default class SecondStage extends Phaser.Scene {
                 ease: 'Linear',
                 repeat: 0,
                 onComplete: ()=>{
+                    this.player.playerPaused = false;
                     this.invenPlus2 = true;
                     itemget.destroy();
                     itemText.destroy();
@@ -935,6 +969,36 @@ export default class SecondStage extends Phaser.Scene {
             }, this);
         }, [] , this);
        
+    }
+
+
+    stage2_10() {
+        //this.camera.x += 400;
+        this.npc6.setFlipX(false);
+        this.tweens.add({
+            targets: this.waterWball,
+            y: 600,
+            duration: 1000,
+            ease: 'Linear',
+            repeat: 0,
+            onComplete: ()=>{
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.stage2_10, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.stage2_11();
+                });   
+            }
+        }, this);
+    }
+
+    stage2_11() {
+        this.waterWball.destroy();
+        this.water = this.add.sprite( 1600, 600, 'water', 0).setOrigin(0,1)
+        this.water.play('water');
+
     }
 }
 

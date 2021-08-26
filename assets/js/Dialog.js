@@ -515,7 +515,7 @@ visible(visible) {
 
   stage2_5 = [
     ['visible',true],
-    ['place', 300,10],
+    ['place', 500,10],
     ['setFace', 1],
     ['print', '할아버지의 부탁을 먼저 해결하자'],
     ['wait-click'],
@@ -552,7 +552,6 @@ visible(visible) {
   stage2_8 = [
     ['visible',true],
     ['place', 800,10],
-    /*
     ['setFace', 1],
     ['print', '이런! 팔이 안 닿나 보구나!'],
     ['wait-click'],
@@ -581,12 +580,22 @@ visible(visible) {
     ['setFace', 0],
     ['print', '(유치원생이 나보다 더 잘 아는군.)'],
     ['wait-click'],
-    */
     ['setFace', 2],
     ['print', '언니 이거 받으세요.'],
     ['wait-click'],
     ['visible',false],
   ]
+
+  stage2_10 = [
+    ['visible',true],
+    ['place', 800,10],
+    ['setFace', 2],
+    ['print', '와 감사합니다!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+
 
 
   stage3_1 = [
