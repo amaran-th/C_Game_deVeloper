@@ -58,7 +58,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         // 영역안에서도 지정된 부분에만 고정되는 듯
         scene.input.on('drop', function (pointer, gameObject, dropZone) {
             gameObject.x = dropZone.x - width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
-            gameObject.y = dropZone.y - height / 2 - 5; // 위치 왜 이런지 궁금한 사람 은지한테 문의 바람 그림 그려줌
+            gameObject.y = dropZone.y - height / 2 - 3; // 위치 왜 이런지 궁금한 사람 은지한테 문의 바람 그림 그려줌
             if(dropZone.name == "1"){
                 scene.code_zone_1 = gameObject._text;
                 this.dropzone = 1; // dragend부분에서 쓰려하는데 거긴 파라미터에 dropZone없어서 여기서 지정해줌

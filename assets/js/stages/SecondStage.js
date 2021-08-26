@@ -377,39 +377,53 @@ export default class SecondStage extends Phaser.Scene {
             if (this.drop_state_1 == 0 && this.code_zone_1 == tag_text) { // 같은 문자열이더라도 드랍존에 이미 생성되어 있으면 해당 부분이 아닌 다른 드랍존에 생성하기 위해 this.drop_state 조건에 포함시켜 줌  
                 //console.log("1");
                 tag_x = this.draganddrop_1.x - (this.draganddrop_1.width / 2) + 5;
-                tag_y = this.draganddrop_1.y - 10;
+                tag_y = this.draganddrop_1.y - 15;
                 this.drop_state_1 = 1;
             } else if (this.drop_state_2 == 0 && this.code_zone_2 == tag_text) {
                 //console.log("2");
                 tag_x = this.draganddrop_2.x - (this.draganddrop_2.width / 2) + 5;
-                tag_y = this.draganddrop_2.y - 10;
+                tag_y = this.draganddrop_2.y - 15;
                 this.drop_state_2 = 1;
             } else if (this.drop_state_3 == 0 && this.code_zone_3 == tag_text) {
                 //console.log("3");
                 tag_x = this.draganddrop_3.x - (this.draganddrop_3.width / 2) + 5;
-                tag_y = this.draganddrop_3.y - 10;
+                tag_y = this.draganddrop_3.y - 15;
                 this.drop_state_3 = 1;
             } else if (this.drop_state_4 == 0 && this.code_zone_4 == tag_text) {
                 //console.log("4");
                 tag_x = this.draganddrop_4.x - (this.draganddrop_4.width / 2) + 5;
-                tag_y = this.draganddrop_4.y - 10;
+                tag_y = this.draganddrop_4.y - 15;
                 this.drop_state_4 = 1;
             } else if (this.drop_state_5 == 0 && this.code_zone_5 == tag_text) {
                 //console.log("5");
                 tag_x = this.draganddrop_5.x - (this.draganddrop_5.width / 2) + 5;
-                tag_y = this.draganddrop_5.y - 10;
+                tag_y = this.draganddrop_5.y - 15;
                 this.drop_state_5 = 1;
             } else if (this.drop_state_6 == 0 && this.code_zone_6 == tag_text) {
                 //console.log("6");
                 tag_x = this.draganddrop_6.x - (this.draganddrop_6.width / 2) + 5;
-                tag_y = this.draganddrop_6.y - 10;
+                tag_y = this.draganddrop_6.y - 15;
                 this.drop_state_6 = 1;
             }
 
             //console.log(this.drop_state_1 + " " + this.drop_state_2 + " " + this.drop_state_3 + " " + this.drop_state_4 + " " + this.drop_state_5 + " " + this.drop_state_6);
             //console.log(this.code_zone_1 + " " + this.code_zone_2 + " " + this.code_zone_3 + " " + this.code_zone_4 + " " + this.code_zone_5 + " " + this.code_zone_6);
-            this.tag_in_dropzone[this.tag_in_dropzone.length] = this.add.text(tag_x, tag_y, tag_text, { font: "25px Arial Black", fill: "#eedfbe" }); // 배열에 태그조각 만들어 넣어줌
             
+            var tag_not_codepiece = true; // 텍스트 오브젝트 tag만 생성하고 codepiece는 생성하지 않기 위한 상태변수
+            
+            for (var code_piece_text of this.item){ 
+                if (tag_text == code_piece_text) {
+                    tag_not_codepiece = false;
+                    break;
+                }
+                
+            //console.log(tag_text + " vs " + code_piece_text);
+            }
+
+            if(tag_not_codepiece){ // 코드조각 아닌 태그만 텍스트 오브젝트 생성
+               this.tag_in_dropzone[this.tag_in_dropzone.length] = this.add.text(tag_x, tag_y, tag_text, { font: "25px Arial Black", fill: "#eedfbe" }); // 배열에 태그조각 만들어 넣어줌
+            }
+
             tag_drop_state = false; // 다른 태그 드랍할 때도 인식하게 하기 위해 false로 바꿔줌
         }
         
