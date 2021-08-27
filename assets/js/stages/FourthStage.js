@@ -181,6 +181,9 @@ export default class FourthStage extends Phaser.Scene {
 
     update() {
 
+        this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
+
+
         if(this.quiz1) {
         this.contenttext = 
         "#include <stdio.h>\n" +
@@ -262,7 +265,7 @@ export default class FourthStage extends Phaser.Scene {
             this.item[this.item.length] =  '원하는';
             this.item[this.item.length] =  '아이템';
             this.item[this.item.length] =  '넣으셈';
-            this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
             //this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             //this.dropzone2_x = 1000;
@@ -292,7 +295,7 @@ export default class FourthStage extends Phaser.Scene {
                     this.firstTalk = undefined;
                     this.player.playerPaused = true;
                     this.temp_getItem();
-                    //this.stage4_2();
+                    this.stage4_quiz_1();
                 }
             }
         }
@@ -328,25 +331,16 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     temp_getItem() {
-        this.item[this.item.length] =  '원하는';
-        this.item[this.item.length] =  '아이템';
-        this.item[this.item.length] =  '넣으셈';
+        this.item[this.item.length] =  '%d';
+        this.item[this.item.length] =  '%s';
+        this.item[this.item.length] =  '%c';
+        this.item[this.item.length] =  '%f';
         this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
-        //this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-        //this.dropzone2_x = 1000;
-        //this.dropzone3_x = 805;
-        //this.dropzone4_x = 200;
-
         this.dragAndDrop.invenPlus(this);
-        //this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-        //this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-        //this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
-        //this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("4");
-        //this.intro4();
     }
 
-    stage4_2() {
+    stage4_quiz_1() {
         this.codeapp_onoff_state = 1; //드랍존 폰 안열려있어도 보여야함
         this.command.entire_code_button.input.enabled = false; //퀴즈 진행하는 동안 폰 안열리도록
         console.log('대사 나오고 시험 시작하도록');
@@ -358,8 +352,19 @@ export default class FourthStage extends Phaser.Scene {
         seq.on('complete', () => {
         });
         this.draganddrop_1 = new DragAndDrop(this, 440, 75, 80, 25).setRectangleDropZone(80, 25).setName("1");     
+
+        //** 드랍존 활성화가 안됨... 일단 그건 넘어가고 **//
+
+        if(this.code_zone_1 = '%d') this.stage4_quiz_2();
+        else {
+            console.log('틀림');
+            //배열 비우고 다시 getItem 함수 불러와주기
+        }
+
     }
 
+    stage4_quiz_2() {
 
+    }
 
 }

@@ -180,8 +180,6 @@ export default class ThirdStage extends Phaser.Scene {
 
         stagenum = 3;
 
-        this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
-
         //초반 대사
         this.cameras.main.fadeIn(1000,0,0,0);
     //   this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
@@ -192,10 +190,10 @@ export default class ThirdStage extends Phaser.Scene {
     this.physics.add.collider(this.breadGroup, this.worldLayer);
     this.physics.add.collider(this.player.player, this.breadGroup);
     this.physics.add.collider(this.breadGroup, this.breadGroup);
+
+        
     
     }
-
-    
 
     update() {
       this.contenttext = 
@@ -280,7 +278,6 @@ export default class ThirdStage extends Phaser.Scene {
             this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 980;
 
-            this.dragAndDrop.invenPlus(this);
             this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
             //this.intro2();
