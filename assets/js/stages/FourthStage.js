@@ -96,7 +96,7 @@ export default class FourthStage extends Phaser.Scene {
             this.scene.sleep('fourth_stage'); 
             this.scene.run("minimap");
         },this);
-***/
+        ***/
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
 
         // 인벤창 팝업 여부를 나타내는 상태변수
@@ -165,7 +165,7 @@ export default class FourthStage extends Phaser.Scene {
 
         stagenum = 4;
 
-        console.log(this.devil.x);
+
         
 
         this.firstTalk = true ;//악마 앞에서 x키 누를때 필요
@@ -175,8 +175,8 @@ export default class FourthStage extends Phaser.Scene {
         this.quiz4 = false;
         this.quizOver = false;
 
-
-        this.code_zone_1 = "           " //이거 어떻게 작동하는 건지 모르겠어서 일단 빈칸 만들기 위해 임시로 해둠
+        
+    
     }
 
     update() {
@@ -351,8 +351,70 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
         });
-        this.draganddrop_1 = new DragAndDrop(this, 440, 75, 80, 25).setRectangleDropZone(80, 25).setName("1");     
 
+        /*
+        this.graphics = this.add.graphics();
+        var graphics = this.graphics; // 함수에서도 graphics를 쓰기 위해 this.graphics 썼으나 input 안에서 this 적용 안 돼서 따로 변수 둠.
+        this.graphics.lineStyle(2, 0x7e80a7);
+        this.graphics.strokeRect(440-80 / 2, 75 - 25/2, 80, 25);
+        */
+    
+        var zone  = this.add.zone(690, 75, 80, 25).setRectangleDropZone(80, 25);
+        var graphics = this.add.graphics();
+        graphics.lineStyle(2, 0xffff00);
+        graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+
+        this.input.on('dragstart', function (pointer, gameObject) {
+
+            this.children.bringToTop(gameObject);
+    
+        }, this);
+    
+        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+    
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+    
+        });
+    
+        this.input.on('dragenter', function (pointer, gameObject, dropZone) {
+    
+            graphics.clear();
+            graphics.lineStyle(2, 0x00ffff);
+            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+    
+        });
+    
+        this.input.on('dragleave', function (pointer, gameObject, dropZone) {
+    
+            graphics.clear();
+            graphics.lineStyle(2, 0xffff00);
+            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+    
+        });
+    
+        this.input.on('drop', function (pointer, gameObject, dropZone) {
+            console.log(dropZone.x,dropZone.y)
+            gameObject.x = dropZone.x;
+            gameObject.y = dropZone.y;
+            console.log(gameObject.x,gameObject.y)
+        });
+    
+        this.input.on('dragend', function (pointer, gameObject, dropped) {
+    
+            if (!dropped)
+            {
+                gameObject.x = gameObject.input.dragStartX;
+                gameObject.y = gameObject.input.dragStartY;
+            }
+    
+            graphics.clear();
+            graphics.lineStyle(2, 0xffff00);
+            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+    
+        });
+
+        //this.draganddrop_1 = new DragAndDrop(this, 440, 75, 80, 25).setRectangleDropZone(80, 25).setName("1"); 
         //** 드랍존 활성화가 안됨... 일단 그건 넘어가고 **//
 
         if(this.code_zone_1 = '%d') this.stage4_quiz_2();
