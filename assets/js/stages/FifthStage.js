@@ -179,6 +179,7 @@ export default class FifthStage extends Phaser.Scene {
 
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
+        this.library_invenIn = false;
         
         /** 아이템 만들기 **/
         var item_text = 'printf';
@@ -273,6 +274,7 @@ export default class FifthStage extends Phaser.Scene {
 
         this.player.update();
         this.inventory.update(this);
+        if(this.library_added) this.library_inventory_update();
         this.command.update(this);
 
         //선택지 선택 결과 처리 코드
@@ -965,14 +967,18 @@ export default class FifthStage extends Phaser.Scene {
             //추가
             this.dialog_text=this.present_library+" 라이브러리 인벤토리가 추가되었습니다.";
             this.change_library=0;
+            this.add_library_inventory();
         }else if(this.change_library==4||this.change_library==7){
             //제거
             this.dialog_text=" 라이브러리 인벤토리가 사라졌습니다.";
             this.change_library=0;
+            this.delete_library_inventory();
         }else if(this.change_library==5||this.change_library==8){
             //전환
             this.dialog_text="기존 라이브러리 인벤토리가 "+this.present_library+" 라이브러리 인벤토리로 변경되었습니다.";
             this.change_library=0;
+            this.delete_library_inventory();
+            this.add_library_inventory();
         }else{
             //변화x
             this.dialog_text="라이브러리를 변경하지 않습니다.";
@@ -1147,5 +1153,59 @@ export default class FifthStage extends Phaser.Scene {
             this.player.playerPaused=false;
             this.cantalking2=true;
         });
+    }
+
+    // 라이브러리 인벤토리 추가하는 함수
+    add_library_inventory() {
+        this.library_inventory = this.add.graphics();
+        this.library_inventory_button = this.add.graphics();
+
+        this.library_inventory.lineStyle(3, 0xFFB569, 1);
+        this.library_inventory_button.lineStyle(3, 0xFFB569, 1);
+
+        this.library_inventoryHandle = this.library_inventory_button.fillRoundedRect(0, 0, 150, 40, 5).strokeRoundedRect(0, 0, 150, 40, 5); // 인벤창 버튼
+        this.library_inventoryBody = this.library_inventory.fillRoundedRect(5, 0, 150, 440, 10).strokeRoundedRect(5, 0, 150, 440, 10); // 인벤창
+        this.library_inventoryBody.y = 600;
+        
+        this.library_inventory_button.fillStyle(0xFCE5CD, 1);
+        this.library_inventory.fillStyle(0xFCE5CD, 1);
+
+        this.library_invenText = this.add.text(5,5,this.present_library,{
+            fontSize : '25px',
+            fontFamily: ' Courier',
+            color: '#FFB569'
+        }).setOrigin(0,0);
+
+        //인벤창버튼 배경과 인벤토리 텍스트 묶어줌
+        this.library_inven_button = this.add.container(165,560, [this.library_inventoryHandle, this.library_invenText]);
+        this.library_inven_button.setSize(200, 100);
+        this.library_inven_button.setInteractive();
+
+        this.library_added = true; // 라이브러리 추가되었다는 걸 알려줘서 update에서 library_inventory_update 함수 실행시켜줌
+    }
+    // 라이브러리 인벤토리 삭제하는 함수
+    delete_library_inventory() {
+        this.library_inventory.destroy();
+        this.library_inventory_button.destroy();
+        this.library_inven_button.destroy();
+        this.library_added = false;
+    }
+    // 라이브러리 인벤토리 버튼 누를때 열고 닫히게 하는 함수
+    library_inventory_update() {
+        this.library_inven_button.x = this.worldView.x + 165;
+        this.library_inventoryBody.x = this.worldView.x + 160;
+
+        if(!this.library_invenIn) { 
+            this.library_inven_button.on('pointerdown', () => {
+                this.library_inventoryBody.y = 120;
+
+                this.library_invenIn = true;
+            });
+        } else { 
+            this.library_inven_button.on('pointerdown', () => {
+                this.library_inventoryBody.y = 600;
+                this.library_invenIn = false;
+            });
+        }
     }
 }
