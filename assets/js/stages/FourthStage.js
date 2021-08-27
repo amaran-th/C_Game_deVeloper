@@ -5,6 +5,9 @@ import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 import ThirdStage from "./ThirdStage.js";
 
+var droppedText; //드랍된 텍스트 무엇인지 판별할때 gameobject._text 값 저장하는 용으로 쓰임
+var graphics; //퀴즈 넘어갈때마다 드랍존 지워야 해서 전역으로 뺐음
+
 
 export default class FourthStage extends Phaser.Scene {   
     constructor(){ 
@@ -181,44 +184,109 @@ export default class FourthStage extends Phaser.Scene {
 
     update() {
 
+        //console.log('droppedText:',droppedText);
+
         this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
 
-
+        /** 현재 퀴즈따라서 컴파일 내용 바꿔주기 (퀴즈 틀리고 맞출때마다 플레이어 말풍선으로 컴파일 내용 뜨는 거 하고싶음)**/
         if(this.quiz1) {
-        this.contenttext = 
-        "#include <stdio.h>\n" +
-        "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+            this.contenttext = 
+            "#include <stdio.h>\n" +
+            "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+            } else if(this.quiz2) {
+                this.contenttext = 
+                "#include <stdio.h>\n" +
+                "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+            } else if(this.quiz3) {
+                this.contenttext = 
+                "#include <stdio.h>\n" +
+                "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+            } else if(this.quiz4) {
+                this.contenttext = 
+                "#include <stdio.h>\n" +
+                "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+            } else if(this.quizOver) {
+            this.contenttext =
+            "#include <stdio.h>\n" +
+            "int main(){\n\n" +
+            "  "+ this.code_zone_1 +"(int i=10; i>0; i--) {\n" +
+            "      "+this.code_zone_2+" (i%2==1){\n" +
+            "          printf(\'"+ this.code_zone_3 +"\',i);\n" +
+            "      }\n" +
+            "  }\n" +
+            "}\n"
+            }
+
+
+        /* 퀴즈 정답맞추기 */
+        if(this.quiz1 && droppedText == '%d' ) {
+            this.quiz1 = false;
+            this.quiz2 = true;
+            droppedText = undefined;
+            this.time.delayedCall(1000,() => {
+                this.item.length = 0; //배열 비워버리기
+                this.temp_getItem() //배열 다시 채우기
+                this.stage4_q_2()
+            },[],this);
+                
+        }
+        else if(this.quiz1 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
+            this.item.length = 0; //배열 비워버리기
+            this.temp_getItem() //배열 다시 채우기
+            this.stage4_quiz_1(); //다시 드랍 실행하기
+            droppedText = undefined;
         }
 
-        if(this.quiz2) {
-            this.contenttext = 
-            "#include <stdio.h>\n" +
-            "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+        if(this.quiz2 && droppedText == '%c' ) {
+            this.quiz2 = false;
+            this.quiz3 = true;
+            droppedText = undefined;
+            this.time.delayedCall(1000,() => {
+                this.item.length = 0; //배열 비워버리기
+                this.temp_getItem() //배열 다시 채우기
+                this.stage4_q_3()
+            },[],this);
+        }
+        else if(this.quiz2 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
+            this.item.length = 0; //배열 비워버리기
+            this.temp_getItem() //배열 다시 채우기
+            this.stage4_quiz_2(); //다시 드랍 실행하기
+            droppedText = undefined;
         }
 
-        if(this.quiz3) {
-            this.contenttext = 
-            "#include <stdio.h>\n" +
-            "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
+        if(this.quiz3 && droppedText == '%s' ) {
+            this.quiz3 = false;
+            this.quiz4 = true;
+            droppedText = undefined;
+            this.time.delayedCall(1000,() => {
+                this.item.length = 0; //배열 비워버리기
+                this.temp_getItem() //배열 다시 채우기
+                this.stage4_q_4()
+            },[],this);
+        }
+        else if(this.quiz3 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
+            this.item.length = 0; //배열 비워버리기
+            this.temp_getItem() //배열 다시 채우기
+            this.stage4_quiz_3(); //다시 드랍 실행하기
+            droppedText = undefined;
+        }
+
+        if(this.quiz4 && droppedText == '%f' ) {
+            this.quiz4 = false;
+            droppedText = undefined;
+            this.time.delayedCall(1000,() => {
+                this.item.length = 0; //배열 비워버리기
+                this.temp_getItem() //배열 다시 채우기
+                this.stage4_5()
+            },[],this);
+        }
+        else if(this.quiz4 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
+            this.item.length = 0; //배열 비워버리기
+            this.temp_getItem() //배열 다시 채우기
+            this.stage4_quiz_4(); //다시 드랍 실행하기
+            droppedText = undefined;
         }
         
-        if(this.quiz4) {
-            this.contenttext = 
-            "#include <stdio.h>\n" +
-            "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
-        }
-        
-        if(this.quizOver) {
-        this.contenttext =
-        "#include <stdio.h>\n" +
-        "int main(){\n\n" +
-        "  "+ this.code_zone_1 +"(int i=10; i>0; i--) {\n" +
-        "      "+this.code_zone_2+" (i%2==1){\n" +
-        "          printf(\'"+ this.code_zone_3 +"\',i);\n" +
-        "      }\n" +
-        "  }\n" +
-        "}\n"
-        }
 
 
         this.player.update();
@@ -340,49 +408,17 @@ export default class FourthStage extends Phaser.Scene {
         this.dragAndDrop.invenPlus(this);
     }
 
-    stage4_quiz_1() {
-        this.codeapp_onoff_state = 1; //드랍존 폰 안열려있어도 보여야함
-        this.command.entire_code_button.input.enabled = false; //퀴즈 진행하는 동안 폰 안열리도록
-        console.log('대사 나오고 시험 시작하도록');
-        var seq = this.plugins.get('rexsequenceplugin').add();
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.stage4_quiz_1, this.dialog)
-        .start();
-        seq.on('complete', () => {
-        });
-
-        /*
-        this.graphics = this.add.graphics();
-        var graphics = this.graphics; // 함수에서도 graphics를 쓰기 위해 this.graphics 썼으나 input 안에서 this 적용 안 돼서 따로 변수 둠.
-        this.graphics.lineStyle(2, 0x7e80a7);
-        this.graphics.strokeRect(440-80 / 2, 75 - 25/2, 80, 25);
-        */
-    
-        var zone  = this.add.zone(690, 75, 80, 25).setRectangleDropZone(80, 25);
-        var graphics = this.add.graphics();
+    makeDropzone(x,y,width) {
+        var zone  = this.add.zone(x, y, width, 25).setRectangleDropZone(80, 25);
+        graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
         graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
 
-        this.input.on('dragstart', function (pointer, gameObject) {
-
-            this.children.bringToTop(gameObject);
-    
-        }, this);
-    
-        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-    
-            gameObject.x = dragX;
-            gameObject.y = dragY;
-    
-        });
-    
         this.input.on('dragenter', function (pointer, gameObject, dropZone) {
     
             graphics.clear();
             graphics.lineStyle(2, 0x00ffff);
             graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
-    
         });
     
         this.input.on('dragleave', function (pointer, gameObject, dropZone) {
@@ -390,7 +426,6 @@ export default class FourthStage extends Phaser.Scene {
             graphics.clear();
             graphics.lineStyle(2, 0xffff00);
             graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
-    
         });
     
         this.input.on('drop', function (pointer, gameObject, dropZone) {
@@ -398,6 +433,10 @@ export default class FourthStage extends Phaser.Scene {
             gameObject.x = dropZone.x;
             gameObject.y = dropZone.y;
             console.log(gameObject.x,gameObject.y)
+
+            droppedText = gameObject._text;
+            //퀴즈 정답유무는 update에
+
         });
     
         this.input.on('dragend', function (pointer, gameObject, dropped) {
@@ -407,25 +446,124 @@ export default class FourthStage extends Phaser.Scene {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
             }
-    
+            gameObject.x = zone.x - (zone.width/2) +5;
+            gameObject.y = zone.y - (zone.height/2);
+
             graphics.clear();
             graphics.lineStyle(2, 0xffff00);
             graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
     
         });
+    }
 
-        //this.draganddrop_1 = new DragAndDrop(this, 440, 75, 80, 25).setRectangleDropZone(80, 25).setName("1"); 
-        //** 드랍존 활성화가 안됨... 일단 그건 넘어가고 **//
+    stage4_quiz_1() {
+        //this.codeapp_onoff_state = 1; //드랍존 폰 안열려있어도 보여야함
+        this.command.entire_code_button.input.enabled = false; //퀴즈 진행하는 동안 폰 안열리도록
 
-        if(this.code_zone_1 = '%d') this.stage4_quiz_2();
-        else {
-            console.log('틀림');
-            //배열 비우고 다시 getItem 함수 불러와주기?
-        }
+
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_quiz_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+        });
+        this.makeDropzone(690,375,80);
+
+    }
+
+
+
+    stage4_q_2(){
+        this.dialog.visible(false);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_q_2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.stage4_quiz_2();
+        });
     }
 
     stage4_quiz_2() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_quiz_2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            /* 드래그 앤 드랍 불러오는게 너무 힘들어서 그냥 바로 드랍존 생성함*/
+            this.makeDropzone(690,75,80);
+        });
+
 
     }
+
+
+
+    stage4_q_3(){
+        this.dialog.visible(false);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_q_3, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.stage4_quiz_3();
+        });
+    }
+
+    stage4_quiz_3() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_quiz_3, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.makeDropzone(690,75,80);
+        });
+    }
+
+
+
+    stage4_q_4(){
+        this.dialog.visible(false);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_q_4, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.stage4_quiz_4();
+        });
+    }
+
+    stage4_quiz_4() {
+
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_quiz_4, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.makeDropzone(690,75,80);
+        });
+    }
+
+
+    stage4_5() {
+        this.dialog.visible(false);
+
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_5, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+        });
+    }
+
 
 }
