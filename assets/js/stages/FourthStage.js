@@ -156,6 +156,8 @@ export default class FourthStage extends Phaser.Scene {
 	     "  }\n" +
          "}\n"
 
+         this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
+
  
          //코드 실행후 불러올 output값
          this.out = "";
@@ -262,15 +264,16 @@ export default class FourthStage extends Phaser.Scene {
             this.item[this.item.length] =  '넣으셈';
             this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
-            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 1000;
-            this.dropzone3_x = 805;
-            this.dropzone4_x = 200;
+            //this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            //this.dropzone2_x = 1000;
+            //this.dropzone3_x = 805;
+            //this.dropzone4_x = 200;
 
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("4");
+            this.dragAndDrop.invenPlus(this);
+            //this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            //this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            //this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            //this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("4");
             //this.intro4();
             this.invenPlus = false;
         }
@@ -288,7 +291,8 @@ export default class FourthStage extends Phaser.Scene {
                 if(this.firstTalk) {
                     this.firstTalk = undefined;
                     this.player.playerPaused = true;
-                    this.stage4_2();
+                    this.temp_getItem();
+                    //this.stage4_2();
                 }
             }
         }
@@ -323,18 +327,37 @@ export default class FourthStage extends Phaser.Scene {
 
     }
 
+    temp_getItem() {
+        this.item[this.item.length] =  '원하는';
+        this.item[this.item.length] =  '아이템';
+        this.item[this.item.length] =  '넣으셈';
+        this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+
+        //this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+        //this.dropzone2_x = 1000;
+        //this.dropzone3_x = 805;
+        //this.dropzone4_x = 200;
+
+        this.dragAndDrop.invenPlus(this);
+        //this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
+        //this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
+        //this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
+        //this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("4");
+        //this.intro4();
+    }
+
     stage4_2() {
+        this.codeapp_onoff_state = 1; //드랍존 폰 안열려있어도 보여야함
+        this.command.entire_code_button.input.enabled = false; //퀴즈 진행하는 동안 폰 안열리도록
         console.log('대사 나오고 시험 시작하도록');
-        this.dropzone1_x = 425;
-        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 75, 80, 25).setRectangleDropZone(80, 25).setName("1");
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.stage4_quiz_1, this.dialog)
         .start();
         seq.on('complete', () => {
-        });     
-
+        });
+        this.draganddrop_1 = new DragAndDrop(this, 440, 75, 80, 25).setRectangleDropZone(80, 25).setName("1");     
     }
 
 

@@ -643,7 +643,7 @@ visible(visible) {
 
   stage4_quiz_1 = [
     ['visible',true],
-    ['place', 200,10],
+    ['place', 300,10],
     ['setFace', 2],
     ['print', "printf('1 + ㅤㅤㅤㅤ = 4', 3 } ?"],
     //['wait-click'],

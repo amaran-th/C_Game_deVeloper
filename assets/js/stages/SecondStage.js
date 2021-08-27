@@ -279,8 +279,10 @@ export default class SecondStage extends Phaser.Scene {
             this.text_temp.x = this.worldView.x + this.input.mousePointer.x-10; // 이부분 있어야 드랍존에 들어간 상태에서도 새로 태그 생성 가능!
             this.text_temp.y = this.input.mousePointer.y-10;
         }, this);
+
         this.temperature.on('pointerout', function(){
             this.text_temp.setVisible(false);
+            this.pointerUnderGround = true;
         }, this);
 
         this.waterWball.on('pointerover', function(){
@@ -328,8 +330,8 @@ export default class SecondStage extends Phaser.Scene {
             isDragging = false;
             
         });
+        this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
         
-
 
         this.mission1Complete = false;
         //this.mission1Complete = true;    //두번째 미션 먼저보고싶을때 활성화
@@ -345,6 +347,7 @@ export default class SecondStage extends Phaser.Scene {
 
 
 
+
         //초반 대사
         this.cameras.main.fadeIn(1000,0,0,0);
         this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
@@ -352,7 +355,6 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     update() {
-        //console.log(isDragging);
         //console.log('마우스 위치', this.input.mousePointer.x + this.worldView.x,' 땅 태그 위치:',this.text_ground.x  )
 
         if(this.input.mousePointer.y >= 500 && this.input.mousePointer.x + this.worldView.x <= 1500  && this.input.mousePointer.x + this.worldView.x >= this.worldView.x + 50 ) {
@@ -608,6 +610,7 @@ export default class SecondStage extends Phaser.Scene {
             this.dropzone2_x = 895;
             this.dropzone3_x = 828;
 
+            this.dragAndDrop.invenPlus(this);
             this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
             this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
@@ -627,6 +630,7 @@ export default class SecondStage extends Phaser.Scene {
             this.dropzone4_x = 810;
             this.dropzone5_x = 900;
  
+            this.dragAndDrop.invenPlus(this);
             this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 170, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 170, 80, 25).setRectangleDropZone(80, 25).setName("2");
             this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 170, 80, 25).setRectangleDropZone(80, 25).setName("3");
