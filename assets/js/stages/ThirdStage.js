@@ -37,7 +37,7 @@ export default class ThirdStage extends Phaser.Scene {
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
         /*** npc_chef 불러오기 ***/ 
-        this.npc_chef = this.add.image(350,250,'npc_chef').setOrigin(0,0);
+        this.npc_chef = this.add.image(350,350,'npc_chef').setOrigin(0,0);
         this.npc_chef.setInteractive();
 
         /***bread 불러오기 */
@@ -61,7 +61,12 @@ export default class ThirdStage extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
     
-        
+        //플레이어 위 pressX 생성해두기(door) => 빵집에서 stage3_0(바깥)으로,
+        this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -313,7 +318,28 @@ export default class ThirdStage extends Phaser.Scene {
             this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run('sixth_stage');
         }
+
+        /* 문앞에 가서 stage3_0(빵집 바깥)감. */
+        if(this.player.player.x < 1300 && 1150 < this.player.player.x ) {
+            this.pressX_1.x = this.player.player.x-50;
+            this.pressX_1.y = this.player.player.y-100;
+            this.pressX_1.setVisible(true);
         
+            if(this.keyX.isDown) {
+                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                console.log('stage3_0로 맵이동');
+
+                
+                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+                this.command.remove_phone(this);
+
+
+                this.scene.stop('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                this.scene.run("third_stage_0");
+            }
+        }
+        else this.pressX_1.setVisible(false);
+
 
     }
     stage3_1() {
