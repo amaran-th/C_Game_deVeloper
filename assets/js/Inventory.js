@@ -62,6 +62,14 @@ export default class inventory {
                 if(scene.draganddrop_4 != undefined) scene.draganddrop_4.updownwithinven(scene);
                 if(scene.draganddrop_5 != undefined) scene.draganddrop_5.updownwithinven(scene);
                 if(scene.draganddrop_6 != undefined) scene.draganddrop_6.updownwithinven(scene);
+                if(scene.draganddrop_7 != undefined) scene.draganddrop_7.updownwithinven(scene);
+                if(scene.draganddrop_8 != undefined) scene.draganddrop_8.updownwithinven(scene);
+                if(scene.draganddrop_9 != undefined) scene.draganddrop_9.updownwithinven(scene);
+                if(scene.draganddrop_10 != undefined) scene.draganddrop_10.updownwithinven(scene);
+                if(scene.draganddrop_11 != undefined) scene.draganddrop_11.updownwithinven(scene);
+                if(scene.draganddrop_12 != undefined) scene.draganddrop_12.updownwithinven(scene);
+                if(scene.draganddrop_13 != undefined) scene.draganddrop_13.updownwithinven(scene);
+                if(scene.draganddrop_14 != undefined) scene.draganddrop_14.updownwithinven(scene);
 
                 scene.invenIn = true;
             });
@@ -76,6 +84,14 @@ export default class inventory {
                 if(scene.draganddrop_4 != undefined) scene.draganddrop_4.updownwithinven(scene);
                 if(scene.draganddrop_5 != undefined) scene.draganddrop_5.updownwithinven(scene);
                 if(scene.draganddrop_6 != undefined) scene.draganddrop_6.updownwithinven(scene);
+                if(scene.draganddrop_7 != undefined) scene.draganddrop_7.updownwithinven(scene);
+                if(scene.draganddrop_8 != undefined) scene.draganddrop_8.updownwithinven(scene);
+                if(scene.draganddrop_9 != undefined) scene.draganddrop_9.updownwithinven(scene);
+                if(scene.draganddrop_10 != undefined) scene.draganddrop_10.updownwithinven(scene);
+                if(scene.draganddrop_11 != undefined) scene.draganddrop_11.updownwithinven(scene);
+                if(scene.draganddrop_12 != undefined) scene.draganddrop_12.updownwithinven(scene);
+                if(scene.draganddrop_13 != undefined) scene.draganddrop_13.updownwithinven(scene);
+                if(scene.draganddrop_14 != undefined) scene.draganddrop_14.updownwithinven(scene);
 
                 scene.invenIn = false;
             });
@@ -88,6 +104,14 @@ export default class inventory {
         if(scene.draganddrop_4 != undefined) scene.draganddrop_4.onoffwithcommand(scene);
         if(scene.draganddrop_5 != undefined) scene.draganddrop_5.onoffwithcommand(scene);
         if(scene.draganddrop_6 != undefined) scene.draganddrop_6.onoffwithcommand(scene);
+        if(scene.draganddrop_7 != undefined) scene.draganddrop_7.onoffwithcommand(scene);
+        if(scene.draganddrop_8 != undefined) scene.draganddrop_8.onoffwithcommand(scene);
+        if(scene.draganddrop_9 != undefined) scene.draganddrop_9.onoffwithcommand(scene);
+        if(scene.draganddrop_10 != undefined) scene.draganddrop_10.onoffwithcommand(scene);
+        if(scene.draganddrop_11 != undefined) scene.draganddrop_11.onoffwithcommand(scene);
+        if(scene.draganddrop_12 != undefined) scene.draganddrop_12.onoffwithcommand(scene);
+        if(scene.draganddrop_13 != undefined) scene.draganddrop_13.onoffwithcommand(scene);
+        if(scene.draganddrop_14 != undefined) scene.draganddrop_14.onoffwithcommand(scene);
     }
 
     invenSave(scene, itemName) { // 이부분 내용 draganddrop으로 옮겨서 함수 이름 바꾸던지 아래 내용 create나 update로 이동할까 싶음

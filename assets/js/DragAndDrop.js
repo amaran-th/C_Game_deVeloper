@@ -57,8 +57,8 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         });
         // 영역안에서도 지정된 부분에만 고정되는 듯
         scene.input.on('drop', function (pointer, gameObject, dropZone) {
-            gameObject.x = dropZone.x - width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
-            gameObject.y = dropZone.y - height / 2 - 3; // 위치 왜 이런지 궁금한 사람 은지한테 문의 바람 그림 그려줌
+            gameObject.x = dropZone.x - dropZone.width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
+            gameObject.y = dropZone.y - dropZone.height / 2 - 3; // 위치 왜 이런지 궁금한 사람 은지한테 문의 바람 그림 그려줌
             if(dropZone.name == "1"){
                 scene.code_zone_1 = gameObject._text;
                 this.dropzone = 1; // dragend부분에서 쓰려하는데 거긴 파라미터에 dropZone없어서 여기서 지정해줌
@@ -82,6 +82,38 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             else if (dropZone.name == "6"){
                 scene.code_zone_6 = gameObject._text;
                 this.dropzone = 6;
+            }  
+            else if (dropZone.name == "7"){
+                scene.code_zone_7 = gameObject._text;
+                this.dropzone = 7;
+            }  
+            else if (dropZone.name == "8"){
+                scene.code_zone_8 = gameObject._text;
+                this.dropzone = 8;
+            }  
+            else if (dropZone.name == "9"){
+                scene.code_zone_9 = gameObject._text;
+                this.dropzone = 9;
+            }  
+            else if (dropZone.name == "10"){
+                scene.code_zone_10 = gameObject._text;
+                this.dropzone = 10;
+            }  
+            else if (dropZone.name == "11"){
+                scene.code_zone_11 = gameObject._text;
+                this.dropzone = 11;
+            }  
+            else if (dropZone.name == "12"){
+                scene.code_zone_12 = gameObject._text;
+                this.dropzone = 12;
+            }  
+            else if (dropZone.name == "13"){
+                scene.code_zone_13 = gameObject._text;
+                this.dropzone = 13;
+            }  
+            else if (dropZone.name == "14"){
+                scene.code_zone_14 = gameObject._text;
+                this.dropzone = 14;
             } 
 
             //gameObject.input.enabled = false; // 한 번 드랍되면 더 못 움직이게
@@ -148,6 +180,78 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                         scene.drop_state_6 = 1;
                     }, 1000);
                     break;
+                case 7:
+                    if (!dropped || scene.drop_state_7) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_7 = 1;
+                    }, 1000);
+                    break;
+                case 8:
+                    if (!dropped || scene.drop_state_8) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_8 = 1;
+                    }, 1000);
+                    break;
+                case 9:
+                    if (!dropped || scene.drop_state_9) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_9 = 1;
+                    }, 1000);
+                    break;
+                case 10:
+                    if (!dropped || scene.drop_state_10) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_10 = 1;
+                    }, 1000);
+                    break;
+                case 11:
+                    if (!dropped || scene.drop_state_11) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_11 = 1;
+                    }, 1000);
+                    break;
+                case 12:
+                    if (!dropped || scene.drop_state_12) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_12 = 1;
+                    }, 1000);
+                    break;
+                case 13:
+                    if (!dropped || scene.drop_state_13) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_13 = 1;
+                    }, 1000);
+                    break;
+                case 14:
+                    if (!dropped || scene.drop_state_14) {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+                    setTimeout(function() {
+                        scene.drop_state_14 = 1;
+                    }, 1000);
+                    break;
                 default:
                     gameObject.x = gameObject.input.dragStartX;
                     gameObject.y = gameObject.input.dragStartY;
@@ -184,6 +288,14 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.drop_state_4 = 0;
             scene.drop_state_5 = 0;
             scene.drop_state_6 = 0;
+            scene.drop_state_7 = 0;
+            scene.drop_state_8 = 0;
+            scene.drop_state_9 = 0;
+            scene.drop_state_10 = 0;
+            scene.drop_state_11 = 0;
+            scene.drop_state_12 = 0;
+            scene.drop_state_13 = 0;
+            scene.drop_state_14 = 0;
 
             scene.code_zone_1 = undefined; // 리셋했을 때 비워주기
             scene.code_zone_2 = undefined;
@@ -191,6 +303,14 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.code_zone_4 = undefined;
             scene.code_zone_5 = undefined;
             scene.code_zone_6 = undefined;
+            scene.code_zone_7 = undefined;
+            scene.code_zone_8 = undefined;
+            scene.code_zone_9 = undefined;
+            scene.code_zone_10 = undefined;
+            scene.code_zone_11 = undefined;
+            scene.code_zone_12 = undefined;
+            scene.code_zone_13 = undefined;
+            scene.code_zone_14 = undefined;
 
             scene.reset_state = true;
         });
@@ -230,6 +350,30 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                     case scene.code_zone_6:
                         this.code_piece[i].x = scene.draganddrop_6.x - (scene.draganddrop_6.width / 2) + 5;
                         break;
+                    case scene.code_zone_7:
+                        this.code_piece[i].x = scene.draganddrop_7.x - (scene.draganddrop_7.width / 2) + 5;
+                        break;
+                    case scene.code_zone_8:
+                        this.code_piece[i].x = scene.draganddrop_8.x - (scene.draganddrop_8.width / 2) + 5;
+                        break;
+                    case scene.code_zone_9:
+                        this.code_piece[i].x = scene.draganddrop_9.x - (scene.draganddrop_9.width / 2) + 5;
+                        break;
+                    case scene.code_zone_10:
+                        this.code_piece[i].x = scene.draganddrop_10.x - (scene.draganddrop_10.width / 2) + 5;
+                        break;
+                    case scene.code_zone_11:
+                        this.code_piece[i].x = scene.draganddrop_11.x - (scene.draganddrop_11.width / 2) + 5;
+                        break;
+                    case scene.code_zone_12:
+                        this.code_piece[i].x = scene.draganddrop_12.x - (scene.draganddrop_12.width / 2) + 5;
+                        break;
+                    case scene.code_zone_13:
+                        this.code_piece[i].x = scene.draganddrop_13.x - (scene.draganddrop_13.width / 2) + 5;
+                        break;
+                    case scene.code_zone_14:
+                        this.code_piece[i].x = scene.draganddrop_14.x - (scene.draganddrop_14.width / 2) + 5;
+                        break;
                     default:
                         this.code_piece[i].x = scene.worldView.x + 15;
                 }
@@ -243,6 +387,14 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         if(scene.draganddrop_4!=undefined) scene.draganddrop_4.x = scene.worldView.x + scene.dropzone4_x;
         if(scene.draganddrop_5!=undefined) scene.draganddrop_5.x = scene.worldView.x + scene.dropzone5_x;
         if(scene.draganddrop_6!=undefined) scene.draganddrop_6.x = scene.worldView.x + scene.dropzone6_x;
+        if(scene.draganddrop_7!=undefined) scene.draganddrop_7.x = scene.worldView.x + scene.dropzone7_x;
+        if(scene.draganddrop_8!=undefined) scene.draganddrop_8.x = scene.worldView.x + scene.dropzone8_x;
+        if(scene.draganddrop_9!=undefined) scene.draganddrop_9.x = scene.worldView.x + scene.dropzone9_x;
+        if(scene.draganddrop_10!=undefined) scene.draganddrop_10.x = scene.worldView.x + scene.dropzone10_x;
+        if(scene.draganddrop_11!=undefined) scene.draganddrop_11.x = scene.worldView.x + scene.dropzone11_x;
+        if(scene.draganddrop_12!=undefined) scene.draganddrop_12.x = scene.worldView.x + scene.dropzone12_x;
+        if(scene.draganddrop_13!=undefined) scene.draganddrop_13.x = scene.worldView.x + scene.dropzone13_x;
+        if(scene.draganddrop_14!=undefined) scene.draganddrop_14.x = scene.worldView.x + scene.dropzone14_x;
         this.graphics.x = scene.worldView.x; // 드랍존 틀 플레이어 따라 이동
         
     }
@@ -293,6 +445,30 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                         case scene.code_zone_6:
                             this.code_piece[i].setVisible(true);
                             break;
+                        case scene.code_zone_7:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_8:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_9:
+                        this.code_piece[i].setVisible(true);
+                        break;
+                        case scene.code_zone_10:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_11:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_12:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_13:
+                            this.code_piece[i].setVisible(true);
+                            break;
+                        case scene.code_zone_14:
+                            this.code_piece[i].setVisible(true);
+                            break;
                         default:
                             this.code_piece[i].setVisible(false);
                     }
@@ -331,6 +507,30 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                         case scene.code_zone_6:
                             this.code_piece[i].setVisible(false);
                             break;
+                        case scene.code_zone_7:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_8:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_9:
+                            this.code_piece[i].setVisible(false);
+                        break;
+                        case scene.code_zone_10:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_11:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_12:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_13:
+                            this.code_piece[i].setVisible(false);
+                            break;
+                        case scene.code_zone_14:
+                            this.code_piece[i].setVisible(false);
+                            break;
                         default:
                             this.code_piece[i].setVisible(true);
                     }
@@ -353,6 +553,14 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         scene.drop_state_4 = 0;
         scene.drop_state_5 = 0;
         scene.drop_state_6 = 0;
+        scene.drop_state_7 = 0;
+        scene.drop_state_8 = 0;
+        scene.drop_state_9 = 0;
+        scene.drop_state_10 = 0;
+        scene.drop_state_11 = 0;
+        scene.drop_state_12 = 0;
+        scene.drop_state_13 = 0;
+        scene.drop_state_14 = 0;
 
         scene.code_zone_1 = undefined; // 리셋했을 때 비워주기
         scene.code_zone_2 = undefined;
@@ -360,5 +568,13 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         scene.code_zone_4 = undefined;
         scene.code_zone_5 = undefined;
         scene.code_zone_6 = undefined;
+        scene.code_zone_7 = undefined;
+        scene.code_zone_8 = undefined;
+        scene.code_zone_9 = undefined;
+        scene.code_zone_10 = undefined;
+        scene.code_zone_11 = undefined;
+        scene.code_zone_12 = undefined;
+        scene.code_zone_13 = undefined;
+        scene.code_zone_14 = undefined;
     }
 }

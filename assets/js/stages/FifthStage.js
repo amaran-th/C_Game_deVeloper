@@ -216,6 +216,14 @@ export default class FifthStage extends Phaser.Scene {
         this.drop_state_4 = 0;
         this.drop_state_5 = 0;
         this.drop_state_6 = 0;
+        this.drop_state_7 = 0;
+        this.drop_state_8 = 0;
+        this.drop_state_9 = 0;
+        this.drop_state_10 = 0;
+        this.drop_state_11 = 0;
+        this.drop_state_12 = 0;
+        this.drop_state_13 = 0;
+        this.drop_state_14 = 0;
 
 
         //사서와 대화 중인지를 나타내는 플래그 변수
@@ -542,17 +550,23 @@ export default class FifthStage extends Phaser.Scene {
             this.item[this.item.length] =  '원하는';
             this.item[this.item.length] =  '아이템';
             this.item[this.item.length] =  '넣으셈';
-            this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.dropzon_su = 7; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
             this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 880;
             this.dropzone3_x = 790;
             this.dropzone4_x = 880;
+            this.dropzone5_x = 1000;
+            this.dropzone6_x = 1000;
+            this.dropzone7_x = 1000;
 
             this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
             this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("3");
             this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("4");
+            this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 300, 80, 25).setRectangleDropZone(80, 25).setName("5");
+            this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 350, 80, 25).setRectangleDropZone(80, 25).setName("6");
+            this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 400, 80, 25).setRectangleDropZone(80, 25).setName("7");
             //this.intro4();
             this.invenPlus = false;
         }
@@ -561,6 +575,16 @@ export default class FifthStage extends Phaser.Scene {
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
         if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
         if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
+        if(this.draganddrop_5!=undefined) this.draganddrop_5.update(this);
+        if(this.draganddrop_6!=undefined) this.draganddrop_6.update(this);
+        if(this.draganddrop_7!=undefined) this.draganddrop_7.update(this);
+        if(this.draganddrop_8!=undefined) this.draganddrop_8.update(this);
+        if(this.draganddrop_9!=undefined) this.draganddrop_9.update(this);
+        if(this.draganddrop_10!=undefined) this.draganddrop_10.update(this);
+        if(this.draganddrop_11!=undefined) this.draganddrop_11.update(this);
+        if(this.draganddrop_12!=undefined) this.draganddrop_12.update(this);
+        if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
+        if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
 
         if(this.key1.isDown) {
             console.log('맵이동');
