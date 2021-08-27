@@ -409,23 +409,24 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     makeDropzone(x,y,width) {
-        var zone  = this.add.zone(x, y, width, 25).setRectangleDropZone(80, 25);
+        this.zone  = this.add.zone(x, y, width, 25).setRectangleDropZone(80, 25);
+        console.log('드랍존 생성!',this.zone);
         graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
-        graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+        graphics.strokeRect(x - width / 2, y - 25 / 2, width, 25);
 
         this.input.on('dragenter', function (pointer, gameObject, dropZone) {
     
             graphics.clear();
             graphics.lineStyle(2, 0x00ffff);
-            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+            graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
         });
     
         this.input.on('dragleave', function (pointer, gameObject, dropZone) {
     
             graphics.clear();
             graphics.lineStyle(2, 0xffff00);
-            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+            graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
         });
     
         this.input.on('drop', function (pointer, gameObject, dropZone) {
@@ -446,12 +447,12 @@ export default class FourthStage extends Phaser.Scene {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
             }
-            gameObject.x = zone.x - (zone.width/2) +5;
-            gameObject.y = zone.y - (zone.height/2);
+            gameObject.x = x - (width/2) +5;
+            gameObject.y = y - (25/2);
 
             graphics.clear();
             graphics.lineStyle(2, 0xffff00);
-            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+            graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
     
         });
     }
@@ -460,7 +461,6 @@ export default class FourthStage extends Phaser.Scene {
         //this.codeapp_onoff_state = 1; //드랍존 폰 안열려있어도 보여야함
         this.command.entire_code_button.input.enabled = false; //퀴즈 진행하는 동안 폰 안열리도록
 
-
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -468,13 +468,16 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
         });
-        this.makeDropzone(690,375,80);
+        this.makeDropzone(690,75,80);
 
     }
 
+//다음문제로 넘어가면 드랍존이 안뜸... zone이 안지워지고 남아있어서 그런가봄
+//this.zone으로 바꾸면 x y 를 못들고오긴 하는데 그냥 끼워맞추면 될지도...?
 
 
     stage4_q_2(){
+        this.zone.destroy();
         this.dialog.visible(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -492,17 +495,17 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_2, this.dialog)
         .start();
-        seq.on('complete', () => {
-            /* 드래그 앤 드랍 불러오는게 너무 힘들어서 그냥 바로 드랍존 생성함*/
-            this.makeDropzone(690,75,80);
-        });
+        this.makeDropzone(765,75,40);
 
+        seq.on('complete', () => {
+        });
 
     }
 
 
 
     stage4_q_3(){
+        this.zone.destroy();
         this.dialog.visible(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -520,14 +523,15 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_3, this.dialog)
         .start();
+        this.makeDropzone(665,75,80);
         seq.on('complete', () => {
-            this.makeDropzone(690,75,80);
         });
     }
 
 
 
     stage4_q_4(){
+        this.zone.destroy();
         this.dialog.visible(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -546,13 +550,14 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_4, this.dialog)
         .start();
+        this.makeDropzone(725,75,80);
         seq.on('complete', () => {
-            this.makeDropzone(690,75,80);
         });
     }
 
 
     stage4_5() {
+        this.zone.destroy();
         this.dialog.visible(false);
 
         var seq = this.plugins.get('rexsequenceplugin').add();
@@ -562,6 +567,7 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false;
+            this.command.entire_code_button.input.enabled = true;
         });
     }
 
