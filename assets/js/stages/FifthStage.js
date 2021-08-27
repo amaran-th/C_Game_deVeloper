@@ -260,6 +260,9 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     update() {
+        
+
+
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
@@ -426,12 +429,7 @@ export default class FifthStage extends Phaser.Scene {
         }else this.talktext2.setVisible(false);
 
 
-
-
-
-
-
-        //초기 이벤트
+        //사서1과의 초기 이벤트
         if(this.function==1){
             this.stage5_2();
             this.function=0;
@@ -449,7 +447,7 @@ export default class FifthStage extends Phaser.Scene {
             this.function=0;
         }
 
-        //초기 이벤트를 본 이후의 이벤트
+        //사서1과의 초기 이벤트를 본 이후의 이벤트
         if(this.function==6){
             this.stage5_7();
             this.function=0;
@@ -461,6 +459,7 @@ export default class FifthStage extends Phaser.Scene {
             this.function=0;
         }
 
+        //학생과의 이벤트 순차 진행을 위한 제어문
         if(this.function2==1){
             this.stage5_11();
             this.function2=0;
@@ -496,7 +495,31 @@ export default class FifthStage extends Phaser.Scene {
             }
         }
 
+        //학생과의 대면 이벤트를 보고 math 문제가 해결되지 않은 동안 코드가 활성화되게
+        if(this.attention&&this.mathOK==false){
+            this.contenttext =             
+                this.code_zone_1 +this.code_zone_2+"\n" +
+                this.code_zone_3 +this.code_zone_4+"\n" +
+                "int main(){\n" +
+                "   " + this.code_zone_5 + "(\"원주율=%f\"," + 'this.code_zone_6' + ");\n"+
+                "   " + "this.code_zone_7" + "(\"64의 제곱근=%f\","+ 'this.code_zone_8' + "(64));\n"+
+                "   " + 'this.code_zone_9' + "(\"사인 45도=%f\","+ 'this.code_zone_10' + "(" + 'this.code_zone_11' + "/4));\n"+
+                "   " + 'this.code_zone_12' + "(\"코사인 60도=%f\","+ 'this.code_zone_13' + "(" + 'this.code_zone_14' + "/3));\n"+
+                "   }\n" +
+                "}"
 
+            // Second_stage의 앱에 들어가는 코드
+            this.app_code_text =
+                "        " +"           \n" +
+                "        " +"           \n" +
+                "int main(){\n" +
+                "   " + "            " + "(\"원주율=%f\"," + "       " + ");\n"+
+                "   " + "            " + "(\"64의 제곱근=%f\","+ "      " + "(64));\n"+
+                "   " + "            " + "(\"사인 45도=%f\","+ "      " + "("+"   "+"/4));\n"+
+                "   " + "            " + "(\"코사인 60도=%f\","+ "      " + "("+"   "+"/3));\n"+
+                "   }\n" +
+                "}"
+        }
 
 
         /** 아이템 획득하는 경우 **/
@@ -624,8 +647,9 @@ export default class FifthStage extends Phaser.Scene {
         //console.log(scene.out);
         console.log("compiled");
         if(msg==scene.out){
+            this.command.remove_phone(this);
             playerX = this.player.player.x;
-            this.textBox = scene.add.image(playerX-70,170,'bubble').setOrigin(0,0);
+            this.textBox = scene.add.image(playerX-70,270,'bubble').setOrigin(0,0);
             this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
             fontFamily: 'Arial Black',
             fontSize: '15px',
@@ -638,15 +662,15 @@ export default class FifthStage extends Phaser.Scene {
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
-            var textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+            this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(이게 답이 아닌 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
         }
         scene.input.once('pointerdown', function() {
             if(msg==scene.out){
@@ -660,9 +684,9 @@ export default class FifthStage extends Phaser.Scene {
                 }
                 
             }else{
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
             }
             
         }, this);
@@ -1024,7 +1048,7 @@ export default class FifthStage extends Phaser.Scene {
             this.tests_paper.setVisible(true);
 
             var textBox = this.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            var script = this.add.text(textBox.x + 200, textBox.y +50, '* 코딩 어플리케이션에 스크립트가 업데이트 되었습니다. *', {
+            var script = this.add.text(textBox.x + 200, textBox.y +50, '* 코딩 어플리케이션의 스크립트가 업데이트 되었습니다. *', {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
@@ -1040,28 +1064,7 @@ export default class FifthStage extends Phaser.Scene {
                 script.setVisible(false);
                 playerFace.setVisible(false);
 
-                this.contenttext =             
-                    this.code_zone_1 +this.code_zone_2+"\n" +
-                    this.code_zone_3 +this.code_zone_4+"\n" +
-                    "int main(){\n" +
-                    "   " + this.code_zone_5 + "(\"원주율=%f\"," + this.code_zone_6 + ");\n"+
-                    "   " + this.code_zone_7 + "(\"64의 제곱근=%f\","+ this.code_zone_8 + "(64));\n"+
-                    "   " + this.code_zone_9 + "(\"사인 45도=%f\","+ this.code_zone_10 + "("+this.code_zone_11+"/4));\n"+
-                    "   " + this.code_zone_12 + "(\"코사인 60도=%f\","+ this.code_zone_13 + "("+this.code_zone_14+"/3));\n"+
-                    "   }\n" +
-                    "}"
-
-                    // Second_stage의 앱에 들어가는 코드
-                this.app_code_text =
-                    "        " +"           \n" +
-                    "        " +"           \n" +
-                    "int main(){\n" +
-                    "   " + "            " + "(\"원주율=%f\"," + "       " + ");\n"+
-                    "   " + "            " + "(\"64의 제곱근=%f\","+ "      " + "(64));\n"+
-                    "   " + "            " + "(\"사인 45도=%f\","+ "      " + "("+"   "+"/4));\n"+
-                    "   " + "            " + "(\"코사인 60도=%f\","+ "      " + "("+"   "+"/3));\n"+
-                    "   }\n" +
-                    "}"
+                
 
                 this.player.playerPaused=false;
                 this.cantalking2=true;
