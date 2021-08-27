@@ -204,9 +204,9 @@ export default class Command extends Phaser.GameObjects.Image {
         this.entire_code_button.x = this.worldView.x + 5;
         /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
         for(var i=0; i < this.apps.length; i++){
-            this.apps[i].visible == this.commandbox.visible;
+            this.apps[i].visible = this.commandbox.visible;
         }
-        this.back_button.visible == this.commandbox.visible;
+        this.back_button.visible = this.commandbox.visible;
 
         if(state == 0) {
             this.compile_button.setVisible(false);
