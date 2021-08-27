@@ -168,6 +168,28 @@ export default class FifthStage extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
+        //quest box 이미지 로드
+        this.questbox = this.add.image(this.worldView.x,500,'quest_box').setOrigin(0,0);
+
+        //quest text1
+        this.quest_text1 = this.add.text(this.questbox.x+430, 540, '사서에게서 <math.h>을 대여하자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        
+        //quest text2
+        this.quest_text2 = this.add.text(this.questbox.x+430, 540, '여학생의 숙제 채점을 도와주자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        this.questbox.setVisible(false);
+        this.quest_text1.setVisible(false);
+        this.quest_text2.setVisible(false);
+
         
         /** 초반 대사 **/
         this.cameras.main.fadeIn(1000,0,0,0);
@@ -269,13 +291,37 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     update() {
-        
-
-
         this.player.update();
         this.inventory.update(this);
         if(this.library_added) this.library_inventory_update();
         this.command.update(this);
+
+        //퀘스트 박스 및 텍스트 관련 코드
+        if(this.questbox.visible==true){
+            this.questbox.x=this.worldView.x+30;
+            this.quest_text1.x=this.questbox.x+430;
+            this.quest_text2.x=this.questbox.x+430;
+        }
+
+        if(this.attention&&this.mathOK==false){
+            if(this.library_state==1){
+                //math.h를 빌린 상태일 때
+                this.questbox.setVisible(true);
+                this.quest_text1.setVisible(false);
+                this.quest_text2.setVisible(true);
+            }else{
+                this.questbox.setVisible(true);
+                this.quest_text1.setVisible(true);
+                this.quest_text2.setVisible(false);
+                
+            }
+            
+        }else{
+            this.questbox.setVisible(false);
+            this.quest_text1.setVisible(false);
+            this.quest_text2.setVisible(false);
+        }
+
 
         //선택지 선택 결과 처리 코드
         if(!this.scene.isVisible('selection') && this.finAnswer.answer){ //selection 화면이 꺼졌다면
@@ -389,8 +435,8 @@ export default class FifthStage extends Phaser.Scene {
        
 
         /* 플레이어가 학생 앞을 지나가면 작동하도록 함 */
-        if(this.attention==false&&this.player.player.x >1440) {
-            this.attention=true;
+        if(this.attention==false&&this.player.player.x >1440&&this.player.playerPaused==false) {
+            
             this.player.playerPaused = true;
             this.bubble.setVisible(false);
             this.concern_text.setVisible(false);
@@ -1094,7 +1140,7 @@ export default class FifthStage extends Phaser.Scene {
                 script.setVisible(false);
                 playerFace.setVisible(false);
 
-                
+                this.attention=true;
 
                 this.player.playerPaused=false;
                 this.cantalking2=true;

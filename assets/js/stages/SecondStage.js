@@ -113,7 +113,7 @@ export default class SecondStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+        this.player = new Player(this, spawnPoint.x, 430);
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -166,13 +166,15 @@ export default class SecondStage extends Phaser.Scene {
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
-        /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
+        /*
+        //미니맵버튼 활성화
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
         this.minimap_button.setInteractive();
         this.minimap_button.on("pointerdown",function(){
             this.scene.sleep('second_stage'); 
             this.scene.run("minimap");
         },this);
+        */
 
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
 
@@ -757,6 +759,7 @@ export default class SecondStage extends Phaser.Scene {
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 //playerFace.setVisible(false);
+                //this.stage2_3_1();
                 
                 
             }else{
