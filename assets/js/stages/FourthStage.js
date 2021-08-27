@@ -358,9 +358,8 @@ export default class FourthStage extends Phaser.Scene {
         if(this.code_zone_1 = '%d') this.stage4_quiz_2();
         else {
             console.log('틀림');
-            //배열 비우고 다시 getItem 함수 불러와주기
+            //배열 비우고 다시 getItem 함수 불러와주기?
         }
-
     }
 
     stage4_quiz_2() {
