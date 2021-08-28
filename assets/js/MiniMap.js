@@ -9,12 +9,19 @@ class MiniMap extends Phaser.Scene {
         this.stageNum
 
         var back=this.add.image(0,0,"map_background").setOrigin(0,0);    //이미지 중심을 0,0 위치로 잡는다.
-        var stage_1=this.add.image(100,100,"stage_1_button").setOrigin(0,0);
-        var stage_2=this.add.image(300,100,"stage_2_button").setOrigin(0,0);
-        var stage_3=this.add.image(500,100,"stage_3_button").setOrigin(0,0);
-        var stage_4=this.add.image(700,100,"stage_4_button").setOrigin(0,0);
-        var stage_5=this.add.image(900,100,"stage_5_button").setOrigin(0,0);
-        var stage_6=this.add.image(100,300,"stage_6_button").setOrigin(0,0);
+        var stage_1=this.add.image(80,70,"stage_1_button").setOrigin(0,0);
+        var stage_2=this.add.image(350,70,"stage_2_button").setOrigin(0,0);
+        var stage_3=this.add.image(620,50,"stage_3_button").setOrigin(0,0);
+        var stage_4=this.add.image(850,280,"stage_4_button").setOrigin(0,0);
+        var stage_5=this.add.image(560,350,"stage_5_button").setOrigin(0,0);
+        var stage_6=this.add.image(260,340,"stage_6_button").setOrigin(0,0);
+
+        //연결다리 색
+        var link_1 =this.add.image(0,0,"link_1").setOrigin(0,0);
+        var link_2 =this.add.image(0,0,"link_2").setOrigin(0,0);
+        var link_3 =this.add.image(0,0,"link_3").setOrigin(0,0);
+        var link_4 =this.add.image(0,0,"link_4").setOrigin(0,0);
+        var link_5 =this.add.image(0,0,"link_5").setOrigin(0,0);
 
         back.setInteractive();
         stage_1.setInteractive();
