@@ -269,7 +269,6 @@ export default class FourthStage extends Phaser.Scene {
         }
         else if(this.quiz1 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.dragAndDrop.reset_before_mission(this);
-            console.log
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
             this.dialog.visible(false);
@@ -455,9 +454,10 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     makeDropzone(x,y,width) {
-        this.zone  = this.add.zone(x, y, width, 25).setRectangleDropZone(80, 25);
+        this.zone  = this.add.zone(x, y, width, 25).setRectangleDropZone(width, 25);
         console.log('드랍존 생성!',this.zone);
-        graphics = this.add.graphics();
+        this.graphics = this.add.graphics();
+        graphics = this.graphics;
         graphics.lineStyle(2, 0xffff00);
         graphics.strokeRect(x - width / 2, y - 25 / 2, width, 25);
 
@@ -501,6 +501,10 @@ export default class FourthStage extends Phaser.Scene {
     
         });
     }
+    deleteDropzone() {
+        this.graphics.destroy();
+        this.zone.destroy();
+    }
 
     stage4_quiz_1() {
         //this.codeapp_onoff_state = 1; //드랍존 폰 안열려있어도 보여야함
@@ -513,7 +517,7 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
         });
-        this.makeDropzone(690,75,80);
+        this.makeDropzone(890,75,80);
     }
 
 //다음문제로 넘어가면 드랍존이 안뜸... zone이 안지워지고 남아있어서 그런가봄
@@ -521,7 +525,7 @@ export default class FourthStage extends Phaser.Scene {
 
 
     stage4_q_2(){
-        this.zone.destroy();
+        this.deleteDropzone();
         this.dialog.visible(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -539,7 +543,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_2, this.dialog)
         .start();
-        this.makeDropzone(765,75,40);
+        this.makeDropzone(950,75,40);
 
         seq.on('complete', () => {
         });
@@ -549,7 +553,7 @@ export default class FourthStage extends Phaser.Scene {
 
 
     stage4_q_3(){
-        this.zone.destroy();
+        this.deleteDropzone();
         this.dialog.visible(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -567,7 +571,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_3, this.dialog)
         .start();
-        this.makeDropzone(665,75,80);
+        this.makeDropzone(850,75,80);
         seq.on('complete', () => {
         });
     }
@@ -575,7 +579,7 @@ export default class FourthStage extends Phaser.Scene {
 
 
     stage4_q_4(){
-        this.zone.destroy();
+        this.deleteDropzone();
         this.dialog.visible(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -593,14 +597,17 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_4, this.dialog)
         .start();
-        this.makeDropzone(725,75,80);
+        this.makeDropzone(895,75,80);
         seq.on('complete', () => {
         });
     }
 
 
     stage4_5() {
-        this.zone.destroy();
+        this.deleteDropzone();
+        this.dragAndDrop.reset_before_mission(this);
+        this.item.length = 0; //배열 비워버리기
+        
         this.dialog.visible(false);
 
         var seq = this.plugins.get('rexsequenceplugin').add();
