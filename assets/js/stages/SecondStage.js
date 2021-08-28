@@ -64,6 +64,9 @@ export default class SecondStage extends Phaser.Scene {
         });
         this.waterWball = this.add.sprite( 1600, 630, 'waterWball', 0).setOrigin(0,1).setInteractive();
         this.waterWball.play('waterWball');
+        this.water = this.add.sprite( 1600, 600, 'water', 0).setOrigin(0,1)
+        this.water.setVisible(false);
+        
 
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "second_stage" });
@@ -357,6 +360,25 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     update() {
+
+        if(this.player.player.x>=1535&&this.player.player.x<=1650&&this.player.player.body.velocity.x>0){
+            this.player.player.x=1850;
+            this.player.player.y=430;
+            this.player.playerPaused=true;
+            this.cameras.main.fadeIn(500,0,0,0);
+            this.time.delayedCall( 500, () => { //1.5초간 옷입고
+                this.player.playerPaused=false;
+             }, [] , this);  
+
+        }else if(this.player.player.x<=1850&&this.player.player.x>=1750&&this.player.player.body.velocity.x<0){
+            this.player.player.x=1535;
+            this.player.player.y=430;
+            this.player.playerPaused=true;
+            this.cameras.main.fadeIn(500,0,0,0);
+            this.time.delayedCall( 500, () => { //1.5초간 옷입고
+                this.player.playerPaused=false;
+             }, [] , this); 
+        }
 
         //console.log('마우스 위치', this.input.mousePointer.x + this.worldView.x,' 땅 태그 위치:',this.text_ground.x  )
 
@@ -733,6 +755,9 @@ export default class SecondStage extends Phaser.Scene {
         console.log("compiled");
         if(msg==scene.out){
             this.command.remove_phone(this);
+            this.invenIn=false;
+            this.inventory.inventoryBody.y = 600;
+
             playerX = this.player.player.x;
             this.textBox = scene.add.image(playerX-70,270,'bubble').setOrigin(0,0);
             this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
@@ -859,6 +884,7 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     stage2_3_1() { //미션 성공
+        this.player.player.setFlipX(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -898,7 +924,7 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     stage2_4_1() {  //미션 실패. 산타복
-       
+       this.player.player.setFlipX(false);
         var seq = this.plugins.get('rexsequenceplugin').add(); 
         this.dialog.loadTextbox(this);
         seq
@@ -1071,8 +1097,9 @@ export default class SecondStage extends Phaser.Scene {
 
     stage2_11() {
         this.waterWball.destroy();
-        this.water = this.add.sprite( 1600, 600, 'water', 0).setOrigin(0,1)
+        this.water.setVisible(true);
         this.water.play('water');
+        this.player.playerPaused=false;
 
     }
  

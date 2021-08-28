@@ -100,13 +100,15 @@ export default class ThirdStage extends Phaser.Scene {
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
-        /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
+        /*
+        // 미니맵버튼 활성화/ //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
         this.minimap_button.setInteractive();
         this.minimap_button.on("pointerdown",function(){
             this.scene.sleep('third_stage'); 
             this.scene.run("minimap");
         },this);
+        */
 
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
 
@@ -187,8 +189,8 @@ export default class ThirdStage extends Phaser.Scene {
 
         //초반 대사
         this.cameras.main.fadeIn(1000,0,0,0);
-    //   this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-    //   this.stage3_1();
+       this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+       this.stage3_1();
 
     this.breadGroup = this.physics.add.group();
     //this.breadGroup.friction.x = 0.5;
@@ -203,19 +205,19 @@ export default class ThirdStage extends Phaser.Scene {
     update() {
       this.contenttext = 
       "#include <stdio.h>\n" + 
-      "int main(){ \n\n" +
+      "int main(){ \n" +
 
-      "   {int bread = 1;} \n\n   " +
+      "   {int bread = 1;} \n   " +
       this.code_zone_1 + 
       "(int i=0; i" + this.code_zone_2 + 
       "100; i++){\n" +
       "      {bread} = {bread} + 1 ; \n" +
-      "   }\n\n" +
+      "   }\n" +
 
       "   printf(\"%d\", {bread} );\n}"
 
         //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
-        if (this.out == "#include <stdio.h>\nint main(){ \n\n   {int bread = 1;} \n\n   for(int i=0; i<100; i++){\n      {bread} = {bread} + 1 ; \n   }\n\n   printf(\"%d\", {bread} );\n}"){
+        if (this.out == "#include <stdio.h>\nint main(){ \n   {int bread = 1;} \n   for(int i=0; i<100; i++){\n      {bread} = {bread} + 1 ; \n   }\n   printf(\"%d\", {bread} );\n}"){
             console.log("===stage3 클리어!===");
             this.bread.setVisible(true);
 
@@ -350,14 +352,16 @@ export default class ThirdStage extends Phaser.Scene {
         .load(this.dialog.stage3_1, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.npc_chef.setFlipX(true);
+            this.npc_chef.setFlipX(false);
+            this.player.player.setFlipX(true);
             this.exclamMark.setVisible(true);
             this.exclamMark.play('exclam');
-            this.time.delayedCall( 1000, () => { this.stage3_2() }, [] , this);
-            });   
+            this.time.delayedCall( 1000, () => {this.stage3_2() }, [] , this);
+            });
         }, [], this);
     }
     stage3_2() {
+    
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -378,7 +382,7 @@ export default class ThirdStage extends Phaser.Scene {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });     
     }
-
+    /*
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 zero_stage을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
@@ -398,6 +402,76 @@ export default class ThirdStage extends Phaser.Scene {
 
             //scene.intro4();
         }, this);
-    }   
+    } 
+    */  
+
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        //console.log(scene.out);
+        console.log("compiled");
+        if(msg==scene.out){
+            this.command.remove_phone(this);
+            this.invenIn=false;
+            this.inventory.inventoryBody.y = 600;
+
+            playerX = this.player.player.x;
+            this.textBox = scene.add.image(playerX-70,170,'bubble').setOrigin(0,0);
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
+            fontFamily: 'Arial Black',
+            fontSize: '15px',
+            color: '#000000', //글자색 
+            wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+            boundsAlignH: "center",
+            boundsAlignV: "middle"
+          }).setOrigin(0.5)
+          this.player.playerPaused=true;    //플레이어 얼려두기
+
+            //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            this.textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            this.playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }
+        scene.input.once('pointerdown', function() {
+            if(msg==scene.out){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                //playerFace.setVisible(false);
+                
+            }else{
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
+            }
+            
+        }, this);
+    
+    }
+
+    printerr(scene){
+        console.log("printerr");
+        var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        
+        scene.input.once('pointerdown', function() {
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+        }, this);
+    }
+
 
 }

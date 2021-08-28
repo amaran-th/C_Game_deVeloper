@@ -28,8 +28,15 @@ export default class Command extends Phaser.GameObjects.Image {
 
         /*** 컴파일버튼 활성화 ***/ //@@@@@@@@@@@
         this.compile_button = scene.add.image(850,425,'compile_button').setOrigin(0,0);
-        this.compile_button.setInteractive();
-
+        
+        var compile_button = this.compile_button;
+        compile_button.setInteractive();
+        compile_button.on('pointerover', function () {
+            compile_button.setTint(0xc92b2b);
+        });
+        compile_button.on('pointerout', function () {
+            compile_button.clearTint();
+        });
         
 
 
