@@ -360,6 +360,7 @@ export default class FourthStage extends Phaser.Scene {
             this.pressX.setVisible(true);
             if(this.keyX.isDown){
                 if(this.firstTalk) {
+                    this.devil.anims.stop();
                     this.firstTalk = undefined;
                     this.player.playerPaused = true;
                     this.temp_getItem();
@@ -566,6 +567,7 @@ export default class FourthStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false;
             this.command.entire_code_button.input.enabled = true;
+            this.devil.play('devil_touch_phone');
         });
     }
 
