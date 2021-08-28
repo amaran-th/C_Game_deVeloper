@@ -223,6 +223,7 @@ export default class FourthStage extends Phaser.Scene {
             this.quiz1 = false;
             this.quiz2 = true;
             droppedText = undefined;
+            
             this.time.delayedCall(1000,() => {
                 this.item.length = 0; //배열 비워버리기
                 this.temp_getItem() //배열 다시 채우기
@@ -287,7 +288,6 @@ export default class FourthStage extends Phaser.Scene {
             droppedText = undefined;
         }
         
-
 
         this.player.update();
         this.inventory.update(this);
@@ -436,12 +436,11 @@ export default class FourthStage extends Phaser.Scene {
             console.log(gameObject.x,gameObject.y)
 
             droppedText = gameObject._text;
-            //퀴즈 정답유무는 update에
 
+            //퀴즈 정답유무는 update에
         });
     
         this.input.on('dragend', function (pointer, gameObject, dropped) {
-    
             if (!dropped)
             {
                 gameObject.x = gameObject.input.dragStartX;
@@ -469,7 +468,6 @@ export default class FourthStage extends Phaser.Scene {
         seq.on('complete', () => {
         });
         this.makeDropzone(690,75,80);
-
     }
 
 //다음문제로 넘어가면 드랍존이 안뜸... zone이 안지워지고 남아있어서 그런가봄
