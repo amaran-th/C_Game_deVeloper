@@ -234,6 +234,7 @@ export default class FourthStage extends Phaser.Scene {
         else if(this.quiz1 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
+            this.dialog.visible(false);
             this.stage4_quiz_1(); //다시 드랍 실행하기
             droppedText = undefined;
         }
@@ -251,6 +252,7 @@ export default class FourthStage extends Phaser.Scene {
         else if(this.quiz2 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
+            this.dialog.visible(false);
             this.stage4_quiz_2(); //다시 드랍 실행하기
             droppedText = undefined;
         }
@@ -268,6 +270,7 @@ export default class FourthStage extends Phaser.Scene {
         else if(this.quiz3 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
+            this.dialog.visible(false);
             this.stage4_quiz_3(); //다시 드랍 실행하기
             droppedText = undefined;
         }
@@ -284,6 +287,7 @@ export default class FourthStage extends Phaser.Scene {
         else if(this.quiz4 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
+            this.dialog.visible(false);
             this.stage4_quiz_4(); //다시 드랍 실행하기
             droppedText = undefined;
         }
@@ -543,7 +547,6 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     stage4_quiz_4() {
-
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -567,6 +570,8 @@ export default class FourthStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false;
             this.command.entire_code_button.input.enabled = true;
+
+            this.cameras.main.shake(3000, 0.01);
             this.devil.play('devil_touch_phone');
         });
     }

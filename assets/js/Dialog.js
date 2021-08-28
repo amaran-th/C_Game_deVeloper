@@ -828,6 +828,10 @@ visible(visible) {
     ['setFace', 2],
     ['print', '좋아! 통과다!'],
     ['wait-click'],
+    ['print', '이 앞으로 가면 더 높은 구역으로 갈 수 있을거다.'],
+    ['wait-click'],
+    ['print', '이제 썩 사라져!'],
+    ['wait-click'],
     ['visible',false],
   ]
 
