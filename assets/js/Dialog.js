@@ -22,7 +22,8 @@ export default class Dialog extends Phaser.Events.EventEmitter {
       this['setFace'] = this.setFace;
       this['setExtraFace'] = this.setFaceact;
       this.testScene = new TestScene();
-      
+
+  
   }
   
 
