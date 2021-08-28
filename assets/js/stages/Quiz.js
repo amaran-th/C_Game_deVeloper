@@ -20,7 +20,7 @@ export default class Quiz extends Phaser.Scene {
     create(){
         console.log('퀴즈 시작!');
         //this.inventory.fillRoundedRect(0, 50, 1094, 173, 20).strokeRoundedRect(0, 50, 1094, 173, 20);
-        var screen = this.add.rectangle(150, 100, 10, 10, 0x9966ff).setOrigin(0,0);
+        var screen = this.add.rectangle(150, 100, 10, 10, 0x36385c).setOrigin(0,0);
         //dropzone
         this.tweens.add({
             targets: screen,
@@ -31,7 +31,7 @@ export default class Quiz extends Phaser.Scene {
             repeat: 0,
             onComplete: ()=>{ this.build_unmovable() }
         }, this);
-        screen.setStrokeStyle(0.1, 0xefc53f);
+        screen.setStrokeStyle(0.1, 0xccc7f5);
 
         graphics = this.add.graphics();
         path = { t: 0, vec: new Phaser.Math.Vector2() };
