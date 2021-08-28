@@ -56,7 +56,7 @@ export default class ThirdStage extends Phaser.Scene {
         this.oven_open.setVisible(false);
 
         /*** 맵 이동 (문 이미지 불러오기) */
-        this.zone = this.physics.add.staticImage(1210, 420, 'door3');
+        this.zone = this.physics.add.staticImage(1210, 420).setSize(92,161)
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");

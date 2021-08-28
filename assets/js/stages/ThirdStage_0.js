@@ -61,7 +61,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
 
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone3_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
-        this.zone3_2 = this.physics.add.staticImage(900, 420, 'door3_2');
+        this.zone3_2 = this.physics.add.staticImage(955, 420).setSize(92,161);
         this.zone3_3 = this.physics.add.staticImage(1300, 420).setSize(100,160);
         
        // this.zone3_3 = this.physics.add.staticImage(1210, 420, 'door3_1');
@@ -69,17 +69,6 @@ export default class ThirdStage_0 extends Phaser.Scene {
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
-
-        this.physics.add.overlap(this.player.player, this.zone3_1, function () {
-            inZone3_1 = true;
-        });
-        this.physics.add.overlap(this.player.player, this.zone3_2, function () {
-            inZone3_2 = true;
-        });
-        this.physics.add.overlap(this.player.player, this.zone3_3, function () {
-            inZone3_3 = true;
-        });
-  
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -93,8 +82,29 @@ export default class ThirdStage_0 extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        this.physics.add.overlap(this.player.player, this.zone3_1, function () {
+            inZone3_1 = true;
+        });
+        this.physics.add.overlap(this.player.player, this.zone3_2, function () {
+            inZone3_2 = true;
+        });
+        this.physics.add.overlap(this.player.player, this.zone3_3, function () {
+            inZone3_3 = true;
+        });
         //플레이어 위 pressX 생성해두기(door) => stage2로 
-        this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+        this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(door) => stage3로 
+        this.pressX_2 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(door) => stage4로 
+        this.pressX_3 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
