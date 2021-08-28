@@ -7,7 +7,7 @@ import ThirdStage from "./ThirdStage.js";
 
 var droppedText; //드랍된 텍스트 무엇인지 판별할때 gameobject._text 값 저장하는 용으로 쓰임
 var graphics; //퀴즈 넘어갈때마다 드랍존 지워야 해서 전역으로 뺐음
-
+var inZone4_1;
 
 export default class FourthStage extends Phaser.Scene {   
     constructor(){ 
@@ -40,12 +40,15 @@ export default class FourthStage extends Phaser.Scene {
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.decoLayer = map.createLayer("deco", tileset, 0, 0);
 
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone4_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, 1400, 430);
+        this.player = new Player(this, 1000, 430);
 
         /*** npc 만들기 ***/
         this.anims.create({
@@ -58,6 +61,18 @@ export default class FourthStage extends Phaser.Scene {
         this.devil = this.physics.add.sprite(910 ,430,'npc_devil');
         this.devil.setFlipX(true);
         this.devil.play('devil_touch_phone');
+
+        //맵이동
+        this.physics.add.overlap(this.player.player, this.zone4_1, function () {
+            inZone4_1 = true;
+        });
+
+        //플레이어 위 pressX 생성해두기(door) => stage2로 
+        this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
 
         /*벽 이미지 만들기*/
 
@@ -115,11 +130,13 @@ export default class FourthStage extends Phaser.Scene {
         ***/
 
 
+        //코드대로라면 if , for, printf를 얻고 시작을 해야하는데..... 안뜨네? 일단 아직 큰 문제는 아니니까 냅둠
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
         this.item = ['if','for','printf'];
         this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
         this.dragAndDrop.reset_button.destroy();
         this.dragAndDrop.invenPlus(this);
+        
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
         
@@ -356,7 +373,8 @@ export default class FourthStage extends Phaser.Scene {
                     this.devil.anims.stop();
                     this.firstTalk = undefined;
                     this.player.playerPaused = true;
-                    this.temp_getItem();
+                    this.item.length = 0; //배열 비워버리기
+                    this.temp_getItem() //배열 다시 채우기
                     this.stage4_quiz_1();
                 }
             }
@@ -405,10 +423,28 @@ export default class FourthStage extends Phaser.Scene {
             this.scene.run("sixth_stage");
         }
 
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //맵이동 (stage3_0) 로
+        if (inZone4_1) {
+            this.pressX_1.x = this.player.player.x-50;
+            this.pressX_1.y = this.player.player.y-100;
+            this.pressX_1.setVisible(true);
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage3_0 으로");
+                this.command.remove_phone(this);
+                this.scene.switch('third_stage_0'); 
+            }
+        }else this.pressX_1.setVisible(false);
+        
+        inZone4_1 = false;
+
     }
 
     temp_getItem() {
         console.log('아이템 겟 함수 호출');
+        this.item[this.item.length] =  'printf';
+        this.item[this.item.length] =  'if';
+        this.item[this.item.length] =  'for';
         this.item[this.item.length] =  '%d';
         this.item[this.item.length] =  '%s';
         this.item[this.item.length] =  '%c';
