@@ -408,17 +408,6 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             this.code_piece[i] = scene.add.text(scene.worldView.x+15, code_piece_y_invenPlus, scene.item[i], { font: "25px Arial Black", fill: "#f9cb9c" }).setInteractive();
             scene.input.setDraggable(this.code_piece[i]); // 드래그 가능하도록
             code_piece_y_invenPlus += 30; // 각 코드 조각 위치 설정
-            var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
-            this.code_piece[i].on('pointerover', function () { 
-                //console.log('조각 수' + this.code_piece.length);
-                code_piece.setTint(0xf9cb9c);
-            });
-            // 마우스가 코드 조각 벗어났을때 원래 색으로!
-            this.code_piece[i].on('pointerout', function () { 
-                code_piece.clearTint();
-            });
-
-
         }
     }
 
