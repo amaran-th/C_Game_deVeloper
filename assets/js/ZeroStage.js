@@ -82,13 +82,13 @@ export default class ZeroStage extends Phaser.Scene {
 
         //플레이어 말풍선 띄워두기
         this.bubble=this.add.image(0, 300,'bubble2').setOrigin(0,1);
-        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(                     )', {
+        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(           )', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
-        this.concern_text = this.add.text(this.bubble.x+20, this.bubble.y-87, '아-마이크 테스트', {
+        this.concern_text = this.add.text(this.bubble.x+20, this.bubble.y-87, '아-마잌테스트', {
             font:'14px',
-            fontFamily: ' Courier',
+            fontFamily: 'Courier',
             color: '#000000'
         }).setOrigin(0,0);
         this.bubble.setVisible(false);
@@ -110,9 +110,12 @@ export default class ZeroStage extends Phaser.Scene {
                         gameObject.y = gameObject.input.dragStartY;
                     }
         });
+        var concern_text = this.concern_text; // drop 안에서 this 안 먹어서 새로 변수 만들어줌
         this.input.on('drop', function (pointer, gameObject, dropZone) {
                     gameObject.x = dropZone.x - dropZone.width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
-                    gameObject.y = dropZone.y - dropZone.height / 2 - 3;
+                    gameObject.y = dropZone.y - dropZone.height / 2 + 15;
+                    concern_text.setColor('#bfede3');
+                    concern_text.setFontSize(25);
         });
 
 

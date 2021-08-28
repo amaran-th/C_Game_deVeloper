@@ -134,6 +134,7 @@ export default class FourthStage extends Phaser.Scene {
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
         this.item = ['if','for','printf'];
         this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
+        this.dragAndDrop.reset_button.destroy();
         this.dragAndDrop.invenPlus(this);
         
         // 인벤창 팝업 여부를 나타내는 상태변수
