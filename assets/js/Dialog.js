@@ -751,6 +751,86 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage4_quiz_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', 'printf("1 + ㅤㅤㅤㅤ = 4", 3 } ?'],
+    //['wait-click'],
+    //['visible',false],
+  ]
+
+  stage4_q_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '그래도 예전보단 덜 멍청하군!'],
+    ['wait-click'],
+    ['print', '두번째 퀴즈다!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage4_quiz_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', 'printf("welcome to ㅤ ell!"), h } ?'],
+  ]
+
+  stage4_q_3 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '이제 그만 멍청하기로 한거냐?'],
+    ['wait-click'],
+    ['print', '세번째 퀴즈다!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage4_quiz_3 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', 'printf(" ㅤㅤㅤㅤ "), "I love Hell!" } ?'],
+  ]
+
+  stage4_q_4 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '이거 기대 이상이라 섭섭해지려 하는데'],
+    ['wait-click'],
+    ['print', '마지막 퀴즈다!'],
+    ['wait-click'],
+    ['visible',false],
+    
+  ]
+
+  stage4_quiz_4 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', 'printf("π = ㅤㅤㅤㅤ "), "3.14" } ?'],
+  ]
+
+  stage4_5 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 2],
+    ['print', '잠옷입고 누워 자기만 좋아하는 놈인줄 알았는데 그래도 공부를 했나보지?'],
+    ['wait-click'],
+    ['print', '이제 유치원생 수준은 벗어났군'],
+    ['setFace', 1],
+    ['print', '(유치원생....)'],
+    ['wait-click'],
+    ['setFace', 2],
+    ['print', '좋아! 통과다!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
   //독백
   stage5_1 = [
     ['visible',true],

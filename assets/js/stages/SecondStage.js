@@ -281,8 +281,10 @@ export default class SecondStage extends Phaser.Scene {
             this.text_temp.x = this.worldView.x + this.input.mousePointer.x-10; // 이부분 있어야 드랍존에 들어간 상태에서도 새로 태그 생성 가능!
             this.text_temp.y = this.input.mousePointer.y-10;
         }, this);
+
         this.temperature.on('pointerout', function(){
             this.text_temp.setVisible(false);
+            this.pointerUnderGround = true;
         }, this);
 
         this.waterWball.on('pointerover', function(){
@@ -354,7 +356,7 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     update() {
-        //console.log(isDragging);
+
         //console.log('마우스 위치', this.input.mousePointer.x + this.worldView.x,' 땅 태그 위치:',this.text_ground.x  )
 
         if(this.input.mousePointer.y >= 500 && this.input.mousePointer.x + this.worldView.x <= 1500  && this.input.mousePointer.x + this.worldView.x >= this.worldView.x + 50 ) {
