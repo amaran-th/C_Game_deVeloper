@@ -306,6 +306,14 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.code_zone_14 = undefined;
 
             scene.reset_state = true;
+
+            //zerostage this.concern_text(마이크테스트) 리셋버튼 적용시키기 위해 넣음
+            if (scene.concern_text != undefined) {
+                scene.concern_text.setColor('#000000');
+                scene.concern_text.setFontSize(14);
+                scene.concern_text.x = scene.bubble.x+20;
+                scene.concern_text.y = scene.bubble.y-87;
+            }
         });
         
         if (scene.code_piece_add_state != scene.dropzon_su - 1) {

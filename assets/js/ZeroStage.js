@@ -112,12 +112,14 @@ export default class ZeroStage extends Phaser.Scene {
         });
         var concern_text = this.concern_text; // drop 안에서 this 안 먹어서 새로 변수 만들어줌
         this.input.on('drop', function (pointer, gameObject, dropZone) {
-                    gameObject.x = dropZone.x - dropZone.width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
-                    gameObject.y = dropZone.y - dropZone.height / 2 + 15;
-                    concern_text.setColor('#bfede3');
-                    concern_text.setFontSize(25);
+            gameObject.x = dropZone.x - dropZone.width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
+            gameObject.y = dropZone.y - dropZone.height / 2 + 15;
+            if (gameObject._text == concern_text._text) {
+                concern_text.setColor('#bfede3');
+                concern_text.setFontSize(25);
+            }
         });
-
+        
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
