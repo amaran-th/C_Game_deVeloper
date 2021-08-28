@@ -4,7 +4,8 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
-
+var inZone5_1;
+var inZone5_2;
 export default class FifthStage extends Phaser.Scene {   
     constructor(){ 
         super("fifth_stage"); //identifier for the scene
@@ -99,6 +100,10 @@ export default class FifthStage extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
         
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone5_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+        this.zone5_2 = this.physics.add.staticImage(1700, 420).setSize(100,160);
+
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
@@ -126,6 +131,13 @@ export default class FifthStage extends Phaser.Scene {
         this.tests_paper=this.add.image(300,600,"tests_paper").setOrigin(0,1);
         this.tests_paper.setVisible(false);
         
+        //맵이동
+        this.physics.add.overlap(this.player.player, this.zone5_1, function () {
+            inZone5_1 = true;
+        });
+        this.physics.add.overlap(this.player.player, this.zone5_2, function () {
+            inZone5_2 = true;
+        });
 
         //플레이어 위 pressX 생성해두기(door)
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
@@ -660,56 +672,34 @@ export default class FifthStage extends Phaser.Scene {
             this.scene.run("sixth_stage");
         }
 
-        /* 문앞에 가서 stage4감. */
-        if(this.player.player.x < 200 && 0 < this.player.player.x ) {
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //맵이동 (stage4) 로
+        if (inZone5_1) {
             this.pressX_1.x = this.player.player.x-50;
             this.pressX_1.y = this.player.player.y-100;
             this.pressX_1.setVisible(true);
-        
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('stage4로 맵이동');
-
-                
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage4 으로");
                 this.command.remove_phone(this);
-
-
-                this.scene.stop('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                this.scene.run("fourth_stage");
+                this.scene.switch('fourth_stage'); 
             }
-        }
-        else this.pressX_1.setVisible(false);
-
-        /* 문앞에 가서 stage6감. */
-        if(1650 < this.player.player.x ) {
+        }else this.pressX_1.setVisible(false);
+        
+        inZone5_1 = false;
+        
+        //맵이동 (stage3_0) 로
+        if (inZone5_2) {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
             this.pressX_2.setVisible(true);
-            
-            if(this.keyX.isDown&&this.cantalking2) {
-                if(this.mathOK==false){
-                    this.function2=3;
-                    this.cantalking2=false;
-                    console.log("button");
-                }else{
-                    this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                    console.log('stage5로 맵이동');
-
-                    
-                    /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-                    this.command.remove_phone(this);
-
-
-                    this.scene.stop('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                    this.scene.run("sixth_stage");
-                }
-                
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage6 으로");
+                this.command.remove_phone(this);
+                this.scene.switch('sixth_stage'); 
             }
-        }
-        else this.pressX_2.setVisible(false);
+        }else this.pressX_2.setVisible(false);
 
-        
+        inZone5_2 = false;
 
 
     }
