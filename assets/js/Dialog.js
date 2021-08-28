@@ -562,10 +562,11 @@ visible(visible) {
   ]
 
   stage2_3_1 = [
+    ['visible',false],
+    ['wait-click'],
     ['visible',true],
     ['place', 40,10],
     ['setFace', 10],
-    ['wait-click'],
     ['print', '날이 덥다고? 알겠네 조금만 기다리게'],
     ['wait-click'],
     ['visible',false],
@@ -604,10 +605,11 @@ visible(visible) {
   ]
 
   stage2_4_1 = [
+    ['visible',false],
+    ['wait-click'],
     ['visible',true],
     ['place', 40,10],
     ['setFace', 10],
-    ['wait-click'],
     ['print', '날이 춥다고? 알겠네 조금만 기다리게'],
     ['wait-click'],
     ['visible',false],
