@@ -323,6 +323,9 @@ export default class FourthStage extends Phaser.Scene {
         this.inventory.update(this);
         this.command.update(this);
         if(this.draganddrop!=undefined) this.draganddrop.update(this);
+        if(this.draganddrop1!=undefined) this.draganddrop1.update(this);
+        if(this.draganddrop2!=undefined) this.draganddrop2.update(this);
+        if(this.draganddrop3!=undefined) this.draganddrop3.update(this);
                 
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
@@ -596,9 +599,12 @@ export default class FourthStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false;
             this.temp_getItem();
-            this.draganddrop_1 = new DragAndDrop(this, 790, 205, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 814, 230, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 880, 340, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 814;
+            this.dropzone3_x = 880;
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 205, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 230, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 340, 80, 25).setRectangleDropZone(80, 25).setName("3");
         });
     }
 
@@ -614,6 +620,55 @@ export default class FourthStage extends Phaser.Scene {
         });
     }
 
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        //console.log(scene.out);
+        console.log("compiled");
+        if(msg==scene.out){
+            this.command.remove_phone(this);
+            this.invenIn=false;
+            this.inventory.inventoryBody.y = 600;
 
+            playerX = this.player.player.x;
+            this.textBox = scene.add.image(playerX-70,270,'bubble').setOrigin(0,0);
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
+                fontFamily: 'Arial Black',
+                fontSize: '15px',
+                color: '#000000', //글자색 
+                wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+                boundsAlignH: "center",
+                boundsAlignV: "middle"
+            }).setOrigin(0.5)
+            this.player.playerPaused=true;    //플레이어 얼려두기
+
+            //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+        }
+        scene.input.once('pointerdown', function() {
+            if(msg==scene.out){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                //playerFace.setVisible(false);
+                //this.stage2_3_1();
+                
+                
+            }else{
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
+            }
+            
+        }, this);
+    
+    }
 
 }
