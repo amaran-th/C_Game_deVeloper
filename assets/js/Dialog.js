@@ -835,6 +835,43 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage4_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    /*
+    ['print', '문 앞에 무엇이 적혀있어'],
+    ['wait-click'],
+    ['setFace', 5],
+    ['print', '<비밀번호는 0과 10 사이 홀수의 합이다. 비밀번호를 맞추시오>'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '지금 장난해?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '잠깐, 뒤에 뭐가 더 적혀있네'],
+    ['wait-click'],
+    ['setFace', 5],
+    ['print', '<단, 코딩으로.>'],
+    ['wait-click'],
+    ['setFace', 1],
+    */
+    ['print', '.....'],
+    ['wait-click'],
+    ['visible',false],
+    
+  ]
+
+  stage4_7 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 5],
+    ['print', '아무일도 일어나지 않는다.'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+
   //독백
   stage5_1 = [
     ['visible',true],
