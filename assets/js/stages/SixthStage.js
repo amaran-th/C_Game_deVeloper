@@ -4,6 +4,7 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
+var inZone6_1;
 export default class SixthStage extends Phaser.Scene {   
     constructor(){ 
         super("sixth_stage"); //identifier for the scene
@@ -62,7 +63,8 @@ export default class SixthStage extends Phaser.Scene {
         this.npc = this.add.image(214,195,'librarian2').setOrigin(0,0);
         this.npc.setInteractive();
         
-        
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone6_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -96,6 +98,10 @@ export default class SixthStage extends Phaser.Scene {
         //책 이미지 불러오기
         this.books = this.add.image(700,380,'books');
         
+        //맵이동
+        this.physics.add.overlap(this.player.player, this.zone6_1, function () {
+            inZone6_1 = true;
+        });
         //플레이어 위 pressX 생성해두기(door)
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
@@ -442,26 +448,21 @@ export default class SixthStage extends Phaser.Scene {
             this.scene.sleep('sixth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run("fifth_stage");
         }
-        /* 문앞에 가서 stage4감. */
-        if(this.player.player.x < 150 && 0 < this.player.player.x ) {
+        
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //맵이동 (stage5) 로
+        if (inZone6_1) {
             this.pressX_1.x = this.player.player.x-50;
             this.pressX_1.y = this.player.player.y-100;
             this.pressX_1.setVisible(true);
-        
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('stage4로 맵이동');
-
-                
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage4 으로");
                 this.command.remove_phone(this);
-
-
-                this.scene.stop('sixth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                this.scene.run("fifth_stage");
+                this.scene.switch('fifth_stage'); 
             }
-        }
-        else this.pressX_1.setVisible(false);
+        }else this.pressX_1.setVisible(false);
+        
+        inZone6_1 = false;
 
     }
 

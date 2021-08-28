@@ -7,7 +7,7 @@ import ThirdStage from "./ThirdStage.js";
 
 var droppedText; //드랍된 텍스트 무엇인지 판별할때 gameobject._text 값 저장하는 용으로 쓰임
 var graphics; //퀴즈 넘어갈때마다 드랍존 지워야 해서 전역으로 뺐음
-
+var inZone4_1;
 
 export default class FourthStage extends Phaser.Scene {   
     constructor(){ 
@@ -40,6 +40,9 @@ export default class FourthStage extends Phaser.Scene {
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.decoLayer = map.createLayer("deco", tileset, 0, 0);
 
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone4_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
@@ -58,6 +61,18 @@ export default class FourthStage extends Phaser.Scene {
         this.devil = this.physics.add.sprite(910 ,430,'npc_devil');
         this.devil.setFlipX(true);
         this.devil.play('devil_touch_phone');
+
+        //맵이동
+        this.physics.add.overlap(this.player.player, this.zone4_1, function () {
+            inZone4_1 = true;
+        });
+
+        //플레이어 위 pressX 생성해두기(door) => stage2로 
+        this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
 
         /*벽 이미지 만들기*/
 
@@ -403,6 +418,21 @@ export default class FourthStage extends Phaser.Scene {
             this.scene.sleep('fourth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
             this.scene.run("sixth_stage");
         }
+
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //맵이동 (stage3_0) 로
+        if (inZone4_1) {
+            this.pressX_1.x = this.player.player.x-50;
+            this.pressX_1.y = this.player.player.y-100;
+            this.pressX_1.setVisible(true);
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage3_0 으로");
+                this.command.remove_phone(this);
+                this.scene.switch('third_stage_0'); 
+            }
+        }else this.pressX_1.setVisible(false);
+        
+        inZone4_1 = false;
 
     }
 
