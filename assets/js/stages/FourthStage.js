@@ -323,9 +323,9 @@ export default class FourthStage extends Phaser.Scene {
         this.inventory.update(this);
         this.command.update(this);
         if(this.draganddrop!=undefined) this.draganddrop.update(this);
-        if(this.draganddrop1!=undefined) this.draganddrop1.update(this);
-        if(this.draganddrop2!=undefined) this.draganddrop2.update(this);
-        if(this.draganddrop3!=undefined) this.draganddrop3.update(this);
+        if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
+        if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
+        if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
                 
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
