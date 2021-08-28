@@ -91,6 +91,11 @@ export default class ZeroStage extends Phaser.Scene {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
+        this.bubble.setVisible(false);
+        this.concern_text0.setVisible(false);
+        this.concern_text.setVisible(false);
+
+        
         this.concern_text.setInteractive();
 
         this.input.setDraggable(this.concern_text);
@@ -512,6 +517,14 @@ export default class ZeroStage extends Phaser.Scene {
         .load(this.dialog.intro5, this.dialog)
         .start();
         seq.on('complete', () => {
+            this.bubble.x=this.player.player.x;
+            this.concern_text0.x=this.bubble.x+10;
+            this.concern_text.x=this.bubble.x+20;
+            
+            this.bubble.setVisible(true);
+            this.concern_text0.setVisible(true);
+            this.concern_text.setVisible(true);
+
             this.questbox.setVisible(true);
             this.quest_text2.setVisible(true);
             this.code_on=true;
@@ -523,6 +536,10 @@ export default class ZeroStage extends Phaser.Scene {
         //console.log(scene.out);
         console.log("compiled");
         if(msg==scene.out){
+            this.bubble.setVisible(false);
+            this.concern_text0.setVisible(false);
+            this.concern_text.setVisible(false);
+
             this.command.remove_phone(this);
             this.invenIn=false;
             this.inventory.inventoryBody.y = 600;

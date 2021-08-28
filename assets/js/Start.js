@@ -199,6 +199,9 @@ class Start extends Phaser.Scene {
       this.load.image("full_bread", "./assets/images/stage3/full_bread.png");
       this.load.image("oven", "./assets/images/stage3/oven.png");
       this.load.image("oven_open", "./assets/images/stage3/oven_open.png");
+
+      //4번째 스테이지
+      this.load.image('wall','./assets/images/stage4/wall.png')
     
       //5번째 스테이지의 desk 이미지 로드
       this.load.image("library_desk", "./assets/images/stage5/desk.png");
