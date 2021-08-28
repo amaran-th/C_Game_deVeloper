@@ -23,6 +23,12 @@ export default class Dialog extends Phaser.Events.EventEmitter {
       this['setExtraFace'] = this.setFaceact;
       this.testScene = new TestScene();
 
+      this.keyX = this.scene.input.keyboard.addKey('X');
+
+      this.keyX.on('down', () => {
+        this.complete();
+        console.log('asdf');
+     }); //x키 입력 가능하게 함!!
   
   }
   
@@ -71,6 +77,8 @@ loadTextbox(scene) { //현재 장면을 가져와야함
     }
 
 loadbubblebox(scene) {
+    //this.click = true;
+
       this.scene = scene; //이거 없으면 callback 함수들이 this.scene을 못읽음
       this.textBox = scene.add.image(0,0,'bubble').setOrigin(0,0);
       this.script = scene.add.text(this.textBox.x + 2.5, this.textBox.y +2.5, '', {
@@ -111,12 +119,24 @@ visible(visible) {
   }
   // callbacks
   print(msg) {
+      //this.click = true; 
+      //항상 웨잇클릭 뒤에 print를 사용한다고 가정
+      //(제일 처음으로 쓰는 print는 loadbox 함수에서 this.click = true가 선언돼 있어서 상관x)
       this.script.setText(msg);
       // return undefined to run next command
   }
 
   waitClick() {
-      this.scene.input.keyboard.on('keydown-' + 'X', () => { this.complete() });
+    /*
+    this.scene.input.keyboard.on('keydown-' + 'X', () => {
+      if(this.click) {
+        this.click = false;
+        console.log('qasdf')
+        this.complete();
+      }
+    });
+    */
+
       this.scene.input.once('pointerup', this.complete, this);
       return this;  // return eventEmitter to pause the sequence
   }
@@ -140,13 +160,6 @@ visible(visible) {
     this.textBox.y = y;
     this.script.x = playerX-70 + 71.5;
     this.script.y = y + 33.5;
-  }
-
-  setFaceact(extraFace,i) { //key , 프래임
-    this.playerFace.setVisible(false);
-    var extraFace = this.scene.add.sprite(this.script.x + 600 ,this.script.y+50, extraFace , 0);
-    extraFace.setFrame(i);
-    this.scene.input.once('pointerup', function () {extraFace.destroy(); this.playerFace.setVisible(true);} , this);
   }
 
   bubbleExample = [
@@ -213,7 +226,6 @@ visible(visible) {
     ['print', '(저 보따리는 또 뭐야?)'],
     ['wait-click'],
     ['visible',false],
-
   ]
 
   intro4 = [
@@ -244,7 +256,7 @@ visible(visible) {
     ['setFace', 1],
     ['print', '...이게 대체 뭔 소리야?'],
     ['wait-click'],
-    ['setExtraFace', 'entire_code_button', 0],
+    ['setFace', 6],
     ['print', '띠링띠링!'],
     ['wait-click'],
     ['visible',false],

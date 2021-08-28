@@ -271,6 +271,8 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     update() {
+
+
         if(this.code_on){
            // zero_stage 씬의 전체코드
             this.contenttext = 
