@@ -496,14 +496,14 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 1],
-    ['print', '할아버지! 여긴 대체 어디죠?'],
+    ['print', '할아버지! 잠시 여쭤보고 싶은 게 있는데요...!'],
     ['wait-click'],
     ['setFace', 10],
-    ['print', '껄껄 코딩지옥은 처음인가 보구나!'],
+    ['print', '껄껄 코딩지옥이 처음인가 보구나!'],
     ['wait-click'],
     ['print', '내 부탁을 좀 들어주면 묻는 말에 대답해주지'],
     ['wait-click'],
-    ['print', '여기서 나가려고하는데 무슨 옷을 입어야할지 모르겠군'],
+    ['print', '여기서 나가려고하는데 무슨 옷을 입어야할지 모르겠구나...'],
     ['wait-click'],
     ['print', '밖에 날씨가 어떤지 좀 말해주겠나? 춥다, 덥다 이런식으로'],
     ['wait-click'],
@@ -618,7 +618,7 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 12],
-    ['print', '자네! 이 옷차림은 아닌것 같은데?'],
+    ['print', '자네! 이 옷차림은 아닌 것 같은데?'],
     ['wait-click'],
     ['print', '다시 한번 말해주게!!!'],
     ['wait-click'],
@@ -697,6 +697,14 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
+  stage2_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '꼬마의 부탁을 먼저 해결하자'],
+    ['wait-click'],
+    ['visible',false],
+  ]
 
   stage2_10 = [
     ['visible',true],
@@ -706,7 +714,6 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
-
 
 
 
