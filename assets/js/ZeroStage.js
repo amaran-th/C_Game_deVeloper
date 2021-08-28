@@ -119,13 +119,9 @@ export default class ZeroStage extends Phaser.Scene {
                 concern_text.setFontSize(25);
             }
         });
-<<<<<<< HEAD
 
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone = this.physics.add.staticImage(100, 420).setSize(100,160);
-=======
-        
->>>>>>> c9c24ea45479e68410a03ce07b477827172e905d
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
