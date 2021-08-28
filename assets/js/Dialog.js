@@ -23,7 +23,7 @@ export default class Dialog extends Phaser.Events.EventEmitter {
       this['setExtraFace'] = this.setFaceact;
       this.testScene = new TestScene();
 
-
+  
   }
   
 
@@ -81,7 +81,6 @@ loadbubblebox(scene) {
            boundsAlignH: "center",
            boundsAlignV: "middle"
           }).setOrigin(0.5)
-  
   }
 
 bubbleVisible(visible){
@@ -117,6 +116,7 @@ visible(visible) {
   }
 
   waitClick() {
+      this.scene.input.keyboard.on('keydown-' + 'X', () => { this.complete() });
       this.scene.input.once('pointerup', this.complete, this);
       return this;  // return eventEmitter to pause the sequence
   }

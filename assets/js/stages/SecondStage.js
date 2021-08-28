@@ -24,6 +24,7 @@ export default class SecondStage extends Phaser.Scene {
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
+        //this.input.keyboard.on('keydown-' + 'W', () => {console.log('qasdf')});
 
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');

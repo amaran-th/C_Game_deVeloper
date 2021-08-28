@@ -45,7 +45,7 @@ export default class FourthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, 1300, 430);
+        this.player = new Player(this, 1400, 430);
 
         /*** npc 만들기 ***/
         this.anims.create({
@@ -246,7 +246,7 @@ export default class FourthStage extends Phaser.Scene {
             console.log("===stage4 클리어!===");
             this.bread.setVisible(true);
         }
-        else this.stage4_7();
+        else if(this.out != "") this.stage4_7();
 
 
 
@@ -468,14 +468,14 @@ export default class FourthStage extends Phaser.Scene {
 
         this.input.on('dragenter', function (pointer, gameObject, dropZone) {
     
-            graphics.clear();
+            //graphics.clear();
             graphics.lineStyle(2, 0x00ffff);
             graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
         });
     
         this.input.on('dragleave', function (pointer, gameObject, dropZone) {
     
-            graphics.clear();
+            //graphics.clear();
             graphics.lineStyle(2, 0xffff00);
             graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
         });
@@ -500,7 +500,7 @@ export default class FourthStage extends Phaser.Scene {
             gameObject.x = x - (width/2) +5;
             gameObject.y = y - (25/2);
 
-            graphics.clear();
+            //graphics.clear();
             graphics.lineStyle(2, 0xffff00);
             graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
     
