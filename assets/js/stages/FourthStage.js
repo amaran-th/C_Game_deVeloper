@@ -48,7 +48,7 @@ export default class FourthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, 1400, 430);
+        this.player = new Player(this, 1000, 430);
 
         /*** npc 만들기 ***/
         this.anims.create({
@@ -130,10 +130,12 @@ export default class FourthStage extends Phaser.Scene {
         ***/
 
 
+        //코드대로라면 if , for, printf를 얻고 시작을 해야하는데..... 안뜨네? 일단 아직 큰 문제는 아니니까 냅둠
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
         this.item = ['if','for','printf'];
         this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
         this.dragAndDrop.invenPlus(this);
+        
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
         
@@ -370,7 +372,8 @@ export default class FourthStage extends Phaser.Scene {
                     this.devil.anims.stop();
                     this.firstTalk = undefined;
                     this.player.playerPaused = true;
-                    this.temp_getItem();
+                    this.item.length = 0; //배열 비워버리기
+                    this.temp_getItem() //배열 다시 채우기
                     this.stage4_quiz_1();
                 }
             }
@@ -438,6 +441,9 @@ export default class FourthStage extends Phaser.Scene {
 
     temp_getItem() {
         console.log('아이템 겟 함수 호출');
+        this.item[this.item.length] =  'printf';
+        this.item[this.item.length] =  'if';
+        this.item[this.item.length] =  'for';
         this.item[this.item.length] =  '%d';
         this.item[this.item.length] =  '%s';
         this.item[this.item.length] =  '%c';
