@@ -191,6 +191,8 @@ class Start extends Phaser.Scene {
       this.load.image("npc_chef", "./assets/images/npc/npc1.png");
       this.load.image("npc_chef2", "./assets/images/stage3/npc_0.png"); //stage3_0
       this.load.image("stage3_tiles", "./assets/images/stage3/map_stage3.png");
+      this.load.image("door3", "./assets/images/stage3/door3.png");
+      this.load.image("door3_2", "./assets/images/stage3/door3_2.png");
 
     /** 3번째 스테이지 이미지 로드 **/
       this.load.image("bread", "./assets/images/stage3/bread.png");

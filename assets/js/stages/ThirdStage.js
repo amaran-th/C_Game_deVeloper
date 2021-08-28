@@ -4,6 +4,8 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
+var inZone = false;
+
 export default class ThirdStage extends Phaser.Scene {   
     constructor(){ 
         super("third_stage"); //identifier for the scene
@@ -53,13 +55,20 @@ export default class ThirdStage extends Phaser.Scene {
         this.oven_open = this.add.image(851,300,'oven_open').setOrigin(0,0)
         this.oven_open.setVisible(false);
 
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone = this.physics.add.staticImage(1210, 420, 'door3');
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
-
+        
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+
+        /* 맵이동 */
+        this.physics.add.overlap(this.player.player, this.zone, function () {
+            inZone = true;
+        });
     
         //플레이어 위 pressX 생성해두기(door) => 빵집에서 stage3_0(바깥)으로,
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
@@ -76,7 +85,7 @@ export default class ThirdStage extends Phaser.Scene {
         this.worldLayer.setCollisionByProperty({ collides: true });
         this.physics.add.collider(this.player.player, this.worldLayer); //충돌 하도록 만들기
         
-        
+
         /*** 퀘스트 말풍선 애니메이션 */
         this.anims.create({
             key: "exclam",
@@ -195,10 +204,10 @@ export default class ThirdStage extends Phaser.Scene {
     this.physics.add.collider(this.breadGroup, this.worldLayer);
     this.physics.add.collider(this.player.player, this.breadGroup);
     this.physics.add.collider(this.breadGroup, this.breadGroup);
-
-        
     
-    }
+
+
+}
 
     update() {
       this.contenttext = 
@@ -319,26 +328,23 @@ export default class ThirdStage extends Phaser.Scene {
             this.scene.run('sixth_stage');
         }
 
-        /* 문앞에 가서 stage3_0(빵집 바깥)감. */
+        /* 문에 글자 띄워줌 */
         if(this.player.player.x < 1300 && 1150 < this.player.player.x ) {
             this.pressX_1.x = this.player.player.x-50;
             this.pressX_1.y = this.player.player.y-100;
             this.pressX_1.setVisible(true);
-        
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('stage3_0로 맵이동');
-
-                
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-                this.command.remove_phone(this);
-
-
-                this.scene.stop('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                this.scene.run("third_stage_0");
-            }
         }
         else this.pressX_1.setVisible(false);
+        
+        // 맵이동 (빵집에서 바깥으로)
+        if (inZone && this.keyX.isDown) {
+            console.log("[맵이동] stage3_0 으로");
+            this.command.remove_phone(this);
+            this.scene.switch('third_stage_0'); 
+            
+        }
+          
+        inZone =  false;
 
 
     }
