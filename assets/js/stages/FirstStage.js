@@ -287,22 +287,25 @@ export default class FirstStage extends Phaser.Scene {
     }
 
     stage1_1() {
-        this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
-
         this.time.delayedCall( 1000, () => {  
-            var seq = this.plugins.get('rexsequenceplugin').add();
-            this.dialog.loadTextbox(this);
-            seq
-            .load(this.dialog.stage1_1, this.dialog)
-            .start();
-            seq.on('complete', () => {
-                //악마를 플레이어 방향을 보게 하고, 그 위에 느낌표 표시를 한 뒤 stage2 대사로 넘어간다
-                this.devil.setFlipX(true);
-                this.exclamMark.setVisible(true);
-                this.exclamMark.play('exclam');
-                this.time.delayedCall( 1000, () => { this.stage1_2() }, [] , this);
-            });    
+            this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
+
+            this.time.delayedCall( 1000, () => {  
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.stage1_1, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    //악마를 플레이어 방향을 보게 하고, 그 위에 느낌표 표시를 한 뒤 stage2 대사로 넘어간다
+                    this.devil.setFlipX(true);
+                    this.exclamMark.setVisible(true);
+                    this.exclamMark.play('exclam');
+                    this.time.delayedCall( 1000, () => { this.stage1_2() }, [] , this);
+                });    
+            }, [], this);
         }, [], this);
+        
     }
 
     stage1_2() {
@@ -446,7 +449,10 @@ export default class FirstStage extends Phaser.Scene {
         .load(this.dialog.stage1_8, this.dialog)
         .start();
         seq.on('complete', () => {
-                this.function=3;
+            this.player.playerPaused = false;
+            this.cantalk=true;
+            this.devil.play('devil_touch_phone',true);
+                //this.function=3;
             
 
         });

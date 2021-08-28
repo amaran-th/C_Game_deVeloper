@@ -69,6 +69,9 @@ export default class FifthStage extends Phaser.Scene {
         this.exclamMark = this.add.sprite( 600, 280, 'exp_exclam', 0);
         this.exclamMark.setVisible(false);
 
+        this.exclamMark2 = this.add.sprite( 1270, 300, 'exp_exclam', 0);
+        this.exclamMark2.setVisible(false);
+
         //사서가 키보드 치는 애니메이션
         this.anims.create({
             key: "working_librarian1",
@@ -89,9 +92,13 @@ export default class FifthStage extends Phaser.Scene {
         this.student = this.add.sprite(1280 ,408,'student');
         this.student.play('working_student',true);
 
-        //회원증 이미지
-        this.membership_card=this.add.image(350,0,"library_membership").setOrigin(0,1);
-
+        //학생 머리 위에 뜨는 말풍선과 말풍선 텍스트
+        this.bubble=this.add.image(this.student.x, this.student.y-40,'bubble2').setOrigin(0,1);
+        this.concern_text = this.add.text(this.bubble.x+30, this.bubble.y-90, '어떡하지...', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+        
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
@@ -111,6 +118,14 @@ export default class FifthStage extends Phaser.Scene {
 
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
+
+
+        //회원증 이미지
+        this.membership_card=this.add.image(350,0,"library_membership").setOrigin(0,1);
+        //문제지 이미지
+        this.tests_paper=this.add.image(300,600,"tests_paper").setOrigin(0,1);
+        this.tests_paper.setVisible(false);
+        
 
         //플레이어 위 pressX 생성해두기(door)
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
@@ -142,10 +157,38 @@ export default class FifthStage extends Phaser.Scene {
         */
 
         //플레이어 위 talktext 생성해두기(talk with librarian)
-        this.talktext = this.add.text(600, 300, 'Press X to have a talk', {
+        this.talktext = this.add.text(500, 280, 'Press X to have a talk', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
+
+        //플레이어 위 talktext 생성해두기(talk with student)
+        this.talktext2 = this.add.text(1250, 300, 'Press X to have a talk', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //quest box 이미지 로드
+        this.questbox = this.add.image(this.worldView.x,500,'quest_box').setOrigin(0,0);
+
+        //quest text1
+        this.quest_text1 = this.add.text(this.questbox.x+430, 540, '사서에게서 <math.h>을 대여하자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        
+        //quest text2
+        this.quest_text2 = this.add.text(this.questbox.x+430, 540, '여학생의 숙제 채점을 도와주자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        this.questbox.setVisible(false);
+        this.quest_text1.setVisible(false);
+        this.quest_text2.setVisible(false);
 
         
         /** 초반 대사 **/
@@ -158,9 +201,9 @@ export default class FifthStage extends Phaser.Scene {
 
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
+        this.library_invenIn = false;
         
         /** 아이템 만들기 **/
-        
         var item_text = 'printf';
         this.itemicon = this.add.image(360,330,'item'); 
         
@@ -196,19 +239,36 @@ export default class FifthStage extends Phaser.Scene {
         this.drop_state_4 = 0;
         this.drop_state_5 = 0;
         this.drop_state_6 = 0;
+        this.drop_state_7 = 0;
+        this.drop_state_8 = 0;
+        this.drop_state_9 = 0;
+        this.drop_state_10 = 0;
+        this.drop_state_11 = 0;
+        this.drop_state_12 = 0;
+        this.drop_state_13 = 0;
+        this.drop_state_14 = 0;
 
 
         //사서와 대화 중인지를 나타내는 플래그 변수
         this.cantalking=true;
+        //학생과 대화중인지를 나타내는 플래그 변수
+        this.cantalking2=false;
         
-        //이벤트 실행을 위한 플래그 변수
+        //사서 관련이벤트 실행을 위한 플래그 변수
         this.function=0;
+        //학생 관련 이벤트 진행을 위한 변수
+        this.function2=0;
         
         //맵 이동을 위한 스테이지 번호 변수
         stagenum = 5;
         
         //사서1과의 초기 이벤트를 봤는지 여부
         this.firsttalked=false;
+        //학생의 어그로 이벤트를 봤는지 여부(저기요!)
+        this.attention=false;
+
+        //학생의 문제를 해결했는지 여부
+        this.mathOK=false;
 
         /** 임시로 만들어둔 선택지 예시 **/
         this.finAnswer = { //주소
@@ -233,7 +293,35 @@ export default class FifthStage extends Phaser.Scene {
     update() {
         this.player.update();
         this.inventory.update(this);
+        if(this.library_added) this.library_inventory_update();
         this.command.update(this);
+
+        //퀘스트 박스 및 텍스트 관련 코드
+        if(this.questbox.visible==true){
+            this.questbox.x=this.worldView.x+30;
+            this.quest_text1.x=this.questbox.x+430;
+            this.quest_text2.x=this.questbox.x+430;
+        }
+
+        if(this.attention&&this.mathOK==false){
+            if(this.library_state==1){
+                //math.h를 빌린 상태일 때
+                this.questbox.setVisible(true);
+                this.quest_text1.setVisible(false);
+                this.quest_text2.setVisible(true);
+            }else{
+                this.questbox.setVisible(true);
+                this.quest_text1.setVisible(true);
+                this.quest_text2.setVisible(false);
+                
+            }
+            
+        }else{
+            this.questbox.setVisible(false);
+            this.quest_text1.setVisible(false);
+            this.quest_text2.setVisible(false);
+        }
+
 
         //선택지 선택 결과 처리 코드
         if(!this.scene.isVisible('selection') && this.finAnswer.answer){ //selection 화면이 꺼졌다면
@@ -310,7 +398,6 @@ export default class FifthStage extends Phaser.Scene {
             
         }
             
-        
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
             '플레이어 위치',
@@ -344,7 +431,61 @@ export default class FifthStage extends Phaser.Scene {
             }
         }else this.talktext.setVisible(false);
 
-        //초기 이벤트
+
+       
+
+        /* 플레이어가 학생 앞을 지나가면 작동하도록 함 */
+        if(this.attention==false&&this.player.player.x >1440&&this.player.playerPaused==false) {
+            
+            this.player.playerPaused = true;
+            this.bubble.setVisible(false);
+            this.concern_text.setVisible(false);
+            this.student.anims.stop();
+            this.exclamMark2.setVisible(true);
+            this.exclamMark2.play('exclam');
+            this.time.delayedCall( 1000, () => {
+
+                this.function2=1;
+            }, [] , this);
+            
+        } 
+        
+        //학생에게 퀘스트를 받은 후 학생 근처에 가면 작동
+        if(this.player.player.x>1350&&this.player.player.x<1440&&this.attention&&this.cantalking2){
+            this.talktext2.setVisible(true);
+            if(this.keyX.isDown&&this.mathOK==false) {
+                if(this.cantalking2){
+                    //학생에게 처음 말을 걸었을 때
+                    console.log('first talk with student');
+                    this.talktext2.setVisible(false);
+                    this.player.player.setFlipX(true);
+                    this.cantalking2=false;
+                    this.player.playerPaused = true;
+                    this.tests_paper.x=this.worldView.x+300;
+                    this.tests_paper.setVisible(true);
+                    this.input.once('pointerdown', function() {
+                        this.tests_paper.setVisible(false);
+                        this.player.playerPaused=false;
+                        this.cantalking2=true;
+                            
+                    }, this);
+
+                }
+            }else if(this.keyX.isDown&&this.mathOK){
+                if(this.cantalking2){
+                    //학생에게 문제 해결 후에 말을 걸었을 때
+                    console.log('second talk with student');
+                    this.talktext2.setVisible(false);
+                    this.player.player.setFlipX(true);
+                    this.cantalking2=false;
+                    this.player.playerPaused = true;
+                    this.function2=6;
+                }
+            }
+        }else this.talktext2.setVisible(false);
+
+
+        //사서1과의 초기 이벤트
         if(this.function==1){
             this.stage5_2();
             this.function=0;
@@ -362,7 +503,7 @@ export default class FifthStage extends Phaser.Scene {
             this.function=0;
         }
 
-        //초기 이벤트를 본 이후의 이벤트
+        //사서1과의 초기 이벤트를 본 이후의 이벤트
         if(this.function==6){
             this.stage5_7();
             this.function=0;
@@ -372,12 +513,27 @@ export default class FifthStage extends Phaser.Scene {
         }else if(this.function==8){
             this.stage5_9();
             this.function=0;
-        }else if(this.function==9){
-            this.stage5_10();
-            this.function=0;
-        }else if(this.function==10){
+        }
+
+        //학생과의 이벤트 순차 진행을 위한 제어문
+        if(this.function2==1){
             this.stage5_11();
-            this.function=0;
+            this.function2=0;
+        }else if(this.function2==2){
+            this.stage5_12();
+            this.function2=0;
+        }else if(this.function2==3){
+            this.stage5_13();
+            this.function2=0;
+        }else if(this.function2==4){
+            this.stage5_14();
+            this.function2=0;
+        }else if(this.function2==5){
+            this.stage5_15();
+            this.function2=0;
+        }else if(this.function2==6){
+            this.stage5_16();
+            this.function2=0;
         }
 
 
@@ -395,7 +551,31 @@ export default class FifthStage extends Phaser.Scene {
             }
         }
 
+        //학생과의 대면 이벤트를 보고 math 문제가 해결되지 않은 동안 코드가 활성화되게
+        if(this.attention&&this.mathOK==false){
+            this.contenttext =             
+                this.code_zone_1 +this.code_zone_2+"\n" +
+                this.code_zone_3 +this.code_zone_4+"\n" +
+                "int main(){\n" +
+                "   " + this.code_zone_5 + "(\"원주율=%f\"," + 'this.code_zone_6' + ");\n"+
+                "   " + "this.code_zone_7" + "(\"64의 제곱근=%f\","+ 'this.code_zone_8' + "(64));\n"+
+                "   " + 'this.code_zone_9' + "(\"사인 45도=%f\","+ 'this.code_zone_10' + "(" + 'this.code_zone_11' + "/4));\n"+
+                "   " + 'this.code_zone_12' + "(\"코사인 60도=%f\","+ 'this.code_zone_13' + "(" + 'this.code_zone_14' + "/3));\n"+
+                "   }\n" +
+                "}"
 
+            // Second_stage의 앱에 들어가는 코드
+            this.app_code_text =
+                "        " +"           \n" +
+                "        " +"           \n" +
+                "int main(){\n" +
+                "   " + "            " + "(\"원주율=%f\"," + "       " + ");\n"+
+                "   " + "            " + "(\"64의 제곱근=%f\","+ "      " + "(64));\n"+
+                "   " + "            " + "(\"사인 45도=%f\","+ "      " + "("+"   "+"/4));\n"+
+                "   " + "            " + "(\"코사인 60도=%f\","+ "      " + "("+"   "+"/3));\n"+
+                "   }\n" +
+                "}"
+        }
 
 
         /** 아이템 획득하는 경우 **/
@@ -418,17 +598,23 @@ export default class FifthStage extends Phaser.Scene {
             this.item[this.item.length] =  '원하는';
             this.item[this.item.length] =  '아이템';
             this.item[this.item.length] =  '넣으셈';
-            this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.dropzon_su = 7; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
-            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 1000;
-            this.dropzone3_x = 805;
-            this.dropzone4_x = 200;
+            this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 880;
+            this.dropzone3_x = 790;
+            this.dropzone4_x = 880;
+            this.dropzone5_x = 1000;
+            this.dropzone6_x = 1000;
+            this.dropzone7_x = 1000;
 
             this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("4");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("4");
+            this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 300, 80, 25).setRectangleDropZone(80, 25).setName("5");
+            this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 350, 80, 25).setRectangleDropZone(80, 25).setName("6");
+            this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 400, 80, 25).setRectangleDropZone(80, 25).setName("7");
             //this.intro4();
             this.invenPlus = false;
         }
@@ -437,6 +623,16 @@ export default class FifthStage extends Phaser.Scene {
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
         if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
         if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
+        if(this.draganddrop_5!=undefined) this.draganddrop_5.update(this);
+        if(this.draganddrop_6!=undefined) this.draganddrop_6.update(this);
+        if(this.draganddrop_7!=undefined) this.draganddrop_7.update(this);
+        if(this.draganddrop_8!=undefined) this.draganddrop_8.update(this);
+        if(this.draganddrop_9!=undefined) this.draganddrop_9.update(this);
+        if(this.draganddrop_10!=undefined) this.draganddrop_10.update(this);
+        if(this.draganddrop_11!=undefined) this.draganddrop_11.update(this);
+        if(this.draganddrop_12!=undefined) this.draganddrop_12.update(this);
+        if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
+        if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -490,23 +686,104 @@ export default class FifthStage extends Phaser.Scene {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
             this.pressX_2.setVisible(true);
-        
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('stage5로 맵이동');
+            
+            if(this.keyX.isDown&&this.cantalking2) {
+                if(this.mathOK==false){
+                    this.function2=3;
+                    this.cantalking2=false;
+                    console.log("button");
+                }else{
+                    this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
+                    console.log('stage5로 맵이동');
 
+                    
+                    /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+                    this.command.remove_phone(this);
+
+
+                    this.scene.stop('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
+                    this.scene.run("sixth_stage");
+                }
                 
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-                this.command.remove_phone(this);
-
-
-                this.scene.stop('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                this.scene.run("sixth_stage");
             }
         }
         else this.pressX_2.setVisible(false);
 
+        
+
+
     }
+    
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        //console.log(scene.out);
+        console.log("compiled");
+        if(msg==scene.out){
+            this.command.remove_phone(this);
+            playerX = this.player.player.x;
+            this.textBox = scene.add.image(playerX-70,270,'bubble').setOrigin(0,0);
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
+            fontFamily: 'Arial Black',
+            fontSize: '15px',
+            color: '#000000', //글자색 
+            wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+            boundsAlignH: "center",
+            boundsAlignV: "middle"
+          }).setOrigin(0.5)
+          this.player.playerPaused=true;    //플레이어 얼려두기
+
+            //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+        }
+        scene.input.once('pointerdown', function() {
+            if(msg==scene.out){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                //playerFace.setVisible(false);
+                if(this.player.player.x>1000&&this.player.player.x<1450){
+                    this.function2=5;
+                }else{
+                    this.function2=4;
+                }
+                
+            }else{
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
+            }
+            
+        }, this);
+    
+    }
+
+    printerr(scene){
+        console.log("printerr");
+        var textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        
+        scene.input.once('pointerdown', function() {
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+        }, this);
+    }
+
     stage5_1(){
         this.time.delayedCall( 1000, () => {  
             var seq = this.plugins.get('rexsequenceplugin').add();
@@ -533,10 +810,6 @@ export default class FifthStage extends Phaser.Scene {
                 this.librarian1.setFlipX(true);
                 this.function=2;
             }, [] , this);
-
-            
-
-            console.log("..");
         });
     }
     
@@ -548,7 +821,7 @@ export default class FifthStage extends Phaser.Scene {
             .start();
             seq.on('complete', () => {
                 //닉네임 말하는 대사 출력하기
-                var textBox = this.add.image(40,10,'textbox').setOrigin(0,0); 
+                var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
                 var script = this.add.text(textBox.x + 200, textBox.y +50, '\''+username+'\' 이에요.', {
                 fontFamily: 'Arial', 
                 fill: '#000000',
@@ -570,7 +843,7 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     stage5_4(){
-        var textBox = this.add.image(40,10,'textbox').setOrigin(0,0); 
+        var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
         var script = this.add.text(textBox.x + 200, textBox.y +50, '\''+username+'\'... 어디보자...', {
             fontFamily: 'Arial', 
             fill: '#000000',
@@ -649,7 +922,7 @@ export default class FifthStage extends Phaser.Scene {
         }); 
     }
 
-    //===========================================================================
+    //===============================================================================================================================
 
     stage5_7(){
         console.log("stage5_7");
@@ -740,14 +1013,18 @@ export default class FifthStage extends Phaser.Scene {
             //추가
             this.dialog_text=this.present_library+" 라이브러리 인벤토리가 추가되었습니다.";
             this.change_library=0;
+            this.add_library_inventory();
         }else if(this.change_library==4||this.change_library==7){
             //제거
             this.dialog_text=" 라이브러리 인벤토리가 사라졌습니다.";
             this.change_library=0;
+            this.delete_library_inventory();
         }else if(this.change_library==5||this.change_library==8){
             //전환
             this.dialog_text="기존 라이브러리 인벤토리가 "+this.present_library+" 라이브러리 인벤토리로 변경되었습니다.";
             this.change_library=0;
+            this.delete_library_inventory();
+            this.add_library_inventory();
         }else{
             //변화x
             this.dialog_text="라이브러리를 변경하지 않습니다.";
@@ -761,7 +1038,7 @@ export default class FifthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             console.log("stage5_8");
-            var textBox = this.add.image(40,10,'textbox').setOrigin(0,0); 
+            var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
             var script = this.add.text(textBox.x + 200, textBox.y +50, this.dialog_text, {
                 fontFamily: 'Arial', 
                 fill: '#000000',
@@ -780,8 +1057,6 @@ export default class FifthStage extends Phaser.Scene {
         });
         
     }
-
-    
     
     stage5_9(){
         console.log("stage5_9");
@@ -825,5 +1100,158 @@ export default class FifthStage extends Phaser.Scene {
             }
         }, this);
     }
-    
+    //=================================================================================================================================
+
+    stage5_11(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_11, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.player.setFlipX(true);
+            this.function2=2;
+        });
+    }
+    stage5_12(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_12, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.tests_paper.x=this.worldView.x+300;
+            this.tests_paper.setVisible(true);
+
+            var textBox = this.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            var script = this.add.text(textBox.x + 200, textBox.y +50, '* 코딩 어플리케이션의 스크립트가 업데이트 되었습니다. *', {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'entire_code_button', 0);
+
+            this.input.once('pointerdown', function() {
+                this.tests_paper.setVisible(false);
+
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+
+                this.attention=true;
+
+                this.player.playerPaused=false;
+                this.cantalking2=true;
+                    
+            }, this);
+            
+        });
+    }
+
+    //math 퀘스트를 깨지 않고 나가려고 할 시
+    stage5_13(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_13, this.dialog)
+        .start();
+        seq.on('complete', () => {  
+            this.cantalking2=true;
+        });
+    }
+
+    //답은 맞으나 너무 멀리에서 실행했을 시
+    stage5_14(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_14, this.dialog)
+        .start();
+        seq.on('complete', () => {  
+            this.player.playerPaused=false;
+        });
+    }
+
+    //math 클리어 시
+    stage5_15(){
+        this.cantalking2=false;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_15, this.dialog)
+        .start();
+        seq.on('complete', () => {  
+            this.mathOK=true;
+            this.player.playerPaused=false;
+            this.cantalking2=true;
+        });
+    }
+
+    stage5_16(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_16, this.dialog)
+        .start();
+        seq.on('complete', () => {  
+            this.player.playerPaused=false;
+            this.cantalking2=true;
+        });
+    }
+
+    // 라이브러리 인벤토리 추가하는 함수
+    add_library_inventory() {
+        this.library_inventory = this.add.graphics();
+        this.library_inventory_button = this.add.graphics();
+
+        this.library_inventory.lineStyle(3, 0xFFB569, 1);
+        this.library_inventory_button.lineStyle(3, 0xFFB569, 1);
+
+        this.library_inventoryHandle = this.library_inventory_button.fillRoundedRect(0, 0, 150, 40, 5).strokeRoundedRect(0, 0, 150, 40, 5); // 인벤창 버튼
+        this.library_inventoryBody = this.library_inventory.fillRoundedRect(5, 0, 150, 440, 10).strokeRoundedRect(5, 0, 150, 440, 10); // 인벤창
+        this.library_inventoryBody.y = 600;
+        
+        this.library_inventory_button.fillStyle(0xFCE5CD, 1);
+        this.library_inventory.fillStyle(0xFCE5CD, 1);
+
+        this.library_invenText = this.add.text(5,5,this.present_library,{
+            fontSize : '25px',
+            fontFamily: ' Courier',
+            color: '#FFB569'
+        }).setOrigin(0,0);
+
+        //인벤창버튼 배경과 인벤토리 텍스트 묶어줌
+        this.library_inven_button = this.add.container(165,560, [this.library_inventoryHandle, this.library_invenText]);
+        this.library_inven_button.setSize(200, 100);
+        this.library_inven_button.setInteractive();
+
+        this.library_added = true; // 라이브러리 추가되었다는 걸 알려줘서 update에서 library_inventory_update 함수 실행시켜줌
+    }
+    // 라이브러리 인벤토리 삭제하는 함수
+    delete_library_inventory() {
+        this.library_inventory.destroy();
+        this.library_inventory_button.destroy();
+        this.library_inven_button.destroy();
+        this.library_added = false;
+    }
+    // 라이브러리 인벤토리 버튼 누를때 열고 닫히게 하는 함수
+    library_inventory_update() {
+        this.library_inven_button.x = this.worldView.x + 165;
+        this.library_inventoryBody.x = this.worldView.x + 160;
+
+        if(!this.library_invenIn) { 
+            this.library_inven_button.on('pointerdown', () => {
+                this.library_inventoryBody.y = 120;
+
+                this.library_invenIn = true;
+            });
+        } else { 
+            this.library_inven_button.on('pointerdown', () => {
+                this.library_inventoryBody.y = 600;
+                this.library_invenIn = false;
+            });
+        }
+    }
 }

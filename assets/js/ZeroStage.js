@@ -135,6 +135,28 @@ export default class ZeroStage extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
+        //quest box 이미지 로드
+        this.questbox = this.add.image(0,500,'quest_box').setOrigin(0,0);
+
+        //quest text1
+        this.quest_text1 = this.add.text(this.questbox.x+430, this.worldView.y+540, '휴대폰을 얻자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        
+        //quest text2
+        this.quest_text2 = this.add.text(this.questbox.x+430, this.worldView.y+540, '폰의 코드 앱을 이용해 말을 해보자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        this.questbox.setVisible(false);
+        this.quest_text1.setVisible(false);
+        this.quest_text2.setVisible(false);
+        
 
         /** 초반 인트로 대사 출력 **/
         this.cameras.main.fadeIn(1000,0,0,0);
@@ -145,6 +167,8 @@ export default class ZeroStage extends Phaser.Scene {
         .load(this.dialog.intro, this.dialog)
         .start();
         seq.on('complete', () => {
+            this.questbox.setVisible(true);
+            this.quest_text1.setVisible(true);
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
 
@@ -155,7 +179,6 @@ export default class ZeroStage extends Phaser.Scene {
         this.invenIn = false;
         
         /** 아이템 만들기 **/
-        
         var item_text = 'printf';
         this.itemicon = this.add.image(360,330,'item'); 
         this.itemicon.setVisible(false);
@@ -195,21 +218,40 @@ export default class ZeroStage extends Phaser.Scene {
         
         // zero_stage 씬의 전체코드
         this.contenttext = "" ;
-
         // zero_stage의 앱에 들어가는 코드
-        this.app_code_text = "           " + "           " + " \n int main(){ \n " +  "           " + "(\"아-아- 마이크 테스트\"); \n }"
+        this.app_code_text ="";
+        
+        
 
         stagenum=0;
+
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
         this.canexit=false; //문 밖으로 나갈 수 있는지 여부
         this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
+        this.code_on=false; //베이스 코드가 설정되었는지 여부
 
-        this.out=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\"아-아- 마이크 테스트\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
+        this.out=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
+        ////나중에 "아-아-마이크 테스트"로 바꾸어야 함.////
         
     }
 
     update() {
-        this.contenttext = this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\"아-아- 마이크 테스트\"); \n }" ;
+        if(this.code_on){
+           // zero_stage 씬의 전체코드
+            this.contenttext = 
+                this.code_zone_1+this.code_zone_2+"\n" + 
+                "int main(){ \n " + 
+                "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
+            // zero_stage의 앱에 들어가는 코드
+            this.app_code_text = 
+                "           " + "           " + "\n" + 
+                "int main(){ \n" +  
+                "    " + "            " + "(\"" + "                         " + "\"); \n" + 
+                "}"; 
+        }
+        
+
+
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
@@ -241,18 +283,22 @@ export default class ZeroStage extends Phaser.Scene {
         }
         
         if(this.invenPlus) {
+            
+
             this.item[this.item.length] =  '#include';
             this.item[this.item.length] =  '<stdio.h>';
             this.item[this.item.length] =  'printf';
-            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
-            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 1000;
-            this.dropzone3_x = 805;
+            this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 950;
+            this.dropzone3_x = 815;
+            this.dropzone4_x = 965;
 
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("2");
             this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 170, 25).setRectangleDropZone(170, 25).setName("4");
             this.intro4();
             this.invenPlus = false;
         }
@@ -260,6 +306,7 @@ export default class ZeroStage extends Phaser.Scene {
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
         if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
+        if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
 
         /* x 키 눌렀을 때 바로 사라지게 하는 건데 대사 많이 출력하는 오류있음
         if(this.itemget.visible && this.keyX.isDown) {
@@ -306,7 +353,7 @@ export default class ZeroStage extends Phaser.Scene {
                 this.phone.setVisible(false);
                 this.myphone.setVisible(false);
                 this.getphone.destroy();    ////나중에 애니메이션까지 destroy 시키자
-                this.phoneicon=this.add.image(550, 300, "entire_code_button").setOrigin(0,0).setAlpha(0);
+                this.phoneicon=this.add.image(550, 250, "entire_code_button").setOrigin(0,0).setAlpha(0);
                 this.tweens.add({
                     targets: this.phoneicon,
                     alpha:1,
@@ -372,6 +419,8 @@ export default class ZeroStage extends Phaser.Scene {
                 ease: 'Power1',
                 repeat: 0,
                 onComplete: ()=>{
+                    this.questbox.setVisible(false);
+                    this.quest_text1.setVisible(false);
                     this.phoneicon.destroy();
                     this.command.entire_code_button.setVisible(true);
                     this.itemicon.setVisible(true);
@@ -426,6 +475,11 @@ export default class ZeroStage extends Phaser.Scene {
         seq
         .load(this.dialog.intro5, this.dialog)
         .start();
+        seq.on('complete', () => {
+            this.questbox.setVisible(true);
+            this.quest_text2.setVisible(true);
+            this.code_on=true;
+        });
     }
 
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
@@ -433,9 +487,10 @@ export default class ZeroStage extends Phaser.Scene {
         //console.log(scene.out);
         console.log("compiled");
         if(msg==scene.out){
+            this.command.remove_phone(this);
             playerX = this.player.player.x;
             this.textBox = scene.add.image(playerX-70,170,'bubble').setOrigin(0,0);
-            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, "아-아- 마이크 테스트-", {
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
             fontFamily: 'Arial Black',
             fontSize: '15px',
             color: '#000000', //글자색 
@@ -444,11 +499,13 @@ export default class ZeroStage extends Phaser.Scene {
             boundsAlignV: "middle"
           }).setOrigin(0.5)
           this.player.playerPaused=true;    //플레이어 얼려두기
+          this.questbox.setVisible(false);
+          this.quest_text2.setVisible(false);
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
-            var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "뭔가 잘못된 것 같아...", {
+            var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
@@ -475,8 +532,8 @@ export default class ZeroStage extends Phaser.Scene {
 
     printerr(scene){
         console.log("printerr");
-        var textBox = scene.add.image(0,400,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "뭔가 잘못된 것 같아...", {
+        var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
@@ -495,7 +552,6 @@ export default class ZeroStage extends Phaser.Scene {
 
 
     intro6() {
-        
         this.canexit=true;
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -504,6 +560,7 @@ export default class ZeroStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.code_on=false;
         });
     }
 }

@@ -161,9 +161,9 @@ export default class Command extends Phaser.GameObjects.Image {
                             console.log("error!!!");
                             scene.printerr(scene);
                         }else{
-                        scene.out = result.output;
-                        console.log('command 파일 result:', result.output);
-                        scene.complied(scene, result.output);
+                            scene.out = result.output;
+                            console.log('command 파일 result:', result.output);
+                            scene.complied(scene, result.output);
                         }
                         //document.getElementById('testoutput').value = result.output;
                     });
@@ -188,7 +188,7 @@ export default class Command extends Phaser.GameObjects.Image {
             console.log(" compile finish!!!");
            
         });
-        //this.compile_button.setVisible(false);
+        
 
 
 
@@ -204,11 +204,12 @@ export default class Command extends Phaser.GameObjects.Image {
         this.entire_code_button.x = this.worldView.x + 5;
         /*** 버튼 클릭마다 명령창 띄웠다 없앴다 ***/
         for(var i=0; i < this.apps.length; i++){
-            this.apps[i].visible == this.commandbox.visible;
+            this.apps[i].visible = this.commandbox.visible;
         }
-        this.back_button.visible == this.commandbox.visible;
+        this.back_button.visible = this.commandbox.visible;
 
         if(state == 0) {
+            this.compile_button.setVisible(false);
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
 
