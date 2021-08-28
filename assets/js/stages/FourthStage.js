@@ -220,6 +220,8 @@ export default class FourthStage extends Phaser.Scene {
                 "#include <stdio.h>\n" +
                 "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
             } else if(this.quizOver) {
+
+            //console.log('퀴즈바뀜');
             this.contenttext =
             "#include <stdio.h>\n" +
             "int main(){\n\n" +
@@ -248,7 +250,10 @@ export default class FourthStage extends Phaser.Scene {
             console.log("===stage4 클리어!===");
             this.bread.setVisible(true);
         }
-        else if(this.out != "") this.stage4_7();
+        else if(this.out != "") {
+            //this.stage4_7(); //주석 해제하면 '아무일도 일어나지 않는다' 뜨나 compiled 함수에서 바로 visible을 false해버려서 사라지는 듯? 
+            this.out = "";
+        }
 
 
 
@@ -319,6 +324,7 @@ export default class FourthStage extends Phaser.Scene {
         if(this.quiz4 && droppedText == '%f' ) {
             this.quiz4 = false;
             droppedText = undefined;
+            this.quizOver = true;
             this.time.delayedCall(1000,() => {
                 this.dragAndDrop.reset_before_mission(this);
                 this.item.length = 0; //배열 비워버리기
@@ -479,7 +485,7 @@ export default class FourthStage extends Phaser.Scene {
             gameObject.x = dropZone.x;
             gameObject.y = dropZone.y;
             console.log(gameObject.x,gameObject.y)
-
+            dropZone.input.enabled = false;
             droppedText = gameObject._text;
 
             //퀴즈 정답유무는 update에
