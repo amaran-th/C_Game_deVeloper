@@ -80,7 +80,35 @@ export default class ZeroStage extends Phaser.Scene {
         this.phone.play('phone_icon');
         this.myphone=this.add.image(710,295,"myphone").setOrigin(0,0);
 
+        //플레이어 말풍선 띄워두기
+        this.bubble=this.add.image(0, 300,'bubble2').setOrigin(0,1);
+        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(                     )', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+        this.concern_text = this.add.text(this.bubble.x+20, this.bubble.y-87, '아-마이크 테스트', {
+            font:'14px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+        this.concern_text.setInteractive();
 
+        this.input.setDraggable(this.concern_text);
+        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+                    gameObject.x = dragX;
+                    gameObject.y = dragY;
+        });
+        this.input.on('dragend', function (pointer, gameObject,dropped) {
+                    if (!dropped) //이거 없으면 마우스 놓은 자리에 유지됨
+                    {
+                        gameObject.x = gameObject.input.dragStartX;
+                        gameObject.y = gameObject.input.dragStartY;
+                    }
+        });
+        this.input.on('drop', function (pointer, gameObject, dropZone) {
+                    gameObject.x = dropZone.x - dropZone.width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
+                    gameObject.y = dropZone.y - dropZone.height / 2 - 3;
+        });
 
 
         /***스폰 포인트 설정하기 locate spawn point***/
@@ -134,6 +162,8 @@ export default class ZeroStage extends Phaser.Scene {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
+
+        
 
         //quest box 이미지 로드
         this.questbox = this.add.image(0,500,'quest_box').setOrigin(0,0);
@@ -250,6 +280,11 @@ export default class ZeroStage extends Phaser.Scene {
                 "}"; 
         }
         
+        if(this.bubble.visible&&this.player.player.body.velocity.x != 0 ){
+            this.bubble.x=this.player.player.x;
+            this.concern_text0.x=this.bubble.x+10;
+            this.concern_text.x=this.bubble.x+20;
+        }
 
 
         this.player.update();
@@ -288,6 +323,7 @@ export default class ZeroStage extends Phaser.Scene {
             this.item[this.item.length] =  '#include';
             this.item[this.item.length] =  '<stdio.h>';
             this.item[this.item.length] =  'printf';
+            //this.item[this.item.length] =  "아-아-마이크 테스트";
             this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
             this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
@@ -488,6 +524,9 @@ export default class ZeroStage extends Phaser.Scene {
         console.log("compiled");
         if(msg==scene.out){
             this.command.remove_phone(this);
+            this.invenIn=false;
+            this.inventory.inventoryBody.y = 600;
+
             playerX = this.player.player.x;
             this.textBox = scene.add.image(playerX-70,170,'bubble').setOrigin(0,0);
             this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
