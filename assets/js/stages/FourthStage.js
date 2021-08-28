@@ -122,20 +122,6 @@ export default class FourthStage extends Phaser.Scene {
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
         
-        /** 아이템 만들기 **/
-        var item_text = 'printf';
-        this.itemicon = this.add.image(360,330,'item'); 
-        
-
-        /** 아이템 얻었을 때 뜨는 이미지 **/
-        this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemText = this.add.text(500, 270, item_text, {
-        font: "30px Arial Black", fill: "#000000" 
-        }).setOrigin(0,0);
-        this.itemget.setVisible(false);
-        this.itemText.setVisible(false);
-        this.beforeItemGet = true; //한 번만 뜨도록
-
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
 
@@ -197,7 +183,6 @@ export default class FourthStage extends Phaser.Scene {
     update() {
 
         //console.log('droppedText:',droppedText);
-
         this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
 
         /** 현재 퀴즈따라서 컴파일 내용 바꿔주기 (퀴즈 틀리고 맞출때마다 플레이어 말풍선으로 컴파일 내용 뜨는 거 하고싶음)**/
@@ -257,6 +242,7 @@ export default class FourthStage extends Phaser.Scene {
             droppedText = undefined;
             
             this.time.delayedCall(1000,() => {
+                this.dragAndDrop.reset_before_mission(this);
                 this.item.length = 0; //배열 비워버리기
                 this.temp_getItem() //배열 다시 채우기
                 this.stage4_q_2()
@@ -264,6 +250,8 @@ export default class FourthStage extends Phaser.Scene {
                 
         }
         else if(this.quiz1 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
+            this.dragAndDrop.reset_before_mission(this);
+            console.log
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
             this.dialog.visible(false);
@@ -276,12 +264,14 @@ export default class FourthStage extends Phaser.Scene {
             this.quiz3 = true;
             droppedText = undefined;
             this.time.delayedCall(1000,() => {
+                this.dragAndDrop.reset_before_mission(this);
                 this.item.length = 0; //배열 비워버리기
                 this.temp_getItem() //배열 다시 채우기
                 this.stage4_q_3()
             },[],this);
         }
         else if(this.quiz2 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
+            this.dragAndDrop.reset_before_mission(this);
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
             this.dialog.visible(false);
@@ -294,12 +284,14 @@ export default class FourthStage extends Phaser.Scene {
             this.quiz4 = true;
             droppedText = undefined;
             this.time.delayedCall(1000,() => {
+                this.dragAndDrop.reset_before_mission(this);
                 this.item.length = 0; //배열 비워버리기
                 this.temp_getItem() //배열 다시 채우기
                 this.stage4_q_4()
             },[],this);
         }
         else if(this.quiz3 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
+            this.dragAndDrop.reset_before_mission(this);
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
             this.dialog.visible(false);
@@ -311,12 +303,14 @@ export default class FourthStage extends Phaser.Scene {
             this.quiz4 = false;
             droppedText = undefined;
             this.time.delayedCall(1000,() => {
+                this.dragAndDrop.reset_before_mission(this);
                 this.item.length = 0; //배열 비워버리기
                 this.temp_getItem() //배열 다시 채우기
                 this.stage4_5()
             },[],this);
         }
         else if(this.quiz4 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
+            this.dragAndDrop.reset_before_mission(this);
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
             this.dialog.visible(false);
@@ -328,6 +322,10 @@ export default class FourthStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+        if(this.draganddrop!=undefined) this.draganddrop.update(this);
+        if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
+        if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
+        if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
                 
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
@@ -347,46 +345,6 @@ export default class FourthStage extends Phaser.Scene {
         this.mouseCoord.x = this.playerCoord.x;
         this.mouseCoord.y = this.worldView.y + 500;
 
-        /** 아이템 획득하는 경우 **/
-        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
-            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-            this.itemicon.setVisible(false);
-            this.itemget.setVisible(true);
-            this.itemText.setVisible(true);
-            this.tweens.add({
-                targets: [this.itemget, this.itemText],
-                alpha: 0,
-                duration: 2000,
-                ease: 'Linear',
-                repeat: 0,
-                onComplete: ()=>{this.invenPlus = true;}
-            }, this);
-        }
-        
-        if(this.invenPlus) {
-            this.item[this.item.length] =  '원하는';
-            this.item[this.item.length] =  '아이템';
-            this.item[this.item.length] =  '넣으셈';
-            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
-            //this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            //this.dropzone2_x = 1000;
-            //this.dropzone3_x = 805;
-            //this.dropzone4_x = 200;
-
-            this.dragAndDrop.invenPlus(this);
-            //this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            //this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            //this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            //this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("4");
-            //this.intro4();
-            this.invenPlus = false;
-        }
-
-        if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
-        if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
-        if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
-        if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
 
 
         /* 시험 시작! */
@@ -496,10 +454,10 @@ export default class FourthStage extends Phaser.Scene {
             {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
+            } else {
+                gameObject.x = x - (width/2) +5;
+                gameObject.y = y - (25/2);
             }
-            gameObject.x = x - (width/2) +5;
-            gameObject.y = y - (25/2);
-
             //graphics.clear();
             graphics.lineStyle(2, 0xffff00);
             graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
@@ -641,9 +599,12 @@ export default class FourthStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false;
             this.temp_getItem();
-            this.draganddrop_1 = new DragAndDrop(this, 790, 205, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, 814, 230, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, 880, 340, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 814;
+            this.dropzone3_x = 880;
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 205, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 230, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 340, 80, 25).setRectangleDropZone(80, 25).setName("3");
         });
     }
 
@@ -659,6 +620,55 @@ export default class FourthStage extends Phaser.Scene {
         });
     }
 
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        //console.log(scene.out);
+        console.log("compiled");
+        if(msg==scene.out){
+            this.command.remove_phone(this);
+            this.invenIn=false;
+            this.inventory.inventoryBody.y = 600;
 
+            playerX = this.player.player.x;
+            this.textBox = scene.add.image(playerX-70,270,'bubble').setOrigin(0,0);
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
+                fontFamily: 'Arial Black',
+                fontSize: '15px',
+                color: '#000000', //글자색 
+                wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+                boundsAlignH: "center",
+                boundsAlignV: "middle"
+            }).setOrigin(0.5)
+            this.player.playerPaused=true;    //플레이어 얼려두기
+
+            //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+        }
+        scene.input.once('pointerdown', function() {
+            if(msg==scene.out){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                //playerFace.setVisible(false);
+                //this.stage2_3_1();
+                
+                
+            }else{
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
+            }
+            
+        }, this);
+    
+    }
 
 }
