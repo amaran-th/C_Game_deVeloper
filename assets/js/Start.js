@@ -89,6 +89,9 @@ class Start extends Phaser.Scene {
         frameWidth: 134,
         frameHeight: 130,
     });
+
+    /*questbox 이미지 로드 */
+      this.load.image('quest_box', "./assets/images/quest_box.png");
       /*** minibox 관련 image 로드 ***/
       this.load.image("minibox", "./assets/images/command/mini_commandbox.png");
 

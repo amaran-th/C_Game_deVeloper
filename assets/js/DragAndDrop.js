@@ -17,14 +17,6 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.input.setDraggable(this.code_piece[i]); // 드래그 가능하도록
             code_piece_y += 30; // 각 코드 조각 위치 설정
             var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
-            this.code_piece[i].on('pointerover', function () { 
-                //console.log('조각 수' + this.code_piece.length);
-                code_piece.setTint(0xf9cb9c);
-            });
-            // 마우스가 코드 조각 벗어났을때 원래 색으로!
-            this.code_piece[i].on('pointerout', function () { 
-                code_piece.clearTint();
-            });
         }
         
         // 드랍 영역 선으로 임시 표시
@@ -37,11 +29,13 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         // 드래그 하려고 선택한 거 맨 위로 올림
         scene.input.on('dragstart', function (pointer, gameObject) { 
             scene.children.bringToTop(gameObject);
+            gameObject.setTint(0xf9cb9c); // 드래그 시작하면 코드 조각 색 바꾸기
         }, scene); 
         // 드래그해서 가는 동작 실시간으로? 보여줌
         scene.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.x = dragX;
             gameObject.y = dragY;
+            gameObject.setTint(0xf9cb9c); // 드래그 하는동안 코드 조각 색 바뀐채로 이동
         });
         // 드랍 영역 안에 들어가면 영역 색 변환
         scene.input.on('dragenter', function (pointer, gameObject, dropZone) { 
@@ -121,6 +115,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
 
         // 드랍 위치가 아니면 원래 자리로 돌아가도록 함 + 색 조정
         scene.input.on('dragend', function (pointer, gameObject, dropped) {
+            gameObject.clearTint(); // 드래그 끝나면 코드 조각 색 원래대로
             //console.log('dropname' + this.dropzone);
             //console.log('scene.drop_state_1 > '+ scene.drop_state_1);
             //console.log('scene.drop_state_2 > '+ scene.drop_state_2);

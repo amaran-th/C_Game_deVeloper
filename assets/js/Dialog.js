@@ -163,6 +163,7 @@ visible(visible) {
     ['visible',false],
     ['wait-time', 1],
     ['visible',true],
+    ['place', 40,10],
     ['setFace', 1],
     ['print', '(흐암...지금이 몇시지?)'],
     ['wait-click'],
@@ -175,6 +176,7 @@ visible(visible) {
   
   intro1 = [
     ['visible',true],
+    ['place', 40,10],
     ['setFace', 5],
     ['print', '* \'휴대전화\'를 얻었습니다. *'],
     ['wait-click'],
@@ -184,6 +186,7 @@ visible(visible) {
 
   intro2 = [
     ['visible',true],
+    ['place', 40,10],
     ['setFace', 0],
     ['print', '(어디보자...지금 시간이...)'],
     ['wait-click'],
@@ -205,6 +208,7 @@ visible(visible) {
 
   intro3 = [
     ['visible',true],
+    ['place', 40,10],
     ['setFace', 1],
     ['print', '(저 보따리는 또 뭐야?)'],
     ['wait-click'],
@@ -214,6 +218,7 @@ visible(visible) {
 
   intro4 = [
     ['visible',true],
+    ['place', 40,10],
     ['print', '\'printf\'?'],
     ['wait-click'],
     ['setFace', 1],
@@ -248,6 +253,7 @@ visible(visible) {
 
   intro5= [
     ['visible',true],
+    ['place', 40,10],
     ['print', '휴대폰에 이건 또 뭐고??'],
     ['wait-click'],
     ['setFace', 1],
@@ -265,6 +271,7 @@ visible(visible) {
   ]
 
   intro6 = [
+    ['place', 40,10],
     ['wait-click'],
     ['visible',true],
     ['setFace', 0],

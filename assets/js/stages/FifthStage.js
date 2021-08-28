@@ -168,6 +168,28 @@ export default class FifthStage extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
+        //quest box 이미지 로드
+        this.questbox = this.add.image(this.worldView.x,500,'quest_box').setOrigin(0,0);
+
+        //quest text1
+        this.quest_text1 = this.add.text(this.questbox.x+430, 540, '사서에게서 <math.h>을 대여하자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        
+        //quest text2
+        this.quest_text2 = this.add.text(this.questbox.x+430, 540, '여학생의 숙제 채점을 도와주자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        this.questbox.setVisible(false);
+        this.quest_text1.setVisible(false);
+        this.quest_text2.setVisible(false);
+
         
         /** 초반 대사 **/
         this.cameras.main.fadeIn(1000,0,0,0);
@@ -179,6 +201,7 @@ export default class FifthStage extends Phaser.Scene {
 
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
+        this.library_invenIn = false;
         
         /** 아이템 만들기 **/
         var item_text = 'printf';
@@ -268,12 +291,37 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     update() {
-        
-
-
         this.player.update();
         this.inventory.update(this);
+        if(this.library_added) this.library_inventory_update();
         this.command.update(this);
+
+        //퀘스트 박스 및 텍스트 관련 코드
+        if(this.questbox.visible==true){
+            this.questbox.x=this.worldView.x+30;
+            this.quest_text1.x=this.questbox.x+430;
+            this.quest_text2.x=this.questbox.x+430;
+        }
+
+        if(this.attention&&this.mathOK==false){
+            if(this.library_state==1){
+                //math.h를 빌린 상태일 때
+                this.questbox.setVisible(true);
+                this.quest_text1.setVisible(false);
+                this.quest_text2.setVisible(true);
+            }else{
+                this.questbox.setVisible(true);
+                this.quest_text1.setVisible(true);
+                this.quest_text2.setVisible(false);
+                
+            }
+            
+        }else{
+            this.questbox.setVisible(false);
+            this.quest_text1.setVisible(false);
+            this.quest_text2.setVisible(false);
+        }
+
 
         //선택지 선택 결과 처리 코드
         if(!this.scene.isVisible('selection') && this.finAnswer.answer){ //selection 화면이 꺼졌다면
@@ -387,8 +435,8 @@ export default class FifthStage extends Phaser.Scene {
        
 
         /* 플레이어가 학생 앞을 지나가면 작동하도록 함 */
-        if(this.attention==false&&this.player.player.x >1440) {
-            this.attention=true;
+        if(this.attention==false&&this.player.player.x >1440&&this.player.playerPaused==false) {
+            
             this.player.playerPaused = true;
             this.bubble.setVisible(false);
             this.concern_text.setVisible(false);
@@ -965,14 +1013,18 @@ export default class FifthStage extends Phaser.Scene {
             //추가
             this.dialog_text=this.present_library+" 라이브러리 인벤토리가 추가되었습니다.";
             this.change_library=0;
+            this.add_library_inventory();
         }else if(this.change_library==4||this.change_library==7){
             //제거
             this.dialog_text=" 라이브러리 인벤토리가 사라졌습니다.";
             this.change_library=0;
+            this.delete_library_inventory();
         }else if(this.change_library==5||this.change_library==8){
             //전환
             this.dialog_text="기존 라이브러리 인벤토리가 "+this.present_library+" 라이브러리 인벤토리로 변경되었습니다.";
             this.change_library=0;
+            this.delete_library_inventory();
+            this.add_library_inventory();
         }else{
             //변화x
             this.dialog_text="라이브러리를 변경하지 않습니다.";
@@ -1088,7 +1140,7 @@ export default class FifthStage extends Phaser.Scene {
                 script.setVisible(false);
                 playerFace.setVisible(false);
 
-                
+                this.attention=true;
 
                 this.player.playerPaused=false;
                 this.cantalking2=true;
@@ -1147,5 +1199,59 @@ export default class FifthStage extends Phaser.Scene {
             this.player.playerPaused=false;
             this.cantalking2=true;
         });
+    }
+
+    // 라이브러리 인벤토리 추가하는 함수
+    add_library_inventory() {
+        this.library_inventory = this.add.graphics();
+        this.library_inventory_button = this.add.graphics();
+
+        this.library_inventory.lineStyle(3, 0xFFB569, 1);
+        this.library_inventory_button.lineStyle(3, 0xFFB569, 1);
+
+        this.library_inventoryHandle = this.library_inventory_button.fillRoundedRect(0, 0, 150, 40, 5).strokeRoundedRect(0, 0, 150, 40, 5); // 인벤창 버튼
+        this.library_inventoryBody = this.library_inventory.fillRoundedRect(5, 0, 150, 440, 10).strokeRoundedRect(5, 0, 150, 440, 10); // 인벤창
+        this.library_inventoryBody.y = 600;
+        
+        this.library_inventory_button.fillStyle(0xFCE5CD, 1);
+        this.library_inventory.fillStyle(0xFCE5CD, 1);
+
+        this.library_invenText = this.add.text(5,5,this.present_library,{
+            fontSize : '25px',
+            fontFamily: ' Courier',
+            color: '#FFB569'
+        }).setOrigin(0,0);
+
+        //인벤창버튼 배경과 인벤토리 텍스트 묶어줌
+        this.library_inven_button = this.add.container(165,560, [this.library_inventoryHandle, this.library_invenText]);
+        this.library_inven_button.setSize(200, 100);
+        this.library_inven_button.setInteractive();
+
+        this.library_added = true; // 라이브러리 추가되었다는 걸 알려줘서 update에서 library_inventory_update 함수 실행시켜줌
+    }
+    // 라이브러리 인벤토리 삭제하는 함수
+    delete_library_inventory() {
+        this.library_inventory.destroy();
+        this.library_inventory_button.destroy();
+        this.library_inven_button.destroy();
+        this.library_added = false;
+    }
+    // 라이브러리 인벤토리 버튼 누를때 열고 닫히게 하는 함수
+    library_inventory_update() {
+        this.library_inven_button.x = this.worldView.x + 165;
+        this.library_inventoryBody.x = this.worldView.x + 160;
+
+        if(!this.library_invenIn) { 
+            this.library_inven_button.on('pointerdown', () => {
+                this.library_inventoryBody.y = 120;
+
+                this.library_invenIn = true;
+            });
+        } else { 
+            this.library_inven_button.on('pointerdown', () => {
+                this.library_inventoryBody.y = 600;
+                this.library_invenIn = false;
+            });
+        }
     }
 }
