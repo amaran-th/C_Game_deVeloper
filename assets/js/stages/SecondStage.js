@@ -7,7 +7,8 @@ import DragAndDrop from "../DragAndDrop.js";
 var tag_drop_state = false; // temp 가 드랍존에 들어가면 텍스트 오브젝트만 남도록
 var tag_text = '';
 var isDragging = false;
-
+var inZone2_1;
+var inZone2_2;
 export default class SecondStage extends Phaser.Scene {   
     constructor(){ 
         super("second_stage"); //identifier for the scene
@@ -23,6 +24,7 @@ export default class SecondStage extends Phaser.Scene {
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
+        //this.input.keyboard.on('keydown-' + 'W', () => {console.log('qasdf')});
 
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
@@ -110,13 +112,17 @@ export default class SecondStage extends Phaser.Scene {
 
         this.npc6 = this.add.sprite(1445 ,430,'npc6');
 
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone2_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+        this.zone2_2 = this.physics.add.staticImage(2000, 420).setSize(100,160);
+
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
-
+        
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 430);
-        
+
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -129,6 +135,26 @@ export default class SecondStage extends Phaser.Scene {
         
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
+
+        //맵이동
+        this.physics.add.overlap(this.player.player, this.zone2_1, function () {
+            inZone2_1 = true;
+        });
+        this.physics.add.overlap(this.player.player, this.zone2_2, function () {
+            inZone2_2 = true;
+        });
+
+        //플레이어 위 pressX 생성해두기(door) => stage2로 
+        this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(door) => stage3로 
+        this.pressX_2 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
 
         /*** 퀘스트 말풍선 애니메이션 */
         this.anims.create({
@@ -781,6 +807,32 @@ export default class SecondStage extends Phaser.Scene {
             this.scene.run("sixth_stage");
         }
 
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //맵이동 (stage1) 로
+        if (inZone2_1) {
+            this.pressX_1.x = this.player.player.x-50;
+            this.pressX_1.y = this.player.player.y-100;
+            this.pressX_1.setVisible(true);
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage1 으로");
+                this.command.remove_phone(this);
+                this.scene.switch('first_stage'); 
+            }
+        }else this.pressX_1.setVisible(false);
+        
+        inZone2_1 = false;
+        
+        //맵이동 (stage3_0) 로
+        if (inZone2_2) {
+            this.pressX_2.x = this.player.player.x-50;
+            this.pressX_2.y = this.player.player.y-100;
+            this.pressX_2.setVisible(true);
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage3_0 으로");
+                this.command.remove_phone(this);
+                this.scene.switch('third_stage_0'); 
+            }
+        }else this.pressX_2.setVisible(false);
         
         /** 미션1 안끝났는데 넘어가려고 할 때 **/
         

@@ -3,6 +3,9 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 
+var inZone3_1 = false;
+var inZone3_2 = false;
+var inZone3_3 = false;
 
 export default class ThirdStage_0 extends Phaser.Scene {   
     constructor(){ 
@@ -56,10 +59,16 @@ export default class ThirdStage_0 extends Phaser.Scene {
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone3_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+        this.zone3_2 = this.physics.add.staticImage(955, 420).setSize(92,161);
+        this.zone3_3 = this.physics.add.staticImage(1300, 420).setSize(100,160);
+        
+       // this.zone3_3 = this.physics.add.staticImage(1210, 420, 'door3_1');
+        
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 430);
-
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -73,20 +82,29 @@ export default class ThirdStage_0 extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        this.physics.add.overlap(this.player.player, this.zone3_1, function () {
+            inZone3_1 = true;
+        });
+        this.physics.add.overlap(this.player.player, this.zone3_2, function () {
+            inZone3_2 = true;
+        });
+        this.physics.add.overlap(this.player.player, this.zone3_3, function () {
+            inZone3_3 = true;
+        });
         //플레이어 위 pressX 생성해두기(door) => stage2로 
-        this.pressX_3 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
-            fontFamily: ' Courier',
-            color: '#000000'
-        }).setOrigin(0,0);
-
-        //플레이어 위 pressX 생성해두기(door) => 빵집 들어가서 stage3으로,
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
 
-        //플레이어 위 pressX 생성해두기(door) => stage4로 (관문)
+        //플레이어 위 pressX 생성해두기(door) => stage3로 
         this.pressX_2 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(door) => stage4로 
+        this.pressX_3 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -198,86 +216,65 @@ export default class ThirdStage_0 extends Phaser.Scene {
             this.scene.run("sixth_stage");
         }
 
-        /* stage2 들어감  */
-        if(this.player.player.x < 150 ) {
-            this.pressX_3.x = this.player.player.x-50;
-            this.pressX_3.y = this.player.player.y-100;
-            this.pressX_3.setVisible(true);
-        
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('stage2로 맵이동');
-
-                
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-                this.command.remove_phone(this);
-
-
-                this.scene.stop('third_stage_0'); 
-                this.scene.run("second_stage");
-            }
-        }
-        else this.pressX_3.setVisible(false);
-
-        /* 빵집 들어감 (stage3). */
-        if(this.player.player.x < 1050 && 900 < this.player.player.x ) {
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //맵이동 (stage2) 로
+        if (inZone3_1) {
             this.pressX_1.x = this.player.player.x-50;
             this.pressX_1.y = this.player.player.y-100;
             this.pressX_1.setVisible(true);
-        
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('stage3로 맵이동');
-
-                
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage2 으로");
                 this.command.remove_phone(this);
-
-
-                this.scene.stop('third_stage_0'); 
-                this.scene.run("third_stage");
+                this.scene.switch('second_stage'); 
             }
-        }
-        else this.pressX_1.setVisible(false);
-
-        /* 관문 들어감 (stage4). */
-        if(this.player.player.x > 1200 ) {
+        }else this.pressX_1.setVisible(false);
+        
+        inZone3_1 = false;
+        
+        //맵이동 (stage3) 로
+        if (inZone3_2) {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
             this.pressX_2.setVisible(true);
-        
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('stage4로 맵이동');
-
-                
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage3 으로");
                 this.command.remove_phone(this);
-
-
-                this.scene.stop('third_stage_0'); 
-                this.scene.run("fourth_stage");
+                this.scene.switch('third_stage'); 
             }
-        }
-        else this.pressX_2.setVisible(false);
-    }
+        }else this.pressX_2.setVisible(false);
 
-    stage3_0_1() {
-        this.time.delayedCall( 1000, () => { 
-        var seq = this.plugins.get('rexsequenceplugin').add(); 
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.stage3_0, this.dialog)
-        .start();
-        seq.on('complete', () => {
-            this.player.playerPaused=false;
-            this.questbox.setVisible(true);
-            this.quest_text.setVisible(true);
-            });
-        }, [], this);
-    }
+        //맵이동 (stage4) 로
+        if (inZone3_3) {
+            this.pressX_3.x = this.player.player.x-50;
+            this.pressX_3.y = this.player.player.y-100;
+            this.pressX_3.setVisible(true);
+            if (this.keyX.isDown){
+                console.log("[맵이동] stage4 으로");
+                this.command.remove_phone(this);
+                this.scene.switch('fourth_stage'); 
+            }
+        }else this.pressX_3.setVisible(false);
+        inZone3_2 = false;
+        inZone3_3 = false;
 
     
 
+    
 
+    
+    }
+    stage3_0_1() {
+            this.time.delayedCall( 1000, () => { 
+            var seq = this.plugins.get('rexsequenceplugin').add(); 
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage3_0, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.player.playerPaused=false;
+                this.questbox.setVisible(true);
+                this.quest_text.setVisible(true);
+                });
+            }, [], this);
+        }
 }

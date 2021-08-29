@@ -4,7 +4,7 @@ import Dialog from "./Dialog.js";
 import Command from "./Command.js";
 import DragAndDrop from "./DragAndDrop.js";
 
-
+var inZone;
 const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
@@ -84,13 +84,13 @@ export default class ZeroStage extends Phaser.Scene {
 
         //플레이어 말풍선 띄워두기
         this.bubble=this.add.image(0, 300,'bubble2').setOrigin(0,1);
-        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(                     )', {
+        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(           )', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
-        this.concern_text = this.add.text(this.bubble.x+20, this.bubble.y-87, '아-마이크 테스트', {
+        this.concern_text = this.add.text(this.bubble.x+20, this.bubble.y-87, '아-마잌테스트', {
             font:'14px',
-            fontFamily: ' Courier',
+            fontFamily: 'Courier',
             color: '#000000'
         }).setOrigin(0,0);
         this.bubble.setVisible(false);
@@ -112,11 +112,18 @@ export default class ZeroStage extends Phaser.Scene {
                         gameObject.y = gameObject.input.dragStartY;
                     }
         });
+        var concern_text = this.concern_text; // drop 안에서 this 안 먹어서 새로 변수 만들어줌
         this.input.on('drop', function (pointer, gameObject, dropZone) {
-                    gameObject.x = dropZone.x - dropZone.width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
-                    gameObject.y = dropZone.y - dropZone.height / 2 - 3;
+            gameObject.x = dropZone.x - dropZone.width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
+            gameObject.y = dropZone.y - dropZone.height / 2 + 15;
+            if (gameObject._text == concern_text._text) {
+                concern_text.setColor('#bfede3');
+                concern_text.setFontSize(25);
+            }
         });
 
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone = this.physics.add.staticImage(100, 420).setSize(100,160);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
@@ -125,6 +132,11 @@ export default class ZeroStage extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
         this.player.player.setFlipX(true);
+
+        //맵이동
+        this.physics.add.overlap(this.player.player, this.zone, function () {
+            inZone = true;
+        });
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -278,6 +290,8 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     update() {
+
+
         if(this.code_on){
            // zero_stage 씬의 전체코드
             this.contenttext = 
@@ -365,26 +379,6 @@ export default class ZeroStage extends Phaser.Scene {
         }
         */
 
-        /* 플레이어가 문 앞에 서면 작동하도록 함 */
-        if(this.player.player.x < 175 && 100 < this.player.player.x && this.canexit ) {
-            this.pressX.x = this.player.player.x-50;
-            this.pressX.y = this.player.player.y-100;
-            this.pressX.setVisible(true);
-        
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('맵이동');
-
-                
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-                this.command.remove_phone(this);
-
-
-                this.scene.stop('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                this.scene.run("first_stage");
-            }
-        }
-        else this.pressX.setVisible(false);
 
 
         
@@ -449,6 +443,21 @@ export default class ZeroStage extends Phaser.Scene {
             this.scene.run("third_stage");
         }
 
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //맵이동 (stage1) 로
+        if (inZone) {
+            this.pressX.x = this.player.player.x-50;
+            this.pressX.y = this.player.player.y-100;
+            this.pressX.setVisible(true);
+            if (this.keyX.isDown){
+                console.log("===[맵이동] stage1 으로===");
+                this.command.remove_phone(this);
+                this.scene.sleep('zero_stage')
+                this.scene.run('first_stage'); 
+            }
+        }else this.pressX.setVisible(false);
+        
+        inZone = false;
     }
 
     intro1() {

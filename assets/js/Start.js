@@ -127,6 +127,12 @@ class Start extends Phaser.Scene {
       this.load.image("stage_5_button", "./assets/images/map/stage_5.png");
       this.load.image("stage_6_button", "./assets/images/map/stage_6.png");
 
+      this.load.image("link_1", "./assets/images/map/link_1.png");
+      this.load.image("link_2", "./assets/images/map/link_2.png");
+      this.load.image("link_3", "./assets/images/map/link_3.png");
+      this.load.image("link_4", "./assets/images/map/link_4.png");
+      this.load.image("link_5", "./assets/images/map/link_5.png");
+
       /** 불타는 배경 로드 **/
       this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {
         frameWidth: 1100,
