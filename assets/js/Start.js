@@ -51,7 +51,8 @@ class Start extends Phaser.Scene {
       this.load.image("map_button", "./assets/images/command/map_button.png");
 
       this.load.image("tutorial", "./assets/images/tutorial.png");
-      this.load.image("ok_button", "./assets/images/OK_button.png");
+      this.load.image("tutorial2", "./assets/images/tutorial2.png");
+      
 
       //나중에 지우기 ======================================
               this.load.image("tiles", "./assets/images/map.png");
@@ -328,10 +329,10 @@ class Start extends Phaser.Scene {
         this.play('load');
       });
 
-      this.isnewgame=false;
+      this.isnewgame=0;
       // 클릭하면 게임 시작
       this.NEW_GAME_button.once("pointerup", function () {
-        this.isnewgame=true;
+        this.isnewgame=1;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
         this.scene.start("third_stage_0");
@@ -357,11 +358,17 @@ class Start extends Phaser.Scene {
       */
 
 
-      if(this.isnewgame){
+      if(this.isnewgame==1){
         this.tutorial = this.add.image(0,0,"tutorial").setOrigin(0,0);
-        this.ok_button = this.add.image(550,450,"ok_button");
-        this.ok_button.setInteractive();
-        this.ok_button.once("pointerdown",function(){
+        this.tutorial.setInteractive();
+        this.tutorial.once("pointerdown",function(){
+          this.isnewgame=2;
+          this.tutorial.setVisible(false);
+        },this);
+      }else if(this.isnewgame==2){
+        this.tutorial2 = this.add.image(0,0,"tutorial2").setOrigin(0,0);
+        this.tutorial2.setInteractive();
+        this.tutorial2.once("pointerdown",function(){
           this.scene.start("zero_stage");
         },this);
       }

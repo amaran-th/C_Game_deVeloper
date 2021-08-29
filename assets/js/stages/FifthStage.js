@@ -857,7 +857,7 @@ export default class FifthStage extends Phaser.Scene {
                 .load(this.dialog.stage5_4, this.dialog)
                 .start();
                 seq.on('complete', () => {
-                    
+                    this.membership_card.x=this.worldView.x+350;
                     this.function=4;
                 });
             }, [], this);   
@@ -918,6 +918,7 @@ export default class FifthStage extends Phaser.Scene {
         console.log("stage5_7");
         this.membership_card.setAlpha(0);
         this.membership_card.y=600;
+        this.membership_card.x=this.worldView.x+350;
         this.librarian1.anims.stop();
         this.librarian1.setFlipX(true);
         
