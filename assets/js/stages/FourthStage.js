@@ -53,12 +53,12 @@ export default class FourthStage extends Phaser.Scene {
         /*** npc 만들기 ***/
         this.anims.create({
             key: "devil_touch_phone",
-            frames: this.anims.generateFrameNumbers('npc_devil',{ start: 4, end: 5}), 
+            frames: this.anims.generateFrameNumbers('npc_devil2',{ start: 4, end: 5}), 
             frameRate: 2,
             repeat: -1,
         });
 
-        this.devil = this.physics.add.sprite(910 ,430,'npc_devil');
+        this.devil = this.physics.add.sprite(910 ,430,'npc_devil2');
         this.devil.setFlipX(true);
         this.devil.play('devil_touch_phone');
 

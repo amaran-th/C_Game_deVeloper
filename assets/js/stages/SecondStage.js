@@ -16,7 +16,6 @@ export default class SecondStage extends Phaser.Scene {
 
     preload() {
 
-        //this.load.image("stage_tiles", "./assets/images/test.png");
         this.load.tilemapTiledJSON("second_stage", "./assets/second_stage.json");
     
     }
@@ -180,6 +179,28 @@ export default class SecondStage extends Phaser.Scene {
         this.cry = this.add.sprite( 900, 300, 'cry', 0);
         this.cry.setVisible(false);
 
+        //quest box 이미지 로드
+        this.questbox = this.add.image(this.worldView.x,500,'quest_box').setOrigin(0,0);
+
+        //quest text1
+        this.quest_text1 = this.add.text(this.questbox.x+430, 540, '할아버지에게 현재 날씨를 알려드리자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        
+        //quest text2
+        this.quest_text2 = this.add.text(this.questbox.x+430, 540, '강물의 양을 불려 공을 꺼내자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        this.questbox.setVisible(false);
+        this.quest_text1.setVisible(false);
+        this.quest_text2.setVisible(false);
+
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "second_stage");
@@ -229,7 +250,8 @@ export default class SecondStage extends Phaser.Scene {
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
         // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
-        /*this.code_zone_1 = "           "; //11칸
+        /*
+        this.code_zone_1 = "           "; //11칸
         this.code_zone_2 = "           ";
         this.code_zone_3 = "           ";
         this.code_zone_4 = "           ";
@@ -245,19 +267,6 @@ export default class SecondStage extends Phaser.Scene {
         this.drop_state_4 = 0;
         this.drop_state_5 = 0;
         this.drop_state_6 = 0;
-
-
-        //Second_stage의 전체 코드
-        this.contenttext = "" ; 
-
-
-        //코드 실행후 불러올 output값
-        this.out = "";
-
-        stagenum = 2;
-
-        
-
 
         /** 변수들 드래그1 **/
         var variable = this.add.graphics();
@@ -362,7 +371,46 @@ export default class SecondStage extends Phaser.Scene {
             
         });
         
+        //초반 대사
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        this.stage2_1();
 
+        //=========================================변수 초기화=================================
+
+        //Second_stage의 전체 코드
+        this.contenttext = "" ; 
+        this.app_code_text = "" ;
+
+
+        //코드 실행 후 비교할 목표 텍스트
+        //this.correct_msg1="더워요";
+        this.wrong_msg="추워요";
+        //this.correct_msg2="water=100";
+
+        //윈도우용
+        this.correct_msg1="#include <stdio.h>\n" + 
+            "int main(){\n" +
+            "   "+"int "+this.code_zone_1+" = 45;\n" +
+            "   " + this.code_zone_2 + "(" + this.code_zone_3 + this.code_zone_4 + "30){\n" + //if(Temp>30)
+            "      " + this.code_zone_5 + "(\"더워요\");\n" +//printf("더워요");
+            "   " + "}else{\n" +
+            "      " + this.code_zone_6 + "(\"추워요\");\n" +
+            "  "+"}\n" +
+            "}";
+        this.correct_msg2=this.contenttext =
+            "#include <stdio.h>\n" +
+            "int main(){\n" +
+            "   "+"int water=0;\n"+
+            "   "+"int ground=100;\n"+
+            "   "+ this.code_zone_1+ "(water"+ this.code_zone_2 + this.code_zone_3 +  "){\n" +
+            "      " + this.code_zone_4 + " = " + this.code_zone_5 + " + 1;\n" +
+            "   }\n" +
+            "   " + this.code_zone_6 + "(\"water=%d\",water);\n"+
+            "}";
+
+        //미니맵에서 사용할 전역변수
+        stagenum = 2;
 
         this.mission1Complete = false;
         //this.mission1Complete = true;    //두번째 미션 먼저보고싶을때 활성화
@@ -376,22 +424,31 @@ export default class SecondStage extends Phaser.Scene {
 
         this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
 
+        //코드 앱에 텍스트 업데이트 시키는 변수
+        this.code_on1=false;
+        this.code_on2=false;
 
-
-        //초반 대사
-        this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage2_1();
     }
 
     update() {
+        this.player.update();
+        this.inventory.update(this);
+        this.command.update(this);
 
+        //퀘스트 박스 및 텍스트 관련 코드
+        if(this.questbox.visible==true){
+            this.questbox.x=this.worldView.x+30;
+            this.quest_text1.x=this.questbox.x+430;
+            this.quest_text2.x=this.questbox.x+430;
+        }
+
+        //강 건너기
         if(this.player.player.x>=1535&&this.player.player.x<=1650&&this.player.player.body.velocity.x>0){
             this.player.player.x=1850;
             this.player.player.y=430;
             this.player.playerPaused=true;
             this.cameras.main.fadeIn(500,0,0,0);
-            this.time.delayedCall( 500, () => { //1.5초간 옷입고
+            this.time.delayedCall( 500, () => { 
                 this.player.playerPaused=false;
              }, [] , this);  
 
@@ -400,7 +457,7 @@ export default class SecondStage extends Phaser.Scene {
             this.player.player.y=430;
             this.player.playerPaused=true;
             this.cameras.main.fadeIn(500,0,0,0);
-            this.time.delayedCall( 500, () => { //1.5초간 옷입고
+            this.time.delayedCall( 500, () => { 
                 this.player.playerPaused=false;
              }, [] , this); 
         }
@@ -544,48 +601,63 @@ export default class SecondStage extends Phaser.Scene {
         this.var_cage3.visible = this.text_ground.visible;
 
 
-        if(this.mission1) {
+        if(this.mission1&&this.code_on1) {
              // Second_stage의 앱에 들어가는 코드
             this.app_code_text =
-            "1_#include <stdio.h>\n" + 
-            "int main(){\n" +
-            "   {int temp = 45;} \n   " +
-            "           " + "(" + "           " + ">30){\n      " + //if(Temp>30)
-            "           " + "(\"더워요\");\n"  +//printf("더워요");
-            "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
+            "#include <stdio.h>\n" + 
+            "int main(){\n" +
+            "   "+"int "+"             "+" = 45;\n" +
+            "   " + "           " + "(" + "             " + "       " + "30){\n" + //if(Temp>30)
+            "      " + "           " + "(\"더워요\");\n" +//printf("더워요");
+            "   " + "}else{\n" +
+            "      " + "           " + "(\"추워요\");\n" +
+            "  "+"}\n" +
+            "}"
+            
             
             this.contenttext = 
-            "1_#include <stdio.h>\n" + 
-            "int main(){\n" +
-            "   {int temp = 45;} \n   " +
-            this.code_zone_1 + "(" + this.code_zone_2 + ">30){\n      " + //if(Temp>30)
-            this.code_zone_3 + "(\"더워요\");\n"  +//printf("더워요");
-            "   }\n   else{\n      printf(\"추워요\");\n   }\n}"
-        }
-
-        if(this.mission2) {
-            this.contenttext =             
-            "1_#include <stdio.h>\n" +
-            "int main(){\n" +
-            "   "+ this.code_zone_1 +"( "+this.code_zone_2+" <= " + this.code_zone_3 + " ) {\n" +
-            "       " + this.code_zone_4 + " = " + this.code_zone_5 + " + 1;\n" +
+            "#include <stdio.h>\n" + 
+            "int main(){\n" +
+            "   "+"int "+this.code_zone_1+" = 45;\n" +
+            "   " + this.code_zone_2 + "(" + this.code_zone_3 + this.code_zone_4 + "30){\n" + //if(Temp>30)
+            "      " + this.code_zone_5 + "(\"더워요\");\n" +//printf("더워요");
+            "   " + "}else{\n" +
+            "      " + this.code_zone_6 + "(\"추워요\");\n" +
+            "  "+"}\n" +
+            "}"
+            
+        }else if(this.mission2&&this.code_on2) {
+            // Second_stage의 앱에 들어가는 코드
+            this.app_code_text =             
+            "#include <stdio.h>\n" +
+            "int main(){\n" +
+            "   "+"int water=0;\n"+
+            "   "+"int ground=100;\n"+
+            "   "+ "            "+ "("+ "water" + "          " + "          " + "){\n" +
+            "      " + "            " + " = " + "           " + " + 1;\n" +
             "   }\n" +
+            "   " + "            " + "(\"water=%d\",water);\n"+
             "}"
 
-             // Second_stage의 앱에 들어가는 코드
-            this.app_code_text =
-            "1_#include <stdio.h>\n" +
-            "int main(){\n" +
-            "              (             <=             )\n" +
-            "   {\n"+
-            "               =             + 1;\n" +
+            this.contenttext =
+            "#include <stdio.h>\n" +
+            "int main(){\n" +
+            "   "+"int water=0;\n"+
+            "   "+"int ground=100;\n"+
+            "   "+ this.code_zone_1+ "(water"+ this.code_zone_2 + this.code_zone_3 +  "){\n" +
+            "      " + this.code_zone_4 + " = " + this.code_zone_5 + " + 1;\n" +
             "   }\n" +
+            "   " + this.code_zone_6 + "(\"water=%d\",water);\n"+
             "}"
+            
+        }else{
+            this.contenttext = "" ; 
+            this.app_code_text = "" ;
         }
 
 
 
-        
+        /*
         //실제로는 2가지에 나눠서 쨔아함! ( this.out ==  "더워요")
         if (this.out == "1_#include <stdio.h>\nint main(){\n   {int temp = 45;} \n   if(temp>30){\n      printf(\"더워요\");\n   }\n   else{\n      printf(\"추워요\");\n   }\n}"){
             console.log("===stage2 성공===");
@@ -619,11 +691,10 @@ export default class SecondStage extends Phaser.Scene {
             this.out = "";
        
         }
+        */
 
 
-        this.player.update();
-        this.inventory.update(this);
-        this.command.update(this);
+        
                 
         /* 플레이어 위치 알려줌*/
         this.playerCoord.setText([
@@ -654,16 +725,25 @@ export default class SecondStage extends Phaser.Scene {
         if(this.invenPlus) {
             //console.log("here");
             this.item[this.item.length] =  'printf';  
-            this.item[this.item.length] =  'if';   
-            this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.item[this.item.length] =  'printf';
+            this.item[this.item.length] =  'if';
+            this.item[this.item.length] =  '<';
+            this.item[this.item.length] =  '>'; 
+            this.dropzon_su = 6; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             
-            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 895;
-            this.dropzone3_x = 828;
+            this.dropzone1_x = 855; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 805;
+            this.dropzone3_x = 895;
+            this.dropzone4_x = 965;
+            this.dropzone5_x = 828;
+            this.dropzone6_x = 828;
 
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 175, 40, 25).setRectangleDropZone(80, 25).setName("4");
+            this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("5");
+            this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("6");
 
             this.invenPlus = false;
         }
@@ -675,19 +755,21 @@ export default class SecondStage extends Phaser.Scene {
             this.reset_before_mission(); // 이전 미션의 드랍은 reset함
 
             this.item[this.item.length] =  'while';  
-            this.dropzon_su = 5; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.dropzon_su = 7; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             
-            this.dropzone1_x = 810;
-            this.dropzone2_x = 900; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone3_x = 1020;
-            this.dropzone4_x = 810;
-            this.dropzone5_x = 900;
+            this.dropzone1_x = 810;// 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 940;
+            this.dropzone3_x = 1010;
+            this.dropzone4_x = 840;
+            this.dropzone5_x = 940;
+            this.dropzone6_x = 810;
  
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 170, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 170, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 170, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 200, 30, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 200, 100, 25).setRectangleDropZone(80, 25).setName("3");
             this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 230, 80, 25).setRectangleDropZone(80, 25).setName("4");
             this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 230, 80, 25).setRectangleDropZone(80, 25).setName("5");
+            this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 290, 80, 25).setRectangleDropZone(80, 25).setName("6");
 
             this.invenPlus2 = undefined;
         }
@@ -697,6 +779,7 @@ export default class SecondStage extends Phaser.Scene {
         if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
         if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
         if(this.draganddrop_5!=undefined) this.draganddrop_5.update(this);
+        if(this.draganddrop_6!=undefined) this.draganddrop_6.update(this);
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -800,6 +883,7 @@ export default class SecondStage extends Phaser.Scene {
             //scene.intro4();
         }, this);
     }   */
+    /*
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
@@ -850,6 +934,76 @@ export default class SecondStage extends Phaser.Scene {
         }, this);
     
     }
+    */
+
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        //console.log(scene.out);
+        console.log("compiled");
+        if(msg==scene.correct_msg1||msg==scene.correct_msg2||msg==scene.wrong_msg){
+            console.log("scene.out="+msg);
+            //console.log("scene.correct_msg"+scene.correct_msg);
+
+            this.command.remove_phone(this);
+            this.invenIn=false;
+            this.inventory.inventoryBody.y = 600;
+
+            playerX = this.player.player.x;
+            this.textBox = scene.add.image(playerX-70,270,'bubble').setOrigin(0,0);
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
+            fontFamily: 'Arial Black',
+            fontSize: '15px',
+            color: '#000000', //글자색 
+            wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+            boundsAlignH: "center",
+            boundsAlignV: "middle"
+          }).setOrigin(0.5)
+          this.player.playerPaused=true;    //플레이어 얼려두기
+          this.questbox.setVisible(false);
+          this.quest_text1.setVisible(false);
+          this.quest_text2.setVisible(false);
+
+            //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+            this.player.playerPaused=true;
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }
+        scene.input.once('pointerdown', function() {
+            if(msg==scene.correct_msg1){
+                console.log("===stage2 성공===");
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.mission1 = undefined;
+                this.mission2 = true;
+                this.stage2_3_1();  
+            }else if(msg==scene.wrong_msg){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.stage2_4_1(); 
+            }else if(msg==scene.correct_msg2){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.mission2 = undefined;
+                this.stage2_10();
+            }else{
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+                this.player.playerPaused=false;
+            }
+            
+        }, this);
+    
+    }
+    //===========================================================================================
 
     printerr(scene){
         console.log("printerr");
@@ -860,6 +1014,7 @@ export default class SecondStage extends Phaser.Scene {
                 fontSize: '30px', 
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
+            this.player.playerPaused=true;
 
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         
@@ -867,6 +1022,7 @@ export default class SecondStage extends Phaser.Scene {
                 textBox.setVisible(false);
                 script.setVisible(false);
                 playerFace.setVisible(false);
+                this.player.playerPaused=false;
         }, this);
     }
 
@@ -931,6 +1087,10 @@ export default class SecondStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false;
+            this.questbox.setVisible(true);
+            this.quest_text1.setVisible(true);
+            this.quest_text2.setVisible(false);
+            this.code_on1=true;
         });     
     }
 
@@ -1112,6 +1272,11 @@ export default class SecondStage extends Phaser.Scene {
                 ease: 'Linear',
                 repeat: 0,
                 onComplete: ()=>{
+                    this.questbox.setVisible(true);
+                    this.quest_text1.setVisible(false);
+                    this.quest_text2.setVisible(true);
+                    this.code_on2=true;
+
                     this.player.playerPaused = false;
                     this.invenPlus2 = true;
                     itemget.destroy();

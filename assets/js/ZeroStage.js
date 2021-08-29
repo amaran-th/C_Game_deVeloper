@@ -4,7 +4,7 @@ import Dialog from "./Dialog.js";
 import Command from "./Command.js";
 import DragAndDrop from "./DragAndDrop.js";
 
-
+var inZone;
 const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
@@ -49,6 +49,8 @@ export default class ZeroStage extends Phaser.Scene {
     }
     
     create () {
+
+        
 
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
@@ -119,7 +121,9 @@ export default class ZeroStage extends Phaser.Scene {
                 concern_text.setFontSize(25);
             }
         });
-        
+
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone = this.physics.add.staticImage(100, 420).setSize(100,160);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
@@ -128,6 +132,11 @@ export default class ZeroStage extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
         this.player.player.setFlipX(true);
+
+        //맵이동
+        this.physics.add.overlap(this.player.player, this.zone, function () {
+            inZone = true;
+        });
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -239,7 +248,8 @@ export default class ZeroStage extends Phaser.Scene {
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
         // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
-        /*this.code_zone_1 = "           "; //11칸
+        /*
+        this.code_zone_1 = "           "; //11칸
         this.code_zone_2 = "           ";
         this.code_zone_3 = "           ";
         this.code_zone_4 = "           ";
@@ -261,7 +271,11 @@ export default class ZeroStage extends Phaser.Scene {
         // zero_stage의 앱에 들어가는 코드
         this.app_code_text ="";
         
-        
+        //코드 실행 후 비교할 목표 텍스트
+        //this.correct_msg="아-마이크 테스트";
+        this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
+                "int main(){ \n " + 
+                "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
 
         stagenum=0;
 
@@ -365,26 +379,6 @@ export default class ZeroStage extends Phaser.Scene {
         }
         */
 
-        /* 플레이어가 문 앞에 서면 작동하도록 함 */
-        if(this.player.player.x < 175 && 100 < this.player.player.x && this.canexit ) {
-            this.pressX.x = this.player.player.x-50;
-            this.pressX.y = this.player.player.y-100;
-            this.pressX.setVisible(true);
-        
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('맵이동');
-
-                
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-                this.command.remove_phone(this);
-
-
-                this.scene.stop('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                this.scene.run("first_stage");
-            }
-        }
-        else this.pressX.setVisible(false);
 
 
         
@@ -449,6 +443,21 @@ export default class ZeroStage extends Phaser.Scene {
             this.scene.run("third_stage");
         }
 
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //맵이동 (stage1) 로
+        if (inZone) {
+            this.pressX.x = this.player.player.x-50;
+            this.pressX.y = this.player.player.y-100;
+            this.pressX.setVisible(true);
+            if (this.keyX.isDown){
+                console.log("===[맵이동] stage1 으로===");
+                this.command.remove_phone(this);
+                this.scene.sleep('zero_stage')
+                this.scene.run('first_stage'); 
+            }
+        }else this.pressX.setVisible(false);
+        
+        inZone = false;
     }
 
     intro1() {
@@ -513,7 +522,6 @@ export default class ZeroStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
             this.time.delayedCall( 1000, () => {  this.intro5(); }, [], this);
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
     }
 
@@ -535,6 +543,7 @@ export default class ZeroStage extends Phaser.Scene {
             this.questbox.setVisible(true);
             this.quest_text2.setVisible(true);
             this.code_on=true;
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
     }
 
@@ -542,7 +551,9 @@ export default class ZeroStage extends Phaser.Scene {
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
         console.log("compiled");
-        if(msg==scene.out){
+        if(msg==scene.correct_msg){
+            console.log("scene.out="+msg);
+            console.log("scene.correct_msg"+scene.correct_msg);
             this.bubble.setVisible(false);
             this.concern_text0.setVisible(false);
             this.concern_text.setVisible(false);
@@ -578,7 +589,7 @@ export default class ZeroStage extends Phaser.Scene {
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
         scene.input.once('pointerdown', function() {
-            if(msg==scene.out){
+            if(msg==scene.correct_msg){
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 //playerFace.setVisible(false);

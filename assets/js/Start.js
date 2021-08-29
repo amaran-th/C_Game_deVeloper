@@ -1,6 +1,5 @@
 var playerX;
 var stagenum=0;
-var isErr;
 var username='AAA';
 
 //데이터베이스에 접속해서 닉네임 불러와서 username 변수에 저장
@@ -128,6 +127,12 @@ class Start extends Phaser.Scene {
       this.load.image("stage_5_button", "./assets/images/map/stage_5.png");
       this.load.image("stage_6_button", "./assets/images/map/stage_6.png");
 
+      this.load.image("link_1", "./assets/images/map/link_1.png");
+      this.load.image("link_2", "./assets/images/map/link_2.png");
+      this.load.image("link_3", "./assets/images/map/link_3.png");
+      this.load.image("link_4", "./assets/images/map/link_4.png");
+      this.load.image("link_5", "./assets/images/map/link_5.png");
+
       /** 불타는 배경 로드 **/
       this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {
         frameWidth: 1100,
@@ -200,7 +205,13 @@ class Start extends Phaser.Scene {
 
       //4번째 스테이지
       this.load.image('wall','./assets/images/stage4/wall.png')
-    
+
+      /** 4번째 스테이지의 npc 로드 **/
+      this.load.spritesheet('npc_devil2', './assets/images/npc/npc8.png', {
+        frameWidth: 79,
+        frameHeight: 140,
+      });
+      
       //5번째 스테이지의 desk 이미지 로드
       this.load.image("library_desk", "./assets/images/stage5/desk.png");
 
@@ -323,7 +334,7 @@ class Start extends Phaser.Scene {
         this.isnewgame=true;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("fifth_stage");
+        this.scene.start("third_stage_0");
       }, this);
 
     }
