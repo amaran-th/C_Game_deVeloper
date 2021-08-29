@@ -255,6 +255,8 @@ class Start extends Phaser.Scene {
       this.load.image("quiz24", "./assets/images/stage6/quiz24.png");
       this.load.image("quiz25", "./assets/images/stage6/quiz25.png");
 
+      //기타
+      this.load.image("standing_student", "./assets/images/npc/npc4_student.png");
 
     } 
     
@@ -335,7 +337,7 @@ class Start extends Phaser.Scene {
         this.isnewgame=1;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("third_stage_0");
+        this.scene.start("bootGame");
       }, this);
 
     }

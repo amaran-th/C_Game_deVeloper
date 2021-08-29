@@ -5,6 +5,7 @@ import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
 var inZone6_1;
+var inZone6_2;
 export default class SixthStage extends Phaser.Scene {   
     constructor(){ 
         super("sixth_stage"); //identifier for the scene
@@ -65,6 +66,8 @@ export default class SixthStage extends Phaser.Scene {
         
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone6_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone6_2 = this.physics.add.staticImage(1200, 420).setSize(100,160);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -102,8 +105,16 @@ export default class SixthStage extends Phaser.Scene {
         this.physics.add.overlap(this.player.player, this.zone6_1, function () {
             inZone6_1 = true;
         });
+        this.physics.add.overlap(this.player.player, this.zone6_2, function () {
+            inZone6_2 = true;
+        });
+
         //플레이어 위 pressX 생성해두기(door)
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+        this.pressX_2 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -461,8 +472,20 @@ export default class SixthStage extends Phaser.Scene {
                 this.scene.switch('fifth_stage'); 
             }
         }else this.pressX_1.setVisible(false);
+        //맵이동 (Ending Room) 로
+        if (inZone6_2) {
+            this.pressX_2.x = this.player.player.x-50;
+            this.pressX_2.y = this.player.player.y-100;
+            this.pressX_2.setVisible(true);
+            if (this.keyX.isDown){
+                console.log("[맵이동] Ending Room 으로");
+                this.command.remove_phone(this);
+                this.scene.switch('bootGame'); 
+            }
+        }else this.pressX_2.setVisible(false);
         
         inZone6_1 = false;
+        inZone6_2 = false;
 
     }
 

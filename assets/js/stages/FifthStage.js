@@ -6,6 +6,7 @@ import DragAndDrop from "../DragAndDrop.js";
 
 var inZone5_1;
 var inZone5_2;
+
 export default class FifthStage extends Phaser.Scene {   
     constructor(){ 
         super("fifth_stage"); //identifier for the scene

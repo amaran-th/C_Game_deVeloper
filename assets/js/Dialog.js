@@ -277,9 +277,7 @@ visible(visible) {
     ['wait-click'],
     ['print', '이걸로 뭔가 해야하는 걸까? 인벤토리 창을 열어서 아까 주운 걸 사용해보자.'],
     ['wait-click'],
-    ['wait-click'],
     ['print', '* Quest : 폰의 코드 앱을 이용해 말을 해보자. *'],
-    ['wait-click'],
     ['wait-click'],
     ['print', '* 코딩 어플리케이션의 스크립트가 업데이트 되었습니다. *'],
     ['wait-click'],
@@ -303,6 +301,15 @@ visible(visible) {
     ['print', '음... 그나저나 좀 더운 거 같은데...'],
     ['wait-click'],
     ['print', '...일단 밖으로 나가볼까?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  //퀘스트가 남아있을 때 나가려고 하면 출력
+  intro_cannot_exit = [
+    ['place', 40,10],
+    ['visible',true],
+    ['setFace', 1],
+    ['print', '(아직은 나가지 말자.)'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1438,7 +1445,17 @@ visible(visible) {
   ]
 
   //어디에 넣을 수 있을진 모르겠는데 적당히 엔딩낼때 넣을 텍스트
-  final = [
+  final_0=[
+    ['visible',true],
+    ['setFace', 4],
+    ['print', '*엔딩 룸에 오신 것을 환영합니다!*'],
+    ['wait-click'],
+    ['print', '캐릭터에게 말을 걸면 개발진의 후기를 볼 수 있습니다.'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  final_devil1 = [
     ['visible',true],
     ['setFace', 4],
     ['print', '...'],
