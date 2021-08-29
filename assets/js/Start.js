@@ -1,6 +1,5 @@
 var playerX;
 var stagenum=0;
-var isErr;
 var username='AAA';
 
 //데이터베이스에 접속해서 닉네임 불러와서 username 변수에 저장
@@ -200,7 +199,13 @@ class Start extends Phaser.Scene {
 
       //4번째 스테이지
       this.load.image('wall','./assets/images/stage4/wall.png')
-    
+
+      /** 4번째 스테이지의 npc 로드 **/
+      this.load.spritesheet('npc_devil2', './assets/images/npc/npc8.png', {
+        frameWidth: 79,
+        frameHeight: 140,
+      });
+      
       //5번째 스테이지의 desk 이미지 로드
       this.load.image("library_desk", "./assets/images/stage5/desk.png");
 
@@ -323,7 +328,7 @@ class Start extends Phaser.Scene {
         this.isnewgame=true;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("fifth_stage");
+        this.scene.start("third_stage_0");
       }, this);
 
     }

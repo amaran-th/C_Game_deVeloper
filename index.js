@@ -1,4 +1,3 @@
-//혼또니
 const express = require("express");
 const app = express();
 app.set("port", process.env.PORT || 3000); 
@@ -35,7 +34,7 @@ app.use(
     })
   );
 
-  app.post('/form_test',function(req,res) { //웹컴파일러
+  app.post('/form_test',function(req,res) { //웹컴파일러(윈도우 개발환경에서 실행할 수 있도록 임시로 만든 라우터)
     console.log("[POST(ajax) /form_test] ");
     var code = req.body.code;  
     var source = code.split(/\r\n|\r\n/).join("\n");
@@ -62,36 +61,46 @@ app.post('/form_receive',function(req,res) { //웹컴파일러
     fs.writeFile(file,source,'utf8',function(error) {
         console.log('write end');
     });
-
+    
+        
     var compile = spawn('gcc',[file]);
     compile.stdout.on('data',function(data) {
         console.log('stdout: '+data);
     });
     compile.stderr.on('data',function(data){
-        console.log("ERROR!!!");
-        console.log(String(data));
-        var responseData ={'result': 'compile_error'};
-        res.json(responseData);
+        if(res.headersSent==false) {    //중복된 응답을 보내지 않도록
+            console.log("ERROR!!!");
+            console.log(String(data));
+            var responseData ={'result': 'compile_error'};
+            return res.json(responseData);
+        }
+        
     });
     compile.on('close',function(data){
         if(data ==0) {
             var run = spawn('./a.out',[]);    
             run.stdout.on('data',function(output){
-                console.log('컴파일 완료');
-                var responseData = {'result':'ok','output': output.toString('utf8')};
-                res.json(responseData);
+                if(res.headersSent==false) {
+                    console.log('컴파일 완료');
+                    var responseData = {'result':'ok','output': output.toString('utf8')};
+                    return res.json(responseData);
+                }
             });
             run.stderr.on('data', function (output) {
-                console.log(String(output));
-                console.log('error!!!');
-                var responseData ={'result': 'runtime_error'};
-                res.json(responseData);
+                if(res.headersSent==false) {
+                    console.log(String(output));
+                    console.log('error!!!');
+                    var responseData ={'result': 'runtime_error'};
+                    return res.json(responseData);
+                }
             });
             run.on('close', function (output) {
                 console.log('stdout: ' + output);
             });
         }
     });
+
+    
     
 });
 

@@ -50,6 +50,8 @@ export default class ZeroStage extends Phaser.Scene {
     
     create () {
 
+        
+
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -234,7 +236,8 @@ export default class ZeroStage extends Phaser.Scene {
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
         // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
-        /*this.code_zone_1 = "           "; //11칸
+        /*
+        this.code_zone_1 = "           "; //11칸
         this.code_zone_2 = "           ";
         this.code_zone_3 = "           ";
         this.code_zone_4 = "           ";
@@ -256,7 +259,11 @@ export default class ZeroStage extends Phaser.Scene {
         // zero_stage의 앱에 들어가는 코드
         this.app_code_text ="";
         
-        
+        //코드 실행 후 비교할 목표 텍스트
+        //this.correct_msg="아-마이크 테스트";
+        this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
+                "int main(){ \n " + 
+                "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
 
         stagenum=0;
 
@@ -506,7 +513,6 @@ export default class ZeroStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
             this.time.delayedCall( 1000, () => {  this.intro5(); }, [], this);
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
     }
 
@@ -528,6 +534,7 @@ export default class ZeroStage extends Phaser.Scene {
             this.questbox.setVisible(true);
             this.quest_text2.setVisible(true);
             this.code_on=true;
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
     }
 
@@ -535,7 +542,9 @@ export default class ZeroStage extends Phaser.Scene {
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
         console.log("compiled");
-        if(msg==scene.out){
+        if(msg==scene.correct_msg){
+            console.log("scene.out="+msg);
+            console.log("scene.correct_msg"+scene.correct_msg);
             this.bubble.setVisible(false);
             this.concern_text0.setVisible(false);
             this.concern_text.setVisible(false);
@@ -571,7 +580,7 @@ export default class ZeroStage extends Phaser.Scene {
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
         scene.input.once('pointerdown', function() {
-            if(msg==scene.out){
+            if(msg==scene.correct_msg){
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 //playerFace.setVisible(false);

@@ -58,7 +58,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+        this.player = new Player(this, spawnPoint.x, 430);
 
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -91,6 +91,18 @@ export default class ThirdStage_0 extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
+        //quest box 이미지 로드
+        this.questbox = this.add.image(0,500,'quest_box').setOrigin(0,0);
+        //quest text
+        this.quest_text = this.add.text(this.questbox.x+430, this.worldView.y+540, '숨을 돌릴 장소를 찾아 들어가자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        this.questbox.setVisible(false);
+        this.quest_text.setVisible(false);
+
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map, "third_stage_0");
 
@@ -120,22 +132,33 @@ export default class ThirdStage_0 extends Phaser.Scene {
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
-        /*** 미니맵버튼 활성화 ***/ //@@@@@@@@@@@
+        /*** 미니맵버튼 활성화  //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
         this.minimap_button.setInteractive();
         this.minimap_button.on("pointerdown",function(){
             this.scene.sleep('third_stage_0'); 
             this.scene.run("minimap");
-        },this);
+        },this);***/
 
         stagenum = 3.1;
 
         //처음 시작하면 .....
+        //초반 대사
+        this.cameras.main.fadeIn(1000,0,0,0);
+        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+        this.stage3_0_1();
         
 
     }
 
     update() {
+
+        //퀘스트 박스 및 텍스트 관련 코드
+        if(this.questbox.visible==true){
+            this.questbox.x=this.worldView.x+30;
+            this.quest_text.x=this.questbox.x+430;
+        }
+
         this.player.update();
         //this.inventory.update();
         this.command.update(this);
@@ -237,6 +260,21 @@ export default class ThirdStage_0 extends Phaser.Scene {
             }
         }
         else this.pressX_2.setVisible(false);
+    }
+
+    stage3_0_1() {
+        this.time.delayedCall( 1000, () => { 
+        var seq = this.plugins.get('rexsequenceplugin').add(); 
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage3_0, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused=false;
+            this.questbox.setVisible(true);
+            this.quest_text.setVisible(true);
+            });
+        }, [], this);
     }
 
     

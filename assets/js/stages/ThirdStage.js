@@ -59,13 +59,15 @@ export default class ThirdStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+        this.player = new Player(this, spawnPoint.x, 430);
     
         //플레이어 위 pressX 생성해두기(door) => 빵집에서 stage3_0(바깥)으로,
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
+
+        
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -157,18 +159,7 @@ export default class ThirdStage extends Phaser.Scene {
         this.contenttext = "" ;
 
         //Second_stage의 앱에 들어가는 코드
-        this.app_code_text = 
-        "#include <stdio.h>\n" + 
-        "int main(){ \n\n" +
-  
-        "   {int bread = 1;} \n\n   " +
-        "           " + 
-        "(int i=0; i" + "           " + 
-        "100; i++){\n" +
-        "      {bread} = {bread} + 1 ; \n" +
-        "   }\n\n" +
-  
-        "   printf(\"%d\", {bread} );\n}";
+        this.app_code_text = "";
         
         
         //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
@@ -181,10 +172,33 @@ export default class ThirdStage extends Phaser.Scene {
              this.oven.destroy()
         });
 
+        //quest box 이미지 로드
+        this.questbox = this.add.image(0,500,'quest_box').setOrigin(0,0);
+        //quest text
+        this.quest_text = this.add.text(this.questbox.x+430, this.worldView.y+540, '핑퐁씨에게 빵을 25개 만들어주자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
 
-        //코드 실행후 불러올 output값
-        this.out = "";
+        this.questbox.setVisible(false);
+        this.quest_text.setVisible(false);
 
+        //코드 앱에 텍스트 업데이트 시키는 변수
+        this.code_on=false;
+
+        //코드 실행 후 비교할 목표 텍스트(리눅스용/윈도우용)
+        //this.correct_msg="bread=25";
+
+        this.correct_msg="#include <stdio.h>\n" + 
+        "int main(){\n" +
+        "   int bread=1;\n" +
+        "   int i;\n"+
+        "   " + this.code_zone_1 + "(int i=0; i" + this.code_zone_2 + "24; i++){\n" +
+        "      bread=bread+1;\n" +
+        "   }\n" +
+        "   printf(\"bread=%d\",bread);\n"+
+        "}"
         stagenum = 3;
 
         //초반 대사
@@ -203,20 +217,39 @@ export default class ThirdStage extends Phaser.Scene {
     }
 
     update() {
-      this.contenttext = 
-      "#include <stdio.h>\n" + 
-      "int main(){ \n" +
 
-      "   {int bread = 1;} \n   " +
-      this.code_zone_1 + 
-      "(int i=0; i" + this.code_zone_2 + 
-      "100; i++){\n" +
-      "      {bread} = {bread} + 1 ; \n" +
-      "   }\n" +
+        //퀘스트 박스 및 텍스트 관련 코드
+        if(this.questbox.visible==true){
+            this.questbox.x=this.worldView.x+30;
+            this.quest_text.x=this.questbox.x+430;
+        }
 
-      "   printf(\"%d\", {bread} );\n}"
+        if(this.code_on){
+            this.contenttext = 
+                "#include <stdio.h>\n" + 
+                "int main(){\n" +
+                "   int bread=1;\n" +
+                "   int i;\n"+
+                "   " + this.code_zone_1 + "(int i=0; i" + this.code_zone_2 + "24; i++){\n" +
+                "      bread=bread+1;\n" +
+                "   }\n" +
+                "   printf(\"bread=%d\",bread);\n"+
+                "}"
+            this.app_code_text = 
+                "#include <stdio.h>\n" + 
+                "int main(){ \n" +
+                "   int bread = 1; \n"+
+                "   int i;	//반복자\n"+
+                "   " +"           " + "(int i=0; i" + "           " + "24; i++){\n" +
+                "      bread=bread+1;\n" +
+                "   }\n" +
+                "   printf(\"bread=%d\",bread);\n"+
+                "}";
+        }
+      
 
         //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
+        /*
         if (this.out == "#include <stdio.h>\nint main(){ \n   {int bread = 1;} \n   for(int i=0; i<100; i++){\n      {bread} = {bread} + 1 ; \n   }\n   printf(\"%d\", {bread} );\n}"){
             console.log("===stage3 클리어!===");
             this.bread.setVisible(true);
@@ -233,6 +266,7 @@ export default class ThirdStage extends Phaser.Scene {
             //this.full_bread_1.setVisible(true);
             //this.full_bread_2.setVisible(true);
             this.out = "";
+            
 
 
             //this.cameras.main.fadeIn(1000,0,0,0);
@@ -242,6 +276,7 @@ export default class ThirdStage extends Phaser.Scene {
                 this.stage3_3();
             }, [], this);
         }
+        */
 
         this.player.update();
         this.inventory.update(this);
@@ -285,8 +320,8 @@ export default class ThirdStage extends Phaser.Scene {
             this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 980;
 
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 231, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("2");
             //this.intro2();
             this.invenPlus = false;
         }
@@ -369,6 +404,9 @@ export default class ThirdStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.code_on=true;
+            this.questbox.setVisible(true);
+            this.quest_text.setVisible(true);
         });     
     }
 
@@ -380,6 +418,7 @@ export default class ThirdStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            
         });     
     }
     /*
@@ -404,7 +443,7 @@ export default class ThirdStage extends Phaser.Scene {
         }, this);
     } 
     */  
-
+/*
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
@@ -470,6 +509,106 @@ export default class ThirdStage extends Phaser.Scene {
                 textBox.setVisible(false);
                 script.setVisible(false);
                 playerFace.setVisible(false);
+        }, this);
+    }
+    */
+
+    complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
+        //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
+        //console.log(scene.out);
+        console.log("compiled");
+        if(msg==scene.correct_msg){
+            console.log("scene.out="+msg);
+            //console.log("scene.correct_msg"+scene.correct_msg);
+
+            this.command.remove_phone(this);
+            this.invenIn=false;
+            this.inventory.inventoryBody.y = 600;
+
+            playerX = this.player.player.x;
+            this.textBox = scene.add.image(playerX-70,270,'bubble').setOrigin(0,0);
+            this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
+            fontFamily: 'Arial Black',
+            fontSize: '15px',
+            color: '#000000', //글자색 
+            wordWrap: { width: 100, height:60, useAdvancedWrap: true },
+            boundsAlignH: "center",
+            boundsAlignV: "middle"
+          }).setOrigin(0.5)
+          this.player.playerPaused=true;    //플레이어 얼려두기
+          //this.questbox.setVisible(false);
+          //this.quest_text2.setVisible(false);
+
+            //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }else{
+            var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+            this.player.playerPaused=true;
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        }
+        scene.input.once('pointerdown', function() {
+            if(msg==scene.correct_msg){
+                console.log("===stage3 클리어!===");
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.bread.setVisible(true);
+                this.questbox.setVisible(false);
+                this.quest_text.setVisible(false);
+
+                for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
+                    (x => {
+                        setTimeout(() => {
+                            console.log('빵');
+                            var bread = this.breadGroup.create(Phaser.Math.Between(this.player.player.x -100, this.player.player.x +100), 0, 'bread');
+                            bread.setFrictionX(1); //이거 마찰인데... 안 먹히는 듯ㅠㅠ
+                        },100*x) //이러면 1초 간격으로 실행됨
+                    })(i)
+                }
+                //this.full_bread_1.setVisible(true);
+                //this.full_bread_2.setVisible(true);
+                //this.out = "";
+                
+                //this.cameras.main.fadeIn(1000,0,0,0);
+                this.time.delayedCall(3000, function() {
+                    this.exclamMark.setVisible(true);
+                    this.exclamMark.play('exclam');
+                    this.stage3_3();
+                }, [], this);
+
+            }else{
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+                this.player.playerPaused=false;
+            }
+            
+        }, this);
+    
+    }
+    printerr(scene){
+        console.log("printerr");
+        var textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+            this.player.playerPaused=true;
+
+            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+        
+        scene.input.once('pointerdown', function() {
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+                this.player.playerPaused=false;
         }, this);
     }
 
