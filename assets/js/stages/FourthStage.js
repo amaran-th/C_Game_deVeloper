@@ -461,32 +461,32 @@ export default class FourthStage extends Phaser.Scene {
         graphics.lineStyle(2, 0xffff00);
         graphics.strokeRect(x - width / 2, y - 25 / 2, width, 25);
 
-        this.input.on('dragenter', function (pointer, gameObject, dropZone) {
+        this.input.once('dragenter', function (pointer, gameObject, dropZone) {
     
             //graphics.clear();
             graphics.lineStyle(2, 0x00ffff);
             graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
         });
     
-        this.input.on('dragleave', function (pointer, gameObject, dropZone) {
+        this.input.once('dragleave', function (pointer, gameObject, dropZone) {
     
             //graphics.clear();
             graphics.lineStyle(2, 0xffff00);
             graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
         });
     
-        this.input.on('drop', function (pointer, gameObject, dropZone) {
-            console.log(dropZone.x,dropZone.y)
+        this.input.once('drop', function (pointer, gameObject, dropZone) {
+            console.log("stagedrop");
             gameObject.x = dropZone.x;
             gameObject.y = dropZone.y;
-            console.log(gameObject.x,gameObject.y)
+            //console.log(gameObject.x,gameObject.y)
 
             droppedText = gameObject._text;
 
             //퀴즈 정답유무는 update에
         });
     
-        this.input.on('dragend', function (pointer, gameObject, dropped) {
+        this.input.once('dragend', function (pointer, gameObject, dropped) {
             if (!dropped)
             {
                 gameObject.x = gameObject.input.dragStartX;
@@ -605,6 +605,7 @@ export default class FourthStage extends Phaser.Scene {
 
     stage4_5() {
         this.deleteDropzone();
+        this.zone = undefined;
         this.dragAndDrop.reset_before_mission(this);
         this.item.length = 0; //배열 비워버리기
         
