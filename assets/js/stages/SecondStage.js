@@ -78,14 +78,18 @@ export default class SecondStage extends Phaser.Scene {
 
         
         /**온도계 이미지**/
+        this.temperature2 = this.add.image(200 ,500,'temperature2').setOrigin(0,1);  //온도계 바닥부분
+
         this.anims.create({
             key: "temperature",
             frames: this.anims.generateFrameNumbers('temperature',{ start: 0, end: 1}), 
             frameRate: 2,
             repeat: -1,
         });
-        this.temperature = this.add.sprite(200 ,500,'temperature').setOrigin(0,1);  
-        this.temperature.setInteractive();  
+        this.temperature = this.add.sprite(200 ,300,'temperature').setOrigin(0,1);  
+        this.temperature.setInteractive(
+            new Phaser.Geom.Rectangle(0 ,0, 200, 100)
+            ,Phaser.Geom.Rectangle.Contains); // 정확도를 높이려고 온도계의 중앙부분만 setinteractive 하게  
         this.temperature.play('temperature');    
 
         /*** 카페 이미지 불러오기 (코드 실행 후 나오는 카페) */
@@ -271,6 +275,7 @@ export default class SecondStage extends Phaser.Scene {
         });
         this.text_temp.setInteractive();
         this.text_temp.setVisible(false);
+
         //var var_temp = this.add.container(100,400, [var_cage1,text_temp]).setSize(50,50); //temp 변수
         //var_temp.setInteractive(new Phaser.Geom.Rectangle(37, 25, 50, 50), Phaser.Geom.Rectangle.Contains); 
         //var_temp.setName("temp")
@@ -304,10 +309,10 @@ export default class SecondStage extends Phaser.Scene {
         this.text_ground.setVisible(false);
 
 
-        /** 마우스 올리면 태그 생기게! **/
+        /** 마우스 올리면 -> 클릭하면 태그 생기게! **/
         this.temperature.on('pointerover', function(){
             this.text_temp.setVisible(true);
-            this.text_temp.x = this.worldView.x + this.input.mousePointer.x-10; // 이부분 있어야 드랍존에 들어간 상태에서도 새로 태그 생성 가능!
+            this.text_temp.x = this.worldView.x + this.input.mousePointer.x-10;
             this.text_temp.y = this.input.mousePointer.y-10;
         }, this);
 
@@ -324,8 +329,7 @@ export default class SecondStage extends Phaser.Scene {
         this.waterWball.on('pointerout', function(){
             this.text_water.setVisible(false)
         }, this);
-        // this.text_ground 부분 없어도 되는 건가요?? 
-        //특정 이미지에 마우스 가져다 대는게 아니라 마우스가 특정 위치로 이동하면 보이게 만든 거라 읍어도 됩니당 /오홍~굿!
+
         
         /** 드래그 활성화 **/
         this.input.setDraggable(this.text_temp);
@@ -407,6 +411,7 @@ export default class SecondStage extends Phaser.Scene {
 
         //console.log('마우스 위치', this.input.mousePointer.x + this.worldView.x,' 땅 태그 위치:',this.text_ground.x  )
 
+
         if(this.input.mousePointer.y >= 500 && this.input.mousePointer.x + this.worldView.x <= 1500  && this.input.mousePointer.x + this.worldView.x >= this.worldView.x + 50 ) {
             if(this.pointerUnderGround){ //계속 불러와지면서 깜빡거리지 않도록
                 this.text_ground.setVisible(true);
@@ -416,7 +421,7 @@ export default class SecondStage extends Phaser.Scene {
             this.text_ground.y = this.input.mousePointer.y - 15;
         }
         else if(!isDragging) {
-           // this.text_ground.setVisible(false);
+            this.text_ground.setVisible(false);
             this.pointerUnderGround = true;
         }
 

@@ -170,9 +170,10 @@ class Start extends Phaser.Scene {
     
     /** 2번째 스테이지 이미지 로드 **/
       this.load.image("cafe", "./assets/images/stage2/cafe.png");
+      this.load.image('temperature2', './assets/images/stage2/temperature2.png')
       this.load.spritesheet("temperature", "./assets/images/stage2/temperature.png", {
         frameWidth: 214,
-        frameHeight: 354,
+        frameHeight: 125,
       });
       this.load.spritesheet("waterWball", "./assets/images/stage2/waterWball.png", {
         frameWidth: 200,

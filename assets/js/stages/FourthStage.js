@@ -175,9 +175,6 @@ export default class FourthStage extends Phaser.Scene {
 	     "      }\n" +
          ' printf("ㅤㅤㅤㅤ",password);\n' +
          "}\n"
-
-
-
  
          //코드 실행후 불러올 output값
          this.out = "";
@@ -192,8 +189,6 @@ export default class FourthStage extends Phaser.Scene {
         this.quiz4 = false;
         this.quizOver = false;
         this.door = true; //문 앞에서 퀴즈 맞출때;
-
-        
     
     }
 
