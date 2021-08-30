@@ -118,7 +118,7 @@ export default class SecondStage extends Phaser.Scene {
         this.npc6 = this.add.sprite(1445 ,430,'npc6');
 
         /*** 맵 이동 (문 이미지 불러오기) */
-        this.zone2_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+        this.zone2_1 = this.physics.add.staticImage(10, 420).setSize(100,160);
         this.zone2_2 = this.physics.add.staticImage(2000, 420).setSize(100,160);
 
         /***스폰 포인트 설정하기 locate spawn point***/
