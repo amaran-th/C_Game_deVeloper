@@ -756,7 +756,7 @@ export default class SecondStage extends Phaser.Scene {
             this.reset_before_mission(); // 이전 미션의 드랍은 reset함
 
             this.item[this.item.length] =  'while';  
-            this.dropzon_su = 7; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.dropzon_su = 6; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             
             this.dropzone1_x = 810;// 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 940;
@@ -1324,6 +1324,9 @@ export default class SecondStage extends Phaser.Scene {
         this.draganddrop_1.reset_before_mission(this);
         this.draganddrop_2.reset_before_mission(this);
         this.draganddrop_3.reset_before_mission(this);
+        this.draganddrop_4.reset_before_mission(this);
+        this.draganddrop_5.reset_before_mission(this);
+        this.draganddrop_6.reset_before_mission(this);
         for (var i = 0; i < this.tag_in_dropzone.length; i++) {
             this.tag_in_dropzone[i].destroy();
         }
@@ -1331,6 +1334,9 @@ export default class SecondStage extends Phaser.Scene {
         this.draganddrop_1 = undefined;
         this.draganddrop_2 = undefined;
         this.draganddrop_3 = undefined;
+        this.draganddrop_4 = undefined;
+        this.draganddrop_5 = undefined;
+        this.draganddrop_6 = undefined;
     }
 }
 
