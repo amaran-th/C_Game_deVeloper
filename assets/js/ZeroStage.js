@@ -49,9 +49,6 @@ export default class ZeroStage extends Phaser.Scene {
     }
     
     create () {
-
-        
-
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -84,7 +81,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         //플레이어 말풍선 띄워두기
         this.bubble=this.add.image(0, 300,'bubble2').setOrigin(0,1);
-        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(           )', {
+        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(                  )', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -123,7 +120,8 @@ export default class ZeroStage extends Phaser.Scene {
         });
 
         /*** 맵 이동 (문 이미지 불러오기) */
-        this.zone = this.physics.add.staticImage(100, 420).setSize(100,160);
+        this.zone = this.physics.add.staticImage(150, 320).setSize(100,160);
+        
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
@@ -280,6 +278,7 @@ export default class ZeroStage extends Phaser.Scene {
         stagenum=0;
 
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
+        this.isdownX2=true;
         this.canexit=false; //문 밖으로 나갈 수 있는지 여부
         this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
         this.code_on=false; //베이스 코드가 설정되었는지 여부
@@ -329,6 +328,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x&&this.cangetItem) {
+            this.player.playerPaused = true; //플레이어 얼려두기
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
             this.itemicon.setVisible(false);
             this.itemget.setVisible(true);
@@ -344,8 +344,6 @@ export default class ZeroStage extends Phaser.Scene {
         }
         
         if(this.invenPlus) {
-            
-
             this.item[this.item.length] =  '#include';
             this.item[this.item.length] =  '<stdio.h>';
             this.item[this.item.length] =  'printf';
@@ -449,11 +447,24 @@ export default class ZeroStage extends Phaser.Scene {
             this.pressX.x = this.player.player.x-50;
             this.pressX.y = this.player.player.y-100;
             this.pressX.setVisible(true);
-            if (this.keyX.isDown){
+            if (this.keyX.isDown&&this.canexit){
                 console.log("===[맵이동] stage1 으로===");
                 this.command.remove_phone(this);
                 this.scene.sleep('zero_stage')
                 this.scene.run('first_stage'); 
+            }else if(this.keyX.isDown&&this.canexit==false&&this.isdownX2){
+                this.isdownX2=false;
+                console.log("아직은 나가지 말자.");
+                this.player.playerPaused = true; //플레이어 얼려두기
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.intro_cannot_exit, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.isdownX2=true;
+                });
             }
         }else this.pressX.setVisible(false);
         
@@ -513,7 +524,7 @@ export default class ZeroStage extends Phaser.Scene {
 
 
     intro4() {
-        this.player.playerPaused = true; //플레이어 얼려두기
+        
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
