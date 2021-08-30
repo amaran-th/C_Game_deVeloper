@@ -264,6 +264,8 @@ export default class ZeroStage extends Phaser.Scene {
         this.canexit=false; //문 밖으로 나갈 수 있는지 여부
         this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
         this.code_on=false; //베이스 코드가 설정되었는지 여부
+        this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
+        this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
 
         this.out=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
         ////나중에 "아-아-마이크 테스트"로 바꾸어야 함.////
@@ -351,15 +353,6 @@ export default class ZeroStage extends Phaser.Scene {
         if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
         if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
 
-        /* x 키 눌렀을 때 바로 사라지게 하는 건데 대사 많이 출력하는 오류있음
-        if(this.itemget.visible && this.keyX.isDown) {
-            this.itemget.setVisible(false);
-            this.itemText.setVisible(false);
-            this.beforeItemGet = false;
-            this.invenPlus = true;
-        }
-        */
-
         /* 플레이어가 문 앞에 서면 작동하도록 함 */
         if(this.player.player.x < 175 && 100 < this.player.player.x && this.canexit ) {
             this.pressX.x = this.player.player.x-50;
@@ -423,6 +416,24 @@ export default class ZeroStage extends Phaser.Scene {
             this.isintro = 0;
         }
 
+        /** 코드 컴파일 이후 말풍선 사라지게 할때 x키 입력이 마우스 클릭과 동일 역할하도록**/
+        //이렇게 하면 바로 대사 안뜨고 공백의 텍스트박스가 한번 뜨기는 함. -
+        if(this.codeComplied && this.keyX.isDown) { 
+            console.log('컴파일 사라지는 용의 x키');
+            this.codeComplied = false;
+
+            if(this.msgEqualOut){ //정답이라면
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                //playerFace.setVisible(false);
+                this.intro6();
+                this.msgEqualOut = false
+            }else{
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
+            }
+        }
 
 
 
@@ -538,6 +549,7 @@ export default class ZeroStage extends Phaser.Scene {
         //console.log(scene.out);
         console.log("compiled");
         if(msg==scene.out){
+            this.msgEqualOut = true;
             this.bubble.setVisible(false);
             this.concern_text0.setVisible(false);
             this.concern_text.setVisible(false);
@@ -572,6 +584,9 @@ export default class ZeroStage extends Phaser.Scene {
 
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
+
+
+
         scene.input.once('pointerdown', function() {
             if(msg==scene.out){
                 this.textBox.setVisible(false);
@@ -585,7 +600,8 @@ export default class ZeroStage extends Phaser.Scene {
             }
             
         }, this);
-    
+
+        this.codeComplied = true;
     }
 
     printerr(scene){
@@ -605,6 +621,8 @@ export default class ZeroStage extends Phaser.Scene {
                 script.setVisible(false);
                 playerFace.setVisible(false);
         }, this);
+
+        this.codeComplied = true;
     }
 
 
