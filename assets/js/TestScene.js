@@ -18,7 +18,7 @@ export default class TestScene extends Phaser.Scene {
         /*** FROM Minicode.js***/
 
         
-        this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
+        this.load.tilemapTiledJSON("map", "./assets/ending_room.json");
 
         /*
         this.load.image("tiles", "./assets/images/map.png");
@@ -59,7 +59,7 @@ export default class TestScene extends Phaser.Scene {
         /*** 맵 만들기 Create Map ***/
         const map = this.make.tilemap({ key: "map" });
         
-        const tileset = map.addTilesetImage("testSceneMap", "tiles"); //name of tileset(which is same as Png tileset) , source
+        const tileset = map.addTilesetImage("ending_room", "tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("ground", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
