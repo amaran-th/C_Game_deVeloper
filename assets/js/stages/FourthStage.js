@@ -201,7 +201,7 @@ export default class FourthStage extends Phaser.Scene {
     update() {
 
         //console.log('droppedText:',droppedText);
-        this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
+        if (this.dragAndDrop != undefined) this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
 
         /** 현재 퀴즈따라서 컴파일 내용 바꿔주기 (퀴즈 틀리고 맞출때마다 플레이어 말풍선으로 컴파일 내용 뜨는 거 하고싶음)**/
         if(this.quiz1) {
@@ -448,9 +448,10 @@ export default class FourthStage extends Phaser.Scene {
         this.item[this.item.length] =  '%s';
         this.item[this.item.length] =  '%c';
         this.item[this.item.length] =  '%f';
-        this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+        this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
-        this.dragAndDrop.invenPlus(this);
+        if(this.dragAndDrop != undefined) this.dragAndDrop.invenPlus(this);
+        if(this.dragAndDrop_1 != undefined) this.dragAndDrop_1.invenPlus(this);
     }
 
     makeDropzone(x,y,width) {
@@ -608,6 +609,7 @@ export default class FourthStage extends Phaser.Scene {
         this.zone = undefined;
         this.dragAndDrop.reset_before_mission(this);
         this.item.length = 0; //배열 비워버리기
+        this.dragAndDrop = undefined; // 드랍존 들어가면 인벤,코드앱 따라 보이고 안 보이고 안 따라가는 거 해결위해 필요
         
         this.dialog.visible(false);
 
