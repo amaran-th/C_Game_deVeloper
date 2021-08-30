@@ -48,7 +48,7 @@ export default class FirstStage extends Phaser.Scene {
 
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone1_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
-        this.zone1_2 = this.physics.add.staticImage(1100, 420).setSize(100,160);
+        this.zone1_2 = this.physics.add.staticImage(1500, 420).setSize(100,160);
         
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
@@ -60,14 +60,6 @@ export default class FirstStage extends Phaser.Scene {
         
         const tileset = map.addTilesetImage("map", "tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("world", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
-
-        //맵이동
-        this.physics.add.overlap(this.player.player, this.zone1_1, function () {
-            inZone1_1 = true;
-        });
-        this.physics.add.overlap(this.player.player, this.zone1_2, function () {
-            inZone1_2 = true;
-        });
 
         //플레이어 위 pressX 생성해두기(door) => stage2로 
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
@@ -130,6 +122,8 @@ export default class FirstStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "first_stage");
+        this.command.entire_code_button.input.enabled = false;
+
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
@@ -177,6 +171,14 @@ export default class FirstStage extends Phaser.Scene {
         
         //이벤트 실행을 위한 플래그 변수
         this.function=0;
+
+        //맵이동
+        this.physics.add.overlap(this.player.player, this.zone1_1, function () {
+            inZone1_1 = true;
+        });
+        this.physics.add.overlap(this.player.player, this.zone1_2, () => {
+            inZone1_2 = true;
+        });
     }
 
     update() {
@@ -412,7 +414,7 @@ export default class FirstStage extends Phaser.Scene {
             this.devil.setFrame(1);
             
             console.log('대화 끝');
-            this.click = this.add.text(500, 400, 'Click!', { font: 'Courier', fill: '#ffffff', fontSize: '100px' })
+            this.click = this.add.text(500, 480, 'Click!', { font: '30px Courier', fill: '#ffffff', fontSize: '100px' })
             this.phoneLocked.once('pointerdown', function() {
                 this.scene.run('quiz');
                 this.quiz_running = true;
