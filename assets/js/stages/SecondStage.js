@@ -756,6 +756,8 @@ export default class SecondStage extends Phaser.Scene {
             this.reset_before_mission(); // 이전 미션의 드랍은 reset함
 
             this.item[this.item.length] =  'while';  
+
+            this.code_piece_add_state = 0; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             this.dropzon_su = 6; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
             
             this.dropzone1_x = 810;// 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
