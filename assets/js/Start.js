@@ -1,6 +1,5 @@
 var playerX;
 var stagenum=0;
-var isErr;
 var username='AAA';
 
 //데이터베이스에 접속해서 닉네임 불러와서 username 변수에 저장
@@ -52,7 +51,8 @@ class Start extends Phaser.Scene {
       this.load.image("map_button", "./assets/images/command/map_button.png");
 
       this.load.image("tutorial", "./assets/images/tutorial.png");
-      this.load.image("ok_button", "./assets/images/OK_button.png");
+      this.load.image("tutorial2", "./assets/images/tutorial2.png");
+      
 
       //나중에 지우기 ======================================
               this.load.image("tiles", "./assets/images/map.png");
@@ -128,6 +128,12 @@ class Start extends Phaser.Scene {
       this.load.image("stage_5_button", "./assets/images/map/stage_5.png");
       this.load.image("stage_6_button", "./assets/images/map/stage_6.png");
 
+      this.load.image("link_1", "./assets/images/map/link_1.png");
+      this.load.image("link_2", "./assets/images/map/link_2.png");
+      this.load.image("link_3", "./assets/images/map/link_3.png");
+      this.load.image("link_4", "./assets/images/map/link_4.png");
+      this.load.image("link_5", "./assets/images/map/link_5.png");
+
       /** 불타는 배경 로드 **/
       this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {
         frameWidth: 1100,
@@ -201,7 +207,13 @@ class Start extends Phaser.Scene {
 
       //4번째 스테이지
       this.load.image('wall','./assets/images/stage4/wall.png')
-    
+
+      /** 4번째 스테이지의 npc 로드 **/
+      this.load.spritesheet('npc_devil2', './assets/images/npc/npc8.png', {
+        frameWidth: 79,
+        frameHeight: 140,
+      });
+      
       //5번째 스테이지의 desk 이미지 로드
       this.load.image("library_desk", "./assets/images/stage5/desk.png");
 
@@ -244,6 +256,8 @@ class Start extends Phaser.Scene {
       this.load.image("quiz24", "./assets/images/stage6/quiz24.png");
       this.load.image("quiz25", "./assets/images/stage6/quiz25.png");
 
+      //기타
+      this.load.image("standing_student", "./assets/images/npc/npc4_student.png");
 
     } 
     
@@ -318,13 +332,13 @@ class Start extends Phaser.Scene {
         this.play('load');
       });
 
-      this.isnewgame=false;
+      this.isnewgame=0;
       // 클릭하면 게임 시작
       this.NEW_GAME_button.once("pointerup", function () {
-        this.isnewgame=true;
+        this.isnewgame=1;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("fifth_stage");
+        this.scene.start("bootGame");
       }, this);
 
     }
@@ -347,11 +361,17 @@ class Start extends Phaser.Scene {
       */
 
 
-      if(this.isnewgame){
+      if(this.isnewgame==1){
         this.tutorial = this.add.image(0,0,"tutorial").setOrigin(0,0);
-        this.ok_button = this.add.image(550,450,"ok_button");
-        this.ok_button.setInteractive();
-        this.ok_button.once("pointerdown",function(){
+        this.tutorial.setInteractive();
+        this.tutorial.once("pointerdown",function(){
+          this.isnewgame=2;
+          this.tutorial.setVisible(false);
+        },this);
+      }else if(this.isnewgame==2){
+        this.tutorial2 = this.add.image(0,0,"tutorial2").setOrigin(0,0);
+        this.tutorial2.setInteractive();
+        this.tutorial2.once("pointerdown",function(){
           this.scene.start("zero_stage");
         },this);
       }

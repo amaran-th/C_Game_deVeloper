@@ -9,7 +9,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         this.code_piece = [];  // 배열로 줘서 씬에서 할당한 코드조각 만큼을 text 생성 변수로 주어줌
         var code_piece_y = 130; // 처음 코드조각 x좌표 위치 이건 나중에 inventory 창 부분에 맞게 수정 예정
         
-        console.log('코드조각 수 : ' + scene.item.length);
+        //console.log('코드조각 수 : ' + scene.item.length);
         for (var i = 0; i < scene.item.length; i++){
             this.code_piece[i] = scene.add.text(15, code_piece_y, scene.item[i], { font: "25px Arial Black", fill: "#f9cb9c" }).setInteractive();
             scene.input.setDraggable(this.code_piece[i]); // 드래그 가능하도록
@@ -306,6 +306,14 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.code_zone_14 = undefined;
 
             scene.reset_state = true;
+
+            //zerostage this.concern_text(마이크테스트) 리셋버튼 적용시키기 위해 넣음
+            if (scene.concern_text != undefined) {
+                scene.concern_text.setColor('#000000');
+                scene.concern_text.setFontSize(14);
+                scene.concern_text.x = scene.bubble.x+20;
+                scene.concern_text.y = scene.bubble.y-87;
+            }
         });
         
         if (scene.code_piece_add_state != scene.dropzon_su - 1) {
@@ -393,24 +401,13 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
     }
 
     invenPlus(scene) {
-        console.log('코드조각 수 : ' + scene.item.length);
+        //console.log('코드조각 수 : ' + scene.item.length);
         var code_piece_y_invenPlus = 150
         for (var i = 0; i < scene.item.length; i++){
-            console.log(scene.item[i],"invenPlus,", code_piece_y_invenPlus );
+            //console.log(scene.item[i],"invenPlus,", code_piece_y_invenPlus );
             this.code_piece[i] = scene.add.text(scene.worldView.x+15, code_piece_y_invenPlus, scene.item[i], { font: "25px Arial Black", fill: "#f9cb9c" }).setInteractive();
             scene.input.setDraggable(this.code_piece[i]); // 드래그 가능하도록
             code_piece_y_invenPlus += 30; // 각 코드 조각 위치 설정
-            var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
-            this.code_piece[i].on('pointerover', function () { 
-                //console.log('조각 수' + this.code_piece.length);
-                code_piece.setTint(0xf9cb9c);
-            });
-            // 마우스가 코드 조각 벗어났을때 원래 색으로!
-            this.code_piece[i].on('pointerout', function () { 
-                code_piece.clearTint();
-            });
-
-
         }
     }
 

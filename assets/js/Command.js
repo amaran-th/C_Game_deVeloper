@@ -150,6 +150,7 @@ export default class Command extends Phaser.GameObjects.Image {
         this.compile_button.on('pointerdown', () => {
            console.log("click");
             if (scene.contenttext !== ''){
+                console.log(scene.contenttext);
                     var data = {
                         'code': scene.contenttext
                     };
@@ -170,7 +171,7 @@ export default class Command extends Phaser.GameObjects.Image {
                         }else{
                             scene.out = result.output;
                             console.log('command 파일 result:', result.output);
-                            scene.complied(scene, result.output);
+                            scene.complied(scene, scene.out);
                         }
                         //document.getElementById('testoutput').value = result.output;
                     });

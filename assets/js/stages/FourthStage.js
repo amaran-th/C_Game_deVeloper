@@ -53,12 +53,12 @@ export default class FourthStage extends Phaser.Scene {
         /*** npc 만들기 ***/
         this.anims.create({
             key: "devil_touch_phone",
-            frames: this.anims.generateFrameNumbers('npc_devil',{ start: 4, end: 5}), 
+            frames: this.anims.generateFrameNumbers('npc_devil2',{ start: 4, end: 5}), 
             frameRate: 2,
             repeat: -1,
         });
 
-        this.devil = this.physics.add.sprite(910 ,430,'npc_devil');
+        this.devil = this.physics.add.sprite(910 ,430,'npc_devil2');
         this.devil.setFlipX(true);
         this.devil.play('devil_touch_phone');
 
@@ -134,6 +134,7 @@ export default class FourthStage extends Phaser.Scene {
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
         this.item = ['if','for','printf'];
         this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
+        this.dragAndDrop.reset_button.destroy();
         this.dragAndDrop.invenPlus(this);
         
         // 인벤창 팝업 여부를 나타내는 상태변수
@@ -195,7 +196,7 @@ export default class FourthStage extends Phaser.Scene {
     update() {
 
         //console.log('droppedText:',droppedText);
-        this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
+        if (this.dragAndDrop != undefined) this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
 
         /** 현재 퀴즈따라서 컴파일 내용 바꿔주기 (퀴즈 틀리고 맞출때마다 플레이어 말풍선으로 컴파일 내용 뜨는 거 하고싶음)**/
         if(this.quiz1) {
@@ -268,7 +269,6 @@ export default class FourthStage extends Phaser.Scene {
         }
         else if(this.quiz1 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.dragAndDrop.reset_before_mission(this);
-            console.log
             this.item.length = 0; //배열 비워버리기
             this.temp_getItem() //배열 다시 채우기
             this.dialog.visible(false);
@@ -449,44 +449,46 @@ export default class FourthStage extends Phaser.Scene {
         this.item[this.item.length] =  '%s';
         this.item[this.item.length] =  '%c';
         this.item[this.item.length] =  '%f';
-        this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+        this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
-        this.dragAndDrop.invenPlus(this);
+        if(this.dragAndDrop != undefined) this.dragAndDrop.invenPlus(this);
+        if(this.dragAndDrop_1 != undefined) this.dragAndDrop_1.invenPlus(this);
     }
 
     makeDropzone(x,y,width) {
-        this.zone  = this.add.zone(x, y, width, 25).setRectangleDropZone(80, 25);
+        this.zone  = this.add.zone(x, y, width, 25).setRectangleDropZone(width, 25);
         console.log('드랍존 생성!',this.zone);
-        graphics = this.add.graphics();
+        this.graphics = this.add.graphics();
+        graphics = this.graphics;
         graphics.lineStyle(2, 0xffff00);
         graphics.strokeRect(x - width / 2, y - 25 / 2, width, 25);
 
-        this.input.on('dragenter', function (pointer, gameObject, dropZone) {
+        this.input.once('dragenter', function (pointer, gameObject, dropZone) {
     
             //graphics.clear();
             graphics.lineStyle(2, 0x00ffff);
             graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
         });
     
-        this.input.on('dragleave', function (pointer, gameObject, dropZone) {
+        this.input.once('dragleave', function (pointer, gameObject, dropZone) {
     
             //graphics.clear();
             graphics.lineStyle(2, 0xffff00);
             graphics.strokeRect((x - width / 2, y - 25 / 2, width, 25));
         });
     
-        this.input.on('drop', function (pointer, gameObject, dropZone) {
-            console.log(dropZone.x,dropZone.y)
+        this.input.once('drop', function (pointer, gameObject, dropZone) {
+            console.log("stagedrop");
             gameObject.x = dropZone.x;
             gameObject.y = dropZone.y;
-            console.log(gameObject.x,gameObject.y)
-            dropZone.input.enabled = false;
+            //console.log(gameObject.x,gameObject.y)
+
             droppedText = gameObject._text;
 
             //퀴즈 정답유무는 update에
         });
     
-        this.input.on('dragend', function (pointer, gameObject, dropped) {
+        this.input.once('dragend', function (pointer, gameObject, dropped) {
             if (!dropped)
             {
                 gameObject.x = gameObject.input.dragStartX;
@@ -501,6 +503,10 @@ export default class FourthStage extends Phaser.Scene {
     
         });
     }
+    deleteDropzone() {
+        this.graphics.destroy();
+        this.zone.destroy();
+    }
 
     stage4_quiz_1() {
         //this.codeapp_onoff_state = 1; //드랍존 폰 안열려있어도 보여야함
@@ -513,7 +519,7 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
         });
-        this.makeDropzone(690,75,80);
+        this.makeDropzone(890,75,80);
     }
 
 //다음문제로 넘어가면 드랍존이 안뜸... zone이 안지워지고 남아있어서 그런가봄
@@ -521,7 +527,7 @@ export default class FourthStage extends Phaser.Scene {
 
 
     stage4_q_2(){
-        this.zone.destroy();
+        this.deleteDropzone();
         this.dialog.visible(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -539,7 +545,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_2, this.dialog)
         .start();
-        this.makeDropzone(765,75,40);
+        this.makeDropzone(950,75,40);
 
         seq.on('complete', () => {
         });
@@ -549,7 +555,7 @@ export default class FourthStage extends Phaser.Scene {
 
 
     stage4_q_3(){
-        this.zone.destroy();
+        this.deleteDropzone();
         this.dialog.visible(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -567,7 +573,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_3, this.dialog)
         .start();
-        this.makeDropzone(665,75,80);
+        this.makeDropzone(850,75,80);
         seq.on('complete', () => {
         });
     }
@@ -575,7 +581,7 @@ export default class FourthStage extends Phaser.Scene {
 
 
     stage4_q_4(){
-        this.zone.destroy();
+        this.deleteDropzone();
         this.dialog.visible(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -593,14 +599,19 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_4, this.dialog)
         .start();
-        this.makeDropzone(725,75,80);
+        this.makeDropzone(895,75,80);
         seq.on('complete', () => {
         });
     }
 
 
     stage4_5() {
-        this.zone.destroy();
+        this.deleteDropzone();
+        this.zone = undefined;
+        this.dragAndDrop.reset_before_mission(this);
+        this.item.length = 0; //배열 비워버리기
+        this.dragAndDrop = undefined; // 드랍존 들어가면 인벤,코드앱 따라 보이고 안 보이고 안 따라가는 거 해결위해 필요
+        
         this.dialog.visible(false);
 
         var seq = this.plugins.get('rexsequenceplugin').add();

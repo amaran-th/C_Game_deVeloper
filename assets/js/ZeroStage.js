@@ -4,7 +4,7 @@ import Dialog from "./Dialog.js";
 import Command from "./Command.js";
 import DragAndDrop from "./DragAndDrop.js";
 
-
+var inZone;
 const sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
@@ -49,7 +49,6 @@ export default class ZeroStage extends Phaser.Scene {
     }
     
     create () {
-
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -82,13 +81,13 @@ export default class ZeroStage extends Phaser.Scene {
 
         //플레이어 말풍선 띄워두기
         this.bubble=this.add.image(0, 300,'bubble2').setOrigin(0,1);
-        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(                     )', {
+        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(                  )', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
-        this.concern_text = this.add.text(this.bubble.x+20, this.bubble.y-87, '아-마이크 테스트', {
+        this.concern_text = this.add.text(this.bubble.x+20, this.bubble.y-87, '아-마잌테스트', {
             font:'14px',
-            fontFamily: ' Courier',
+            fontFamily: 'Courier',
             color: '#000000'
         }).setOrigin(0,0);
         this.bubble.setVisible(false);
@@ -110,11 +109,19 @@ export default class ZeroStage extends Phaser.Scene {
                         gameObject.y = gameObject.input.dragStartY;
                     }
         });
+        var concern_text = this.concern_text; // drop 안에서 this 안 먹어서 새로 변수 만들어줌
         this.input.on('drop', function (pointer, gameObject, dropZone) {
-                    gameObject.x = dropZone.x - dropZone.width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
-                    gameObject.y = dropZone.y - dropZone.height / 2 - 3;
+            gameObject.x = dropZone.x - dropZone.width / 2 + 5; // 드랍존 틀에 맞춰서 넣어줌
+            gameObject.y = dropZone.y - dropZone.height / 2 + 15;
+            if (gameObject._text == concern_text._text) {
+                concern_text.setColor('#bfede3');
+                concern_text.setFontSize(25);
+            }
         });
 
+        /*** 맵 이동 (문 이미지 불러오기) */
+        this.zone = this.physics.add.staticImage(150, 320).setSize(100,160);
+        
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
@@ -123,6 +130,11 @@ export default class ZeroStage extends Phaser.Scene {
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
         this.player = new Player(this, spawnPoint.x, 330);
         this.player.player.setFlipX(true);
+
+        //맵이동
+        this.physics.add.overlap(this.player.player, this.zone, function () {
+            inZone = true;
+        });
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -234,7 +246,8 @@ export default class ZeroStage extends Phaser.Scene {
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
         // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
-        /*this.code_zone_1 = "           "; //11칸
+        /*
+        this.code_zone_1 = "           "; //11칸
         this.code_zone_2 = "           ";
         this.code_zone_3 = "           ";
         this.code_zone_4 = "           ";
@@ -256,11 +269,16 @@ export default class ZeroStage extends Phaser.Scene {
         // zero_stage의 앱에 들어가는 코드
         this.app_code_text ="";
         
-        
+        //코드 실행 후 비교할 목표 텍스트
+        //this.correct_msg="아-마이크 테스트";
+        this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
+                "int main(){ \n " + 
+                "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
 
         stagenum=0;
 
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
+        this.isdownX2=true;
         this.canexit=false; //문 밖으로 나갈 수 있는지 여부
         this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
         this.code_on=false; //베이스 코드가 설정되었는지 여부
@@ -312,6 +330,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x&&this.cangetItem) {
+            this.player.playerPaused = true; //플레이어 얼려두기
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
             this.itemicon.setVisible(false);
             this.itemget.setVisible(true);
@@ -327,8 +346,6 @@ export default class ZeroStage extends Phaser.Scene {
         }
         
         if(this.invenPlus) {
-            
-
             this.item[this.item.length] =  '#include';
             this.item[this.item.length] =  '<stdio.h>';
             this.item[this.item.length] =  'printf';
@@ -455,6 +472,34 @@ export default class ZeroStage extends Phaser.Scene {
             this.scene.run("third_stage");
         }
 
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //맵이동 (stage1) 로
+        if (inZone) {
+            this.pressX.x = this.player.player.x-50;
+            this.pressX.y = this.player.player.y-100;
+            this.pressX.setVisible(true);
+            if (this.keyX.isDown&&this.canexit){
+                console.log("===[맵이동] stage1 으로===");
+                this.command.remove_phone(this);
+                this.scene.sleep('zero_stage')
+                this.scene.run('first_stage'); 
+            }else if(this.keyX.isDown&&this.canexit==false&&this.isdownX2){
+                this.isdownX2=false;
+                console.log("아직은 나가지 말자.");
+                this.player.playerPaused = true; //플레이어 얼려두기
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.intro_cannot_exit, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.isdownX2=true;
+                });
+            }
+        }else this.pressX.setVisible(false);
+        
+        inZone = false;
     }
 
     intro1() {
@@ -510,7 +555,7 @@ export default class ZeroStage extends Phaser.Scene {
 
 
     intro4() {
-        this.player.playerPaused = true; //플레이어 얼려두기
+        
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -519,7 +564,6 @@ export default class ZeroStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
             this.time.delayedCall( 1000, () => {  this.intro5(); }, [], this);
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
     }
 
@@ -541,6 +585,7 @@ export default class ZeroStage extends Phaser.Scene {
             this.questbox.setVisible(true);
             this.quest_text2.setVisible(true);
             this.code_on=true;
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
     }
 
@@ -548,8 +593,9 @@ export default class ZeroStage extends Phaser.Scene {
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
         console.log("compiled");
-        if(msg==scene.out){
-            this.msgEqualOut = true;
+        if(msg==scene.correct_msg){
+            console.log("scene.out="+msg);
+            console.log("scene.correct_msg"+scene.correct_msg);
             this.bubble.setVisible(false);
             this.concern_text0.setVisible(false);
             this.concern_text.setVisible(false);
@@ -588,7 +634,7 @@ export default class ZeroStage extends Phaser.Scene {
 
 
         scene.input.once('pointerdown', function() {
-            if(msg==scene.out){
+            if(msg==scene.correct_msg){
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 //playerFace.setVisible(false);
