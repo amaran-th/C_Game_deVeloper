@@ -65,21 +65,16 @@ router.route('/')
             const input_pw = pw; //입력받은 pw값
             const stage =  result.dataValues.stage ; //입력받은 pw값
           
-            const hash_pw =  crypto.pbkdf2Sync(input_pw, salt, 100, 64, "sha512").toString("base64");
-            
-
-            if(db_pw === hash_pw){
-                
-                req.session.is_logined = true; 
+            req.session.is_logined = true; 
                 req.session.uid = id; 
                 req.session.nickname=nick;
                 req.session.stage=stage;
 
                 console.log("==Success to login==");
-                res.redirect('/game');
-            }
-            
+                res.redirect('/game'); 
         }
+
+        
     })
 
 module.exports = router;
