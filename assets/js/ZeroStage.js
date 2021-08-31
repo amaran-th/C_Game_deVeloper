@@ -249,9 +249,6 @@ export default class ZeroStage extends Phaser.Scene {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
 
-        
-        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
-
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
         
@@ -272,6 +269,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -376,12 +374,11 @@ export default class ZeroStage extends Phaser.Scene {
         }
         
         if(this.invenPlus) {
-            this.item[this.item.length] =  '#include';
-            this.item[this.item.length] =  '<stdio.h>';
-            this.item[this.item.length] =  'printf';
-            //this.item[this.item.length] =  "아-아-마이크 테스트";
-            this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
+            codepiece_string_arr[codepiece_string_arr.length] = '#include';
+            codepiece_string_arr[codepiece_string_arr.length] = '<stdio.h>';
+            codepiece_string_arr[codepiece_string_arr.length] = 'printf';
+            this.code_piece.add_new_stage_codepiece(this);
+            
             this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 950;
             this.dropzone3_x = 815;
