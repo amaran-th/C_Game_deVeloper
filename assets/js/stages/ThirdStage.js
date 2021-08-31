@@ -12,6 +12,7 @@ export default class ThirdStage extends Phaser.Scene {
     }
 
     preload() {
+<<<<<<< HEAD
         /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/stage/check', true);
@@ -23,6 +24,13 @@ export default class ThirdStage extends Phaser.Scene {
         console.log("======== 현재 스테이지는 : " + result.stage + " ========")
         stage = result.stage;
         });
+=======
+        /* 흔드는 플러그인 */
+        var url;
+        url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexshakepositionplugin.min.js';
+        this.load.plugin('rexshakepositionplugin', url, true);
+
+>>>>>>> 923995d1889eaa011a7893df8096a91286c0efec
         //this.load.image("stage_tiles", "./assets/images/map_stage3.png");
         this.load.tilemapTiledJSON("third_stage", "./assets/third_stage.json");
     
@@ -65,6 +73,20 @@ export default class ThirdStage extends Phaser.Scene {
         this.oven_open = this.add.image(851,300,'oven_open').setOrigin(0,0)
         this.oven_open.setVisible(false);
 
+        /** 오븐 흔들리는 효과 **/
+        this.oven.shake = this.plugins.get('rexshakepositionplugin').add(this.oven, {
+            duration: 1000,
+            magnitude: 3,
+            mode: 'effect'
+        })
+        //.on('complete', function () {
+        //    console.log('complete');
+        //})
+
+        this.ovenShake = setInterval(() => this.oven.shake.shake(), 2000); //1초 간격으로 흔들리게 함
+
+        
+
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone = this.physics.add.staticImage(1210, 420).setSize(92,161)
 
@@ -73,7 +95,7 @@ export default class ThirdStage extends Phaser.Scene {
         
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, 430);
+        this.player = new Player(this, spawnPoint.x - 120, 430);
 
         /* 맵이동 */
         this.physics.add.overlap(this.player.player, this.zone, function () {
@@ -107,7 +129,7 @@ export default class ThirdStage extends Phaser.Scene {
             hideOnComplete: true
         });
         
-        this.exclamMark = this.add.sprite( 390, 220, 'exp_exclam', 0);
+        this.exclamMark = this.add.sprite( 390, 320, 'exp_exclam', 0);
         this.exclamMark.setVisible(false);
 
         /*** 카메라가 비추는 화면 변수 선언 ***/
@@ -183,13 +205,7 @@ export default class ThirdStage extends Phaser.Scene {
         
         //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
         this.oven_on = false; // 오븐이 열려있을때만 아이템 받을수있게 할거임
-        this.oven.on('pointerup', () => {
-            this.oven_open.setVisible(true);
-            this.oven_on = true;
-             /** 아이템 만들기 **/
-             this.itemicon.setVisible(true);
-             this.oven.destroy()
-        });
+        
 
         //quest box 이미지 로드
         this.questbox = this.add.image(0,500,'quest_box').setOrigin(0,0);
@@ -202,6 +218,34 @@ export default class ThirdStage extends Phaser.Scene {
 
         this.questbox.setVisible(false);
         this.quest_text.setVisible(false);
+
+        //help icon
+        this.help_icon=this.add.image(this.questbox.x+870,535,'help_icon').setOrigin(0,0).setInteractive();
+        this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
+        
+        //help text
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 3 힌트====================================", {
+            font:'20px',
+            fontFamily: ' Courier',
+            color: '#000000',
+            wordWrap: { width: 500, height:230, useAdvancedWrap: true },
+        }).setOrigin(0,0);
+
+        this.help_icon.setVisible(false);
+        this.help_box.setVisible(false);
+        this.help_text.setVisible(false);
+
+        this.help_icon.on('pointerover', function(){
+            this.help_box.setVisible(true);
+            this.help_icon.setTint(0x4A6BD6);
+            this.help_text.setVisible(true);
+            
+        },this);
+        this.help_icon.on('pointerout', function(){
+            this.help_box.setVisible(false);
+            this.help_text.setVisible(false);
+            this.help_icon.clearTint();
+        },this);
 
         //코드 앱에 텍스트 업데이트 시키는 변수
         this.code_on=false;
@@ -231,7 +275,7 @@ export default class ThirdStage extends Phaser.Scene {
     this.physics.add.collider(this.player.player, this.breadGroup);
     this.physics.add.collider(this.breadGroup, this.breadGroup);
     
-
+    this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
 
 }
 
@@ -241,6 +285,9 @@ export default class ThirdStage extends Phaser.Scene {
         if(this.questbox.visible==true){
             this.questbox.x=this.worldView.x+30;
             this.quest_text.x=this.questbox.x+430;
+            this.help_icon.x=this.worldView.x+870;
+            this.help_box.x=this.help_icon.x-418;
+            this.help_text.x=this.help_box.x+30;
         }
 
         if(this.code_on){
@@ -267,6 +314,7 @@ export default class ThirdStage extends Phaser.Scene {
         }
       
 
+
         //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
         /*
         if (this.out == "#include <stdio.h>\nint main(){ \n   {int bread = 1;} \n   for(int i=0; i<100; i++){\n      {bread} = {bread} + 1 ; \n   }\n   printf(\"%d\", {bread} );\n}"){
@@ -285,8 +333,6 @@ export default class ThirdStage extends Phaser.Scene {
             //this.full_bread_1.setVisible(true);
             //this.full_bread_2.setVisible(true);
             this.out = "";
-            
-
 
             //this.cameras.main.fadeIn(1000,0,0,0);
             this.time.delayedCall(3000, function() {
@@ -310,6 +356,21 @@ export default class ThirdStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
+
+        /** 오븐 근처에서 x키 누르면 오븐 열리게**/
+        if(this.player.player.x <= this.oven.x + 100 && this.player.player.x >= this.oven.x) {
+            //console.log('오븐근처')
+            if(this.keyX.isDown) {
+                this.oven_open.setVisible(true);
+                this.oven_on = true;
+                 /** 아이템 만들기 **/
+                 if(this.beforeItemGet) {
+                    this.itemicon.setVisible(true);
+                 }
+                 this.oven.destroy()
+                 clearInterval(this.ovenShake) //오븐 반복적으로 흔들리게 하는거 멈춤
+            }
+        }
 
         /** 아이템 획득하는 경우 **/
         if (this.oven_on && this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
@@ -347,6 +408,45 @@ export default class ThirdStage extends Phaser.Scene {
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
+
+
+        if(this.codeComplied && this.keyX.isDown) { 
+            this.codeComplied = false;
+                if(this.msg==this.correct_msg){
+                    console.log("===stage3 클리어!===");
+                    this.textBox.setVisible(false);
+                    this.script.setVisible(false);
+                    this.bread.setVisible(true);
+                    this.questbox.setVisible(false);
+                    this.quest_text.setVisible(false);
+    
+                    for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
+                        (x => {
+                            setTimeout(() => {
+                                console.log('빵');
+                                var bread = this.breadGroup.create(Phaser.Math.Between(this.player.player.x -100, this.player.player.x +100), 0, 'bread');
+                                bread.setFrictionX(1); //이거 마찰인데... 안 먹히는 듯ㅠㅠ
+                            },100*x) //이러면 1초 간격으로 실행됨
+                        })(i)
+                    }
+                    //this.full_bread_1.setVisible(true);
+                    //this.full_bread_2.setVisible(true);
+                    //this.out = "";
+                    
+                    //this.cameras.main.fadeIn(1000,0,0,0);
+                    this.time.delayedCall(3000, function() {
+                        this.exclamMark.setVisible(true);
+                        this.exclamMark.play('exclam');
+                        this.stage3_3();
+                    }, [], this);
+    
+                }else{
+                    this.textBox.setVisible(false);
+                    this.script.setVisible(false);
+                    this.playerFace.setVisible(false);
+                    this.player.playerPaused=false;
+                }
+        }
 
 
         if(this.key1.isDown) {
@@ -422,6 +522,7 @@ export default class ThirdStage extends Phaser.Scene {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
             this.code_on=true;
             this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
             this.quest_text.setVisible(true);
         });     
     }
@@ -568,6 +669,10 @@ export default class ThirdStage extends Phaser.Scene {
 
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
+
+        this.codeComplied = true;
+        this.msg = msg;
+        /*
         scene.input.once('pointerdown', function() {
             if(msg==scene.correct_msg){
                 console.log("===stage3 클리어!===");
@@ -576,6 +681,7 @@ export default class ThirdStage extends Phaser.Scene {
                 this.bread.setVisible(true);
                 this.questbox.setVisible(false);
                 this.quest_text.setVisible(false);
+                this.help_icon.setVisible(false);
 
                 for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
                     (x => {
@@ -605,6 +711,7 @@ export default class ThirdStage extends Phaser.Scene {
             }
             
         }, this);
+        */
     
     }
     printerr(scene){

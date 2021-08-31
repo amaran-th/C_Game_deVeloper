@@ -3,6 +3,7 @@ import Inventory from "./Inventory.js";
 import Dialog from "./Dialog.js";
 import Command from "./Command.js";
 import DragAndDrop from "./DragAndDrop.js";
+import ThirdStage from "./stages/ThirdStage.js";
 
 var inZone;
 const sleep = ms => {
@@ -203,6 +204,35 @@ export default class ZeroStage extends Phaser.Scene {
         this.questbox.setVisible(false);
         this.quest_text1.setVisible(false);
         this.quest_text2.setVisible(false);
+
+        //help icon
+        this.help_icon=this.add.image(this.questbox.x+840,535,'help_icon').setOrigin(0,0).setInteractive();
+        this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
+        
+        //help text
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 0 힌트====================================", {
+            font:'20px',
+            fontFamily: ' Courier',
+            color: '#000000',
+            wordWrap: { width: 500, height:230, useAdvancedWrap: true },
+        }).setOrigin(0,0);
+
+        this.help_icon.setVisible(false);
+        this.help_box.setVisible(false);
+        this.help_text.setVisible(false);
+
+        this.help_icon.on('pointerover', function(){
+            this.help_box.setVisible(true);
+            this.help_text.setVisible(true);
+            this.help_icon.setTint(0x4A6BD6);
+        },this);
+        this.help_icon.on('pointerout', function(){
+            this.help_box.setVisible(false);
+            this.help_text.setVisible(false);
+            this.help_icon.clearTint();
+        },this);
+
+
         
 
         /** 초반 인트로 대사 출력 **/
@@ -402,6 +432,7 @@ export default class ZeroStage extends Phaser.Scene {
             if(this.keyX.isDown) {
                 if(this.isdownX) {
                 this.isdownX=false;
+                this.player.playerPaused=true;   //플레이어 얼려두기
                 console.log('휴대폰 획득');
                 this.phone.setVisible(false);
                 this.myphone.setVisible(false);
@@ -493,8 +524,10 @@ export default class ZeroStage extends Phaser.Scene {
                 .load(this.dialog.intro_cannot_exit, this.dialog)
                 .start();
                 seq.on('complete', () => {
+                    console.log('끝');
                     this.player.playerPaused = false;
-                    this.isdownX2=true;
+                    this.time.delayedCall( 1000, () => { this.isdownX2=true }, [] , this); //문 나가는 x키랑 다이얼로그 x키랑 안겹치도록
+
                 });
             }
         }else this.pressX.setVisible(false);
@@ -503,7 +536,6 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     intro1() {
-        this.player.playerPaused = true; //플레이어 얼려두기
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -584,6 +616,10 @@ export default class ZeroStage extends Phaser.Scene {
 
             this.questbox.setVisible(true);
             this.quest_text2.setVisible(true);
+
+            this.help_icon.setVisible(true);
+
+            
             this.code_on=true;
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
@@ -617,9 +653,11 @@ export default class ZeroStage extends Phaser.Scene {
           this.player.playerPaused=true;    //플레이어 얼려두기
           this.questbox.setVisible(false);
           this.quest_text2.setVisible(false);
+          this.help_icon.setVisible(false);
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
+            /*
             var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
             var script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
                 fontFamily: 'Arial', 
@@ -629,23 +667,16 @@ export default class ZeroStage extends Phaser.Scene {
             }).setOrigin(0,0);
 
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            */
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.intro_wrong, this.dialog)
+            .start();
+            seq.on('complete', () => {
+            });
+
         }
-
-
-
-        scene.input.once('pointerdown', function() {
-            if(msg==scene.correct_msg){
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                //playerFace.setVisible(false);
-                scene.intro6();
-            }else{
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-            }
-            
-        }, this);
 
         this.codeComplied = true;
     }
@@ -670,9 +701,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         this.codeComplied = true;
     }
-
-
-
+    
     intro6() {
         this.canexit=true;
         var seq = this.plugins.get('rexsequenceplugin').add();

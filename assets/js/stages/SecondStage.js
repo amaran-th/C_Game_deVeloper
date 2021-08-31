@@ -188,14 +188,15 @@ export default class SecondStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "second_stage");
-        /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+
+        /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록
         this.command.commandbox.setVisible(false);
         for(var i=0; i < this.command.apps.length; i++){
             this.command.apps[i].setVisible(this.command.commandbox.visible);
             console.log(this.command.apps[i].visible);
         }
         this.command.back_button.setVisible(this.command.commandbox.visible);
-
+**/
         //quest box 이미지 로드
         this.questbox = this.add.image(this.worldView.x,500,'quest_box').setOrigin(0,0);
 
@@ -217,6 +218,48 @@ export default class SecondStage extends Phaser.Scene {
         this.questbox.setVisible(false);
         this.quest_text1.setVisible(false);
         this.quest_text2.setVisible(false);
+
+        //help icon
+        this.help_icon=this.add.image(this.questbox.x+870,535,'help_icon').setOrigin(0,0).setInteractive();
+        this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
+        
+        //help text
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 2-1 힌트====================================", {
+            font:'20px',
+            fontFamily: ' Courier',
+            color: '#000000',
+            wordWrap: { width: 500, height:230, useAdvancedWrap: true },
+        }).setOrigin(0,0);
+        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 2-2 힌트====================================", {
+            font:'20px',
+            fontFamily: ' Courier',
+            color: '#000000',
+            wordWrap: { width: 500, height:230, useAdvancedWrap: true },
+        }).setOrigin(0,0);
+
+        this.help_icon.setVisible(false);
+        this.help_box.setVisible(false);
+        this.help_text.setVisible(false);
+        this.help_text2.setVisible(false);
+
+        this.help_icon.on('pointerover', function(){
+            this.help_box.setVisible(true);
+            
+            this.help_icon.setTint(0x4A6BD6);
+            if(this.quest_text1.visible){
+                this.help_text.setVisible(true);
+            }else if(this.quest_text2.visible){
+                this.help_text2.setVisible(true);
+            }
+        },this);
+        this.help_icon.on('pointerout', function(){
+            this.help_box.setVisible(false);
+            this.help_text.setVisible(false);
+            this.help_text2.setVisible(false);
+            this.help_icon.clearTint();
+        },this);
+
+
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
@@ -428,6 +471,8 @@ export default class SecondStage extends Phaser.Scene {
         this.pointerUnderGround = true //태그가 번쩍거리지 않도록 setvisible true를 한번만 선언해줌
 
         this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
+        this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
+        this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
 
         //코드 앱에 텍스트 업데이트 시키는 변수
         this.code_on1=false;
@@ -445,6 +490,10 @@ export default class SecondStage extends Phaser.Scene {
             this.questbox.x=this.worldView.x+30;
             this.quest_text1.x=this.questbox.x+430;
             this.quest_text2.x=this.questbox.x+430;
+            this.help_icon.x=this.worldView.x+870;
+            this.help_box.x=this.help_icon.x-418;
+            this.help_text.x=this.help_box.x+30;
+            this.help_text2.x=this.help_box.x+30;
         }
 
         //강 건너기
@@ -730,8 +779,7 @@ export default class SecondStage extends Phaser.Scene {
         
         if(this.invenPlus) {
             //console.log("here");
-            this.item[this.item.length] =  'printf';  
-            this.item[this.item.length] =  'printf';
+            this.item[this.item.length] =  'printf'; 
             this.item[this.item.length] =  'if';
             this.item[this.item.length] =  '<';
             this.item[this.item.length] =  '>'; 
@@ -786,6 +834,36 @@ export default class SecondStage extends Phaser.Scene {
         if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
         if(this.draganddrop_5!=undefined) this.draganddrop_5.update(this);
         if(this.draganddrop_6!=undefined) this.draganddrop_6.update(this);
+
+        /** 코드 컴파일 이후 말풍선 사라지게 할때 x키 입력이 마우스 클릭과 동일 역할하도록**/
+        //이렇게 하면 바로 대사 안뜨고 공백의 텍스트박스가 한번 뜨기는 함. -
+        if(this.codeComplied && this.keyX.isDown) { 
+            console.log('컴파일 사라지는 용의 x키');
+            this.codeComplied = false;
+
+            if(this.msg==this.correct_msg1){
+                console.log("===stage2 성공===");
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.mission1 = undefined;
+                this.mission2 = true;
+                this.stage2_3_1();  
+            }else if(this.msg==this.wrong_msg){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.stage2_4_1(); 
+            }else if(this.msg==this.correct_msg2){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.mission2 = undefined;
+                this.stage2_10();
+            }else{
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+                this.player.playerPaused=false;
+            }
+        }
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -852,7 +930,15 @@ export default class SecondStage extends Phaser.Scene {
                 .load(this.dialog.stage2_5, this.dialog) //할아버지의 부탁을 먼저 해결하자
                 .start();
                 seq.on('complete', () => {
-                    this.player.playerPaused = false;
+                    this.player.player.setFlipX(true);
+                    this.tweens.add({
+                        targets: this.player.player,
+                        x: 1090,
+                        duration: 300,
+                        ease: 'Linear',
+                        repeat: 0,
+                        onComplete: ()=>{this.player.playerPaused = false;}
+                    });
                 }, [], this); 
             }   
          }
@@ -946,6 +1032,8 @@ export default class SecondStage extends Phaser.Scene {
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
         console.log("compiled");
+        this.msg = msg;
+
         if(msg==scene.correct_msg1||msg==scene.correct_msg2||msg==scene.wrong_msg){
             console.log("scene.out="+msg);
             //console.log("scene.correct_msg"+scene.correct_msg);
@@ -968,6 +1056,7 @@ export default class SecondStage extends Phaser.Scene {
           this.questbox.setVisible(false);
           this.quest_text1.setVisible(false);
           this.quest_text2.setVisible(false);
+          this.help_icon.setVisible(false);
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
@@ -982,32 +1071,8 @@ export default class SecondStage extends Phaser.Scene {
 
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
-        scene.input.once('pointerdown', function() {
-            if(msg==scene.correct_msg1){
-                console.log("===stage2 성공===");
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.mission1 = undefined;
-                this.mission2 = true;
-                this.stage2_3_1();  
-            }else if(msg==scene.wrong_msg){
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.stage2_4_1(); 
-            }else if(msg==scene.correct_msg2){
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.mission2 = undefined;
-                this.stage2_10();
-            }else{
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-                this.player.playerPaused=false;
-            }
-            
-        }, this);
-    
+        this.codeComplied = true;
+
     }
     //===========================================================================================
 
@@ -1094,6 +1159,7 @@ export default class SecondStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false;
             this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
             this.quest_text1.setVisible(true);
             this.quest_text2.setVisible(false);
             this.code_on1=true;
@@ -1101,9 +1167,12 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     stage2_3_1() { //미션 성공
+
         this.player.player.setFlipX(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
+        console.log('stage2_3_1');
+
         seq
         .load(this.dialog.stage2_3_1, this.dialog)
         .start();
@@ -1279,6 +1348,7 @@ export default class SecondStage extends Phaser.Scene {
                 repeat: 0,
                 onComplete: ()=>{
                     this.questbox.setVisible(true);
+                    this.help_icon.setVisible(true);
                     this.quest_text1.setVisible(false);
                     this.quest_text2.setVisible(true);
                     this.code_on2=true;
