@@ -260,7 +260,9 @@ export default class ThirdStage_0 extends Phaser.Scene {
     
 
     
-
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1400, 600);
+       this.player.player.body.setCollideWorldBounds()
     
     }
     stage3_0_1() {
