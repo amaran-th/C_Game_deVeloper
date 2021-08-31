@@ -1,9 +1,9 @@
 #include <stdio.h>
 int main(){
-   int water=0;
-   int ground=100;
-   undefined(waterundefinedundefined){
-      undefined = undefined + 1;
+   int bread=1;
+   int i;
+   undefined(int i=0; iundefined24; i++){
+      bread=bread+1;
    }
-   undefined("water=%d",water);
+   printf("bread=%d",bread);
 }

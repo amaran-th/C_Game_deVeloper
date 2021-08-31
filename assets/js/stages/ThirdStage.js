@@ -239,7 +239,7 @@ export default class ThirdStage extends Phaser.Scene {
     this.physics.add.collider(this.player.player, this.breadGroup);
     this.physics.add.collider(this.breadGroup, this.breadGroup);
     
-
+    this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
 
 }
 
@@ -275,6 +275,7 @@ export default class ThirdStage extends Phaser.Scene {
         }
       
 
+
         //정답일시, 나중에 this.out == "25" 이케 바꿔야함.
         /*
         if (this.out == "#include <stdio.h>\nint main(){ \n   {int bread = 1;} \n   for(int i=0; i<100; i++){\n      {bread} = {bread} + 1 ; \n   }\n   printf(\"%d\", {bread} );\n}"){
@@ -293,8 +294,6 @@ export default class ThirdStage extends Phaser.Scene {
             //this.full_bread_1.setVisible(true);
             //this.full_bread_2.setVisible(true);
             this.out = "";
-            
-
 
             //this.cameras.main.fadeIn(1000,0,0,0);
             this.time.delayedCall(3000, function() {
@@ -370,6 +369,45 @@ export default class ThirdStage extends Phaser.Scene {
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
+
+
+        if(this.codeComplied && this.keyX.isDown) { 
+            this.codeComplied = false;
+                if(this.msg==this.correct_msg){
+                    console.log("===stage3 클리어!===");
+                    this.textBox.setVisible(false);
+                    this.script.setVisible(false);
+                    this.bread.setVisible(true);
+                    this.questbox.setVisible(false);
+                    this.quest_text.setVisible(false);
+    
+                    for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
+                        (x => {
+                            setTimeout(() => {
+                                console.log('빵');
+                                var bread = this.breadGroup.create(Phaser.Math.Between(this.player.player.x -100, this.player.player.x +100), 0, 'bread');
+                                bread.setFrictionX(1); //이거 마찰인데... 안 먹히는 듯ㅠㅠ
+                            },100*x) //이러면 1초 간격으로 실행됨
+                        })(i)
+                    }
+                    //this.full_bread_1.setVisible(true);
+                    //this.full_bread_2.setVisible(true);
+                    //this.out = "";
+                    
+                    //this.cameras.main.fadeIn(1000,0,0,0);
+                    this.time.delayedCall(3000, function() {
+                        this.exclamMark.setVisible(true);
+                        this.exclamMark.play('exclam');
+                        this.stage3_3();
+                    }, [], this);
+    
+                }else{
+                    this.textBox.setVisible(false);
+                    this.script.setVisible(false);
+                    this.playerFace.setVisible(false);
+                    this.player.playerPaused=false;
+                }
+        }
 
 
         if(this.key1.isDown) {
@@ -591,6 +629,10 @@ export default class ThirdStage extends Phaser.Scene {
 
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
+
+        this.codeComplied = true;
+        this.msg = msg;
+        /*
         scene.input.once('pointerdown', function() {
             if(msg==scene.correct_msg){
                 console.log("===stage3 클리어!===");
@@ -628,6 +670,7 @@ export default class ThirdStage extends Phaser.Scene {
             }
             
         }, this);
+        */
     
     }
     printerr(scene){
