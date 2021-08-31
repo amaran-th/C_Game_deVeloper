@@ -1142,7 +1142,7 @@ visible(visible) {
   stage5_3 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 20],
+    ['setFace', 25],
     ['print', '...아, 도서관이 처음이신가요?'],
     ['wait-click'],
     ['setFace', 1],
@@ -1210,6 +1210,7 @@ visible(visible) {
     ['print', '(일단은 여길 한 번 둘러볼까)'],
     ['wait-click'],
     ['visible',false],
+    ['wait-time',0.5],
   ]
   stage5_7 = [
     ['visible',true],

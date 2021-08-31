@@ -110,7 +110,7 @@ export default class FifthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, 430);
+        this.player = new Player(this, spawnPoint.x + 100, 430);
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -282,6 +282,7 @@ export default class FifthStage extends Phaser.Scene {
 
         //학생의 문제를 해결했는지 여부
         this.mathOK=false;
+
 
         /** 임시로 만들어둔 선택지 예시 **/
         this.finAnswer = { //주소
@@ -702,6 +703,9 @@ export default class FifthStage extends Phaser.Scene {
 
         inZone5_2 = false;
 
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1800, 600);
+       this.player.player.body.setCollideWorldBounds()
 
     }
     
@@ -1030,6 +1034,7 @@ export default class FifthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             console.log("stage5_8");
+            this.textBoxDelete = true;
             var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
             var script = this.add.text(textBox.x + 200, textBox.y +50, this.dialog_text, {
                 fontFamily: 'Arial', 
@@ -1038,7 +1043,16 @@ export default class FifthStage extends Phaser.Scene {
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
             var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 31);
-            
+
+            this.keyX.on('down', () => {
+                console.log("click");
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+                this.function=8;       
+             }); //x키 입력 가능하게 함!!
+
+             /*
             this.input.once('pointerdown', function() {
                 console.log("click");
                     textBox.setVisible(false);
@@ -1046,10 +1060,10 @@ export default class FifthStage extends Phaser.Scene {
                     playerFace.setVisible(false);
                     this.function=8;       
             }, this);
+            */
         });
         
     }
-    
     stage5_9(){
         console.log("stage5_9");
         this.tweens.add({
@@ -1092,6 +1106,7 @@ export default class FifthStage extends Phaser.Scene {
             }
         }, this);
     }
+    
     //=================================================================================================================================
 
     stage5_11(){

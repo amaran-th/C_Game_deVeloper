@@ -1,9 +1,9 @@
 #include <stdio.h>
 int main(){
-   int bread=1;
-   int i;
-   undefined(int i=0; iundefined24; i++){
-      bread=bread+1;
-   }
-   printf("bread=%d",bread);
+   int undefined = 45;
+   undefined(undefinedundefined30){
+      undefined("더워요");
+   }else{
+      undefined("추워요");
+  }
 }

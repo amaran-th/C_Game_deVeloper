@@ -899,6 +899,10 @@ export default class SecondStage extends Phaser.Scene {
             }
 
         }
+
+                /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 2200, 600);
+       this.player.player.body.setCollideWorldBounds()
     }
 /*
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
