@@ -69,7 +69,7 @@ export default class ThirdStage extends Phaser.Scene {
         //    console.log('complete');
         //})
 
-        setInterval(() => this.oven.shake.shake(), 2000); //1초 간격으로 흔들리게 함
+        this.ovenShake = setInterval(() => this.oven.shake.shake(), 2000); //1초 간격으로 흔들리게 함
 
         
 
@@ -81,7 +81,7 @@ export default class ThirdStage extends Phaser.Scene {
         
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x - 150, 430);
+        this.player = new Player(this, spawnPoint.x - 120, 430);
 
         /* 맵이동 */
         this.physics.add.overlap(this.player.player, this.zone, function () {
@@ -318,6 +318,21 @@ export default class ThirdStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
+
+        /** 오븐 근처에서 x키 누르면 오븐 열리게**/
+        if(this.player.player.x <= this.oven.x + 100 && this.player.player.x >= this.oven.x) {
+            //console.log('오븐근처')
+            if(this.keyX.isDown) {
+                this.oven_open.setVisible(true);
+                this.oven_on = true;
+                 /** 아이템 만들기 **/
+                 if(this.beforeItemGet) {
+                    this.itemicon.setVisible(true);
+                 }
+                 this.oven.destroy()
+                 clearInterval(this.ovenShake) //오븐 반복적으로 흔들리게 하는거 멈춤
+            }
+        }
 
         /** 아이템 획득하는 경우 **/
         if (this.oven_on && this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
