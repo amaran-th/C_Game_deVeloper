@@ -48,7 +48,7 @@ export default class FourthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, 1000, 430);
+        this.player = new Player(this, spawnPoint.x, 430);
 
         /*** npc 만들기 ***/
         this.anims.create({
@@ -61,6 +61,15 @@ export default class FourthStage extends Phaser.Scene {
         this.devil = this.physics.add.sprite(910 ,430,'npc_devil2');
         this.devil.setFlipX(true);
         this.devil.play('devil_touch_phone');
+
+        this.anims.create({
+            key: "crying",
+            frames: this.anims.generateFrameNumbers('npc9',{ start: 0, end: 1}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+        this.npc9 = this.add.sprite(530 ,500,'npc9').setOrigin(0,1);
+        this.npc9.play('crying');
 
         //맵이동
         this.physics.add.overlap(this.player.player, this.zone4_1, function () {
@@ -132,10 +141,9 @@ export default class FourthStage extends Phaser.Scene {
 
         //코드대로라면 if , for, printf를 얻고 시작을 해야하는데..... 안뜨네? 일단 아직 큰 문제는 아니니까 냅둠
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
-        this.item = ['if','for','printf'];
         this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
         this.dragAndDrop.reset_button.destroy();
-        this.dragAndDrop.invenPlus(this);
+
         
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
@@ -176,9 +184,6 @@ export default class FourthStage extends Phaser.Scene {
 	     "      }\n" +
          ' printf("ㅤㅤㅤㅤ",password);\n' +
          "}\n"
-
-
-
  
          //코드 실행후 불러올 output값
          this.out = "";
@@ -186,6 +191,7 @@ export default class FourthStage extends Phaser.Scene {
 
         stagenum = 4;
 
+        this.npcTalk = true; //npc랑 한번만 말하게 
         this.firstTalk = true ;//악마 앞에서 x키 누를때 필요
         this.quiz1 = true;
         this.quiz2 = false;
@@ -193,8 +199,6 @@ export default class FourthStage extends Phaser.Scene {
         this.quiz4 = false;
         this.quizOver = false;
         this.door = true; //문 앞에서 퀴즈 맞출때;
-
-        
     
     }
 
@@ -204,23 +208,7 @@ export default class FourthStage extends Phaser.Scene {
         if (this.dragAndDrop != undefined) this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
 
         /** 현재 퀴즈따라서 컴파일 내용 바꿔주기 (퀴즈 틀리고 맞출때마다 플레이어 말풍선으로 컴파일 내용 뜨는 거 하고싶음)**/
-        if(this.quiz1) {
-            this.contenttext = 
-            "#include <stdio.h>\n" +
-            "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
-            } else if(this.quiz2) {
-                this.contenttext = 
-                "#include <stdio.h>\n" +
-                "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
-            } else if(this.quiz3) {
-                this.contenttext = 
-                "#include <stdio.h>\n" +
-                "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
-            } else if(this.quiz4) {
-                this.contenttext = 
-                "#include <stdio.h>\n" +
-                "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
-            } else if(this.quizOver) {
+            //console.log('퀴즈바뀜');
             this.contenttext =
             "#include <stdio.h>\n" +
             "int main(){\n\n" +
@@ -232,7 +220,7 @@ export default class FourthStage extends Phaser.Scene {
             "  }\n" +
             "   printf(\'"+ this.code_zone_3 +"\',i);\n" +
             "}\n"
-            }
+            
 
         if (this.out == 
             "#include <stdio.h>\n" +
@@ -247,9 +235,11 @@ export default class FourthStage extends Phaser.Scene {
             "}\n"
             ){
             console.log("===stage4 클리어!===");
-            this.bread.setVisible(true);
         }
-        else if(this.out != "") this.stage4_7();
+        else if(this.out != "") {
+            //this.stage4_7(); //주석 해제하면 '아무일도 일어나지 않는다' 뜨나 compiled 함수에서 바로 visible을 false해버려서 사라지는 듯? 
+            this.out = "";
+        }
 
 
 
@@ -319,6 +309,7 @@ export default class FourthStage extends Phaser.Scene {
         if(this.quiz4 && droppedText == '%f' ) {
             this.quiz4 = false;
             droppedText = undefined;
+            this.quizOver = true;
             this.time.delayedCall(1000,() => {
                 this.dragAndDrop.reset_before_mission(this);
                 this.item.length = 0; //배열 비워버리기
@@ -362,6 +353,17 @@ export default class FourthStage extends Phaser.Scene {
         this.mouseCoord.x = this.playerCoord.x;
         this.mouseCoord.y = this.worldView.y + 500;
 
+
+        /* 아이템 얻기 */
+        if(this.player.player.x >=this.npc9.x -100 && this.npc9.x +100 >= this.player.player.x ){
+            if(this.npcTalk) {
+                this.npcTalk = undefined;
+                this.player.playerPaused = true;
+                this.stage4_1();
+                console.log('대사 몇번나오니');
+            }
+        }
+        else this.pressX.setVisible(false);
 
 
         /* 시험 시작! */
@@ -507,6 +509,20 @@ export default class FourthStage extends Phaser.Scene {
         this.zone.destroy();
     }
 
+
+    stage4_1() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            console.log('대사끝');
+            this.player.playerPaused = false
+            this.temp_getItem();
+        });
+    }
+
     stage4_quiz_1() {
         //this.codeapp_onoff_state = 1; //드랍존 폰 안열려있어도 보여야함
         this.command.entire_code_button.input.enabled = false; //퀴즈 진행하는 동안 폰 안열리도록
@@ -518,7 +534,7 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
         });
-        this.makeDropzone(890,75,80);
+        this.makeDropzone(this.worldView.x + 440 ,75,80);
     }
 
 //다음문제로 넘어가면 드랍존이 안뜸... zone이 안지워지고 남아있어서 그런가봄
@@ -544,7 +560,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_2, this.dialog)
         .start();
-        this.makeDropzone(950,75,40);
+        this.makeDropzone(this.worldView.x + 500,75,40);
 
         seq.on('complete', () => {
         });
@@ -572,7 +588,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_3, this.dialog)
         .start();
-        this.makeDropzone(850,75,80);
+        this.makeDropzone(this.worldView.x + 400,75,80);
         seq.on('complete', () => {
         });
     }
@@ -598,13 +614,14 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_4, this.dialog)
         .start();
-        this.makeDropzone(895,75,80);
+        this.makeDropzone(this.worldView.x + 440,75,80);
         seq.on('complete', () => {
         });
     }
 
 
     stage4_5() {
+        //this.temp_getItem();
         this.deleteDropzone();
         this.zone = undefined;
         this.dragAndDrop.reset_before_mission(this);
@@ -645,7 +662,7 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false;
-            this.temp_getItem();
+            //this.temp_getItem();
             this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 814;
             this.dropzone3_x = 880;
@@ -705,9 +722,7 @@ export default class FourthStage extends Phaser.Scene {
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 //playerFace.setVisible(false);
-                //this.stage2_3_1();
-                
-                
+                //this.stage2_3_1();                
             }else{
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);

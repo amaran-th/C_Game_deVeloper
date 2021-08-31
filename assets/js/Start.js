@@ -93,6 +93,12 @@ class Start extends Phaser.Scene {
 
     /*questbox 이미지 로드 */
       this.load.image('quest_box', "./assets/images/quest_box.png");
+      //help관련 image 로드
+      this.load.image('help_icon', "./assets/images/help.png");
+      this.load.image('help_box', "./assets/images/help_box.png");
+      this.load.image('help_box2', "./assets/images/help_box2.png");
+
+
       /*** minibox 관련 image 로드 ***/
       this.load.image("minibox", "./assets/images/command/mini_commandbox.png");
 
@@ -113,6 +119,7 @@ class Start extends Phaser.Scene {
       this.load.image("app_code", "./assets/images/app_code.png");
       this.load.image("app_map", "./assets/images/app_map.png");
       this.load.image("app_tutorial", "./assets/images/app_tutorial.png");
+      this.load.image("app_control", "./assets/images/app_control.png");
 
       /*** 뒤로가기 버튼 로드 ***/
       this.load.image("back_button", "./assets/images/back_button.png");
@@ -134,6 +141,8 @@ class Start extends Phaser.Scene {
       this.load.image("link_3", "./assets/images/map/link_3.png");
       this.load.image("link_4", "./assets/images/map/link_4.png");
       this.load.image("link_5", "./assets/images/map/link_5.png");
+
+      this.load.image("back_map", "./assets/images/map/back_button.png");
 
       /** 불타는 배경 로드 **/
       this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {
@@ -177,9 +186,10 @@ class Start extends Phaser.Scene {
     
     /** 2번째 스테이지 이미지 로드 **/
       this.load.image("cafe", "./assets/images/stage2/cafe.png");
+      this.load.image('temperature2', './assets/images/stage2/temperature2.png')
       this.load.spritesheet("temperature", "./assets/images/stage2/temperature.png", {
         frameWidth: 214,
-        frameHeight: 354,
+        frameHeight: 125,
       });
       this.load.spritesheet("waterWball", "./assets/images/stage2/waterWball.png", {
         frameWidth: 200,
@@ -212,6 +222,10 @@ class Start extends Phaser.Scene {
       this.load.spritesheet('npc_devil2', './assets/images/npc/npc8.png', {
         frameWidth: 79,
         frameHeight: 140,
+      });
+      this.load.spritesheet('npc9', './assets/images/npc/npc9.png', {
+        frameWidth: 81,
+        frameHeight: 95,
       });
       
       //5번째 스테이지의 desk 이미지 로드

@@ -1,12 +1,9 @@
-1_#include <stdio.h>
-int main(){
-
-   {int temp = 45;} 
-
-   if(temp>30){
-      printf("더워요");
+#include <stdio.h>
+int main(){
+   int bread=1;
+   int i;
+   undefined(int i=0; iundefined24; i++){
+      bread=bread+1;
    }
-   else{
-      printf("추워요");
-   }
+   printf("bread=%d",bread);
 }
