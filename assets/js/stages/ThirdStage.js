@@ -191,13 +191,7 @@ export default class ThirdStage extends Phaser.Scene {
         
         //오븐 관련 => 오븐 누를시 열린 오븐 이미지 뜨고, 인벤토리에 for문 얻게 할거임
         this.oven_on = false; // 오븐이 열려있을때만 아이템 받을수있게 할거임
-        this.oven.on('pointerup', () => {
-            this.oven_open.setVisible(true);
-            this.oven_on = true;
-             /** 아이템 만들기 **/
-             this.itemicon.setVisible(true);
-             this.oven.destroy()
-        });
+        
 
         //quest box 이미지 로드
         this.questbox = this.add.image(0,500,'quest_box').setOrigin(0,0);
