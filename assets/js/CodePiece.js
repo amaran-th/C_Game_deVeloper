@@ -208,7 +208,7 @@ class CodePiece extends Phaser.GameObjects.Text {
         }
     }
     add_new_stage_codepiece(scene) { // 잔류하던 코드조각 외에 새로 추가된 코드조각 생성을 위한 함수
-        //console.log("저장된 코드조각 수",this.stored_codepiece_count);
+        console.log("저장된 코드조각 수",this.stored_codepiece_count);
         var new_codepiece_start_count;
         if (this.stored_codepiece_count == 0) {
             new_codepiece_start_count = 0;
@@ -219,6 +219,7 @@ class CodePiece extends Phaser.GameObjects.Text {
             this.codepiece_textObject_arr[i] = scene.add.text(scene.worldView.x + 15, this.codepiece_textObject_y, codepiece_string_arr[i], { font: "25px Arial Black", fill: "#f9cb9c" }).setInteractive();
             scene.input.setDraggable(this.codepiece_textObject_arr[i]); // 드래그 가능하도록
             this.codepiece_textObject_y += 30; // 각 코드 조각 위치 설정
+            this.stored_codepiece_count += 1;
         }
     }
 
