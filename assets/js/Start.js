@@ -92,6 +92,12 @@ class Start extends Phaser.Scene {
 
     /*questbox 이미지 로드 */
       this.load.image('quest_box', "./assets/images/quest_box.png");
+      //help관련 image 로드
+      this.load.image('help_icon', "./assets/images/help.png");
+      this.load.image('help_box', "./assets/images/help_box.png");
+      this.load.image('help_box2', "./assets/images/help_box2.png");
+
+
       /*** minibox 관련 image 로드 ***/
       this.load.image("minibox", "./assets/images/command/mini_commandbox.png");
 
@@ -112,6 +118,7 @@ class Start extends Phaser.Scene {
       this.load.image("app_code", "./assets/images/app_code.png");
       this.load.image("app_map", "./assets/images/app_map.png");
       this.load.image("app_tutorial", "./assets/images/app_tutorial.png");
+      this.load.image("app_control", "./assets/images/app_control.png");
 
       /*** 뒤로가기 버튼 로드 ***/
       this.load.image("back_button", "./assets/images/back_button.png");
@@ -133,6 +140,8 @@ class Start extends Phaser.Scene {
       this.load.image("link_3", "./assets/images/map/link_3.png");
       this.load.image("link_4", "./assets/images/map/link_4.png");
       this.load.image("link_5", "./assets/images/map/link_5.png");
+
+      this.load.image("back_map", "./assets/images/map/back_button.png");
 
       /** 불타는 배경 로드 **/
       this.load.spritesheet('fireBackground', './assets/images/fireBackground.png', {

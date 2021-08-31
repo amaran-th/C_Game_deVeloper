@@ -204,6 +204,35 @@ export default class ZeroStage extends Phaser.Scene {
         this.questbox.setVisible(false);
         this.quest_text1.setVisible(false);
         this.quest_text2.setVisible(false);
+
+        //help icon
+        this.help_icon=this.add.image(this.questbox.x+840,535,'help_icon').setOrigin(0,0).setInteractive();
+        this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
+        
+        //help text
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 0 힌트====================================", {
+            font:'20px',
+            fontFamily: ' Courier',
+            color: '#000000',
+            wordWrap: { width: 500, height:230, useAdvancedWrap: true },
+        }).setOrigin(0,0);
+
+        this.help_icon.setVisible(false);
+        this.help_box.setVisible(false);
+        this.help_text.setVisible(false);
+
+        this.help_icon.on('pointerover', function(){
+            this.help_box.setVisible(true);
+            this.help_text.setVisible(true);
+            this.help_icon.setTint(0x4A6BD6);
+        },this);
+        this.help_icon.on('pointerout', function(){
+            this.help_box.setVisible(false);
+            this.help_text.setVisible(false);
+            this.help_icon.clearTint();
+        },this);
+
+
         
 
         /** 초반 인트로 대사 출력 **/
@@ -403,6 +432,7 @@ export default class ZeroStage extends Phaser.Scene {
             if(this.keyX.isDown) {
                 if(this.isdownX) {
                 this.isdownX=false;
+                this.player.playerPaused=true;   //플레이어 얼려두기
                 console.log('휴대폰 획득');
                 this.phone.setVisible(false);
                 this.myphone.setVisible(false);
@@ -510,7 +540,6 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     intro1() {
-        this.player.playerPaused = true; //플레이어 얼려두기
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -591,6 +620,10 @@ export default class ZeroStage extends Phaser.Scene {
 
             this.questbox.setVisible(true);
             this.quest_text2.setVisible(true);
+
+            this.help_icon.setVisible(true);
+
+            
             this.code_on=true;
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
@@ -624,6 +657,7 @@ export default class ZeroStage extends Phaser.Scene {
           this.player.playerPaused=true;    //플레이어 얼려두기
           this.questbox.setVisible(false);
           this.quest_text2.setVisible(false);
+          this.help_icon.setVisible(false);
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{

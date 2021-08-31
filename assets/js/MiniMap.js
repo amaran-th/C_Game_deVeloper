@@ -8,13 +8,14 @@ class MiniMap extends Phaser.Scene {
     create () {
         this.stageNum
 
-        var back=this.add.image(0,0,"map_background").setOrigin(0,0);    //이미지 중심을 0,0 위치로 잡는다.
+        var background=this.add.image(0,0,"map_background").setOrigin(0,0);    //이미지 중심을 0,0 위치로 잡는다.
         var stage_1=this.add.image(80,70,"stage_1_button").setOrigin(0,0);
         var stage_2=this.add.image(350,70,"stage_2_button").setOrigin(0,0);
         var stage_3=this.add.image(620,50,"stage_3_button").setOrigin(0,0);
         var stage_4=this.add.image(850,280,"stage_4_button").setOrigin(0,0);
         var stage_5=this.add.image(560,350,"stage_5_button").setOrigin(0,0);
         var stage_6=this.add.image(260,340,"stage_6_button").setOrigin(0,0);
+        var back_button=this.add.image(50,550,"back_map").setOrigin(0,1);
 
         //연결다리 색
         var link_1 =this.add.image(0,0,"link_1").setOrigin(0,0);
@@ -23,7 +24,7 @@ class MiniMap extends Phaser.Scene {
         var link_4 =this.add.image(0,0,"link_4").setOrigin(0,0);
         var link_5 =this.add.image(0,0,"link_5").setOrigin(0,0);
 
-        back.setInteractive();
+        back_button.setInteractive();
         stage_1.setInteractive();
         stage_2.setInteractive();
         stage_3.setInteractive();
@@ -32,7 +33,8 @@ class MiniMap extends Phaser.Scene {
         stage_6.setInteractive();
 
         stage_1.once("pointerdown",function(){
-            back.setVisible(false);
+            background.setVisible(false);
+            back_button.setVisible(false);
             stage_1.setVisible(false);
             stage_2.setVisible(false);
             stage_3.setVisible(false);
@@ -66,7 +68,8 @@ class MiniMap extends Phaser.Scene {
         },this);
 
         stage_2.once("pointerdown",function(){
-            back.setVisible(false);
+            background.setVisible(false);
+            back_button.setVisible(false);
             stage_1.setVisible(false);
             stage_2.setVisible(false);
             stage_3.setVisible(false);
@@ -101,7 +104,8 @@ class MiniMap extends Phaser.Scene {
         },this);
 
         stage_3.once("pointerdown",function(){
-            back.setVisible(false);
+            background.setVisible(false);
+            back_button.setVisible(false);
             stage_1.setVisible(false);
             stage_2.setVisible(false);
             stage_3.setVisible(false);
@@ -135,7 +139,8 @@ class MiniMap extends Phaser.Scene {
         },this);
 
         stage_4.once("pointerdown",function(){
-            back.setVisible(false);
+            background.setVisible(false);
+            back_button.setVisible(false);
             stage_1.setVisible(false);
             stage_2.setVisible(false);
             stage_3.setVisible(false);
@@ -169,7 +174,8 @@ class MiniMap extends Phaser.Scene {
         },this);
 
         stage_5.once("pointerdown",function(){
-            back.setVisible(false);
+            background.setVisible(false);
+            back_button.setVisible(false);
             stage_1.setVisible(false);
             stage_2.setVisible(false);
             stage_3.setVisible(false);
@@ -203,7 +209,8 @@ class MiniMap extends Phaser.Scene {
         },this);
 
         stage_6.once("pointerdown",function(){
-            back.setVisible(false);
+            background.setVisible(false);
+            back_button.setVisible(false);
             stage_1.setVisible(false);
             stage_2.setVisible(false);
             stage_3.setVisible(false);
@@ -239,10 +246,11 @@ class MiniMap extends Phaser.Scene {
 
 
 
-        back.on("pointerdown",function(){
+        back_button.on("pointerdown",function(){
             console.log("click");
             console.log(stagenum);
-            back.setVisible(false);
+            background.setVisible(false);
+            back_button.setVisible(false);
             stage_1.setVisible(false);
             stage_2.setVisible(false);
             stage_3.setVisible(false);
