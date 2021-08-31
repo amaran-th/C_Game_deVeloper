@@ -3,7 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
-
+var stage;
 var inZone = false;
 
 export default class ThirdStage extends Phaser.Scene {   
@@ -12,7 +12,17 @@ export default class ThirdStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
 
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
         //this.load.image("stage_tiles", "./assets/images/map_stage3.png");
         this.load.tilemapTiledJSON("third_stage", "./assets/third_stage.json");
     

@@ -523,7 +523,41 @@ visible(visible) {
     ['wait-time', 1],
   ]
 
-
+  stage1_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '악마한테 따지고오자!!!!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage1_10 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '악마와 대화 2번째'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '안뇽안뇽안뇽`'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage1_11 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 5],
+    ['print', '뭐야, 잠금 한번 더 걸어줘?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage1_12 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '얏호! 또 풀었다!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
   stage2_1 = [
     ['visible',true],
     ['place', 40,10],
@@ -793,6 +827,15 @@ visible(visible) {
     ['wait-click'],
     ['setFace', 4],
     ['print', '* Quest : 숨을 돌릴 장소를 찾아 들어가자. *'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage3_0_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '저기 빵집, 되게 시원해보이는데,,,'],
     ['wait-click'],
     ['visible',false],
   ]

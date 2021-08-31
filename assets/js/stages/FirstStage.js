@@ -133,7 +133,7 @@ export default class FirstStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "first_stage");
-        this.command.entire_code_button.input.enabled = false;
+        this.command.entire_code_button.input.enabled = false;//이거 나중에 고치기,,,
 
 
         /** 플레이어 위치 확인용 **/

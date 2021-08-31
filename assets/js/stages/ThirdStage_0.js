@@ -3,6 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 
+var stage;
 var inZone3_1 = false;
 var inZone3_2 = false;
 var inZone3_3 = false;
@@ -13,6 +14,17 @@ export default class ThirdStage_0 extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
 
         this.load.tilemapTiledJSON("third_0_stage", "./assets/third_stage_0.json");
 
@@ -162,9 +174,14 @@ export default class ThirdStage_0 extends Phaser.Scene {
 
         //처음 시작하면 .....
         //초반 대사
+        if (stage==3){
+            //나중에 플레이가 빵집 들어가서 퀘스트받으면 stage값 1증가.
+            this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage3_0_1();
+        }
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage3_0_1();
+        
+        this.isdownX=true; //x키 중복 방지. 이거 안하면 안됨
         
 
     }
@@ -231,7 +248,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
         
         inZone3_1 = false;
         
-        //맵이동 (stage3) 로
+        //맵이동 (stage3) 로 => stage3에서 김핑퐁과 대화 끝내야!! stage값 1증가,
         if (inZone3_2) {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
@@ -240,6 +257,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
                 console.log("[맵이동] stage3 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('third_stage'); 
+                this.quest_text.setText('김핑퐁씨의 퀘스트를 완료하자!');
             }
         }else this.pressX_2.setVisible(false);
 
@@ -248,10 +266,13 @@ export default class ThirdStage_0 extends Phaser.Scene {
             this.pressX_3.x = this.player.player.x-50;
             this.pressX_3.y = this.player.player.y-100;
             this.pressX_3.setVisible(true);
-            if (this.keyX.isDown){
+            if (this.keyX.isDown&&stage>3){ //stage3보다 클시에만 4로 이동.
                 console.log("[맵이동] stage4 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('fourth_stage'); 
+            }else if(this.keyX.isDown&&stage<=3&&this.isdownX){ //스테이지 클리어 못하고 stage4 나가려할때
+                this.isdownX=false;
+                this.stage3_0_2();
             }
         }else this.pressX_3.setVisible(false);
         inZone3_2 = false;
@@ -277,4 +298,18 @@ export default class ThirdStage_0 extends Phaser.Scene {
                 });
             }, [], this);
         }
+
+    stage3_0_2(){ //스테이지 클리어 안하고 나가려 할때//
+        this.player.playerPaused = true; //플레이어 얼려두기
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.stage3_0_2, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.isdownX=true;
+                });
+
+    }    
 }
