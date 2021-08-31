@@ -875,6 +875,28 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage4_1 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 20],
+    ['print', '흑흑흑!'],
+    ['wait-click'],
+    ['print', '왜 알파벳으로 나눗셈을 하는 거야?!'],
+    ['wait-click'],
+    ['print', "'알파값을 찾으라' 따위의 수학 문제도 아니면서!"],
+    ['wait-click'],
+    ['print', "나눗셈은 숫자로 하는 거라고!"],
+    ['wait-click'],
+    ['print', "저기요, 이거 가져요"],
+    ['wait-click'],
+    ['print', "가져가서 유황불에 태워버린다음에 어디 묻어버려요!"],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', "(새로운 문법 아이템을 받았다.)"],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
   //스테이지 4 들어가자마자 출력되는 대사
   stage4_0 = [
     ['visible',true],

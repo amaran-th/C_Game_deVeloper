@@ -176,9 +176,10 @@ class Start extends Phaser.Scene {
     
     /** 2번째 스테이지 이미지 로드 **/
       this.load.image("cafe", "./assets/images/stage2/cafe.png");
+      this.load.image('temperature2', './assets/images/stage2/temperature2.png')
       this.load.spritesheet("temperature", "./assets/images/stage2/temperature.png", {
         frameWidth: 214,
-        frameHeight: 354,
+        frameHeight: 125,
       });
       this.load.spritesheet("waterWball", "./assets/images/stage2/waterWball.png", {
         frameWidth: 200,
@@ -211,6 +212,10 @@ class Start extends Phaser.Scene {
       this.load.spritesheet('npc_devil2', './assets/images/npc/npc8.png', {
         frameWidth: 79,
         frameHeight: 140,
+      });
+      this.load.spritesheet('npc9', './assets/images/npc/npc9.png', {
+        frameWidth: 81,
+        frameHeight: 95,
       });
       
       //5번째 스테이지의 desk 이미지 로드

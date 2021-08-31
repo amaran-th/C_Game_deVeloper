@@ -1,12 +1,10 @@
-1_#include <stdio.h>
-int main(){
+#include <stdio.h>
+int main(){
 
-   {int temp = 45;} 
-
-   if(temp>30){
-      printf("더워요");
-   }
-   else{
-      printf("추워요");
-   }
+   int password = 0;  for(int i=10; i>0; i--) {
+      if (i%2==1){
+          password += i;
+      }
+  }
+   printf('printf',i);
 }
