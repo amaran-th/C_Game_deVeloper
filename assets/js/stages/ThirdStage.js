@@ -12,6 +12,10 @@ export default class ThirdStage extends Phaser.Scene {
     }
 
     preload() {
+        /* 흔드는 플러그인 */
+        var url;
+        url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexshakepositionplugin.min.js';
+        this.load.plugin('rexshakepositionplugin', url, true);
 
         //this.load.image("stage_tiles", "./assets/images/map_stage3.png");
         this.load.tilemapTiledJSON("third_stage", "./assets/third_stage.json");
@@ -55,6 +59,20 @@ export default class ThirdStage extends Phaser.Scene {
         this.oven_open = this.add.image(851,300,'oven_open').setOrigin(0,0)
         this.oven_open.setVisible(false);
 
+        /** 오븐 흔들리는 효과 **/
+        this.oven.shake = this.plugins.get('rexshakepositionplugin').add(this.oven, {
+            duration: 1000,
+            magnitude: 3,
+            mode: 'effect'
+        })
+        //.on('complete', function () {
+        //    console.log('complete');
+        //})
+
+        setInterval(() => this.oven.shake.shake(), 2000); //1초 간격으로 흔들리게 함
+
+        
+
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone = this.physics.add.staticImage(1210, 420).setSize(92,161)
 
@@ -63,7 +81,7 @@ export default class ThirdStage extends Phaser.Scene {
         
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, 430);
+        this.player = new Player(this, spawnPoint.x - 150, 430);
 
         /* 맵이동 */
         this.physics.add.overlap(this.player.player, this.zone, function () {
@@ -97,7 +115,7 @@ export default class ThirdStage extends Phaser.Scene {
             hideOnComplete: true
         });
         
-        this.exclamMark = this.add.sprite( 390, 220, 'exp_exclam', 0);
+        this.exclamMark = this.add.sprite( 390, 320, 'exp_exclam', 0);
         this.exclamMark.setVisible(false);
 
         /*** 카메라가 비추는 화면 변수 선언 ***/
