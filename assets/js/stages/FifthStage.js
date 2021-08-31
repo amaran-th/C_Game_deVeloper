@@ -601,27 +601,25 @@ export default class FifthStage extends Phaser.Scene {
 
         //학생과의 대면 이벤트를 보고 math 문제가 해결되지 않은 동안 코드가 활성화되게
         if(this.attention&&this.mathOK==false){
-            this.contenttext =             
+            this.contenttext = 
+                "#include <stdio.h>\n" +            
                 this.code_zone_1 +this.code_zone_2+"\n" +
-                this.code_zone_3 +this.code_zone_4+"\n" +
                 "int main(){\n" +
-                "   " + this.code_zone_5 + "(\"원주율=%f\"," + 'this.code_zone_6' + ");\n"+
-                "   " + "this.code_zone_7" + "(\"64의 제곱근=%f\","+ 'this.code_zone_8' + "(64));\n"+
-                "   " + 'this.code_zone_9' + "(\"사인 45도=%f\","+ 'this.code_zone_10' + "(" + 'this.code_zone_11' + "/4));\n"+
-                "   " + 'this.code_zone_12' + "(\"코사인 60도=%f\","+ 'this.code_zone_13' + "(" + 'this.code_zone_14' + "/3));\n"+
-                "   }\n" +
+                "   " + "printf" + "(\"ㅠ=%.2f\\n\"," + this.code_zone_3 + ");\n"+
+                "   " + "printf" + "(\"√64=%.2f\\n\","+ this.code_zone_4 + "(64));\n"+
+                "   " + "printf" + "(\"sin(45°)=%.2f\\n\","+ this.code_zone_5 + "(" + this.code_zone_6 + "/4));\n"+
+                "   " + "printf" + "(\"cos(60°)=%.2f\\n\","+ this.code_zone_7 + "(" + this.code_zone_8 + "/3));\n"+
                 "}"
 
             // Second_stage의 앱에 들어가는 코드
             this.app_code_text =
-                "        " +"           \n" +
+                "#include <stdio.h>\n" +
                 "        " +"           \n" +
                 "int main(){\n" +
-                "   " + "            " + "(\"원주율=%f\"," + "       " + ");\n"+
-                "   " + "            " + "(\"64의 제곱근=%f\","+ "      " + "(64));\n"+
-                "   " + "            " + "(\"사인 45도=%f\","+ "      " + "("+"   "+"/4));\n"+
-                "   " + "            " + "(\"코사인 60도=%f\","+ "      " + "("+"   "+"/3));\n"+
-                "   }\n" +
+                "   " + "printf" + "(\"ㅠ=%f\"," + "             " + ");\n"+
+                "   " + "printf" + "(\"√64=%f\","+ "            " + "(64));\n"+
+                "   " + "printf" + "(\"sin(45°)=%f\",\n"+ "                         " + "("+"            "+"/4));\n"+
+                "   " + "printf" + "(\"cos(60°)=%f\",\n"+ "                         " + "("+"            "+"/3));\n"+
                 "}"
         }
 
@@ -643,26 +641,32 @@ export default class FifthStage extends Phaser.Scene {
         }
         
         if(this.invenPlus) {
-            this.item[this.item.length] =  '원하는';
-            this.item[this.item.length] =  '아이템';
-            this.item[this.item.length] =  '넣으셈';
-            this.dropzon_su = 7; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            this.item[this.item.length] =  '#include';
+            this.item[this.item.length] =  '<math.h>';
+            this.item[this.item.length] =  'M_PI';
+            this.item[this.item.length] =  'sqrt';
+            this.item[this.item.length] =  'sin';
+            this.item[this.item.length] =  'cos';
+            this.item[this.item.length] =  'tan';
+            this.dropzon_su = 8; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
-            this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 880;
-            this.dropzone3_x = 790;
-            this.dropzone4_x = 880;
-            this.dropzone5_x = 1000;
-            this.dropzone6_x = 1000;
-            this.dropzone7_x = 1000;
+            this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 950;
+            this.dropzone3_x = 970;
+            this.dropzone4_x = 985;
+            this.dropzone5_x = 880;
+            this.dropzone6_x = 970;
+            this.dropzone7_x = 880;
+            this.dropzone8_x = 970;
 
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("4");
-            this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 300, 80, 25).setRectangleDropZone(80, 25).setName("5");
-            this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 350, 80, 25).setRectangleDropZone(80, 25).setName("6");
-            this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 400, 80, 25).setRectangleDropZone(80, 25).setName("7");
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("4");
+            this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("5");
+            this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("6");
+            this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("7");
+            this.draganddrop_8 = new DragAndDrop(this, this.dropzone8_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("8");
             //this.intro4();
             this.invenPlus = false;
         }
@@ -675,12 +679,12 @@ export default class FifthStage extends Phaser.Scene {
         if(this.draganddrop_6!=undefined) this.draganddrop_6.update(this);
         if(this.draganddrop_7!=undefined) this.draganddrop_7.update(this);
         if(this.draganddrop_8!=undefined) this.draganddrop_8.update(this);
-        if(this.draganddrop_9!=undefined) this.draganddrop_9.update(this);
-        if(this.draganddrop_10!=undefined) this.draganddrop_10.update(this);
-        if(this.draganddrop_11!=undefined) this.draganddrop_11.update(this);
-        if(this.draganddrop_12!=undefined) this.draganddrop_12.update(this);
-        if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
-        if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
+        //if(this.draganddrop_9!=undefined) this.draganddrop_9.update(this);
+        //if(this.draganddrop_10!=undefined) this.draganddrop_10.update(this);
+        //if(this.draganddrop_11!=undefined) this.draganddrop_11.update(this);
+        //if(this.draganddrop_12!=undefined) this.draganddrop_12.update(this);
+        //if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
+        //if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
 
         if(this.key1.isDown) {
             console.log('맵이동');
