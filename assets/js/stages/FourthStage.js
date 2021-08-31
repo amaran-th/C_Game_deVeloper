@@ -199,24 +199,6 @@ export default class FourthStage extends Phaser.Scene {
         if (this.dragAndDrop != undefined) this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
 
         /** 현재 퀴즈따라서 컴파일 내용 바꿔주기 (퀴즈 틀리고 맞출때마다 플레이어 말풍선으로 컴파일 내용 뜨는 거 하고싶음)**/
-        if(this.quiz1) {
-            this.contenttext = 
-            "#include <stdio.h>\n" +
-            "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
-            } else if(this.quiz2) {
-                this.contenttext = 
-                "#include <stdio.h>\n" +
-                "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
-            } else if(this.quiz3) {
-                this.contenttext = 
-                "#include <stdio.h>\n" +
-                "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
-            } else if(this.quiz4) {
-                this.contenttext = 
-                "#include <stdio.h>\n" +
-                "int main()  { printf('1 + "+ this.code_zone_1 +" = 4', 3 }"
-            } else if(this.quizOver) {
-
             //console.log('퀴즈바뀜');
             this.contenttext =
             "#include <stdio.h>\n" +
@@ -229,7 +211,7 @@ export default class FourthStage extends Phaser.Scene {
             "  }\n" +
             "   printf(\'"+ this.code_zone_3 +"\',i);\n" +
             "}\n"
-            }
+            
 
         if (this.out == 
             "#include <stdio.h>\n" +
@@ -244,7 +226,6 @@ export default class FourthStage extends Phaser.Scene {
             "}\n"
             ){
             console.log("===stage4 클리어!===");
-            this.bread.setVisible(true);
         }
         else if(this.out != "") {
             //this.stage4_7(); //주석 해제하면 '아무일도 일어나지 않는다' 뜨나 compiled 함수에서 바로 visible을 false해버려서 사라지는 듯? 
@@ -706,9 +687,7 @@ export default class FourthStage extends Phaser.Scene {
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 //playerFace.setVisible(false);
-                //this.stage2_3_1();
-                
-                
+                //this.stage2_3_1();                
             }else{
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
