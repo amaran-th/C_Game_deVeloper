@@ -4,19 +4,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         // ...
         scene.add.existing(this);
 
-        /*** 드래그앤드랍 ***/        
-        // 코드 조각 불러와 배치하기
-        this.code_piece = [];  // 배열로 줘서 씬에서 할당한 코드조각 만큼을 text 생성 변수로 주어줌
-        var code_piece_y = 130; // 처음 코드조각 x좌표 위치 이건 나중에 inventory 창 부분에 맞게 수정 예정
-        
-        //console.log('코드조각 수 : ' + scene.item.length);
-        for (var i = 0; i < scene.item.length; i++){
-            this.code_piece[i] = scene.add.text(15, code_piece_y, scene.item[i], { font: "25px Arial Black", fill: "#f9cb9c" }).setInteractive();
-            scene.input.setDraggable(this.code_piece[i]); // 드래그 가능하도록
-            code_piece_y += 30; // 각 코드 조각 위치 설정
-            var code_piece = this.code_piece[i]; //뒤에 index 안 먹어서 변수에 넣어 준 후 적용
-        }
-        
+        /*** 드래그앤드랍 ***/                
         // 드랍 영역 선으로 임시 표시
         this.graphics = scene.add.graphics();
         var graphics = this.graphics; // 함수에서도 graphics를 쓰기 위해 this.graphics 썼으나 input 안에서 this 적용 안 돼서 따로 변수 둠.
@@ -265,7 +253,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         reset_button.on('pointerout', function () {
             reset_button.clearTint();
         });
-        var code_piece2 = this.code_piece; // 리셋 버튼 안에서 this.code_piece를 가져오지 못해서 따로 변수로 둠(앞에서 code_piece로 변수 둬서 충돌하길래 2로 둠)
+        /*var code_piece2 = this.code_piece; // 리셋 버튼 안에서 this.code_piece를 가져오지 못해서 따로 변수로 둠(앞에서 code_piece로 변수 둬서 충돌하길래 2로 둠)
         reset_button.on('pointerup', function () {
             console.log('reset');
             var code_piece_reset_y = 130;
@@ -314,74 +302,15 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                 scene.concern_text.x = scene.bubble.x+20;
                 scene.concern_text.y = scene.bubble.y-87;
             }
-        });
-        
-        if (scene.code_piece_add_state != scene.dropzon_su - 1) {
-            for (var i = 0; i < scene.item.length; i++){
-                this.code_piece[i].destroy();
-            }
-            //console.log('code piece destroyed');
-                
-            scene.code_piece_add_state += 1;
-        }   
+        });*/
+        //scene.code_piece_add_state 상태변수 다 삭제해도 될듯
+
     } 
 
     update(scene) {
         
         this.reset_button.x = scene.worldView.x + 800; // 리턴 버튼 플레이어 따라 이동
-        
-        if (scene.worldView.x != this.preworldview_x) { // 코드 조각 플레이어 따라 이동
-            for (var i = 0; i < scene.item.length; i++) {
-                switch (this.code_piece[i]._text) { // 드랍존에 들어가지 않은 코드 조각은 그냥 플레이어 따라가고
-                    case scene.code_zone_1:         // 드랍존에 들어간 코드조각은 어는 드랍존인 지 구분하여 해당 드랍존 위치에 맞게 플레이어를 따라가도록 함
-                        this.code_piece[i].x = scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5;
-                        break;
-                    case scene.code_zone_2:
-                        this.code_piece[i].x = scene.draganddrop_2.x - (scene.draganddrop_2.width / 2) + 5;
-                        break;
-                    case scene.code_zone_3:
-                        this.code_piece[i].x = scene.draganddrop_3.x - (scene.draganddrop_3.width / 2) + 5;
-                        break;
-                    case scene.code_zone_4:
-                        this.code_piece[i].x = scene.draganddrop_4.x - (scene.draganddrop_4.width / 2) + 5;
-                        break;
-                    case scene.code_zone_5:
-                        this.code_piece[i].x = scene.draganddrop_5.x - (scene.draganddrop_5.width / 2) + 5;
-                        break;
-                    case scene.code_zone_6:
-                        this.code_piece[i].x = scene.draganddrop_6.x - (scene.draganddrop_6.width / 2) + 5;
-                        break;
-                    case scene.code_zone_7:
-                        this.code_piece[i].x = scene.draganddrop_7.x - (scene.draganddrop_7.width / 2) + 5;
-                        break;
-                    case scene.code_zone_8:
-                        this.code_piece[i].x = scene.draganddrop_8.x - (scene.draganddrop_8.width / 2) + 5;
-                        break;
-                    case scene.code_zone_9:
-                        this.code_piece[i].x = scene.draganddrop_9.x - (scene.draganddrop_9.width / 2) + 5;
-                        break;
-                    case scene.code_zone_10:
-                        this.code_piece[i].x = scene.draganddrop_10.x - (scene.draganddrop_10.width / 2) + 5;
-                        break;
-                    case scene.code_zone_11:
-                        this.code_piece[i].x = scene.draganddrop_11.x - (scene.draganddrop_11.width / 2) + 5;
-                        break;
-                    case scene.code_zone_12:
-                        this.code_piece[i].x = scene.draganddrop_12.x - (scene.draganddrop_12.width / 2) + 5;
-                        break;
-                    case scene.code_zone_13:
-                        this.code_piece[i].x = scene.draganddrop_13.x - (scene.draganddrop_13.width / 2) + 5;
-                        break;
-                    case scene.code_zone_14:
-                        this.code_piece[i].x = scene.draganddrop_14.x - (scene.draganddrop_14.width / 2) + 5;
-                        break;
-                    default:
-                        this.code_piece[i].x = scene.worldView.x + 15;
-                }
-            }
-            this.preworldview_x = scene.worldView.x;
-        }
-
+   
         if(scene.draganddrop_1!=undefined) scene.draganddrop_1.x = scene.worldView.x + scene.dropzone1_x; // 드랍존 플레이어 따라 이동
         if(scene.draganddrop_2!=undefined) scene.draganddrop_2.x = scene.worldView.x + scene.dropzone2_x;
         if(scene.draganddrop_3!=undefined) scene.draganddrop_3.x = scene.worldView.x + scene.dropzone3_x;
@@ -436,127 +365,14 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             //console.log('there');
             this.graphics.setVisible(true);
             this.reset_button.setVisible(true);
-            if (!scene.invenIn) { // 인벤 닫혀있을 때
-                for (var i = 0; i < scene.item.length; i++){
-                    switch (this.code_piece[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
-                        case scene.code_zone_1:         
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_2:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_3:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_4:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_5:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_6:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_7:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_8:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_9:
-                        this.code_piece[i].setVisible(true);
-                        break;
-                        case scene.code_zone_10:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_11:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_12:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_13:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        case scene.code_zone_14:
-                            this.code_piece[i].setVisible(true);
-                            break;
-                        default:
-                            this.code_piece[i].setVisible(false);
-                    }
-                }
-            } else { // 인벤 열려있을 때
-                for (var i = 0; i < scene.item.length; i++){
-                    this.code_piece[i].setVisible(true);
-                }
-            }
         } else { // 명령창이 들어가있을 때 드랍존과 리셋버튼 들어가 있도록
             //console.log('here');
             this.graphics.setVisible(false);
             this.reset_button.setVisible(false);
-            if (!scene.invenIn) { // 인벤 닫혀있을 때
-                for (var i = 0; i < scene.item.length; i++){
-                    this.code_piece[i].setVisible(false);
-                }
-            } else { // 인벤 열려있을 때
-                for (var i = 0; i < scene.item.length; i++){
-                    switch (this.code_piece[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
-                        case scene.code_zone_1:         
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_2:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_3:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_4:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_5:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_6:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_7:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_8:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_9:
-                            this.code_piece[i].setVisible(false);
-                        break;
-                        case scene.code_zone_10:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_11:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_12:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_13:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        case scene.code_zone_14:
-                            this.code_piece[i].setVisible(false);
-                            break;
-                        default:
-                            this.code_piece[i].setVisible(true);
-                    }
-                }
-            }
         }
     }
 
-
     reset_before_mission(scene) {   
-        for (var i = 0; i < scene.item.length; i++){ // 코드조각 없애줌
-            this.code_piece[i].destroy();
-        }
-
         this.graphics.destroy(); // 드랍존틀 없애줌
         this.reset_button.destroy(); // 리셋버튼 없애줌
 
