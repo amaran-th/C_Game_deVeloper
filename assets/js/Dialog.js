@@ -1449,7 +1449,7 @@ visible(visible) {
     ['print', '그럼 저야 좋죠.'],
     ['wait-click'],
     ['setFace', 35],
-    ['print', '좋아. 그럼...거기 있는 갈색 책을 들어볼래?'],
+    ['print', '좋아. 그럼...거기 있는 녹색 책을 펼쳐볼래?'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1467,7 +1467,7 @@ visible(visible) {
     ['setFace', 35],
     ['print', '맞아~ 이 책처럼 배열의 번호(index)도 0부터 시작해.'],
     ['wait-click'],
-    ['print', '그럼, 만약에 이 배열이름을 book이라고 둬보자'],
+    ['print', '그럼, 만약에 이 배열의 이름을 book이라고 둬보자'],
     ['wait-click'],
     ['print', '그럼, book[0]은 뭘까? book배열의 1번째 원소를 찾는거야!'],
     ['wait-click'],
