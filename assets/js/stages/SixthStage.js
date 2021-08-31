@@ -68,7 +68,8 @@ export default class SixthStage extends Phaser.Scene {
         this.zone6_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone6_2 = this.physics.add.staticImage(1200, 420).setSize(100,160);
-
+        //책 이미지 불러오기
+        this.books = this.add.image(700,380,'books');
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
@@ -98,8 +99,9 @@ export default class SixthStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
-        //책 이미지 불러오기
-        this.books = this.add.image(700,380,'books');
+
+
+        
         
         //맵이동
         this.physics.add.overlap(this.player.player, this.zone6_1, function () {
@@ -134,6 +136,19 @@ export default class SixthStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "sixth_stage");
+
+        //quest box 이미지 로드
+        this.questbox = this.add.image(this.worldView.x,500,'quest_box').setOrigin(0,0);
+
+        //quest text1
+        this.quest_text1 = this.add.text(this.questbox.x+430, 540, '남자 사서에게 책을 전달해주자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        this.questbox.setVisible(false);
+        this.quest_text1.setVisible(false);
 
  
         /** 플레이어 위치 확인용 **/
@@ -328,6 +343,12 @@ export default class SixthStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+
+        //퀘스트 박스 및 텍스트 관련 코드
+        if(this.questbox.visible==true){
+            this.questbox.x=this.worldView.x+30;
+            this.quest_text1.x=this.questbox.x+430;
+        }
                 
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
@@ -363,6 +384,8 @@ export default class SixthStage extends Phaser.Scene {
 
             if(this.keyX.isDown) {
                 this.somethingup = false;
+                this.questbox.setVisible(false);
+                this.quest_text1.setVisible(false);
                 this.stage6_3();
             }
         }
@@ -514,6 +537,8 @@ export default class SixthStage extends Phaser.Scene {
             .load(this.dialog.stage6_2, this.dialog)
             .start();
             seq.on('complete', () => {
+                this.questbox.setVisible(true);
+                this.quest_text1.setVisible(true);
                 this.player.playerPaused = false;
             });
     }

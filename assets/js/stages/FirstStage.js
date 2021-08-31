@@ -125,6 +125,20 @@ export default class FirstStage extends Phaser.Scene {
         this.command.entire_code_button.input.enabled = false;
 
 
+        //quest box 이미지 로드
+        this.questbox = this.add.image(this.worldView.x,500,'quest_box').setOrigin(0,0);
+
+        //quest text1
+        this.quest_text1 = this.add.text(this.questbox.x+430, 540, '아까 본 남자에게 말을 걸자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        this.questbox.setVisible(false);
+        this.quest_text1.setVisible(false);
+
+
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
@@ -185,6 +199,12 @@ export default class FirstStage extends Phaser.Scene {
         this.player.update();
         //this.inventory.update(this);
         this.command.update(this);
+
+        //퀘스트 박스 및 텍스트 관련 코드
+        if(this.questbox.visible==true){
+            this.questbox.x=this.worldView.x+30;
+            this.quest_text1.x=this.questbox.x+430;
+        }
                 
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
@@ -230,8 +250,10 @@ export default class FirstStage extends Phaser.Scene {
                     this.cantalk=false;
                     this.function=1;
                     this.player.playerPaused = true;
+                    this.questbox.setVisible(false);
+                    this.quest_text1.setVisible(false);
                 }
-            }else if(this.keyX.isDown&&this.talknum==1){
+            }else if(this.keyX.isDown&&this.talk_num==1){
                 //devil에게 말을 건 이후에 또 말을 걸 때
                 if(this.cantalk){
                     console.log('second talk with devil');
@@ -446,13 +468,26 @@ export default class FirstStage extends Phaser.Scene {
                     onComplete: ()=>{
                         this.command.entire_code_button.setVisible(true);//휴대폰 생김
                         phoneUnlocked.destroy();
-                        this.player.playerPaused = false;
-                        this.cantalk=true;
-                        this.devil.play('devil_touch_phone',true);
+                        this.stage1_6_1();
                     }
                 }, this);
             }); 
         }, [], this);
+    }
+
+    stage1_6_1(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage1_6_1, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.questbox.setVisible(true);
+                this.quest_text1.setVisible(true);
+                this.player.playerPaused = false;
+                this.cantalk=true;
+                this.devil.play('devil_touch_phone',true);
+            }); 
     }
     stage1_7(){
         this.exclamMark.x=1200;
