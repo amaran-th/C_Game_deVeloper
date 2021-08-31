@@ -1,9 +1,10 @@
 #include <stdio.h>
 int main(){
-   int undefined = 45;
-   undefined(undefinedundefined30){
-      undefined("더워요");
-   }else{
-      undefined("추워요");
+
+   int password = 0;  undefined(int i=10; i>0; i--) {
+      undefined (i%2==1){
+          password += i;
+      }
   }
+   printf('undefined',i);
 }
