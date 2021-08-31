@@ -634,6 +634,8 @@ export default class ZeroStage extends Phaser.Scene {
         //console.log(scene.out);
         console.log("compiled");
         if(msg==scene.correct_msg){
+            this.codeComplied = true;
+            
             console.log("scene.out="+msg);
             console.log("scene.correct_msg"+scene.correct_msg);
             this.bubble.setVisible(false);
@@ -682,7 +684,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         }
 
-        this.codeComplied = true;
+
     }
 
     printerr(scene){

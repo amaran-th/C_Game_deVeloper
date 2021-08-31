@@ -7,6 +7,7 @@ var inZone1_1;
 var inZone1_2;
 export default class FirstStage extends Phaser.Scene {   
     constructor(){ 
+        console.log('firststage');
         super("first_stage"); //identifier for the scene
     }
 
@@ -347,6 +348,7 @@ export default class FirstStage extends Phaser.Scene {
     }
 
     stage1_1() {
+        console.log('불바다 대사');
         this.time.delayedCall( 1000, () => {  
             this.player.player.setVelocityY(-300)    //플레이어 프래임도 바꾸고 싶은데 안바뀌네..
 
