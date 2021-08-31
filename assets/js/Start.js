@@ -213,6 +213,10 @@ class Start extends Phaser.Scene {
         frameWidth: 79,
         frameHeight: 140,
       });
+      this.load.spritesheet('npc9', './assets/images/npc/npc9.png', {
+        frameWidth: 81,
+        frameHeight: 95,
+      });
       
       //5번째 스테이지의 desk 이미지 로드
       this.load.image("library_desk", "./assets/images/stage5/desk.png");
