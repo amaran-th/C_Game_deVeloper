@@ -534,7 +534,7 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
         });
-        this.makeDropzone(890,75,80);
+        this.makeDropzone(this.worldView.x + 440 ,75,80);
     }
 
 //다음문제로 넘어가면 드랍존이 안뜸... zone이 안지워지고 남아있어서 그런가봄
@@ -560,7 +560,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_2, this.dialog)
         .start();
-        this.makeDropzone(950,75,40);
+        this.makeDropzone(this.worldView.x + 500,75,40);
 
         seq.on('complete', () => {
         });
@@ -588,7 +588,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_3, this.dialog)
         .start();
-        this.makeDropzone(850,75,80);
+        this.makeDropzone(this.worldView.x + 400,75,80);
         seq.on('complete', () => {
         });
     }
@@ -614,13 +614,14 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_4, this.dialog)
         .start();
-        this.makeDropzone(895,75,80);
+        this.makeDropzone(this.worldView.x + 440,75,80);
         seq.on('complete', () => {
         });
     }
 
 
     stage4_5() {
+        //this.temp_getItem();
         this.deleteDropzone();
         this.zone = undefined;
         this.dragAndDrop.reset_before_mission(this);
