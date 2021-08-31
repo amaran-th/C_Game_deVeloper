@@ -41,7 +41,7 @@ export default class FourthStage extends Phaser.Scene {
         this.decoLayer = map.createLayer("deco", tileset, 0, 0);
 
         /*** 맵 이동 (문 이미지 불러오기) */
-        this.zone4_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+        this.zone4_1 = this.physics.add.staticImage(30, 420).setSize(100,160);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -186,6 +186,17 @@ export default class FourthStage extends Phaser.Scene {
  
          //코드 실행후 불러올 output값
          this.out = "";
+
+         /* 시작 대사 */
+        this.player.playerPaused = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_0, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+        });
 
 
         stagenum = 4;
@@ -375,7 +386,7 @@ export default class FourthStage extends Phaser.Scene {
                     this.player.playerPaused = true;
                     this.item.length = 0; //배열 비워버리기
                     this.temp_getItem() //배열 다시 채우기
-                    this.stage4_quiz_1();
+                    this.stage4_0_1();
                 }
             }
         }
@@ -519,6 +530,17 @@ export default class FourthStage extends Phaser.Scene {
             console.log('대사끝');
             this.player.playerPaused = false
             this.temp_getItem();
+        });
+    }
+
+    stage4_0_1(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_0_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.stage4_quiz_1()
         });
     }
 
