@@ -60,7 +60,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
         /*** 맵 이동 (문 이미지 불러오기) */
-        this.zone3_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+        this.zone3_1 = this.physics.add.staticImage(30, 420).setSize(100,160);
         this.zone3_2 = this.physics.add.staticImage(955, 420).setSize(92,161);
         this.zone3_3 = this.physics.add.staticImage(1300, 420).setSize(100,160);
         

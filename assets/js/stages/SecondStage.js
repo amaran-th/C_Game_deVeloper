@@ -428,6 +428,8 @@ export default class SecondStage extends Phaser.Scene {
         this.pointerUnderGround = true //태그가 번쩍거리지 않도록 setvisible true를 한번만 선언해줌
 
         this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
+        this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
+        this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
 
         //코드 앱에 텍스트 업데이트 시키는 변수
         this.code_on1=false;
@@ -787,6 +789,36 @@ export default class SecondStage extends Phaser.Scene {
         if(this.draganddrop_5!=undefined) this.draganddrop_5.update(this);
         if(this.draganddrop_6!=undefined) this.draganddrop_6.update(this);
 
+        /** 코드 컴파일 이후 말풍선 사라지게 할때 x키 입력이 마우스 클릭과 동일 역할하도록**/
+        //이렇게 하면 바로 대사 안뜨고 공백의 텍스트박스가 한번 뜨기는 함. -
+        if(this.codeComplied && this.keyX.isDown) { 
+            console.log('컴파일 사라지는 용의 x키');
+            this.codeComplied = false;
+
+            if(this.msg==this.correct_msg1){
+                console.log("===stage2 성공===");
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.mission1 = undefined;
+                this.mission2 = true;
+                this.stage2_3_1();  
+            }else if(this.msg==this.wrong_msg){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.stage2_4_1(); 
+            }else if(this.msg==this.correct_msg2){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.mission2 = undefined;
+                this.stage2_10();
+            }else{
+                textBox.setVisible(false);
+                script.setVisible(false);
+                playerFace.setVisible(false);
+                this.player.playerPaused=false;
+            }
+        }
+
         if(this.key1.isDown) {
             console.log('맵이동');
             this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
@@ -946,6 +978,8 @@ export default class SecondStage extends Phaser.Scene {
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
         console.log("compiled");
+        this.msg = msg;
+
         if(msg==scene.correct_msg1||msg==scene.correct_msg2||msg==scene.wrong_msg){
             console.log("scene.out="+msg);
             //console.log("scene.correct_msg"+scene.correct_msg);
@@ -982,32 +1016,8 @@ export default class SecondStage extends Phaser.Scene {
 
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
-        scene.input.once('pointerdown', function() {
-            if(msg==scene.correct_msg1){
-                console.log("===stage2 성공===");
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.mission1 = undefined;
-                this.mission2 = true;
-                this.stage2_3_1();  
-            }else if(msg==scene.wrong_msg){
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.stage2_4_1(); 
-            }else if(msg==scene.correct_msg2){
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.mission2 = undefined;
-                this.stage2_10();
-            }else{
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-                this.player.playerPaused=false;
-            }
-            
-        }, this);
-    
+        this.codeComplied = true;
+
     }
     //===========================================================================================
 
@@ -1101,9 +1111,12 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     stage2_3_1() { //미션 성공
+
         this.player.player.setFlipX(false);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
+        console.log('stage2_3_1');
+
         seq
         .load(this.dialog.stage2_3_1, this.dialog)
         .start();

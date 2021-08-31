@@ -304,6 +304,17 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
+
+  //틀렸을때
+  intro_wrong = [
+    ['place', 40,10],
+    ['visible',true],
+    ['setFace', 0],
+    ['print', '(이게 정답이 아닌 거 같아)'],
+    ['wait-time',0.5],
+    ['visible',false],
+  ]
+  
   //퀘스트가 남아있을 때 나가려고 하면 출력
   intro_cannot_exit = [
     ['place', 40,10],
@@ -729,7 +740,6 @@ visible(visible) {
     ['setFace', 0],
     ['print', '......'],
     ['wait-click'],
-    ['wait-time', 1],
     ['setFace', 1],
     ['print', '이럴수가.. 내 팔은 너무 짧아...'],
     ['wait-click'],

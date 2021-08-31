@@ -3,6 +3,7 @@ import Inventory from "./Inventory.js";
 import Dialog from "./Dialog.js";
 import Command from "./Command.js";
 import DragAndDrop from "./DragAndDrop.js";
+import ThirdStage from "./stages/ThirdStage.js";
 
 var inZone;
 const sleep = ms => {
@@ -493,8 +494,10 @@ export default class ZeroStage extends Phaser.Scene {
                 .load(this.dialog.intro_cannot_exit, this.dialog)
                 .start();
                 seq.on('complete', () => {
+                    console.log('끝');
                     this.player.playerPaused = false;
-                    this.isdownX2=true;
+                    this.time.delayedCall( 1000, () => { this.isdownX2=true }, [] , this); //문 나가는 x키랑 다이얼로그 x키랑 안겹치도록
+
                 });
             }
         }else this.pressX.setVisible(false);
@@ -620,6 +623,7 @@ export default class ZeroStage extends Phaser.Scene {
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
+            /*
             var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
             var script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
                 fontFamily: 'Arial', 
@@ -629,23 +633,16 @@ export default class ZeroStage extends Phaser.Scene {
             }).setOrigin(0,0);
 
             var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            */
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.intro_wrong, this.dialog)
+            .start();
+            seq.on('complete', () => {
+            });
+
         }
-
-
-
-        scene.input.once('pointerdown', function() {
-            if(msg==scene.correct_msg){
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                //playerFace.setVisible(false);
-                scene.intro6();
-            }else{
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-            }
-            
-        }, this);
 
         this.codeComplied = true;
     }
@@ -670,9 +667,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         this.codeComplied = true;
     }
-
-
-
+    
     intro6() {
         this.canexit=true;
         var seq = this.plugins.get('rexsequenceplugin').add();
