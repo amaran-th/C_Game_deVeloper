@@ -377,13 +377,9 @@ export default class ThirdStage extends Phaser.Scene {
         }
 
         if(this.invenPlus) {
-            codepiece_string_arr[codepiece_string_arr.length] =  '<';
-            codepiece_string_arr[codepiece_string_arr.length] =  'if';
-            codepiece_string_arr[codepiece_string_arr.length] =  'for';
+            codepiece_string_arr[codepiece_string_arr.length] = 'for';
             this.code_piece.add_new_stage_codepiece(this);
             
-            this.dropzon_su = 2; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
             this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 980;
 
