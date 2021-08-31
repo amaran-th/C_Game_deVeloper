@@ -888,7 +888,7 @@ visible(visible) {
   stage4_1 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 20],
+    ['setFace', 45],
     ['print', '흑흑흑!'],
     ['wait-click'],
     ['print', '왜 알파벳으로 나눗셈을 하는 거야?!'],
@@ -899,7 +899,7 @@ visible(visible) {
     ['wait-click'],
     ['print', "저기요, 이거 가져요"],
     ['wait-click'],
-    ['print', "가져가서 유황불에 태워버린다음에 어디 묻어버려요!"],
+    ['print', "가져가서 유황불에 태워버린 다음에 어디 묻어버려요!"],
     ['wait-click'],
     ['setFace', 1],
     ['print', "(새로운 문법 아이템을 받았다.)"],
@@ -1089,7 +1089,6 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 1],
-    /*
     ['print', '문 앞에 무엇이 적혀있어'],
     ['wait-click'],
     ['setFace', 5],
@@ -1105,7 +1104,6 @@ visible(visible) {
     ['print', '<단, 코딩으로.>'],
     ['wait-click'],
     ['setFace', 1],
-    */
     ['print', '.....'],
     ['wait-click'],
     ['visible',false],
