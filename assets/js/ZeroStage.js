@@ -432,6 +432,7 @@ export default class ZeroStage extends Phaser.Scene {
             if(this.keyX.isDown) {
                 if(this.isdownX) {
                 this.isdownX=false;
+                this.player.playerPaused=true;   //플레이어 얼려두기
                 console.log('휴대폰 획득');
                 this.phone.setVisible(false);
                 this.myphone.setVisible(false);
@@ -535,7 +536,6 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     intro1() {
-        this.player.playerPaused = true; //플레이어 얼려두기
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
