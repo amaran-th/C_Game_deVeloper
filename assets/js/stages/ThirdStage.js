@@ -193,6 +193,34 @@ export default class ThirdStage extends Phaser.Scene {
         this.questbox.setVisible(false);
         this.quest_text.setVisible(false);
 
+        //help icon
+        this.help_icon=this.add.image(this.questbox.x+870,535,'help_icon').setOrigin(0,0).setInteractive();
+        this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
+        
+        //help text
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 3 힌트====================================", {
+            font:'20px',
+            fontFamily: ' Courier',
+            color: '#000000',
+            wordWrap: { width: 500, height:230, useAdvancedWrap: true },
+        }).setOrigin(0,0);
+
+        this.help_icon.setVisible(false);
+        this.help_box.setVisible(false);
+        this.help_text.setVisible(false);
+
+        this.help_icon.on('pointerover', function(){
+            this.help_box.setVisible(true);
+            this.help_icon.setTint(0x4A6BD6);
+            this.help_text.setVisible(true);
+            
+        },this);
+        this.help_icon.on('pointerout', function(){
+            this.help_box.setVisible(false);
+            this.help_text.setVisible(false);
+            this.help_icon.clearTint();
+        },this);
+
         //코드 앱에 텍스트 업데이트 시키는 변수
         this.code_on=false;
 
@@ -231,6 +259,9 @@ export default class ThirdStage extends Phaser.Scene {
         if(this.questbox.visible==true){
             this.questbox.x=this.worldView.x+30;
             this.quest_text.x=this.questbox.x+430;
+            this.help_icon.x=this.worldView.x+870;
+            this.help_box.x=this.help_icon.x-418;
+            this.help_text.x=this.help_box.x+30;
         }
 
         if(this.code_on){
@@ -412,6 +443,7 @@ export default class ThirdStage extends Phaser.Scene {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
             this.code_on=true;
             this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
             this.quest_text.setVisible(true);
         });     
     }
@@ -566,6 +598,7 @@ export default class ThirdStage extends Phaser.Scene {
                 this.bread.setVisible(true);
                 this.questbox.setVisible(false);
                 this.quest_text.setVisible(false);
+                this.help_icon.setVisible(false);
 
                 for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
                     (x => {

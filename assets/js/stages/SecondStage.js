@@ -184,14 +184,15 @@ export default class SecondStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "second_stage");
-        /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
+
+        /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록
         this.command.commandbox.setVisible(false);
         for(var i=0; i < this.command.apps.length; i++){
             this.command.apps[i].setVisible(this.command.commandbox.visible);
             console.log(this.command.apps[i].visible);
         }
         this.command.back_button.setVisible(this.command.commandbox.visible);
-
+**/
         //quest box 이미지 로드
         this.questbox = this.add.image(this.worldView.x,500,'quest_box').setOrigin(0,0);
 
@@ -213,6 +214,48 @@ export default class SecondStage extends Phaser.Scene {
         this.questbox.setVisible(false);
         this.quest_text1.setVisible(false);
         this.quest_text2.setVisible(false);
+
+        //help icon
+        this.help_icon=this.add.image(this.questbox.x+870,535,'help_icon').setOrigin(0,0).setInteractive();
+        this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
+        
+        //help text
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 2-1 힌트====================================", {
+            font:'20px',
+            fontFamily: ' Courier',
+            color: '#000000',
+            wordWrap: { width: 500, height:230, useAdvancedWrap: true },
+        }).setOrigin(0,0);
+        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 2-2 힌트====================================", {
+            font:'20px',
+            fontFamily: ' Courier',
+            color: '#000000',
+            wordWrap: { width: 500, height:230, useAdvancedWrap: true },
+        }).setOrigin(0,0);
+
+        this.help_icon.setVisible(false);
+        this.help_box.setVisible(false);
+        this.help_text.setVisible(false);
+        this.help_text2.setVisible(false);
+
+        this.help_icon.on('pointerover', function(){
+            this.help_box.setVisible(true);
+            
+            this.help_icon.setTint(0x4A6BD6);
+            if(this.quest_text1.visible){
+                this.help_text.setVisible(true);
+            }else if(this.quest_text2.visible){
+                this.help_text2.setVisible(true);
+            }
+        },this);
+        this.help_icon.on('pointerout', function(){
+            this.help_box.setVisible(false);
+            this.help_text.setVisible(false);
+            this.help_text2.setVisible(false);
+            this.help_icon.clearTint();
+        },this);
+
+
 
         /** 플레이어 위치 확인용 **/
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
@@ -441,6 +484,10 @@ export default class SecondStage extends Phaser.Scene {
             this.questbox.x=this.worldView.x+30;
             this.quest_text1.x=this.questbox.x+430;
             this.quest_text2.x=this.questbox.x+430;
+            this.help_icon.x=this.worldView.x+870;
+            this.help_box.x=this.help_icon.x-418;
+            this.help_text.x=this.help_box.x+30;
+            this.help_text2.x=this.help_box.x+30;
         }
 
         //강 건너기
@@ -725,8 +772,7 @@ export default class SecondStage extends Phaser.Scene {
         
         if(this.invenPlus) {
             //console.log("here");
-            this.item[this.item.length] =  'printf';  
-            this.item[this.item.length] =  'printf';
+            this.item[this.item.length] =  'printf'; 
             this.item[this.item.length] =  'if';
             this.item[this.item.length] =  '<';
             this.item[this.item.length] =  '>'; 
@@ -847,7 +893,15 @@ export default class SecondStage extends Phaser.Scene {
                 .load(this.dialog.stage2_5, this.dialog) //할아버지의 부탁을 먼저 해결하자
                 .start();
                 seq.on('complete', () => {
-                    this.player.playerPaused = false;
+                    this.player.player.setFlipX(true);
+                    this.tweens.add({
+                        targets: this.player.player,
+                        x: 1090,
+                        duration: 300,
+                        ease: 'Linear',
+                        repeat: 0,
+                        onComplete: ()=>{this.player.playerPaused = false;}
+                    });
                 }, [], this); 
             }   
          }
@@ -963,6 +1017,7 @@ export default class SecondStage extends Phaser.Scene {
           this.questbox.setVisible(false);
           this.quest_text1.setVisible(false);
           this.quest_text2.setVisible(false);
+          this.help_icon.setVisible(false);
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
@@ -1089,6 +1144,7 @@ export default class SecondStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false;
             this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
             this.quest_text1.setVisible(true);
             this.quest_text2.setVisible(false);
             this.code_on1=true;
@@ -1274,6 +1330,7 @@ export default class SecondStage extends Phaser.Scene {
                 repeat: 0,
                 onComplete: ()=>{
                     this.questbox.setVisible(true);
+                    this.help_icon.setVisible(true);
                     this.quest_text1.setVisible(false);
                     this.quest_text2.setVisible(true);
                     this.code_on2=true;

@@ -40,9 +40,12 @@ export default class Quiz extends Phaser.Scene {
         curve[1] = new Phaser.Curves.Line([ 300, 270, 300, 270 ]); //double
         curve[2] = new Phaser.Curves.Line([ 300, 370, 300, 370 ]); //char
         curve[3] = new Phaser.Curves.Line([ 300, 470, 300, 470 ]); //char
+
     }
 
     build_unmovable() {
+        
+
         //글자...
         var quiz = ['3.14', '-64', '36', '가'];
         var answer= [ 'Int', 'Double', 'Char'];
@@ -65,6 +68,39 @@ export default class Quiz extends Phaser.Scene {
             graphics_zone.strokeCircle(zone.x, zone.y, 10);
         }
         this.make_circle();
+
+        //gueid text
+        this.guide_text = this.add.text(270,120, '<값을 올바른 자료형에 대응시켜 잠금을 해제하시오>', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#ffffff'
+        }).setOrigin(0,0);
+
+        //help icon
+        this.help_icon=this.add.image(880,120,'help_icon').setOrigin(0,0).setInteractive();
+        this.help_box=this.add.image(this.help_icon.x-418,160,'help_box2').setOrigin(0,0);
+        
+        //help text
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+60, "hint : 스테이지 1 힌트====================================", {
+            font:'20px',
+            fontFamily: ' Courier',
+            color: '#000000',
+            wordWrap: { width: 500, height:230, useAdvancedWrap: true },
+        }).setOrigin(0,0);
+        this.help_box.setVisible(false);
+        this.help_text.setVisible(false);
+
+        this.help_icon.on('pointerover', function(){
+            this.help_box.setVisible(true);
+            this.help_text.setVisible(true);
+            this.help_icon.setTint(0x4A6BD6);
+        },this);
+        this.help_icon.on('pointerout', function(){
+            this.help_box.setVisible(false);
+            this.help_text.setVisible(false);
+            this.help_icon.clearTint();
+        },this);
+
     }
     make_circle() {
         this.problem0 = this.add.circle(curve[0].p0.x,curve[0].p0.y,10,10,0xefc53f).setInteractive().setData('vector', curve[0].p0);
@@ -77,6 +113,7 @@ export default class Quiz extends Phaser.Scene {
     }
 
     start_quiz() {
+
         var addIndex;
         this.input.on('dragstart', function (pointer, gameObject) {
             //gameObject.setTint(0xf9cb9c);

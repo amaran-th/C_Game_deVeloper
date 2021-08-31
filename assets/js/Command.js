@@ -4,6 +4,8 @@ var tutorial_text;
 var code_on = false;
 var tutorial_on = false;
 var app_on = false;
+var control_on=0;
+var isclick=false;
 //import ZeroStage from "./ZeroStage.js";
 
 export default class Command extends Phaser.GameObjects.Image {
@@ -37,7 +39,11 @@ export default class Command extends Phaser.GameObjects.Image {
         compile_button.on('pointerout', function () {
             compile_button.clearTint();
         });
-        
+
+        this.tutorial = scene.add.image(0,0,"tutorial").setOrigin(0,0);
+        this.tutorial2 = scene.add.image(0,0,"tutorial2").setOrigin(0,0);
+        this.tutorial.setVisible(false);
+        this.tutorial2.setVisible(false);
 
 
         // 튜토리얼 설명 
@@ -76,8 +82,10 @@ export default class Command extends Phaser.GameObjects.Image {
         ];
         tutorial_text = scene.add.text(map.widthInPixels, 75, content, {  font: "16px Arial", color: '#ffffff', wordWrap: { width: 340 } }).setOrigin(0,0);
 
+
+
         /*** 폰 앱들 넣어주기 ***/
-        var app_names = ['app_code', 'app_map', 'app_tutorial'];
+        var app_names = ['app_code', 'app_map', 'app_tutorial','app_control'];
         this.apps = [];
         for(var i=0; i < app_names.length; i++){
             const j = i;
@@ -107,17 +115,18 @@ export default class Command extends Phaser.GameObjects.Image {
                         this.back_button.setVisible(false);
                         state = 0;
 
-                        
-
-
                         scene.scene.sleep(name);
                         scene.scene.run("minimap");
                         break;
                     case 2:
                         tutorial_on = true;
                         break;
+                    case 3:
+                        control_on=1;
+                        break;
                     default:
-                        scene.add.text(400, 300, 'default zone... why?', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
+                        console.log("default app");
+                        //scene.add.text(400, 300, 'default zone... why?', { fontFamily: 'Arial', color: '#000'}).setOrigin(0,0);
                         break;
                 }
             },this);
@@ -269,8 +278,11 @@ export default class Command extends Phaser.GameObjects.Image {
                             //this.extext.setVisible(true);
                         }
                     });
-                } 
+                }
             }
+            
+
+
             this.entire_code_button.on('pointerdown', () => {
                 this.commandbox.setVisible(false);
                 for(var i=0; i < this.apps.length; i++){
@@ -289,6 +301,28 @@ export default class Command extends Phaser.GameObjects.Image {
                 state = 0;
             });
         }
+        if(control_on==1&&isclick==false){
+            isclick=true;
+                this.remove_phone(this);
+                this.tutorial.setVisible(true);
+                this.tutorial.setInteractive();
+                this.tutorial.once("pointerdown",function(){
+                    console.log("click1");
+                    control_on=2;
+                    this.tutorial.setVisible(false);
+                    isclick=false;
+                },this);
+            }else if(control_on==2&&isclick==false){
+                isclick=true;
+                this.tutorial2.setVisible(true);
+                this.tutorial2.setInteractive();
+                this.tutorial2.once("pointerdown",function(){
+                    console.log("click2");
+                    this.tutorial2.setVisible(false);
+                    control_on=0;
+                    isclick=false;
+                },this);
+            }
     }
 
     remove_phone(scene){
