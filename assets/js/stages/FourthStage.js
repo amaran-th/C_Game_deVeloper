@@ -69,6 +69,7 @@ export default class FourthStage extends Phaser.Scene {
             repeat: -1,
         });
         this.npc9 = this.add.sprite(530 ,500,'npc9').setOrigin(0,1);
+        this.npc9.setScale(1.1);
         this.npc9.play('crying');
 
         //맵이동
@@ -138,8 +139,6 @@ export default class FourthStage extends Phaser.Scene {
         },this);
         ***/
 
-
-        //코드대로라면 if , for, printf를 얻고 시작을 해야하는데..... 안뜨네? 일단 아직 큰 문제는 아니니까 냅둠
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
         this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
         this.dragAndDrop.reset_button.destroy();
@@ -240,7 +239,6 @@ export default class FourthStage extends Phaser.Scene {
             //this.stage4_7(); //주석 해제하면 '아무일도 일어나지 않는다' 뜨나 compiled 함수에서 바로 visible을 false해버려서 사라지는 듯? 
             this.out = "";
         }
-
 
 
         /* 퀴즈 정답맞추기 */
@@ -372,6 +370,7 @@ export default class FourthStage extends Phaser.Scene {
             if(this.keyX.isDown){
                 if(this.firstTalk) {
                     this.devil.anims.stop();
+                    this.devil.setFrame(1);
                     this.firstTalk = undefined;
                     this.player.playerPaused = true;
                     this.item.length = 0; //배열 비워버리기

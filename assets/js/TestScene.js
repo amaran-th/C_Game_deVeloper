@@ -47,6 +47,9 @@ export default class TestScene extends Phaser.Scene {
     }
     
     create () {
+
+
+
         this.dialog = new Dialog(this);
 
         /** x 키 입력 받기**/
@@ -172,8 +175,10 @@ export default class TestScene extends Phaser.Scene {
         });
             
 
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1500, 600);
+       this.player.player.body.setCollideWorldBounds()
         
-
         
          //minimap에서 사용될 전역변수
          stagenum = 0;

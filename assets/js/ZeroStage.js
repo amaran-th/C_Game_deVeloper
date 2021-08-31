@@ -531,6 +531,10 @@ export default class ZeroStage extends Phaser.Scene {
                 });
             }
         }else this.pressX.setVisible(false);
+
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1000, 600);
+       this.player.player.body.setCollideWorldBounds()
         
         inZone = false;
     }

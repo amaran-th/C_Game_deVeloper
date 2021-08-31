@@ -338,6 +338,11 @@ export default class FirstStage extends Phaser.Scene {
         
         if(!this.scene.isActive('quiz') && this.quiz_running ) this.stage1_6();
 
+
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1500, 600);
+       this.player.player.body.setCollideWorldBounds()
+
         
     }
 
