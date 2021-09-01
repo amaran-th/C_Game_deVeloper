@@ -118,7 +118,7 @@ export default class SecondStage extends Phaser.Scene {
 
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone2_1 = this.physics.add.staticImage(10, 420).setSize(100,160);
-        this.zone2_2 = this.physics.add.staticImage(2000, 420).setSize(100,160);
+        this.zone2_2 = this.physics.add.staticImage(2100, 420).setSize(100,160);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -224,13 +224,13 @@ export default class SecondStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 2-1 힌트====================================", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 이 스테이지에서는 사물로부터 '변수' 코드조각을 가져와 사용할 수 있습니다!\n 전광판에서 temp(온도) 변수를 드래그&드랍해봅시다.", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
             wordWrap: { width: 500, height:230, useAdvancedWrap: true },
         }).setOrigin(0,0);
-        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 2-2 힌트====================================", {
+        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 앞 퀘스트와 마찬가지로 땅과 강에서 변수를 얻어 드래그&드랍해봅시다!", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
@@ -281,7 +281,7 @@ export default class SecondStage extends Phaser.Scene {
         
         /** 아이템 만들기 **/
         this.itemicon = this.add.image(360,430,'item');
-        var item_text = 'if';
+        var item_text = 'if < >';
         
         /** 아이템 얻었을 때 뜨는 이미지 **/
         this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
@@ -432,11 +432,14 @@ export default class SecondStage extends Phaser.Scene {
 
 
         //코드 실행 후 비교할 목표 텍스트
+        this.msg="";
+
         //this.correct_msg1="더워요";
         this.wrong_msg="추워요";
         //this.correct_msg2="water=100";
 
         //윈도우용
+        /* */
         this.correct_msg1="#include <stdio.h>\n" + 
             "int main(){\n" +
             "   "+"int "+this.code_zone_1+" = 45;\n" +
@@ -456,6 +459,8 @@ export default class SecondStage extends Phaser.Scene {
             "   }\n" +
             "   " + this.code_zone_6 + "(\"water=%d\",water);\n"+
             "}";
+
+
 
         //미니맵에서 사용할 전역변수
         stagenum = 2;
@@ -661,7 +666,7 @@ export default class SecondStage extends Phaser.Scene {
             this.app_code_text =
             "#include <stdio.h>\n" + 
             "int main(){\n" +
-            "   "+"int "+"             "+" = 45;\n" +
+            "   "+"int "+"             "+" = 200;\n" +
             "   " + "           " + "(" + "             " + "       " + "30){\n" + //if(Temp>30)
             "      " + "           " + "(\"더워요\");\n" +//printf("더워요");
             "   " + "}else{\n" +
@@ -779,6 +784,9 @@ export default class SecondStage extends Phaser.Scene {
         
         if(this.invenPlus) {
             //console.log("here");
+            this.item[this.item.length] =  '#include';
+            this.item[this.item.length] =  '<stdio.h>';
+            this.item[this.item.length] =  'printf';
             this.item[this.item.length] =  'printf'; 
             this.item[this.item.length] =  'if';
             this.item[this.item.length] =  '<';

@@ -29,7 +29,7 @@ var config = {
   physics: {
       default: 'arcade',
       arcade: {
-        debug: true,
+        debug: false,
         gravity: { y: 800 } //중력설정
       }
   },

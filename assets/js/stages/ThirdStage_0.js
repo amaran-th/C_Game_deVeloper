@@ -223,6 +223,8 @@ export default class ThirdStage_0 extends Phaser.Scene {
             this.pressX_1.y = this.player.player.y-100;
             this.pressX_1.setVisible(true);
             if (this.keyX.isDown){
+                this.questbox.setVisible(false);
+                this.quest_text.setVisible(false);
                 console.log("[맵이동] stage2 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('second_stage'); 

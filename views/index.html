@@ -5,7 +5,7 @@
 
  
     <title>Coding Hell</title>
-    
+    <!--
     <script src="assets/js/StageClear.js" type="module"></script>
     <script src="assets/js/Dialog.js" type="module"></script>
     <script src="assets/js/Player.js" type="module"></script>
@@ -30,24 +30,68 @@
     <script src="assets/js/Command.js" type="module" ></script>
     <script src="assets/js/DragAndDrop.js" type="module" ></script>
     <script src="assets/js/MiniMap.js"></script>
-    
-    
-
+    -->
     
 
+    
+<style>
+    
+        body{
+            margin:0;
+            display: block;
+        }
+        #middle{
+            
+            text-align:center;
+            width:1100px;
+            margin:0 auto;
+            
+        }
+        #left{
+            background-image:url(view_image/fireBackground2.png);
+            width:20vw;
+            height:100vh;
+            background-color: bisque;
+            float:left;
+        }
+        #right{
+
+            background-image:url(view_image/fireBackground2.png);
+            width:20vw;
+            height:100vh;
+            background-color: bisque;
+            float:right;
+        }
+        #middle{
+            height:100vh;
+        }
+        button{
+            margin:10px;
+        }
+        #islogined{
+            color: cadetblue;
+        }
+        p{
+            margin:0;
+        }
+</style>
 </head>
 <body>
-    <h1>로그인</h1>
-    <p id="islogined">**로그아웃된 상태**</p> 
-    <form id='form' action="/login" method="POST" onsubmit="checkinput(); return false;">
-        ID : <input type='text' name='id' id='id' placeholder="아이디" /><br>
-        비밀번호 : <input type='password' name='pw' id='pw' placeholder="비밀번호"/>
-        <button type="submit"> 로그인 </button>
-    </form>
+    <div id='left'></div><div id='right'></div>
+    <div id='middle'>
+        <br>
+        <p id="islogined">**로그아웃 상태**</p>
+        <h1>로그인</h1>
+        <form id='form' action="/login" method="POST" onsubmit="checkinput(); return false;">
+            ID : <input type='text' name='id' id='id' placeholder="아이디" /><br>
+            비밀번호 : <input type='password' name='pw' id='pw' placeholder="비밀번호"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+            <button type="submit"> 로그인 </button>
+        </form>
 
 
-    <h2>계정이 없으신가요?<h2>
-    <a href="/register">회원가입</a>
+        <h2>계정이 없으신가요?</h2>
+        <a href="/register">회원가입</a>
+    </div>
 
 
     <script>

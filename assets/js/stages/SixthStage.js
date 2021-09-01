@@ -286,7 +286,11 @@ export default class SixthStage extends Phaser.Scene {
                         this.O.setVisible(true);
                         this.quiz1 = false;
                         this.quiz2 = true;
-                        this.time.delayedCall( 1000, () => { this.O.setVisible(false);}, [] , this);
+                        this.time.delayedCall( 1000, () => {
+                            //퀴즈를 모두 맞춘 경우
+                            this.O.setVisible(false);
+                            this.stage6_6();
+                        }, [] , this);
                         this.quiz2 = false;
                         
                         break;
@@ -589,6 +593,16 @@ export default class SixthStage extends Phaser.Scene {
                 this.page1.destroy();
                 this.page2.destroy();
                 this.quiz1 = true; //퀴즈 시작
+            });
+    }
+    stage6_6() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage6_6, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.player.playerPaused=false;
             });
     }
 
