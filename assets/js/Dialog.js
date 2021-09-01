@@ -1169,6 +1169,8 @@ visible(visible) {
     ['wait-click'],
     ['print', '* [코딩하기] 어플에 스크립트가 업데이트 되었습니다. *'],
     ['wait-click'],
+    ['print', '**스테이지 4의 도어락 퀘스트는 구현이 덜 되었습니다! 숫자 5키를 눌러서 다음 맵으로 이동해주세요!**'],
+    ['wait-click'],
     ['visible',false],
     
   ]
@@ -1628,7 +1630,7 @@ visible(visible) {
 
   final_npc1 = [
     ['visible',true],
-    ['setFace', 4],
+    ['setFace', 5],
     ['print', '...'],
     ['wait-click'],
     ['print', '안녕하세요. 개발진입니다.'],
@@ -1646,6 +1648,10 @@ visible(visible) {
     ['print', '사실 이스터에그도 많이 넣고 싶었는데, '],
     ['wait-click'],
     ['print', '2달은 그런 것까지 신경쓰기엔 너무 짧은 시간이더라구요.'],
+    ['wait-click'],
+    ['print', '사실 이 엔딩룸도 아직 준비가 덜됐어요^^;'],
+    ['wait-click'],
+    ['print', '나중에 캐릭터마다 저희 구성원 각각의 개발후기를 대사로 넣어줄거에요.'],
     ['wait-click'],
     ['visible',false],
     ['wait-time', 0.5],

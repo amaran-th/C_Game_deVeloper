@@ -167,7 +167,7 @@ export default class Command extends Phaser.GameObjects.Image {
 
                     var xhr = new XMLHttpRequest();
 
-                    xhr.open('POST', '/form_test', true);                
+                    xhr.open('POST', '/form_receive', true);                
                     
                     xhr.setRequestHeader('Content-type', 'application/json');
                     xhr.send(data);
