@@ -304,7 +304,6 @@ export default class SixthStage extends Phaser.Scene {
                         this.time.delayedCall( 1000, () => {
                             //퀴즈를 모두 맞춘 경우
                             this.O.setVisible(false);
-                            this.stage6_6();
                         }, [] , this);
                         this.quiz2 = false;
                         this.quiz_finish = true;
@@ -648,16 +647,7 @@ export default class SixthStage extends Phaser.Scene {
                 
             });
     }
-    stage6_6() {
-        var seq = this.plugins.get('rexsequenceplugin').add();
-            this.dialog.loadTextbox(this);
-            seq
-            .load(this.dialog.stage6_6, this.dialog)
-            .start();
-            seq.on('complete', () => {
-                this.player.playerPaused=false;
-            });
-    }
+
 
     stage6_6(){ //처음으로 퀴즈 2개 다 풀었을때 
     
