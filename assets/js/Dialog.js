@@ -554,8 +554,18 @@ visible(visible) {
     ['wait-time', 0.5],
   ]
 
-  //악마와 대화2(두번째부터)
+  //악마한테 말 안걸고 나가려고 할 때
   stage1_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '아까 그 놈하고 얘기부터 좀 해보자.'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 0.5],
+  ]
+  //악마와 대화2(두번째부터)
+  stage1_10 = [
     ['visible',true],
     ['place', 40,10],
     ['setFace', 1],
@@ -575,37 +585,6 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
     ['wait-time', 0.5],
-  ]
-
-  //악마한테 말 안걸고 나가려고 할 때
-  stage1_10 = [
-    ['visible',true],
-    ['place', 40,10],
-    ['setFace', 1],
-    ['print', '아까 그 놈하고 얘기부터 좀 해보자.'],
-    ['wait-click'],
-    ['visible',false],
-    ['wait-time', 0.5],
-  ]
-
-  stage1_9 = [
-    ['visible',true],
-    ['place', 40,10],
-    ['setFace', 1],
-    ['print', '악마한테 따지고오자!!!!'],
-    ['wait-click'],
-    ['visible',false],
-  ]
-  stage1_10 = [
-    ['visible',true],
-    ['place', 40,10],
-    ['setFace', 1],
-    ['print', '악마와 대화 2번째'],
-    ['wait-click'],
-    ['setFace', 1],
-    ['print', '안뇽안뇽안뇽`'],
-    ['wait-click'],
-    ['visible',false],
   ]
   stage1_11 = [
     ['visible',true],

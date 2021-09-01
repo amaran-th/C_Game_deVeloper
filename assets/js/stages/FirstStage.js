@@ -220,8 +220,6 @@ export default class FirstStage extends Phaser.Scene {
             inZone1_2 = true;
         });
 
-        //X키가 눌린 상태인지 여부
-        this.isdownX=false;
     }
 
     update() {
