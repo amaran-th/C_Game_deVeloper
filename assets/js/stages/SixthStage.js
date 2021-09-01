@@ -86,7 +86,7 @@ export default class SixthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+        this.player = new Player(this, spawnPoint.x + 100, spawnPoint.y);
     
         this.anims.create({
             key: "exclam",
@@ -301,7 +301,11 @@ export default class SixthStage extends Phaser.Scene {
                         this.O.setVisible(true);
                         this.quiz1 = false;
                         this.quiz2 = true;
-                        this.time.delayedCall( 1000, () => { this.O.setVisible(false);}, [] , this);
+                        this.time.delayedCall( 1000, () => {
+                            //퀴즈를 모두 맞춘 경우
+                            this.O.setVisible(false);
+                            this.stage6_6();
+                        }, [] , this);
                         this.quiz2 = false;
                         this.quiz_finish = true;
                         
@@ -561,6 +565,10 @@ export default class SixthStage extends Phaser.Scene {
         inZone6_1 = false;
         inZone6_2 = false;
 
+                /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1300, 600);
+       this.player.player.body.setCollideWorldBounds()
+
     }
 
     stage6_1() {
@@ -638,6 +646,16 @@ export default class SixthStage extends Phaser.Scene {
                 this.quiz1 = true; //퀴즈 시작
 
                 
+            });
+    }
+    stage6_6() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage6_6, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.player.playerPaused=false;
             });
     }
 

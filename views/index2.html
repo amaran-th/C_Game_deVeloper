@@ -3,18 +3,64 @@
 <head>
     <meta charset="UTF-8" />
     <title>C Game deVeloper</title>
+
+    <style>
+        html{
+            height:100%;
+        }
+        body{
+            margin:0;
+            height:100%;
+        }
+        #middle{
+            text-align:center;
+            
+            margin:0 auto;
+            
+        }
+        #left{
+            background-image:url(view_image/fireBackground2.png);
+            width:20%;
+            height:100%;
+            background-color: bisque;
+            float:left;
+        }
+        #right{
+            background-image:url(view_image/fireBackground2.png);
+            width:20%;
+            height:100%;
+            background-color: bisque;
+            float:right;
+        }
+        #middle{
+            height:100%;
+        }
+        #islogined{
+            color: cadetblue;
+        }
+        p{
+            margin:0;
+        }
+    
+        
+    
+    </style>
 </head>
 <body>
-    <p id="islogined">**로그인된 상태**</p>
-    <h1>사용자 정보</h1> 
-    <textarea id="user_info" style="resize:none; width:400px; height:100px;" readonly="readonly"></textarea>
-    <form action="/logout" method="POST">
-        <button type="submit"> 로그아웃 </button>
-    </form>  
-        
-    <form action="/terminate" method="POST" onsubmit="return check_terminate();">
-        <button type="submit"> 회원탈퇴 </button>
-    </form>
+    <div id='left'></div><div id='right'></div>
+    <div id='middle'>
+        <br>
+        <p id="islogined">**로그인 상태**</p>
+        <h1>사용자 정보</h1> 
+        <textarea id="user_info" style="resize:none; width:400px; height:100px;" readonly="readonly"></textarea>
+        <form action="/logout" method="POST">
+            <button type="submit"> 로그아웃 </button>
+        </form>  
+            
+        <form action="/terminate" method="POST" onsubmit="return check_terminate();">
+            <button type="submit"> 회원탈퇴 </button>
+        </form>
+    </div>
     
     <script>
         window.onload=function(){

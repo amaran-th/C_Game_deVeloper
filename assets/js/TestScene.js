@@ -47,6 +47,9 @@ export default class TestScene extends Phaser.Scene {
     }
     
     create () {
+
+
+
         this.dialog = new Dialog(this);
 
         /** x 키 입력 받기**/
@@ -68,44 +71,36 @@ export default class TestScene extends Phaser.Scene {
 
         ////npc
         //devil1
-        this.devil1 = this.physics.add.sprite(300 ,330,'npc_devil');
-        this.devil1.setFrame(1);
-        this.devil1.setFlipX(true);
-        this.physics.add.collider(this.devil1, this.worldLayer); //충돌 설정
-        this.devil1_text = this.add.text(this.devil1.x-50, 225, 'X키로 말 걸기', {
-            fontFamily: ' Courier',
-            color: '#000000'
-        }).setOrigin(0,0);
-
-        //유치원생
-        this.child = this.add.sprite(450 ,330,'npc6');
-        this.child.setFlipX(true);
-        this.child_text = this.add.text(this.child.x-50, 225, 'X키로 말 걸기', {
+        this.npc1 = this.physics.add.sprite(400 ,330,'npc_devil');
+        this.npc1.setFrame(1);
+        this.npc1.setFlipX(true);
+        this.physics.add.collider(this.npc1, this.worldLayer); //충돌 설정
+        this.npc1_text = this.add.text(this.npc1.x-50, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
 
         //devil2
-        this.devil2 = this.physics.add.sprite(550 ,330,'npc_devil2');
-        this.devil2.setFrame(1);
-        this.devil2.setFlipX(true);
-        this.physics.add.collider(this.devil2, this.worldLayer); //충돌 설정
-        this.devil2_text = this.add.text(this.devil2.x-50, 225, 'X키로 말 걸기', {
+        this.npc2 = this.physics.add.sprite(650 ,330,'npc_devil2');
+        this.npc2.setFrame(1);
+        this.npc2.setFlipX(true);
+        this.physics.add.collider(this.npc2, this.worldLayer); //충돌 설정
+        this.npc2_text = this.add.text(this.npc2.x-50, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
         
         //student
-        this.student=this.add.image(700,325,'standing_student');
-        this.student.setFlipX(true);
-        this.student_text = this.add.text(this.student.x-50, 225, 'X키로 말 걸기', {
+        this.npc3=this.add.image(900,325,'standing_student');
+        this.npc3.setFlipX(true);
+        this.npc3_text = this.add.text(this.npc3.x-50, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
 
         //librarian2
-        this.librarian=this.add.image(850 ,325,'librarian2');
-        this.librarian_text = this.add.text(this.librarian.x-50, 225, 'X키로 말 걸기', {
+        this.npc4=this.add.image(1150 ,325,'librarian2');
+        this.npc4_text = this.add.text(this.npc4.x-50, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -172,8 +167,10 @@ export default class TestScene extends Phaser.Scene {
         });
             
 
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1500, 600);
+       this.player.player.body.setCollideWorldBounds()
         
-
         
          //minimap에서 사용될 전역변수
          stagenum = 0;
@@ -187,7 +184,7 @@ export default class TestScene extends Phaser.Scene {
         
         this.text.x=this.worldView.x+380;
         
-        //맵이동 (stage1) 로
+        //맵이동 (stage6) 로
         if (inZone&&this.inevent==false) {
             this.pressX.x = this.player.player.x-50;
             this.pressX.y = this.player.player.y-100;
@@ -214,8 +211,8 @@ export default class TestScene extends Phaser.Scene {
 
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.devil1.x-100&&this.player.player.x<this.devil1.x){
-            this.devil1_text.setVisible(true);
+        if(this.inevent==false&&this.player.player.x>this.npc1.x-150&&this.player.player.x<this.npc1.x-50){
+            this.npc1_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
                 this.player.player.setFlipX(false);
@@ -223,7 +220,7 @@ export default class TestScene extends Phaser.Scene {
                 var seq = this.plugins.get('rexsequenceplugin').add();
                 this.dialog.loadTextbox(this);
                 seq
-                .load(this.dialog.final_devil1, this.dialog)
+                .load(this.dialog.final_npc1, this.dialog)
                 .start();
                 seq.on('complete', () => {
                     this.player.playerPaused = false;
@@ -231,9 +228,68 @@ export default class TestScene extends Phaser.Scene {
                 });
             }
             
-        }else{
-            this.devil1_text.setVisible(false);
-        }
+        }else this.npc1_text.setVisible(false);
+
+        //npc에게 말걸기
+        if(this.inevent==false&&this.player.player.x>this.npc2.x-150&&this.player.player.x<this.npc2.x-50){
+            this.npc2_text.setVisible(true);
+            if(this.keyX.isDown){
+                this.inevent=true;
+                this.player.player.setFlipX(false);
+                this.player.playerPaused=true;
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.final_npc2, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.inevent=false;
+                });
+            }
+            
+        }else this.npc2_text.setVisible(false);
+
+        //npc에게 말걸기
+        if(this.inevent==false&&this.player.player.x>this.npc3.x-150&&this.player.player.x<this.npc3.x-50){
+            this.npc3_text.setVisible(true);
+            if(this.keyX.isDown){
+                this.inevent=true;
+                this.player.player.setFlipX(false);
+                this.player.playerPaused=true;
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.final_npc3, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.inevent=false;
+                });
+            }
+            
+        }else this.npc3_text.setVisible(false);
+
+        //npc에게 말걸기
+        if(this.inevent==false&&this.player.player.x>this.npc4.x-150&&this.player.player.x<this.npc4.x-50){
+            this.npc4_text.setVisible(true);
+            if(this.keyX.isDown){
+                this.inevent=true;
+                this.player.player.setFlipX(false);
+                this.player.playerPaused=true;
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.final_npc4, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.inevent=false;
+                });
+            }
+            
+        }else this.npc4_text.setVisible(false);
+        
 
 
 

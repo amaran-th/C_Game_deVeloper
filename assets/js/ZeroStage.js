@@ -221,7 +221,7 @@ export default class ZeroStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 0 힌트====================================", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 인벤토리 창의 코드조각과 생각풍선의 문구를 [코딩하기] 앱에 적절하게 드래그&드랍해봅시다!", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
@@ -288,14 +288,14 @@ export default class ZeroStage extends Phaser.Scene {
         this.invenIn = false;
         
         /** 아이템 만들기 **/
-        var item_text = 'printf';
+        var item_text = '#include\n<stdio.h>\n  printf';
         this.itemicon = this.add.image(360,330,'item'); 
         this.itemicon.setVisible(false);
         
 
         /** 아이템 얻었을 때 뜨는 이미지 **/
         this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemText = this.add.text(500, 270, item_text, {
+        this.itemText = this.add.text(480, 210, item_text, {
         font: "30px Arial Black", fill: "#000000" 
         }).setOrigin(0,0);
         this.itemget.setVisible(false);
@@ -330,9 +330,13 @@ export default class ZeroStage extends Phaser.Scene {
         this.contenttext = "" ;
         // zero_stage의 앱에 들어가는 코드
         this.app_code_text ="";
+
+        
         
         //코드 실행 후 비교할 목표 텍스트
-        //this.correct_msg="아-마이크 테스트";
+
+        //this.correct_msg="아-마잌테스트";
+        /* */
         this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
                 "int main(){ \n " + 
                 "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
@@ -517,12 +521,12 @@ export default class ZeroStage extends Phaser.Scene {
             this.pressX.x = this.player.player.x-50;
             this.pressX.y = this.player.player.y-100;
             this.pressX.setVisible(true);
-            if (this.keyX.isDown&&stage>0){
+            if (this.keyX.isDown&&stage>0&&this.player.playerPaused==false){
                 console.log("===[맵이동] stage1 으로===");
                 this.command.remove_phone(this);
                 this.scene.sleep('zero_stage')
                 this.scene.run('first_stage'); 
-            }else if(this.keyX.isDown&&stage<=0&&this.isdownX2){
+            }else if(this.keyX.isDown&&stage<=0&&this.isdownX2&&this.player.playerPaused==false){
                 this.isdownX2=false;
                 console.log("아직은 나가지 말자.");
                 this.player.playerPaused = true; //플레이어 얼려두기
@@ -539,6 +543,10 @@ export default class ZeroStage extends Phaser.Scene {
                 });
             }
         }else this.pressX.setVisible(false);
+
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1000, 600);
+       this.player.player.body.setCollideWorldBounds()
         
         inZone = false;
     }
