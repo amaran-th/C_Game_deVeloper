@@ -138,9 +138,7 @@ export default class FourthStage extends Phaser.Scene {
         },this);
         ***/
 
-
-        //코드대로라면 if , for, printf를 얻고 시작을 해야하는데..... 안뜨네? 일단 아직 큰 문제는 아니니까 냅둠
-        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
+        //여기 코드 보자!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
         this.dragAndDrop.reset_button.destroy();
 
@@ -150,7 +148,7 @@ export default class FourthStage extends Phaser.Scene {
         
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
-
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -162,8 +160,6 @@ export default class FourthStage extends Phaser.Scene {
         this.code_zone_5 = "           ";
         this.code_zone_6 = "           ";*/
         
-        // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
-        this.code_piece_add_state = 0;
         // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
@@ -205,7 +201,6 @@ export default class FourthStage extends Phaser.Scene {
     update() {
 
         //console.log('droppedText:',droppedText);
-        if (this.dragAndDrop != undefined) this.dragAndDrop.updownwithinven(this); //인벤창 닫고 열때 아이템도 같이 움직이게 함
 
         /** 현재 퀴즈따라서 컴파일 내용 바꿔주기 (퀴즈 틀리고 맞출때마다 플레이어 말풍선으로 컴파일 내용 뜨는 거 하고싶음)**/
             //console.log('퀴즈바뀜');
@@ -251,16 +246,14 @@ export default class FourthStage extends Phaser.Scene {
             
             this.time.delayedCall(1000,() => {
                 this.dragAndDrop.reset_before_mission(this);
-                this.item.length = 0; //배열 비워버리기
-                this.temp_getItem() //배열 다시 채우기
+                this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
                 this.stage4_q_2()
             },[],this);
                 
         }
         else if(this.quiz1 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.dragAndDrop.reset_before_mission(this);
-            this.item.length = 0; //배열 비워버리기
-            this.temp_getItem() //배열 다시 채우기
+            this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
             this.dialog.visible(false);
             this.stage4_quiz_1(); //다시 드랍 실행하기
             droppedText = undefined;
@@ -272,15 +265,13 @@ export default class FourthStage extends Phaser.Scene {
             droppedText = undefined;
             this.time.delayedCall(1000,() => {
                 this.dragAndDrop.reset_before_mission(this);
-                this.item.length = 0; //배열 비워버리기
-                this.temp_getItem() //배열 다시 채우기
+                this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
                 this.stage4_q_3()
             },[],this);
         }
         else if(this.quiz2 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.dragAndDrop.reset_before_mission(this);
-            this.item.length = 0; //배열 비워버리기
-            this.temp_getItem() //배열 다시 채우기
+            this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
             this.dialog.visible(false);
             this.stage4_quiz_2(); //다시 드랍 실행하기
             droppedText = undefined;
@@ -292,15 +283,13 @@ export default class FourthStage extends Phaser.Scene {
             droppedText = undefined;
             this.time.delayedCall(1000,() => {
                 this.dragAndDrop.reset_before_mission(this);
-                this.item.length = 0; //배열 비워버리기
-                this.temp_getItem() //배열 다시 채우기
+                this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
                 this.stage4_q_4()
             },[],this);
         }
         else if(this.quiz3 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.dragAndDrop.reset_before_mission(this);
-            this.item.length = 0; //배열 비워버리기
-            this.temp_getItem() //배열 다시 채우기
+            this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
             this.dialog.visible(false);
             this.stage4_quiz_3(); //다시 드랍 실행하기
             droppedText = undefined;
@@ -312,15 +301,13 @@ export default class FourthStage extends Phaser.Scene {
             this.quizOver = true;
             this.time.delayedCall(1000,() => {
                 this.dragAndDrop.reset_before_mission(this);
-                this.item.length = 0; //배열 비워버리기
-                this.temp_getItem() //배열 다시 채우기
+                this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
                 this.stage4_5()
             },[],this);
         }
         else if(this.quiz4 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
             this.dragAndDrop.reset_before_mission(this);
-            this.item.length = 0; //배열 비워버리기
-            this.temp_getItem() //배열 다시 채우기
+            this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
             this.dialog.visible(false);
             this.stage4_quiz_4(); //다시 드랍 실행하기
             droppedText = undefined;
@@ -330,6 +317,10 @@ export default class FourthStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+        this.code_piece.update(this);
+        if(this.unique_code_piece != undefined) this.unique_code_piece.update(this);
+        if(this.mini_inventory!=undefined) this.mini_inven_update();
+
         if(this.draganddrop!=undefined) this.draganddrop.update(this);
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
@@ -374,8 +365,8 @@ export default class FourthStage extends Phaser.Scene {
                     this.devil.anims.stop();
                     this.firstTalk = undefined;
                     this.player.playerPaused = true;
-                    this.item.length = 0; //배열 비워버리기
-                    this.temp_getItem() //배열 다시 채우기
+                    //this.item.length = 0; //배열 비워버리기
+                    //this.get_type_specifier() //배열 다시 채우기
                     this.stage4_quiz_1();
                 }
             }
@@ -390,7 +381,7 @@ export default class FourthStage extends Phaser.Scene {
                 if(this.door) {
                     this.door = false;
                     this.player.playerPaused = true;
-                    //this.temp_getItem();
+                    //this.get_type_specifier();
                     this.stage4_6();
                 }
             }
@@ -441,19 +432,14 @@ export default class FourthStage extends Phaser.Scene {
 
     }
 
-    temp_getItem() {
-        console.log('아이템 겟 함수 호출');
-        this.item[this.item.length] =  'printf';
-        this.item[this.item.length] =  'if';
-        this.item[this.item.length] =  'for';
-        this.item[this.item.length] =  '%d';
-        this.item[this.item.length] =  '%s';
-        this.item[this.item.length] =  '%c';
-        this.item[this.item.length] =  '%f';
-        this.dropzon_su = 3; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
-        if(this.dragAndDrop != undefined) this.dragAndDrop.invenPlus(this);
-        if(this.dragAndDrop_1 != undefined) this.dragAndDrop_1.invenPlus(this);
+    get_type_specifier() {
+        console.log('get_type_specifier 함수 호출');
+        this.unique_codepiece_string_arr = [];
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%d';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%s';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%c';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%f';
+        this.unique_code_piece = new UniqueCodePiece(this, 170, 400); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
     }
 
     makeDropzone(x,y,width) {
@@ -518,8 +504,9 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             console.log('대사끝');
-            this.player.playerPaused = false
-            this.temp_getItem();
+            this.player.playerPaused = false;
+            this.add_mini_inven();
+            this.get_type_specifier();
         });
     }
 
@@ -621,11 +608,11 @@ export default class FourthStage extends Phaser.Scene {
 
 
     stage4_5() {
-        //this.temp_getItem();
+        //this.get_type_specifier();
         this.deleteDropzone();
         this.zone = undefined;
         this.dragAndDrop.reset_before_mission(this);
-        this.item.length = 0; //배열 비워버리기
+        this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
         this.dragAndDrop = undefined; // 드랍존 들어가면 인벤,코드앱 따라 보이고 안 보이고 안 따라가는 거 해결위해 필요
         
         this.dialog.visible(false);
@@ -662,7 +649,7 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false;
-            //this.temp_getItem();
+            //this.get_type_specifier();
             this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 814;
             this.dropzone3_x = 880;
@@ -732,5 +719,33 @@ export default class FourthStage extends Phaser.Scene {
         }, this);
     
     }
+    add_mini_inven() {
+        console.log("here");
+        this.mini_inventory = this.add.graphics();
+        this.mini_inventory.lineStyle(3, 0xFFB569, 1);
+        this.mini_inventory.fillStyle(0xFCE5CD, 1);
 
+        this.mini_inventoryBody = this.mini_inventory.fillRoundedRect(160, 390, 60, 170, 10).strokeRoundedRect(160, 390, 60, 170, 10); // 인벤창
+        this.mini_inventoryBody.y = 600; // 처음 안 보이도록
+        this.mini_added = true; // 라이브러리 추가되었다는 걸 알려줘서 update에서 mini_inventory_update 함수 실행시켜줌
+    }
+    // 미니 인벤토리 삭제하는 함수
+    delete_mini_inven() {
+        this.mini_invenText.destroy();
+        this.mini_inventory.destroy();
+        this.mini_inventory_button.destroy();
+        this.mini_added = false;
+    }
+    // 미니 인벤토리 버튼 누를때 열고 닫히게 하는 함수
+    mini_inven_update() {
+        this.mini_inventoryBody.x = this.worldView.x;
+        if(this.invenIn) { // 열려있을 때
+            //console.log("here", this.mini_inventoryBody.x, this.mini_inventoryBody.y);
+            this.mini_inventoryBody.y = 0; // 와 왜 0으로 해야 그 위치로 가는거지?? 이유를 모르겠네.. 이거 setvisible로 처리해도 될 것 같긴한데 앞에 인벤 짤때 y좌표로 해놨길래 그냥 이것도 이렇게 해놨습니다!
+        } else { // 닫혀있을 때
+            //console.log("there", this.mini_inventoryBody.x, this.mini_inventoryBody.y);
+            this.mini_inventoryBody.y = 600;
+        }
+        this.unique_code_piece.updownwithinven(this,this.invenIn); // 코드조각 인벤 따라가도록
+    }
 }

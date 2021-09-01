@@ -69,7 +69,7 @@ export default class inventory {
         if(scene.draganddrop_12 != undefined) scene.draganddrop_12.onoffwithcommand(scene);
         if(scene.draganddrop_13 != undefined) scene.draganddrop_13.onoffwithcommand(scene);
         if(scene.draganddrop_14 != undefined) scene.draganddrop_14.onoffwithcommand(scene);
-        scene.code_piece.onoffwithcommand(scene);
+        if(scene.code_piece != undefined) scene.code_piece.onoffwithcommand(scene);
     }
 
     invenSave(scene, itemName) { // 이부분 내용 draganddrop으로 옮겨서 함수 이름 바꾸던지 아래 내용 create나 update로 이동할까 싶음

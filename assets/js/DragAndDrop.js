@@ -329,7 +329,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         
     }
 
-    invenPlus(scene) {
+    /*invenPlus(scene) {
         //console.log('코드조각 수 : ' + scene.item.length);
         var code_piece_y_invenPlus = 150
         for (var i = 0; i < scene.item.length; i++){
@@ -338,27 +338,9 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             scene.input.setDraggable(this.code_piece[i]); // 드래그 가능하도록
             code_piece_y_invenPlus += 30; // 각 코드 조각 위치 설정
         }
-    }
+    }*/
 
 
-    // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
-    updownwithinven(scene) {
-        if (scene.drop_state_1 == 0) { // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
-            if (this.code_piece.length > 0) {
-                if (scene.invenIn) { // 인벤창이 나와있을 때 코드 보이도록
-                    //console.log('there');
-                    for (var i = 0; i < scene.item.length; i++) {
-                        this.code_piece[i].setVisible(true);
-                    }
-                } else { // 인벤창이 들어가있을 때 코드 안 보이도록
-                    //console.log('here');
-                    for (var i = 0; i < scene.item.length; i++) {
-                        this.code_piece[i].setVisible(false);
-                    }
-                }
-            }
-        }
-    }
     onoffwithcommand(scene) {
         //console.log("폰 열림상태 > "+scene.codeapp_onoff_state);
         if (scene.codeapp_onoff_state) { // 명령창이 나와있을 때 드랍존과 리셋버튼 나와 있도록
