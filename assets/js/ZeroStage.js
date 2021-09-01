@@ -521,12 +521,12 @@ export default class ZeroStage extends Phaser.Scene {
             this.pressX.x = this.player.player.x-50;
             this.pressX.y = this.player.player.y-100;
             this.pressX.setVisible(true);
-            if (this.keyX.isDown&&stage>0){
+            if (this.keyX.isDown&&stage>0&&this.player.playerPaused==false){
                 console.log("===[맵이동] stage1 으로===");
                 this.command.remove_phone(this);
                 this.scene.sleep('zero_stage')
                 this.scene.run('first_stage'); 
-            }else if(this.keyX.isDown&&stage<=0){
+            }else if(this.keyX.isDown&&stage<=0&&this.player.playerPaused==false){
                 this.isdownX2=false;
                 console.log("아직은 나가지 말자.");
                 this.player.playerPaused = true; //플레이어 얼려두기
