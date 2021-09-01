@@ -1,7 +1,7 @@
 var playerX;
 var stagenum=0;
 var username='AAA';
-
+var stage;
 //데이터베이스에 접속해서 닉네임 불러와서 username 변수에 저장
 var xhr = new XMLHttpRequest();
 xhr.open('POST', '/get_session', true);
@@ -20,7 +20,17 @@ class Start extends Phaser.Scene {
     }
 
     preload() {
+      /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/stage/check', true);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.send();
 
+      xhr.addEventListener('load', function() {
+      var result = JSON.parse(xhr.responseText);
+      console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+      stage = result.stage;
+      });
       
       this.load.image("bubble","./assets/images/bubble.png");
       this.load.image("bubble2","./assets/images/bubble2.png")
@@ -349,10 +359,22 @@ class Start extends Phaser.Scene {
       this.isnewgame=0;
       // 클릭하면 게임 시작
       this.NEW_GAME_button.once("pointerup", function () {
-        this.isnewgame=1;
+        this.isnewgame=1; 
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/reset', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 리셋! : " + result.stage + " ========")
+        stage = result.stage;
+        
+        });
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("bootGame");
+        this.scene.start("zero_stage"); //이어하기. 방부터
       }, this);
 
     }

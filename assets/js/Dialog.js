@@ -554,8 +554,18 @@ visible(visible) {
     ['wait-time', 0.5],
   ]
 
-  //악마와 대화2(두번째부터)
+  //악마한테 말 안걸고 나가려고 할 때
   stage1_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '아까 그 놈하고 얘기부터 좀 해보자.'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 0.5],
+  ]
+  //악마와 대화2(두번째부터)
+  stage1_10 = [
     ['visible',true],
     ['place', 40,10],
     ['setFace', 1],
@@ -576,19 +586,22 @@ visible(visible) {
     ['visible',false],
     ['wait-time', 0.5],
   ]
-
-  //악마한테 말 안걸고 나가려고 할 때
-  stage1_10 = [
+  stage1_11 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 1],
-    ['print', '아까 그 놈하고 얘기부터 좀 해보자.'],
+    ['setFace', 5],
+    ['print', '뭐야, 잠금 한번 더 걸어줘?'],
     ['wait-click'],
     ['visible',false],
-    ['wait-time', 0.5],
   ]
-
-
+  stage1_12 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '얏호! 또 풀었다!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
   stage2_1 = [
     ['visible',true],
     ['place', 40,10],
@@ -843,6 +856,15 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
+  //퀘스트 완료후, 한번더 할려고
+  stage2_11 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 12],
+    ['print', '뭐여! 한번 더 말해주겠다고? 고마우이~'],
+    ['wait-click'],
+    ['visible',false],
+  ]
 
   //스테이지 3-0에 들어가면 나오는 대사
   stage3_0 = [
@@ -855,6 +877,15 @@ visible(visible) {
     ['wait-click'],
     ['setFace', 4],
     ['print', '* Quest : 숨을 돌릴 장소를 찾아 들어가자. *'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage3_0_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '저기 빵집, 되게 시원해보이는데,,,'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1614,6 +1645,45 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage6_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 35],
+    ['print', '와! 고마워! 이제 다음 방으로 들어가봐'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_7 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 35],
+    ['print', '앗, 배열퀴즈 한번 더 풀고 싶구나?'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_8 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '얏호! 또 풀었다!'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 35],
+    ['print', '어, 어디가요?'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
   //어디에 넣을 수 있을진 모르겠는데 적당히 엔딩낼때 넣을 텍스트
   final_0=[
     ['visible',true],

@@ -2,7 +2,7 @@ import Player from "../Player.js";
 import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
-
+var stage;
 var inZone1_1;
 var inZone1_2;
 export default class FirstStage extends Phaser.Scene {   
@@ -11,6 +11,17 @@ export default class FirstStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
         this.load.tilemapTiledJSON("stage1", "./assets/stage1.json");
     }
     
@@ -122,7 +133,7 @@ export default class FirstStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "first_stage");
-        this.command.entire_code_button.input.enabled = false;
+        this.command.entire_code_button.input.enabled = false;//이거 나중에 고치기,,,
 
 
         //quest box 이미지 로드
@@ -172,20 +183,35 @@ export default class FirstStage extends Phaser.Scene {
 
         /** 초반 대사 **/
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage1_1();
 
-        this.quiz_running = false;
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        if (stage==1){
+            this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage1_1();
 
-        //npc에게 말을 걸 수 있는지 여부
-        this.cantalk=false;
+            this.quiz_running = false;
 
-        //npc에게 말을 건 횟수(순차적 실행을 위함)
-        this.talk_num=0
+            //npc에게 말을 걸 수 있는지 여부
+            this.cantalk=false;
+
+            //npc에게 말을 건 횟수(순차적 실행을 위함)
+            this.talk_num=0
+
+            //이벤트 실행을 위한 플래그 변수
+            this.function=0;
+        }
+        else {//stage완료 했을때!!(이어하기)
+            this.devil.x=1200; //악마 위치 고정
+            this.devil.y=110;
+
+            this.talk_num = 2;
+           
+            this.cantalk = true;
+        }
+
+        this.isdownX=true; //x키 중복 방지. 이거 안하면 안됨
+        this.quiz_running2 = false; //이어하기에 쓰이는 변수
         
-        //이벤트 실행을 위한 플래그 변수
-        this.function=0;
-
         //맵이동
         this.physics.add.overlap(this.player.player, this.zone1_1, function () {
             inZone1_1 = true;
@@ -194,8 +220,6 @@ export default class FirstStage extends Phaser.Scene {
             inZone1_2 = true;
         });
 
-        //X키가 눌린 상태인지 여부
-        this.isdownX=false;
     }
 
     update() {
@@ -253,6 +277,7 @@ export default class FirstStage extends Phaser.Scene {
                     this.cantalk=false;
                     this.function=1;
                     this.player.playerPaused = true;
+                    this.talk_num++; //second talk 악마 말하기
                     this.questbox.setVisible(false);
                     this.quest_text1.setVisible(false);
                 }
@@ -262,8 +287,19 @@ export default class FirstStage extends Phaser.Scene {
                     console.log('second talk with devil');
                     this.player.player.setFlipX(false);
                     this.cantalk=false;
-                    this.function=3;
+                    this.function=4;
                     this.player.playerPaused = true;
+                    this.talk_num++;
+                    
+                }
+            }
+            else if (this.keyX.isDown&&this.talk_num==2){ //퀴즈 한번더(계속 할 수 있음)
+                if(this.cantalk){
+                    console.log('퀴즈 한번더');
+                    this.player.player.setFlipX(false);
+                    this.cantalk=false;
+                    this.function=5;
+                    this.player.playerPaused = true
                 }
             }
         }else this.talktext.setVisible(false);
@@ -273,16 +309,16 @@ export default class FirstStage extends Phaser.Scene {
             this.stage1_7();
             this.function=0;
         }else if(this.function==2){
-            this.stage1_8();
+            this.stage1_8(); //미션 완료후, 악마와 대화(1)하고 stage값 1증가(자동으로)
             this.function=0;
         }else if(this.function==3){
-            this.stage1_9();
+            //이거 안씀...
             this.function=0;
         }else if(this.function==4){
-            this.stage1_10();
+            this.stage1_10(); //미션 완료후 악마와 대화(2)
             this.function=0;
         }else if(this.function==5){
-            this.stage1_11();
+            this.stage1_11(); //한번 더 퀴즈
             this.function=0;
         }
 
@@ -325,25 +361,27 @@ export default class FirstStage extends Phaser.Scene {
         
         inZone1_1 = false;
         
-        //맵이동 (stage3_0) 로
+      
+
         if (inZone1_2) {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
             this.pressX_2.setVisible(true);
-            if (this.keyX.isDown&&this.talk_num==1){
+            if (this.keyX.isDown&&stage>1){ // 스테이지 클리어해야 나감.
+                console.log("===[맵이동] stage2 으로===");
                 console.log("[맵이동] stage2 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('second_stage'); 
-            }else if(this.keyX.isDown&&this.talk_num==0&&this.isdownX==false){
-                this.isDownX=true;
-                console.log("nope.");
-                this.function=4;
+            }else if(this.keyX.isDown&&stage<=1&&this.isdownX){ //스테이지 클리어 못하고 나가려할때
+                this.isdownX=false;
+                this.stage1_9();
             }
         }else this.pressX_2.setVisible(false);
 
         inZone1_2 = false;
         
         if(!this.scene.isActive('quiz') && this.quiz_running ) this.stage1_6();
+        if(!this.scene.isActive('quiz') && this.quiz_running2) this.stage1_12();
 
 
         /* 바운더리 정하기 */
@@ -532,37 +570,80 @@ export default class FirstStage extends Phaser.Scene {
             this.player.playerPaused = false;
             this.cantalk=true;
             this.devil.play('devil_touch_phone',true);
-            this.talk_num=1;
+            
+            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+            var result = JSON.parse(xhr.responseText);
+
+                console.log("========stage 추가된다!: " + result.stage)
+                stage = result.stage;          
+            });
+
+
+            
+
         });
     }
-    stage1_9(){
-        this.devil.anims.stop();
-        this.devil.setFrame(1);
-        this.devil.setFlipX(true);
+    stage1_9(){ //스테이지 클리어 안하고 나가려 할때//악마한테 따지고 오자!!!
+        this.player.playerPaused = true; //플레이어 얼려두기
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.stage1_9, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.isdownX=true;
+                });
+
+    }
+
+    stage1_10(){ //악마와 대화 2번쩨
+        this.player.playerPaused = true; //플레이어 얼려두기
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.stage1_10, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.cantalk=true;
+                });
+
+    }
+
+
+    stage1_11() { //악마에게 퀴즈 한번 더
+        this.player.playerPaused = true; //플레이어 얼려두기
+
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
-        .load(this.dialog.stage1_9, this.dialog)
+        .load(this.dialog.stage1_11, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.scene.run('quiz');
+            this.quiz_running2 = true;
+        });  
+    }
+
+    stage1_12() { //얏호! 또 풀었따
+        this.quiz_running2 = false;
+
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_12, this.dialog)
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false;
             this.cantalk=true;
-            this.devil.play('devil_touch_phone',true);
-            
-            
-        });
+        });  
     }
-    //악마한테 말 안걸고 나가려고 할 때
-    stage1_10(){
-        this.player.playerPaused = true;
-        var seq = this.plugins.get('rexsequenceplugin').add();
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.stage1_10, this.dialog)
-        .start();
-        seq.on('complete', () => {
-            this.player.playerPaused = false;
-            this.isdownX=false;
-        }); 
-    }
+
 }

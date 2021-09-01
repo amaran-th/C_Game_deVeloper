@@ -4,6 +4,7 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
+var stage;
 var tag_drop_state = false; // temp 가 드랍존에 들어가면 텍스트 오브젝트만 남도록
 var tag_text = '';
 var isDragging = false;
@@ -15,7 +16,17 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
 
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
         this.load.tilemapTiledJSON("second_stage", "./assets/second_stage.json");
     
     }
@@ -421,8 +432,14 @@ export default class SecondStage extends Phaser.Scene {
         
         //초반 대사
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage2_1();
+    
+        if (stage==2){
+            this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage2_1();
+        }
+        else {
+            
+        }
 
         //=========================================변수 초기화=================================
 
