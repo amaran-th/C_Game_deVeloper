@@ -12,7 +12,6 @@ export default class ThirdStage extends Phaser.Scene {
     }
 
     preload() {
-<<<<<<< HEAD
         /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/stage/check', true);
@@ -24,13 +23,11 @@ export default class ThirdStage extends Phaser.Scene {
         console.log("======== 현재 스테이지는 : " + result.stage + " ========")
         stage = result.stage;
         });
-=======
         /* 흔드는 플러그인 */
         var url;
         url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexshakepositionplugin.min.js';
         this.load.plugin('rexshakepositionplugin', url, true);
 
->>>>>>> 923995d1889eaa011a7893df8096a91286c0efec
         //this.load.image("stage_tiles", "./assets/images/map_stage3.png");
         this.load.tilemapTiledJSON("third_stage", "./assets/third_stage.json");
     
@@ -266,8 +263,12 @@ export default class ThirdStage extends Phaser.Scene {
 
         //초반 대사
         this.cameras.main.fadeIn(1000,0,0,0);
-       this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-       this.stage3_1();
+
+        if (stage==3){
+            this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage3_1();//대화 끝나면 stage값 1증가.
+
+        }
 
     this.breadGroup = this.physics.add.group();
     //this.breadGroup.friction.x = 0.5;
@@ -511,7 +512,7 @@ export default class ThirdStage extends Phaser.Scene {
             });
         }, [], this);
     }
-    stage3_2() {
+    stage3_2() {//퀘스트줌
     
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -524,6 +525,19 @@ export default class ThirdStage extends Phaser.Scene {
             this.questbox.setVisible(true);
             this.help_icon.setVisible(true);
             this.quest_text.setVisible(true);
+
+            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+            var result = JSON.parse(xhr.responseText);
+
+            console.log("========stage 추가된다!: " + result.stage)
+                stage = result.stage;          
+            });
         });     
     }
 
