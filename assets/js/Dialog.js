@@ -724,15 +724,20 @@ visible(visible) {
     ['setFace', 0],
     ['print', '그럴수가...'],
     ['wait-click'],
+    ['setFace', 10],
+    ['print', '어우 덥다, 난 다시 들어갈랑께! 나중에 또 부탁함세!'],
+    ['wait-click'],
     ['visible',false],
     ['wait-time', 1],
   ]
-  //할아버지 퀘스트 깨고 난 후에 말 걸 수 있게 한다면?
+  //할아버지 퀘스트 깨고 난 후, 다시 카페로 들어감
   stage2_3_3 =[
   ['visible',true],
   ['place', 40,10],
   ['setFace', 10],
-  ['print', '아이고 덥다~~'],
+  ['print', '저 옆에 누가 저렇게 우는거야?'],
+  ['wait-click'],
+  ['print', '난 이제 쉴랑께'],
   ['wait-click'],
   ['visible',false],
 ]
@@ -856,16 +861,24 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
-  //퀘스트 완료후, 한번더 할려고
-  stage2_11 = [
+  //퀘스트 완료후, 할아버지 퀘스트 한번더
+  stage2_12 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 12],
-    ['print', '뭐여! 한번 더 말해주겠다고? 고마우이~'],
+    ['setFace', 10],
+    ['print', '아 자네! 또 도와주러왔는가?'],
     ['wait-click'],
     ['visible',false],
   ]
-
+  //퀘스트 완료후, 할아버지 퀘스트 한번더 => 얏호! 또 풀었다
+  stage2_13 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '얏호! 또 풀었다'],
+    ['wait-click'],
+    ['visible',false],
+  ]
   //스테이지 3-0에 들어가면 나오는 대사
   stage3_0 = [
     ['visible',true],
