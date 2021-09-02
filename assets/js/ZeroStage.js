@@ -278,6 +278,8 @@ export default class ZeroStage extends Phaser.Scene {
 
             //나갈 수 있게
             this.canexit = true; //문 밖으로 나갈 수 있는지 여부
+
+            this.player.playerPaused=false//이거 집밖에 갈때 조건에 없으면 대사창이 안꺼짐.
         }
         
 
