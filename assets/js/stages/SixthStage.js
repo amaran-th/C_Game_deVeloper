@@ -19,7 +19,6 @@ export default class SixthStage extends Phaser.Scene {
     }
     
     create () {
-
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -163,48 +162,12 @@ export default class SixthStage extends Phaser.Scene {
         },this);
 ***/
 
-        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
-
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
-        
-        /** 아이템 만들기 **/
-        
-        var item_text = 'printf';
-        this.itemicon = this.add.image(360,330,'item'); 
-        
-
-        /** 아이템 얻었을 때 뜨는 이미지 **/
-        this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemText = this.add.text(500, 270, item_text, {
-        font: "30px Arial Black", fill: "#000000" 
-        }).setOrigin(0,0);
-        this.itemget.setVisible(false);
-        this.itemText.setVisible(false);
-        this.beforeItemGet = true; //한 번만 뜨도록
 
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
-
-        /** 드래그앤드랍 **/
-        //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
-        /*this.code_zone_1 = "           "; //11칸
-        this.code_zone_2 = "           ";
-        this.code_zone_3 = "           ";
-        this.code_zone_4 = "           ";
-        this.code_zone_5 = "           ";
-        this.code_zone_6 = "           ";*/
-        
-        // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
-        this.code_piece_add_state = 0;
-        // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
-        this.drop_state_1 = 0;
-        this.drop_state_2 = 0;
-        this.drop_state_3 = 0;
-        this.drop_state_4 = 0;
-        this.drop_state_5 = 0;
-        this.drop_state_6 = 0;
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
 
         stagenum = 6;
@@ -343,6 +306,7 @@ export default class SixthStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+        this.code_piece.update(this);
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -414,48 +378,6 @@ export default class SixthStage extends Phaser.Scene {
             }
 
         }
-
-        /** 아이템 획득하는 경우 **/
-        //console.log(this.itemicon.x + "<" + this.player.player.x +'<' +(this.itemicon.x+54));
-        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
-            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-            this.itemicon.setVisible(false);
-            this.itemget.setVisible(true);
-            this.itemText.setVisible(true);
-            this.tweens.add({
-                targets: [this.itemget, this.itemText],
-                alpha: 0,
-                duration: 2000,
-                ease: 'Linear',
-                repeat: 0,
-                onComplete: ()=>{this.invenPlus = true;}
-            }, this);
-        }
-        
-        if(this.invenPlus) {
-            this.item[this.item.length] =  '원하는';
-            this.item[this.item.length] =  '아이템';
-            this.item[this.item.length] =  '넣으셈';
-            this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
-            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 1000;
-            this.dropzone3_x = 805;
-            this.dropzone4_x = 200;
-
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("4");
-            //this.intro4();
-            this.invenPlus = false;
-        }
-
-        if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
-        if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
-        if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
-        if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
-
 
         if(this.key1.isDown) {
             console.log('맵이동');
