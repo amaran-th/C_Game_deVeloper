@@ -237,29 +237,14 @@ export default class FifthStage extends Phaser.Scene {
         this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
         this.stage5_1();
 
-        
-        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
 
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
         this.library_invenIn = false;
         
-        /** 아이템 만들기 **/
-        var item_text = 'printf';
-        this.itemicon = this.add.image(360,330,'item'); 
-        
-
-        /** 아이템 얻었을 때 뜨는 이미지 **/
-        this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemText = this.add.text(500, 270, item_text, {
-        font: "30px Arial Black", fill: "#000000" 
-        }).setOrigin(0,0);
-        this.itemget.setVisible(false);
-        this.itemText.setVisible(false);
-        this.beforeItemGet = true; //한 번만 뜨도록
-
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -288,6 +273,23 @@ export default class FifthStage extends Phaser.Scene {
         this.drop_state_12 = 0;
         this.drop_state_13 = 0;
         this.drop_state_14 = 0;
+
+        // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+        this.dropzone1_x = 790; 
+        this.dropzone2_x = 880;
+        this.dropzone3_x = 790;
+        this.dropzone4_x = 880;
+        this.dropzone5_x = 1000;
+        this.dropzone6_x = 1000;
+        this.dropzone7_x = 1000;
+        // 드랍존 호출
+        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("3");
+        this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("4");
+        this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 300, 80, 25).setRectangleDropZone(80, 25).setName("5");
+        this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 350, 80, 25).setRectangleDropZone(80, 25).setName("6");
+        this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 400, 80, 25).setRectangleDropZone(80, 25).setName("7");
 
 
         //사서와 대화 중인지를 나타내는 플래그 변수
@@ -336,6 +338,7 @@ export default class FifthStage extends Phaser.Scene {
         this.inventory.update(this);
         if(this.library_added) this.library_inventory_update();
         this.command.update(this);
+        this.code_piece.update(this);
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -622,48 +625,6 @@ export default class FifthStage extends Phaser.Scene {
                 "   " + "            " + "(\"코사인 60도=%f\","+ "      " + "("+"   "+"/3));\n"+
                 "   }\n" +
                 "}"
-        }
-
-
-        /** 아이템 획득하는 경우 **/
-        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
-            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-            this.itemicon.setVisible(false);
-            this.itemget.setVisible(true);
-            this.itemText.setVisible(true);
-            this.tweens.add({
-                targets: [this.itemget, this.itemText],
-                alpha: 0,
-                duration: 2000,
-                ease: 'Linear',
-                repeat: 0,
-                onComplete: ()=>{this.invenPlus = true;}
-            }, this);
-        }
-        
-        if(this.invenPlus) {
-            this.item[this.item.length] =  '원하는';
-            this.item[this.item.length] =  '아이템';
-            this.item[this.item.length] =  '넣으셈';
-            this.dropzon_su = 7; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
-            this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 880;
-            this.dropzone3_x = 790;
-            this.dropzone4_x = 880;
-            this.dropzone5_x = 1000;
-            this.dropzone6_x = 1000;
-            this.dropzone7_x = 1000;
-
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("4");
-            this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 300, 80, 25).setRectangleDropZone(80, 25).setName("5");
-            this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 350, 80, 25).setRectangleDropZone(80, 25).setName("6");
-            this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 400, 80, 25).setRectangleDropZone(80, 25).setName("7");
-            //this.intro4();
-            this.invenPlus = false;
         }
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
