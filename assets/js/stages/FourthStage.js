@@ -41,7 +41,7 @@ export default class FourthStage extends Phaser.Scene {
         this.decoLayer = map.createLayer("deco", tileset, 0, 0);
 
         /*** 맵 이동 (문 이미지 불러오기) */
-        this.zone4_1 = this.physics.add.staticImage(100, 420).setSize(100,160);
+        this.zone4_1 = this.physics.add.staticImage(30, 420).setSize(100,160);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -52,7 +52,7 @@ export default class FourthStage extends Phaser.Scene {
 
         /*** npc 만들기 ***/
         this.anims.create({
-            key: "devil_touch_phone",
+            key: "devil_touch_phone2",
             frames: this.anims.generateFrameNumbers('npc_devil2',{ start: 4, end: 5}), 
             frameRate: 2,
             repeat: -1,
@@ -60,7 +60,7 @@ export default class FourthStage extends Phaser.Scene {
 
         this.devil = this.physics.add.sprite(910 ,430,'npc_devil2');
         this.devil.setFlipX(true);
-        this.devil.play('devil_touch_phone');
+        this.devil.play('devil_touch_phone2');
 
         this.anims.create({
             key: "crying",
@@ -69,6 +69,7 @@ export default class FourthStage extends Phaser.Scene {
             repeat: -1,
         });
         this.npc9 = this.add.sprite(530 ,500,'npc9').setOrigin(0,1);
+        this.npc9.setScale(1.1);
         this.npc9.play('crying');
 
         //맵이동
@@ -89,14 +90,14 @@ export default class FourthStage extends Phaser.Scene {
         this.wall.body.setImmovable(true);
         this.wall.body.setAllowGravity(false); //플레이어가 밀 수도 없고 중력에 영향을 받지도 않게
 
-        this.pressX = this.add.text(this.devil.x-50, this.devil.y-100, 'press X to\nattemp the test', {
+        this.pressX = this.add.text(this.devil.x-50, this.devil.y-130, 'press X to\nattemp the test', {
             fontFamily: ' Courier',
             color: '#ffffff',
             boundsAlignH: "center",
             boundsAlignV: "middle"
         });
 
-        this.pressXDoor = this.add.text(0, 340, 'press X', {
+        this.pressXDoor = this.add.text(0, 330, 'press X', {
             fontFamily: ' Courier',
             color: '#ffffff',
             boundsAlignH: "center",
@@ -121,6 +122,25 @@ export default class FourthStage extends Phaser.Scene {
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "fourth_stage");
+
+
+        //quest box 이미지 로드
+        this.questbox = this.add.image(0,500,'quest_box').setOrigin(0,0);
+        //quest text
+        this.quest_text = this.add.text(this.questbox.x+430, this.worldView.y+540, '악마에게 말을 걸자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+        this.quest_text2 = this.add.text(this.questbox.x+430, this.worldView.y+540, '도어락의 비밀번호의 값을 구하자.', {
+            font:'25px',
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        this.questbox.setVisible(false);
+        this.quest_text.setVisible(false);
+        this.quest_text2.setVisible(false);
 
 
         /** 플레이어 위치 확인용 **/
@@ -171,18 +191,31 @@ export default class FourthStage extends Phaser.Scene {
          // 4_stage의 앱에 들어가는 코드
          this.app_code_text =
          "#include <stdio.h>\n" +
-         "int main(){\n\n" +
-         "int password = 0;\n" +
-         " ㅤㅤㅤ(int i=10; i>0; i--) {\n" +
-		 "      ㅤㅤㅤ (i%2==1){\n" +
-		 "          password += i;\n" +
-		 "          }\n" +
-	     "      }\n" +
-         ' printf("ㅤㅤㅤㅤ",password);\n' +
-         "}\n"
+         "int main(){\n" +
+         "\u00a0\u00a0\u00a0int password = 0;\n" +
+         "\u00a0\u00a0\u00a0"+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0(int i=10; i>0; i--) {\n" +
+		 "\u00a0\u00a0\u00a0"+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"(i%2==1){\n" +
+		 "\u00a0\u00a0\u00a0"+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"password += i;\n" +
+		 "\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0}\n" +
+	     "\u00a0\u00a0\u00a0}\n" +
+         "   printf(\""+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"\",password);\n" +
+         "}"
  
          //코드 실행후 불러올 output값
          this.out = "";
+
+         /* 시작 대사 */
+        this.player.playerPaused = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_0, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+            this.questbox.setVisible(true);
+            this.quest_text.setVisible(true);
+        });
 
 
         stagenum = 4;
@@ -195,10 +228,21 @@ export default class FourthStage extends Phaser.Scene {
         this.quiz4 = false;
         this.quizOver = false;
         this.door = true; //문 앞에서 퀴즈 맞출때;
+
+        //악마에게 말을 걸 수 있는지 여부
+        this.cantalk=true;
     
     }
 
     update() {
+
+        //퀘스트 박스 및 텍스트 관련 코드
+        if(this.questbox.visible==true){
+            this.questbox.x=this.worldView.x+30;
+            this.quest_text.x=this.questbox.x+430;
+            this.quest_text2.x=this.questbox.x+430;
+        }
+
 
         //console.log('droppedText:',droppedText);
 
@@ -235,7 +279,6 @@ export default class FourthStage extends Phaser.Scene {
             //this.stage4_7(); //주석 해제하면 '아무일도 일어나지 않는다' 뜨나 compiled 함수에서 바로 visible을 false해버려서 사라지는 듯? 
             this.out = "";
         }
-
 
 
         /* 퀴즈 정답맞추기 */
@@ -358,16 +401,24 @@ export default class FourthStage extends Phaser.Scene {
 
 
         /* 시험 시작! */
-        if(this.player.player.x >=this.devil.x -100 && this.devil.x +100 >= this.player.player.x ){
+        if(this.player.player.x >=this.devil.x -100 && this.devil.x +100 >= this.player.player.x&&this.cantalk){
             this.pressX.setVisible(true);
             if(this.keyX.isDown){
-                if(this.firstTalk) {
+                this.cantalk=false;
+                if(this.firstTalk==true) {
                     this.devil.anims.stop();
+                    this.devil.setFrame(1);
                     this.firstTalk = undefined;
                     this.player.playerPaused = true;
-                    //this.item.length = 0; //배열 비워버리기
-                    //this.get_type_specifier() //배열 다시 채우기
-                    this.stage4_quiz_1();
+                    this.questbox.setVisible(false);
+                    this.quest_text.setVisible(false);
+                    this.stage4_0_1();
+                }else if(this.firstTalk==false){
+                    this.devil.anims.stop();
+                    this.devil.setFrame(1);
+                    this.firstTalk = undefined;
+                    this.player.playerPaused = true;
+                    this.stage4_8();
                 }
             }
         }
@@ -376,10 +427,11 @@ export default class FourthStage extends Phaser.Scene {
         /*두번째 관문*/
         if(this.player.player.x >= 1400 && 1500 >= this.player.player.x ){
             this.pressXDoor.setVisible(true);
-            this.pressXDoor.x = this.player.player.x;
+            this.pressXDoor.x = this.player.player.x-30;
             if(this.keyX.isDown){
                 if(this.door) {
                     this.door = false;
+                    this.player.player.setFlipX(false);
                     this.player.playerPaused = true;
                     //this.get_type_specifier();
                     this.stage4_6();
@@ -510,6 +562,17 @@ export default class FourthStage extends Phaser.Scene {
         });
     }
 
+    stage4_0_1(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_0_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.stage4_quiz_1()
+        });
+    }
+
     stage4_quiz_1() {
         //this.codeapp_onoff_state = 1; //드랍존 폰 안열려있어도 보여야함
         this.command.entire_code_button.input.enabled = false; //퀴즈 진행하는 동안 폰 안열리도록
@@ -634,7 +697,9 @@ export default class FourthStage extends Phaser.Scene {
                 ease: 'Linear',
                 repeat: 0,
                 onComplete: ()=>{
-                    this.devil.play('devil_touch_phone');
+                    this.devil.play('devil_touch_phone2');
+                    this.cantalk=true;
+                    this.firstTalk=false;
                 }
             }, this);
         });
@@ -648,14 +713,16 @@ export default class FourthStage extends Phaser.Scene {
         .load(this.dialog.stage4_6, this.dialog)
         .start();
         seq.on('complete', () => {
+            this.questbox.setVisible(true);
+            this.quest_text2.setVisible(true);
+            this.code_on=true;
             this.player.playerPaused = false;
-            //this.get_type_specifier();
-            this.dropzone1_x = 790; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 814;
-            this.dropzone3_x = 880;
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 205, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 230, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 340, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.dropzone1_x = 814; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 835;
+            this.dropzone3_x = 885;
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 205, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 315, 80, 25).setRectangleDropZone(80, 25).setName("3");
         });
     }
 
@@ -668,6 +735,20 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false;
+        });
+    }
+
+    stage4_8(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_8, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+            this.firstTalk=false;
+            this.cantalk=true;
+            this.devil.play('devil_touch_phone2');
         });
     }
 

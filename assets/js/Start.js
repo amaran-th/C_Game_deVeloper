@@ -304,6 +304,7 @@ class Start extends Phaser.Scene {
 
     title.play('logo');
     this.NEW_GAME_button.play('start');
+    this.CONTINUE_button.play('load');
     /*
       this.hsv = Phaser.Display.Color.HSVColorWheel();
 

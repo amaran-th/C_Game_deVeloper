@@ -235,8 +235,10 @@ export default class ThirdStage extends Phaser.Scene {
         this.code_on=false;
 
         //코드 실행 후 비교할 목표 텍스트(리눅스용/윈도우용)
-        //this.correct_msg="bread=25";
+        this.msg="";
 
+        //this.correct_msg="bread=25";
+        /* */
         this.correct_msg="#include <stdio.h>\n" + 
         "int main(){\n" +
         "   int bread=1;\n" +
@@ -246,6 +248,8 @@ export default class ThirdStage extends Phaser.Scene {
         "   }\n" +
         "   printf(\"bread=%d\",bread);\n"+
         "}"
+
+
         stagenum = 3;
 
         //초반 대사
@@ -290,7 +294,7 @@ export default class ThirdStage extends Phaser.Scene {
                 "int main(){ \n" +
                 "   int bread = 1; \n"+
                 "   int i;	//반복자\n"+
-                "   " +"           " + "(int i=0; i" + "           " + "24; i++){\n" +
+                "   " +"           " + "(int i=0;i" + "            " + "24; i++){\n" +
                 "      bread=bread+1;\n" +
                 "   }\n" +
                 "   printf(\"bread=%d\",bread);\n"+
@@ -402,6 +406,7 @@ export default class ThirdStage extends Phaser.Scene {
                     this.bread.setVisible(true);
                     this.questbox.setVisible(false);
                     this.quest_text.setVisible(false);
+                    this.help_icon.setVisible(false);
     
                     for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
                         (x => {
@@ -476,6 +481,10 @@ export default class ThirdStage extends Phaser.Scene {
           
         inZone =  false;
 
+       /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1300, 600);
+       this.player.player.body.setCollideWorldBounds()
+
 
     }
     stage3_1() {
@@ -507,7 +516,7 @@ export default class ThirdStage extends Phaser.Scene {
             this.questbox.setVisible(true);
             this.help_icon.setVisible(true);
             this.quest_text.setVisible(true);
-        });     
+        });
     }
 
     stage3_3() {

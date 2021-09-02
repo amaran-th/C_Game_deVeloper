@@ -181,7 +181,7 @@ visible(visible) {
     ['print', '(흐암...지금이 몇시지?)'],
     ['wait-click'],
     ['setFace', 4],
-    ['print', '* [Quest] 휴대전화를 얻자 *'],
+    ['print', '* Quest : 휴대전화를 얻자 *'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -242,7 +242,7 @@ visible(visible) {
     ['print', '(그것보다 이게 왜 우리집에?)'],
     ['wait-click'],
     ['setFace', 4],
-    ['print', '* 자세히 보니 보따리에는 작은 쪽지가 들어있었다. *'],
+    ['print', '* 자세히 보니 보따리에는 작은 쪽지가 들어있다. *'],
     ['wait-click'],
     ['setFace', 0],
     ['print', '(쪽지...?)'],
@@ -266,7 +266,7 @@ visible(visible) {
     ['setFace', 1],
     ['print', '...이게 대체 뭔 소리야?'],
     ['wait-click'],
-    ['setFace', 6],
+    ['setFace', 4],
     ['print', '띠링띠링!'],
     ['wait-click'],
     ['visible',false],
@@ -292,21 +292,20 @@ visible(visible) {
 
   intro6 = [
     ['place', 40,10],
-    ['wait-click'],
     ['visible',true],
     ['setFace', 0],
     ['print', '(말이 나왔어...!)'],
     ['wait-click'],
     ['setFace', 1],
-    ['print', '이 휴대폰 앱을 통해서 \'어떠한 행동\'을 할 수 있게 되는 걸지도...?'],
+    ['print', '(이 휴대폰 앱을 통해서 \'어떠한 행동\'을 할 수 있게 되는 걸지도...?)'],
     ['wait-click'],
-    ['print', '......'],
+    ['print', '(......)'],
     ['wait-click'],
-    ['print', '하하! 그럴리가 없잖아. 여기가 코딩 지옥이냐? 난 코딩같은 거 모른다고!'],
+    ['print', '(하하! 그럴리가 없잖아. 여기가 코딩 지옥이냐? 난 코딩같은 거 모른다고!)'],
     ['wait-click'],
-    ['print', '음... 그나저나 좀 더운 거 같은데...'],
+    ['print', '(음... 그나저나 좀 더운 거 같은데...)'],
     ['wait-click'],
-    ['print', '...일단 밖으로 나가볼까?'],
+    ['print', '(...일단 밖으로 나가볼까?)'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -361,7 +360,7 @@ visible(visible) {
     ['wait-click'],
     ['print', '이거 깜짝 카메라같은 거에요?'],
     ['wait-click'],
-    ['setFace', 5],
+    ['setFace', 6],
     ['print', 'F라고?? 세상에. 이거 안되겠네.'],
     ['wait-click'],
     ['visible',false],
@@ -379,7 +378,7 @@ visible(visible) {
   stage1_4 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 5],
+    ['setFace', 6],
     ['print', '흠...(만족)'],
     ['wait-click'],
     ['setFace', 0],
@@ -452,7 +451,7 @@ visible(visible) {
     ['setFace', 0],
     ['print', '아니 그러니까 이게 뭐하는거냐고.'],
     ['wait-click'],
-    ['setFace', 5],
+    ['setFace', 6],
     ['print', '뭐긴 뭐겠어. 신입을 도와주려는 선배의 배려지^^'],
     ['wait-click'],
     ['setFace', 0],
@@ -508,7 +507,7 @@ visible(visible) {
     ['setFace', 0],
     ['print', '...실환가? 휴학한지 일주일도 안됐는데 이런 곳에 갇혔다고?'],
     ['wait-click'],
-    ['setFace', 5],
+    ['setFace', 6],
     ['print', '휴학생이라고? 잘됐네, 배워간다고 생각해~'],
     ['wait-click'],
     ['setFace', 0],
@@ -524,7 +523,7 @@ visible(visible) {
     ['setFace', 0],
     ['print', '어? 그러고보니...printf인지 뭔지를 안 썼는데 목소리가 나오잖아?'],
     ['wait-click'],
-    ['setFace', 5],
+    ['setFace', 6],
     ['print', '어때? 내 배려가 눈물나게 고맙지?'],
     ['wait-click'],
     ['setFace', 0],
@@ -552,7 +551,41 @@ visible(visible) {
     ['print', '여긴 너 같은 사람들이 아주 많으니까 도움이 될거야.'],
     ['wait-click'],
     ['visible',false],
-    ['wait-time', 1],
+    ['wait-time', 0.5],
+  ]
+
+  //악마와 대화2(두번째부터)
+  stage1_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '근데 내가 알던 악마 이미지랑은 좀 다르네.'],
+    ['wait-click'],
+    ['setFace', 5],
+    ['print', '뭘 기대한건데?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '그냥...좀 현대적인 패션이라서?'],
+    ['wait-click'],
+    ['setFace', 5],
+    ['print', '흠. 너희같은 사람들이 많이 넘어온 뒤로 분위기가 바뀌긴 했지.'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '그렇구만...'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 0.5],
+  ]
+
+  //악마한테 말 안걸고 나가려고 할 때
+  stage1_10 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '아까 그 놈하고 얘기부터 좀 해보자.'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 0.5],
   ]
 
 
@@ -642,7 +675,6 @@ visible(visible) {
 
   stage2_3_1 = [
     ['visible',false],
-    ['wait-click'],
     ['visible',true],
     ['place', 40,10],
     ['setFace', 10],
@@ -694,7 +726,6 @@ visible(visible) {
 
   stage2_4_1 = [
     ['visible',false],
-    ['wait-click'],
     ['visible',true],
     ['place', 40,10],
     ['setFace', 10],
@@ -909,7 +940,7 @@ visible(visible) {
   stage4_1 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 20],
+    ['setFace', 45],
     ['print', '흑흑흑!'],
     ['wait-click'],
     ['print', '왜 알파벳으로 나눗셈을 하는 거야?!'],
@@ -920,10 +951,10 @@ visible(visible) {
     ['wait-click'],
     ['print', "저기요, 이거 가져요"],
     ['wait-click'],
-    ['print', "가져가서 유황불에 태워버린다음에 어디 묻어버려요!"],
+    ['print', "가져가서 유황불에 태워버린 다음에 어디 묻어버려요!"],
     ['wait-click'],
     ['setFace', 1],
-    ['print', "(새로운 문법 아이템을 받았다.)"],
+    ['print', "* 새로운 코드조각?들이 인벤토리에 추가되었습니다. *"],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1020,13 +1051,15 @@ visible(visible) {
     ['setFace', 40],
     ['print', '그래, 좋아.'],
     ['wait-click'],
+    ['print', '첫번째 문제는 정수 자료형에 대한 거야!'],
+    ['wait-click'],
     ['visible',false],
   ]
   stage4_quiz_1 = [
     ['visible',true],
     ['place', 40,10],
     ['setFace', 2],
-    ['print', 'printf("1 + ㅤㅤㅤㅤ = 4", 3 } ?'],
+    ['print', 'printf("1 + \u00a0\u00a0\u00a0 = 4", 3 } ?'],
     //['wait-click'],
     //['visible',false],
   ]
@@ -1034,10 +1067,11 @@ visible(visible) {
   stage4_q_2 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 2],
-    ['print', '그래도 예전보단 덜 멍청하군!'],
+    ['setFace', 42],
+    ['print', '오? 맞았어. 제법이네!'],
     ['wait-click'],
-    ['print', '두번째 퀴즈다!'],
+    ['setFace', 40],
+    ['print', '다음은 \'문자\' 형식이야!'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1046,16 +1080,14 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 2],
-    ['print', 'printf("welcome to ㅤ ell!"), h } ?'],
+    ['print', 'printf("welcome to \u00a0\u00a0\u00a0ell!"), h } ?'],
   ]
 
   stage4_q_3 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 2],
-    ['print', '이제 그만 멍청하기로 한거냐?'],
-    ['wait-click'],
-    ['print', '세번째 퀴즈다!'],
+    ['setFace', 40],
+    ['print', '다음은 \'문자열\' 형식이야!'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1064,16 +1096,14 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 2],
-    ['print', 'printf(" ㅤㅤㅤㅤ "), "I love Hell!" } ?'],
+    ['print', 'printf("\u00a0\u00a0\u00a0\u00a0"), "I love Hell!" } ?'],
   ]
 
   stage4_q_4 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 2],
-    ['print', '이거 기대 이상이라 섭섭해지려 하는데'],
-    ['wait-click'],
-    ['print', '마지막 퀴즈다!'],
+    ['setFace', 42],
+    ['print', '이제 마지막! \'실수\'형식이야.'],
     ['wait-click'],
     ['visible',false],
     
@@ -1083,25 +1113,31 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 2],
-    ['print', 'printf("π = ㅤㅤㅤㅤ "), "3.14" } ?'],
+    ['print', 'printf("π =\u00a0\u00a0\u00a0\u00a0"), "3.14" } ?'],
   ]
 
   stage4_5 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 2],
-    ['print', '잠옷입고 누워 자기만 좋아하는 놈인줄 알았는데 그래도 공부를 했나보지?'],
+    ['setFace', 42],
+    ['print', '잘했어! 모두 정답이네!'],
     ['wait-click'],
-    ['print', '이제 유치원생 수준은 벗어났군'],
+    ['setFace', 40],
+    ['print', '너 꽤 재능있는 것 같은데?'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '정말요?'],
+    ['wait-click'],
+    ['setFace', 40],
+    ['print', '이제 유치원생 수준은 벗어났구나!'],
+    ['wait-click'],
     ['setFace', 1],
     ['print', '(유치원생....)'],
     ['wait-click'],
-    ['setFace', 2],
-    ['print', '좋아! 통과다!'],
+    ['setFace', 40],
+    ['print', '좋아! 문을 열어줄게.'],
     ['wait-click'],
-    ['print', '이 앞으로 가면 더 높은 구역으로 갈 수 있을거다.'],
-    ['wait-click'],
-    ['print', '이제 썩 사라져!'],
+    ['print', '잠시만 기다려.'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1110,24 +1146,28 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 1],
-    /*
-    ['print', '문 앞에 무엇이 적혀있어'],
+    ['print', '이 문은 또 뭐지?'],
     ['wait-click'],
-    ['setFace', 5],
+    ['print', '도어락이잖아? 뭔가 적혀있네.'],
+    ['wait-click'],
+    ['setFace', 4],
     ['print', '<비밀번호는 0과 10 사이 홀수의 합이다. 비밀번호를 맞추시오>'],
     ['wait-click'],
     ['setFace', 1],
-    ['print', '지금 장난해?'],
+    ['print', '휴, 웬일로 쉬운 문제네.'],
     ['wait-click'],
-    ['setFace', 1],
-    ['print', '잠깐, 뒤에 뭐가 더 적혀있네'],
+    ['print', '잠깐, 뒤에 뭐가 더 적혀있어'],
     ['wait-click'],
-    ['setFace', 5],
+    ['setFace', 4],
     ['print', '<단, 코딩으로.>'],
     ['wait-click'],
     ['setFace', 1],
-    */
-    ['print', '.....'],
+    ['print', '.....지금 장난해?'],
+    ['wait-click'],
+    ['setFace', 4],
+    ['print', '* Quest : 도어락 비밀번호의 값을 구하자. *'],
+    ['wait-click'],
+    ['print', '* [코딩하기] 어플에 스크립트가 업데이트 되었습니다. *'],
     ['wait-click'],
     ['visible',false],
     
@@ -1136,10 +1176,44 @@ visible(visible) {
   stage4_7 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 5],
+    ['setFace', 4],
     ['print', '아무일도 일어나지 않는다.'],
     ['wait-click'],
     ['visible',false],
+  ]
+
+  stage4_8 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '아까 보니까 신택스씨랑 아는 사이인가봐요?'],
+    ['wait-click'],
+    ['setFace', 40],
+    ['print', '아 걔. 내 동생이야.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '헐?'],
+    ['wait-click'],
+    ['setFace', 40],
+    ['print', '성이 똑같잖아. 신택스 에러, 런타임 에러.'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '아 그렇네요...'],
+    ['wait-click'],
+    ['setFace', 40],
+    ['print', '걔가 좀 싸가지없지?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '네 좀 많이...'],
+    ['wait-click'],
+    ['setFace', 43],
+    ['print', 'ㅎㅎ아직도 그러는구나~알겠어~'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '(...지금 주먹 쥔 것 같은데...)'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time',0.5]
   ]
 
 
@@ -1165,7 +1239,7 @@ visible(visible) {
   stage5_3 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 20],
+    ['setFace', 25],
     ['print', '...아, 도서관이 처음이신가요?'],
     ['wait-click'],
     ['setFace', 1],
@@ -1220,6 +1294,7 @@ visible(visible) {
 
   stage5_5 = [
     ['visible',true],
+    ['place', 40,10],
     ['setFace', 1],
     ['print', '* [회원증]을 얻었습니다. *'],
     ['wait-click'],
@@ -1233,6 +1308,7 @@ visible(visible) {
     ['print', '(일단은 여길 한 번 둘러볼까)'],
     ['wait-click'],
     ['visible',false],
+    ['wait-time',0.5],
   ]
   stage5_7 = [
     ['visible',true],
@@ -1279,6 +1355,7 @@ visible(visible) {
   ]
   stage5_8_2 = [
     ['visible',true],
+    ['place', 40,10],
     ['setFace', 25],
     ['print', '여기 회원증입니다.'],
     ['wait-click'],
@@ -1292,6 +1369,7 @@ visible(visible) {
     ['print', '* 라이브러리 대여 상황이 업데이트 되었습니다. *'],
     ['wait-click'],
     ['visible',false],
+    ['wait-time',0.5]
   ]
 
   stage5_11=[
@@ -1327,6 +1405,15 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
+  stage5_12_2=[
+    ['visible',true],
+    ['place', 40,400],
+    ['setFace', 4],
+    ['print', '* 코딩 어플리케이션의 스크립트가 업데이트 되었습니다. *'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
   stage5_13=[
     ['visible',true],
     ['place', 40,10],
@@ -1337,7 +1424,6 @@ visible(visible) {
   ]
   stage5_14=[
     ['place', 40,10],
-    ['wait-click'],
     ['visible',true],
     ['setFace', 0],
     ['print', '(음, 이게 맞는 것 같긴 한데, 이제 학생 가까이에 가서 말해주면 될 것 같아.)'],
@@ -1346,7 +1432,6 @@ visible(visible) {
   ]
   stage5_15=[
     ['place', 40,10],
-    ['wait-click'],
     ['visible',true],
     ['setFace', 30],
     ['print', '와 감사합니다!!!ㅠㅠㅠ 이제 채점 할 수 있겠어요!'],
@@ -1364,6 +1449,7 @@ visible(visible) {
     ['print', '...'],
     ['wait-click'],
     ['visible',false],
+    ['wait-time', 0.5],
   ]
   stage5_16=[
     ['visible',true],
@@ -1378,6 +1464,7 @@ visible(visible) {
     ['print', '* 옆에 이전에 풀었던 수학 문제가 있다. *'],
     ['wait-click'],
     ['visible',false],
+    ['wait-time', 0.5],
   ]
 
 
@@ -1385,7 +1472,7 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 0],
-    ['print', '여긴 아직 정리 중인가보네.'],
+    ['print', '여긴 아직 정리 중인가보네. 창고인가?'],
     ['wait-click'],
 
     ['visible',false],
@@ -1449,7 +1536,7 @@ visible(visible) {
     ['print', '그럼 저야 좋죠.'],
     ['wait-click'],
     ['setFace', 35],
-    ['print', '좋아. 그럼...거기 있는 갈색 책을 들어볼래?'],
+    ['print', '좋아. 그럼...거기 있는 녹색 책을 펼쳐볼래?'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1467,7 +1554,7 @@ visible(visible) {
     ['setFace', 35],
     ['print', '맞아~ 이 책처럼 배열의 번호(index)도 0부터 시작해.'],
     ['wait-click'],
-    ['print', '그럼, 만약에 이 배열이름을 book이라고 둬보자'],
+    ['print', '그럼, 만약에 이 배열의 이름을 book이라고 둬보자'],
     ['wait-click'],
     ['print', '그럼, book[0]은 뭘까? book배열의 1번째 원소를 찾는거야!'],
     ['wait-click'],
@@ -1503,6 +1590,29 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
+  stage6_6 = [
+    ['visible',true],
+    ['setFace', 35],
+    ['print', '와 대단해! 다 맞췄잖아?'],
+    ['wait-click'],
+    ['print', '너 배우는 게 빠르구나?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '하하...감사합니다'],
+    ['wait-click'],
+    ['setFace', 35],
+    ['print', '원래는 너한테 책 정렬하는 걸 도와달라고 하려고 했는데,'],
+    ['wait-click'],
+    ['print', '이 게임 개발자들이 그거까지 넣기엔 시간이 부족했대.'],
+    ['wait-click'],
+    ['setFace', 0],
+    ['print', '네??'],
+    ['wait-click'],
+    ['setFace', 35],
+    ['print', '음...게임은 이게 끝이라는 거야. 저기 방으로 가봐.'],
+    ['wait-click'],
+    ['visible',false],
+  ]
 
   //어디에 넣을 수 있을진 모르겠는데 적당히 엔딩낼때 넣을 텍스트
   final_0=[
@@ -1513,9 +1623,10 @@ visible(visible) {
     ['print', '캐릭터에게 말을 걸면 개발진의 후기를 볼 수 있습니다.'],
     ['wait-click'],
     ['visible',false],
+    ['wait-time',0.5]
   ]
 
-  final_devil1 = [
+  final_npc1 = [
     ['visible',true],
     ['setFace', 4],
     ['print', '...'],
@@ -1532,13 +1643,38 @@ visible(visible) {
     ['wait-click'],
     ['print', '이후 스테이지를 더 만들지는...잘 모르겠네요.'],
     ['wait-click'],
-    ['print', '아마 힘들지 않을까 싶어요.'],
-    ['wait-click'],
     ['print', '사실 이스터에그도 많이 넣고 싶었는데, '],
     ['wait-click'],
     ['print', '2달은 그런 것까지 신경쓰기엔 너무 짧은 시간이더라구요.'],
     ['wait-click'],
     ['visible',false],
+    ['wait-time', 0.5],
+  ]
+
+  final_npc2 = [
+    ['visible',true],
+    ['setFace', 4],
+    ['print', '...'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 0.5],
+  ]
+  final_npc3 = [
+    ['visible',true],
+    ['setFace', 4],
+    ['print', '...'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 0.5],
+  ]
+
+  final_npc4 = [
+    ['visible',true],
+    ['setFace', 4],
+    ['print', '...'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 0.5],
   ]
 
   

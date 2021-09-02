@@ -1,28 +1,86 @@
 <html>
-    <head><h1>Register</h1></head>
+    <head>
+        <title>Coding Hell-Register</title>
+        
+        <style>
+            html{
+                height:100%;
+            }
+            body{
+                margin:0;
+                height:100%;
+            }
+            #middle{
+                text-align:center;
+                
+                margin:0 auto;
+                
+            }
+            #left{
+                background-image:url(view_image/fireBackground2.png);
+                width:20%;
+                height:100%;
+                background-color: bisque;
+                float:left;
+            }
+            #right{
+                background-image:url(view_image/fireBackground2.png);
+                width:20%;
+                height:100%;
+                background-color: bisque;
+                float:right;
+            }
+            #middle{
+                height:100%;
+            }
+            #islogined{
+                color: cadetblue;
+            }
+            h1{
+                margin:0;
+            }
+            #icon{
+                color:blue;
+            }
+            input,button{
+                margin:2px;
+            }
+            p{
+                color:red;
+            }
+        
+            
+        
+        </style>
+    </head>
     <body>
-        <form action="/register" method="post" onsubmit = "return ischeck()"> <!--submit으로 form에 있는 데이터 서버로 보내줌-->
-            <label>nickname</label>
-            <input type="text" name="nick" id="nick" placeholder="닉네임">
-            <br>
-            <label>id</label>
-            <input type="text" name="id" id="id" placeholder="아이디">
-            <span id="icon">X</span>
-            <br>
-            <label>password</label>
-            <input type="password" name="pw" id="pw" placeholder="비밀번호">
-            <br>
-            <label>password check</label>
-            <input type="password" name="pwck" id="pwck" placeholder="비밀번호 확인">
-            <br>
+        <div id='left'></div><div id='right'></div>
+        <div id='middle'>
+            <h1>회원가입</h1><br>
+            <form action="/register" method="post" onsubmit = "return ischeck()"> <!--submit으로 form에 있는 데이터 서버로 보내줌-->
+                <label>nickname</label>
+                <input type="text" name="nick" id="nick" placeholder="닉네임">
+                <br>
+                <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id</label>
+                <input type="text" name="id" id="id" placeholder="아이디">
+                <span id="icon">X</span>
+                <br>
+                <label>password</label>
+                <input type="password" name="pw" id="pw" placeholder="비밀번호">
+                <br>
+                <label>password check</label>
+                <input type="password" name="pwck" id="pwck" placeholder="비밀번호 확인">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <br>
 
-            <button type="button" id="checkid" onclick="checkdp()">id 중복 확인</button>
-              
-            <button type="submit">회원가입</button>
-        </form>
-        <form action="/" method="get">
-            <button type="submit">뒤로가기</button>
-        </form>
+                <button type="button" id="checkid" onclick="checkdp()">id 중복 확인</button>
+                
+                <button type="submit">회원가입</button>
+            </form>
+            <form action="/" method="get">
+                <button type="submit">뒤로가기</button>
+            </form>
+            <p>* 테스터분들의 계정 정보는 서버가 닫힌 후 삭제됩니다. *</p>
+        </div>
     </body>
     <script>
         var dpflag=1;    //중복체크 수행 여부(중복이 아닐 시 0이 됨)
