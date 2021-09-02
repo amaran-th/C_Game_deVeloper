@@ -879,6 +879,25 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
+  //퀘스트 완료후, 유치원생 퀘스트 한번더
+  stage2_14 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 15],
+    ['print', '언니! 그때 그 코드가 뭐였죠? 까먹었엉ㅜㅜ'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  //퀘스트 완료후, 유치원생 퀘스트 한번더 => 얏호! 또 풀었다
+  stage2_15 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 15],
+    ['print', '아하! 이거구나! 고마워~!~!~!~!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
   //스테이지 3-0에 들어가면 나오는 대사
   stage3_0 = [
     ['visible',true],

@@ -177,6 +177,12 @@ export default class SecondStage extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
+        //플레이어 위 pressX 생성해두기(door) => stage2로 
+        this.pressX_quest2 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to have a talk', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
         /*** 퀘스트 말풍선 애니메이션 */
         this.anims.create({
             key: "exclam",
@@ -443,12 +449,14 @@ export default class SecondStage extends Phaser.Scene {
             this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
             this.stage2_1(); 
             this.mission1Complete = false;
+            this.cantGoFarther = true;
         }
         else if (stage == 3){//할아버지 미션 성공했을때(stage = 3)
             this.mission1Complete = true;
+            this.cantGoFarther = false;
         }
         else{//할아버지, 초딩 다 성공했을때(stage = 4) => 이제야 퀘스트 다시 할 수 있음!
-            
+            this.mission1Complete = true;
         }
 
         //=========================================변수 초기화=================================
@@ -494,7 +502,7 @@ export default class SecondStage extends Phaser.Scene {
 
         
         //this.mission1Complete = true;    //두번째 미션 먼저보고싶을때 활성화
-        this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
+        //this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
         this.firstTalk = true; //플레이어가 유치원생과 한 번만 대화할 수 있도록
 
         this.reset_state = false; // 태그조각 리셋 버튼과 연동하기 위함
@@ -508,9 +516,9 @@ export default class SecondStage extends Phaser.Scene {
 
         //코드 앱에 텍스트 업데이트 시키는 변수
       //  this.code_on1=false;
-        this.code_on2=false;
+        //this.code_on2=false;
 
-        this.isdownX=true;
+        this.isdownX=true;//x키 중복 방지. 이거 필수. 아니면 대사가 안 넘어감..
 
     }
 
@@ -901,7 +909,13 @@ export default class SecondStage extends Phaser.Scene {
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 this.mission2 = undefined;
-                this.stage2_10();
+                
+                if (stage==3){
+                    this.stage2_10();
+                }
+                else { //반복퀘스트에서 완료한 경우
+                    this.stage2_15();
+                }
             }else{
                 textBox.setVisible(false);
                 script.setVisible(false);
@@ -979,6 +993,23 @@ export default class SecondStage extends Phaser.Scene {
             }
         }
         else this.pressX_quest1.setVisible(false);
+
+        //모든 퀘스트 완료후,  유치원생한테 퀘스트 다시(무한 반복) => 유치원생한테 말걸면, 코드창 나옴. 
+        if(this.player.player.x<1300&&this.player.player.x>1100&&stage>=4&&this.isdownX){
+            this.pressX_quest2.setVisible(true);
+            this.pressX_quest2.x = this.player.player.x-50;
+            this.pressX_quest2.y = this.player.player.y-100;
+
+            if(this.keyX.isDown) {
+                this.stage2_14();
+
+                this.mission2 = true;
+                this.code_on2 = true;
+
+                this.isdownX = false;
+            }
+        }
+        else this.pressX_quest2.setVisible(false);
         
         /** 미션1 안끝났는데 넘어가려고 할 때 **/
         
@@ -1007,7 +1038,7 @@ export default class SecondStage extends Phaser.Scene {
         else this.cantGoFarther = true;
         
 
-        if(1300 <= this.player.player.x && this.player.player.x <= 1350) {
+        if(1300 <= this.player.player.x && this.player.player.x <= 1350&&stage==3) {
             if(this.firstTalk) {
                 this.playerPaused = true;
                 this.firstTalk = undefined;
@@ -1501,6 +1532,28 @@ export default class SecondStage extends Phaser.Scene {
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.stage2_13, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused=false; 
+            this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
+        });     
+    }
+
+    stage2_14() { //유치원 퀘스트 다시
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_14, this.dialog)
+        .start();
+        seq.on('complete', () => {
+        });     
+    }
+
+    stage2_15() { //유치원 퀘스트 완료한경우
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_15, this.dialog)
         .start();
         seq.on('complete', () => {
             this.player.playerPaused=false; 
