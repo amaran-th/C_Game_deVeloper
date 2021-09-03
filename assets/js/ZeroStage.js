@@ -292,6 +292,17 @@ export default class ZeroStage extends Phaser.Scene {
         this.drop_state_5 = 0;
         this.drop_state_6 = 0;
         
+        
+        this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+        this.dropzone2_x = 950;
+        this.dropzone3_x = 815;
+        this.dropzone4_x = 965;
+
+        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
+        this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 170, 25).setRectangleDropZone(170, 25).setName("4");
+
         // zero_stage 씬의 전체코드
         this.contenttext = "" ;
         // zero_stage의 앱에 들어가는 코드
@@ -383,15 +394,6 @@ export default class ZeroStage extends Phaser.Scene {
             codepiece_string_arr[codepiece_string_arr.length] = 'printf';
             this.code_piece.add_new_stage_codepiece(this);
             
-            this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 950;
-            this.dropzone3_x = 815;
-            this.dropzone4_x = 965;
-
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 170, 25).setRectangleDropZone(170, 25).setName("4");
             this.intro4();
             this.invenPlus = false;
         }
