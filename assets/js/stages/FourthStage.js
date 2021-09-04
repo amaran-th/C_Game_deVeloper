@@ -118,6 +118,7 @@ export default class FourthStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage4_text').setOrigin(1,0);
 
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
@@ -237,13 +238,19 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     update() {
-
+        this.player.update();
+        this.inventory.update(this);
+        this.command.update(this);
+        
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
             this.questbox.x=this.worldView.x+30;
             this.quest_text.x=this.questbox.x+430;
             this.quest_text2.x=this.questbox.x+430;
         }
+
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
 
 
         //console.log('droppedText:',droppedText);
@@ -368,9 +375,7 @@ export default class FourthStage extends Phaser.Scene {
         }
         
 
-        this.player.update();
-        this.inventory.update(this);
-        this.command.update(this);
+        
         if(this.draganddrop!=undefined) this.draganddrop.update(this);
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);

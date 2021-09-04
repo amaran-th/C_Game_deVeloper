@@ -183,7 +183,7 @@ export default class SecondStage extends Phaser.Scene {
         this.cry = this.add.sprite( 900, 300, 'cry', 0);
         this.cry.setVisible(false);
 
-        
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage2_text').setOrigin(1,0);
 
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
@@ -500,6 +500,9 @@ export default class SecondStage extends Phaser.Scene {
             this.help_text.x=this.help_box.x+30;
             this.help_text2.x=this.help_box.x+30;
         }
+
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
 
         //강 건너기
         if(this.player.player.x>=1535&&this.player.player.x<=1650&&this.player.player.body.velocity.x>0){

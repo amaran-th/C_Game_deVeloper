@@ -121,6 +121,8 @@ export default class ThirdStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage3_text').setOrigin(1,0);
+
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "third_stage");
@@ -270,7 +272,11 @@ export default class ThirdStage extends Phaser.Scene {
 }
 
     update() {
+        this.player.update();
+        this.inventory.update(this);
+        this.command.update(this);
 
+        
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
             this.questbox.x=this.worldView.x+30;
@@ -279,6 +285,9 @@ export default class ThirdStage extends Phaser.Scene {
             this.help_box.x=this.help_icon.x-418;
             this.help_text.x=this.help_box.x+30;
         }
+
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
 
         if(this.code_on){
             this.contenttext = 
@@ -332,10 +341,6 @@ export default class ThirdStage extends Phaser.Scene {
             }, [], this);
         }
         */
-
-        this.player.update();
-        this.inventory.update(this);
-        this.command.update(this);
 
         
          /* 플레이어 위치 알려줌*/

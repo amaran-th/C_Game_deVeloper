@@ -152,6 +152,8 @@ export default class FifthStage extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage5_text').setOrigin(1,0);
+
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "fifth_stage");
@@ -363,6 +365,9 @@ export default class FifthStage extends Phaser.Scene {
             this.help_box.x=this.help_icon.x-418;
             this.help_text.x=this.help_box.x+30;
         }
+
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
 
         if(this.attention&&this.mathOK==false){
             if(this.library_state==1){

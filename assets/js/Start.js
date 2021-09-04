@@ -160,6 +160,15 @@ class Start extends Phaser.Scene {
       frameHeight: 50
     });
 
+    //스테이지를 알려주는 텍스트 이미지
+    this.load.image("tutorial_text", "./assets/images/tutorial_text.png");
+    this.load.image("stage1_text", "./assets/images/stage1_text.png");
+    this.load.image("stage2_text", "./assets/images/stage2_text.png");
+    this.load.image("stage3_text", "./assets/images/stage3_text.png");
+    this.load.image("stage4_text", "./assets/images/stage4_text.png");
+    this.load.image("stage5_text", "./assets/images/stage5_text.png");
+    this.load.image("stage6_text", "./assets/images/stage6_text.png");
+    
     /** 첫번째 스테이지의 집 이미지 로드 **/
       this.load.image("house", "./assets/images/house.png");
     /**첫번째 스테이지 npc 로드  **/
