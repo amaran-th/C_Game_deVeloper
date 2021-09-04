@@ -160,7 +160,6 @@ export default class FourthStage extends Phaser.Scene {
 
         //여기 코드 보자!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         this.dragAndDrop = new DragAndDrop(this, 0, 0, 0, 0);
-        this.dragAndDrop.reset_button.destroy();
 
         
         // 인벤창 팝업 여부를 나타내는 상태변수

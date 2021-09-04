@@ -243,16 +243,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
             graphics.strokeRect(x - width / 2, y - height / 2, width, height);
         });
         
-        //초기화 시키기
-        this.reset_button = scene.add.image(800, 450, 'reset_button'); // 함수에서도 변수 쓰기 위해 this로 함
-        var reset_button = this.reset_button;
-        reset_button.setInteractive();
-        reset_button.on('pointerover', function () {
-            reset_button.setTint(0x4A6BD6);
-        });
-        reset_button.on('pointerout', function () {
-            reset_button.clearTint();
-        });
+        
         /*var code_piece2 = this.code_piece; // 리셋 버튼 안에서 this.code_piece를 가져오지 못해서 따로 변수로 둠(앞에서 code_piece로 변수 둬서 충돌하길래 2로 둠)
         reset_button.on('pointerup', function () {
             console.log('reset');
@@ -303,13 +294,12 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
                 scene.concern_text.y = scene.bubble.y-87;
             }
         });*/
-        //scene.code_piece_add_state 상태변수 다 삭제해도 될듯
 
     } 
 
     update(scene) {
         
-        this.reset_button.x = scene.worldView.x + 800; // 리턴 버튼 플레이어 따라 이동
+        //this.reset_button.x = scene.worldView.x + 800; // 리턴 버튼 플레이어 따라 이동
    
         if(scene.draganddrop_1!=undefined) scene.draganddrop_1.x = scene.worldView.x + scene.dropzone1_x; // 드랍존 플레이어 따라 이동
         if(scene.draganddrop_2!=undefined) scene.draganddrop_2.x = scene.worldView.x + scene.dropzone2_x;
@@ -346,17 +336,17 @@ export default class DragAndDrop extends Phaser.GameObjects.Zone {
         if (scene.codeapp_onoff_state) { // 명령창이 나와있을 때 드랍존과 리셋버튼 나와 있도록
             //console.log('there');
             this.graphics.setVisible(true);
-            this.reset_button.setVisible(true);
+            //this.reset_button.setVisible(true);
         } else { // 명령창이 들어가있을 때 드랍존과 리셋버튼 들어가 있도록
             //console.log('here');
             this.graphics.setVisible(false);
-            this.reset_button.setVisible(false);
+            //this.reset_button.setVisible(false);
         }
     }
 
     reset_before_mission(scene) {   
         this.graphics.destroy(); // 드랍존틀 없애줌
-        this.reset_button.destroy(); // 리셋버튼 없애줌
+        //this.reset_button.destroy(); // 리셋버튼 없애줌
 
         //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
         scene.drop_state_1 = 0;
