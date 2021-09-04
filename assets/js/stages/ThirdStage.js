@@ -26,7 +26,6 @@ export default class ThirdStage extends Phaser.Scene {
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
-
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
         this.key1 = this.input.keyboard.addKey('ONE');
@@ -139,8 +138,6 @@ export default class ThirdStage extends Phaser.Scene {
         },this);
         */
 
-        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
-
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
 
@@ -160,6 +157,7 @@ export default class ThirdStage extends Phaser.Scene {
 
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -336,6 +334,7 @@ export default class ThirdStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+        this.code_piece.update(this);
 
         
          /* 플레이어 위치 알려줌*/
@@ -382,16 +381,9 @@ export default class ThirdStage extends Phaser.Scene {
         }
 
         if(this.invenPlus) {
-            this.item[this.item.length] =  '#include';
-            this.item[this.item.length] =  '<stdio.h>';
-            this.item[this.item.length] =  'printf';
-            this.item[this.item.length] =  'if';
-            this.item[this.item.length] =  '<';
-            this.item[this.item.length] =  '>';
-            this.item[this.item.length] =  'while';
-            this.item[this.item.length] =  'for';
-            this.dropzon_su = 2; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
+            codepiece_string_arr[codepiece_string_arr.length] = 'for';
+            this.code_piece.add_new_stage_codepiece(this);
+            
             this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 980;
 

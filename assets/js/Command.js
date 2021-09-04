@@ -39,6 +39,16 @@ export default class Command extends Phaser.GameObjects.Image {
         compile_button.on('pointerout', function () {
             compile_button.clearTint();
         });
+        /*** 리셋버튼 활성화 ***/
+        this.reset_button = scene.add.image(800, 450, 'reset_button'); // 함수에서도 변수 쓰기 위해 this로 함
+        var reset_button = this.reset_button;
+        reset_button.setInteractive();
+        reset_button.on('pointerover', function () {
+            reset_button.setTint(0x4A6BD6);
+        });
+        reset_button.on('pointerout', function () {
+            reset_button.clearTint();
+        });
 
         this.tutorial = scene.add.image(0,0,"tutorial").setOrigin(0,0);
         this.tutorial2 = scene.add.image(0,0,"tutorial2").setOrigin(0,0);
@@ -111,6 +121,7 @@ export default class Command extends Phaser.GameObjects.Image {
                         tutorial_on = false;
                         code_text.setVisible(false);
                         this.compile_button.setVisible(false);
+                        this.reset_button.setVisible(false);
                         tutorial_text.setVisible(false);
                         this.back_button.setVisible(false);
                         state = 0;
@@ -142,6 +153,7 @@ export default class Command extends Phaser.GameObjects.Image {
                 tutorial_on = false;
                 code_text.setVisible(false);
                 this.compile_button.setVisible(false);
+                this.reset_button.setVisible(false);
                 tutorial_text.setVisible(false);
             }
         },this);
@@ -205,11 +217,56 @@ export default class Command extends Phaser.GameObjects.Image {
             console.log(" compile finish!!!");
            
         });
-        
+        /*** 리셋버튼 누를 시 코드 조각 원래 위치로 이동 ***/
+        reset_button.on('pointerup', function () {
+            console.log('reset');
+            var code_piece_reset_y = 130;
+            for (var i = 0; i < scene.code_piece.codepiece_textObject_arr.length; i++){
+                scene.code_piece.codepiece_textObject_arr[i].x = scene.worldView.x + 15;
+                scene.code_piece.codepiece_textObject_arr[i].y = code_piece_reset_y;
+                code_piece_reset_y += 30;
+            }
+            //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
+            scene.drop_state_1 = 0;
+            scene.drop_state_2 = 0;
+            scene.drop_state_3 = 0;
+            scene.drop_state_4 = 0;
+            scene.drop_state_5 = 0;
+            scene.drop_state_6 = 0;
+            scene.drop_state_7 = 0;
+            scene.drop_state_8 = 0;
+            scene.drop_state_9 = 0;
+            scene.drop_state_10 = 0;
+            scene.drop_state_11 = 0;
+            scene.drop_state_12 = 0;
+            scene.drop_state_13 = 0;
+            scene.drop_state_14 = 0;
 
+            scene.code_zone_1 = undefined; // 리셋했을 때 비워주기
+            scene.code_zone_2 = undefined;
+            scene.code_zone_3 = undefined;
+            scene.code_zone_4 = undefined;
+            scene.code_zone_5 = undefined;
+            scene.code_zone_6 = undefined;
+            scene.code_zone_7 = undefined;
+            scene.code_zone_8 = undefined;
+            scene.code_zone_9 = undefined;
+            scene.code_zone_10 = undefined;
+            scene.code_zone_11 = undefined;
+            scene.code_zone_12 = undefined;
+            scene.code_zone_13 = undefined;
+            scene.code_zone_14 = undefined;
 
+            //scene.reset_state = true;
 
-
+            //zerostage this.concern_text(마이크테스트) 리셋버튼 적용시키기 위해 넣음
+            if (scene.concern_text != undefined) {
+                scene.concern_text.setColor('#000000');
+                scene.concern_text.setFontSize(14);
+                scene.concern_text.x = scene.bubble.x+20;
+                scene.concern_text.y = scene.bubble.y-87;
+            }
+        });
 
     }
 
@@ -227,6 +284,7 @@ export default class Command extends Phaser.GameObjects.Image {
 
         if(state == 0) {
             this.compile_button.setVisible(false);
+            this.reset_button.setVisible(false);
             this.entire_code_button.on('pointerdown', () => { //명령창 띄우기
                 this.commandbox.setVisible(true);
 
@@ -242,6 +300,7 @@ export default class Command extends Phaser.GameObjects.Image {
             this.commandbox.x = this.worldView.x + 715; //화면 이동시 명령창 따라가도록 설정
             this.back_button.x = this.worldView.x + 980;
             this.compile_button.x = this.worldView.x + 850;
+            this.reset_button.x = this.worldView.x + 800;
             
             for(var i=0; i < this.apps.length; i++){
                 this.apps[i].x = this.worldView.x + 755 + (i%2)*170;
@@ -255,6 +314,7 @@ export default class Command extends Phaser.GameObjects.Image {
                 tutorial_text.setVisible(false);
                 code_text.setVisible(false);
                 this.compile_button.setVisible(false);
+                this.reset_button.setVisible(false);
             }else{
                 if(code_on === true){
                     for(var i=0; i < this.apps.length; i++){
@@ -262,6 +322,7 @@ export default class Command extends Phaser.GameObjects.Image {
                     }
                     code_text.setVisible(true);
                     this.compile_button.setVisible(true);
+                    this.reset_button.setVisible(true);
                     code_text.x = this.worldView.x + 750;
                 } else if(tutorial_on === true){
                     for(var i=0; i < this.apps.length; i++){
@@ -296,6 +357,7 @@ export default class Command extends Phaser.GameObjects.Image {
                 //text.setVisible(false);
                 code_text.setVisible(false);
                 this.compile_button.setVisible(false);
+                this.reset_button.setVisible(false);
                 tutorial_text.setVisible(false);
                 this.back_button.setVisible(false);
                 state = 0;
@@ -337,6 +399,7 @@ export default class Command extends Phaser.GameObjects.Image {
         tutorial_on = false;
         code_text.setVisible(false);
         this.compile_button.setVisible(false);
+        this.reset_button.setVisible(false);
         tutorial_text.setVisible(false);
         this.back_button.setVisible(false);
         state = 0;

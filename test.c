@@ -1,10 +1,9 @@
 #include <stdio.h>
 int main(){
-
-   int password = 0;  undefined(int i=10; i>0; i--) {
-      undefined (i%2==1){
-          password += i;
-      }
-  }
-   printf('undefined',i);
+   int bread=1;
+   int i;
+   undefined(int i=0; iundefined24; i++){
+      bread=bread+1;
+   }
+   printf("bread=%d",bread);
 }
