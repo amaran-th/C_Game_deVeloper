@@ -1,6 +1,7 @@
 var playerX;
 var stagenum=0;
 var username='AAA';
+var codepiece_string_arr = [];
 
 //데이터베이스에 접속해서 닉네임 불러와서 username 변수에 저장
 var xhr = new XMLHttpRequest();
@@ -352,7 +353,7 @@ class Start extends Phaser.Scene {
         this.isnewgame=1;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("fifth_stage");
+        this.scene.start("fourth_stage");
       }, this);
 
     }

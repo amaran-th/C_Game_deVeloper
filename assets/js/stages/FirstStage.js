@@ -194,6 +194,9 @@ export default class FirstStage extends Phaser.Scene {
         this.physics.add.overlap(this.player.player, this.zone1_2, () => {
             inZone1_2 = true;
         });
+
+        //X키가 눌린 상태인지 여부
+        this.isdownX=false;
     }
 
     update() {
@@ -260,7 +263,7 @@ export default class FirstStage extends Phaser.Scene {
                     console.log('second talk with devil');
                     this.player.player.setFlipX(false);
                     this.cantalk=false;
-                    this.function=6;
+                    this.function=3;
                     this.player.playerPaused = true;
                 }
             }
@@ -328,10 +331,14 @@ export default class FirstStage extends Phaser.Scene {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
             this.pressX_2.setVisible(true);
-            if (this.keyX.isDown){
+            if (this.keyX.isDown&&this.talk_num==1){
                 console.log("[맵이동] stage2 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('second_stage'); 
+            }else if(this.keyX.isDown&&this.talk_num==0&&this.isdownX==false){
+                this.isDownX=true;
+                console.log("nope.");
+                this.function=4;
             }
         }else this.pressX_2.setVisible(false);
 
@@ -527,12 +534,37 @@ export default class FirstStage extends Phaser.Scene {
             this.player.playerPaused = false;
             this.cantalk=true;
             this.devil.play('devil_touch_phone',true);
-                //this.function=3;
-            
-
+            this.talk_num=1;
         });
     }
     stage1_9(){
-
+        this.devil.anims.stop();
+        this.devil.setFrame(1);
+        this.devil.setFlipX(true);
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_9, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+            this.cantalk=true;
+            this.devil.play('devil_touch_phone',true);
+            
+            
+        });
+    }
+    //악마한테 말 안걸고 나가려고 할 때
+    stage1_10(){
+        this.player.playerPaused = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage1_10, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+            this.isdownX=false;
+        }); 
     }
 }

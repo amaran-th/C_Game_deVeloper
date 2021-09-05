@@ -118,7 +118,7 @@ export default class SecondStage extends Phaser.Scene {
 
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone2_1 = this.physics.add.staticImage(10, 420).setSize(100,160);
-        this.zone2_2 = this.physics.add.staticImage(2000, 420).setSize(100,160);
+        this.zone2_2 = this.physics.add.staticImage(2100, 420).setSize(100,160);
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -224,13 +224,13 @@ export default class SecondStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 2-1 힌트====================================", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 이 스테이지에서는 사물로부터 '변수' 코드조각을 가져와 사용할 수 있습니다!\n 전광판에서 temp(온도) 변수를 드래그&드랍해봅시다.", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
             wordWrap: { width: 500, height:230, useAdvancedWrap: true },
         }).setOrigin(0,0);
-        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 2-2 힌트====================================", {
+        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 앞 퀘스트와 마찬가지로 땅과 강에서 변수를 얻어 드래그&드랍해봅시다!", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
@@ -274,14 +274,12 @@ export default class SecondStage extends Phaser.Scene {
         },this);
         */
 
-        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
-
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
         
         /** 아이템 만들기 **/
         this.itemicon = this.add.image(360,430,'item');
-        var item_text = 'if';
+        var item_text = 'if < >';
         
         /** 아이템 얻었을 때 뜨는 이미지 **/
         this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
@@ -294,6 +292,8 @@ export default class SecondStage extends Phaser.Scene {
 
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
+
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -306,8 +306,6 @@ export default class SecondStage extends Phaser.Scene {
         this.code_zone_5 = "           ";
         this.code_zone_6 = "           ";*/
         
-        // 클래스 여러번 호출해도 위에 추가한 코드조각만큼만 호출되게 하기 위한 상태 변수
-        this.code_piece_add_state = 0;
         // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
@@ -432,11 +430,14 @@ export default class SecondStage extends Phaser.Scene {
 
 
         //코드 실행 후 비교할 목표 텍스트
+        this.msg="";
+
         //this.correct_msg1="더워요";
         this.wrong_msg="추워요";
         //this.correct_msg2="water=100";
 
         //윈도우용
+        /* */
         this.correct_msg1="#include <stdio.h>\n" + 
             "int main(){\n" +
             "   "+"int "+this.code_zone_1+" = 45;\n" +
@@ -456,6 +457,8 @@ export default class SecondStage extends Phaser.Scene {
             "   }\n" +
             "   " + this.code_zone_6 + "(\"water=%d\",water);\n"+
             "}";
+
+
 
         //미니맵에서 사용할 전역변수
         stagenum = 2;
@@ -484,6 +487,7 @@ export default class SecondStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+        this.code_piece.update(this);
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -579,7 +583,7 @@ export default class SecondStage extends Phaser.Scene {
             
             var tag_not_codepiece = true; // 텍스트 오브젝트 tag만 생성하고 codepiece는 생성하지 않기 위한 상태변수
             
-            for (var code_piece_text of this.item){ 
+            for (var code_piece_text of codepiece_string_arr){ 
                 if (tag_text == code_piece_text) {
                     tag_not_codepiece = false;
                     break;
@@ -661,7 +665,7 @@ export default class SecondStage extends Phaser.Scene {
             this.app_code_text =
             "#include <stdio.h>\n" + 
             "int main(){\n" +
-            "   "+"int "+"             "+" = 45;\n" +
+            "   "+"int "+"             "+" = 200;\n" +
             "   " + "           " + "(" + "             " + "       " + "30){\n" + //if(Temp>30)
             "      " + "           " + "(\"더워요\");\n" +//printf("더워요");
             "   " + "}else{\n" +
@@ -779,12 +783,11 @@ export default class SecondStage extends Phaser.Scene {
         
         if(this.invenPlus) {
             //console.log("here");
-            this.item[this.item.length] =  'printf'; 
-            this.item[this.item.length] =  'if';
-            this.item[this.item.length] =  '<';
-            this.item[this.item.length] =  '>'; 
-            this.dropzon_su = 6; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-            
+            codepiece_string_arr[codepiece_string_arr.length] = 'if';
+            codepiece_string_arr[codepiece_string_arr.length] = '<';
+            codepiece_string_arr[codepiece_string_arr.length] = '>';
+            this.code_piece.add_new_stage_codepiece(this);
+
             this.dropzone1_x = 855; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 805;
             this.dropzone3_x = 895;
@@ -808,8 +811,8 @@ export default class SecondStage extends Phaser.Scene {
 
             this.reset_before_mission(); // 이전 미션의 드랍은 reset함
 
-            this.item[this.item.length] =  'while';  
-            this.dropzon_su = 6; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+            codepiece_string_arr[codepiece_string_arr.length] = 'while';
+            this.code_piece.add_new_stage_codepiece(this);
             
             this.dropzone1_x = 810;// 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 940;

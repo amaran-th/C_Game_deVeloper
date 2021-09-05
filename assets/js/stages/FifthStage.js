@@ -110,7 +110,7 @@ export default class FifthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x + 100, 430);
+        this.player = new Player(this, spawnPoint.x, 430);
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -237,29 +237,14 @@ export default class FifthStage extends Phaser.Scene {
         this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
         this.stage5_1();
 
-        
-        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
 
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
         this.library_invenIn = false;
         
-        /** 아이템 만들기 **/
-        var item_text = 'printf';
-        this.itemicon = this.add.image(360,330,'item'); 
-        
-
-        /** 아이템 얻었을 때 뜨는 이미지 **/
-        this.itemget = this.add.image(0,0,'itemGet').setOrigin(0.0);
-        this.itemText = this.add.text(500, 270, item_text, {
-        font: "30px Arial Black", fill: "#000000" 
-        }).setOrigin(0,0);
-        this.itemget.setVisible(false);
-        this.itemText.setVisible(false);
-        this.beforeItemGet = true; //한 번만 뜨도록
-
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -289,6 +274,23 @@ export default class FifthStage extends Phaser.Scene {
         this.drop_state_13 = 0;
         this.drop_state_14 = 0;
 
+        // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+        this.dropzone1_x = 790; 
+        this.dropzone2_x = 880;
+        this.dropzone3_x = 790;
+        this.dropzone4_x = 880;
+        this.dropzone5_x = 1000;
+        this.dropzone6_x = 1000;
+        this.dropzone7_x = 1000;
+        // 드랍존 호출
+        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("3");
+        this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("4");
+        this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 300, 80, 25).setRectangleDropZone(80, 25).setName("5");
+        this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 350, 80, 25).setRectangleDropZone(80, 25).setName("6");
+        this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 400, 80, 25).setRectangleDropZone(80, 25).setName("7");
+
 
         //사서와 대화 중인지를 나타내는 플래그 변수
         this.cantalking=true;
@@ -310,7 +312,6 @@ export default class FifthStage extends Phaser.Scene {
 
         //학생의 문제를 해결했는지 여부
         this.mathOK=false;
-
 
         /** 임시로 만들어둔 선택지 예시 **/
         this.finAnswer = { //주소
@@ -337,6 +338,7 @@ export default class FifthStage extends Phaser.Scene {
         this.inventory.update(this);
         if(this.library_added) this.library_inventory_update();
         this.command.update(this);
+        this.code_piece.update(this);
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -601,74 +603,28 @@ export default class FifthStage extends Phaser.Scene {
 
         //학생과의 대면 이벤트를 보고 math 문제가 해결되지 않은 동안 코드가 활성화되게
         if(this.attention&&this.mathOK==false){
-            this.contenttext = 
-                "#include <stdio.h>\n" +            
+            this.contenttext =             
                 this.code_zone_1 +this.code_zone_2+"\n" +
+                this.code_zone_3 +this.code_zone_4+"\n" +
                 "int main(){\n" +
-                "   " + "printf" + "(\"ㅠ=%.2f\\n\"," + this.code_zone_3 + ");\n"+
-                "   " + "printf" + "(\"√64=%.2f\\n\","+ this.code_zone_4 + "(64));\n"+
-                "   " + "printf" + "(\"sin(45°)=%.2f\\n\","+ this.code_zone_5 + "(" + this.code_zone_6 + "/4));\n"+
-                "   " + "printf" + "(\"cos(60°)=%.2f\\n\","+ this.code_zone_7 + "(" + this.code_zone_8 + "/3));\n"+
+                "   " + this.code_zone_5 + "(\"원주율=%f\"," + 'this.code_zone_6' + ");\n"+
+                "   " + "this.code_zone_7" + "(\"64의 제곱근=%f\","+ 'this.code_zone_8' + "(64));\n"+
+                "   " + 'this.code_zone_9' + "(\"사인 45도=%f\","+ 'this.code_zone_10' + "(" + 'this.code_zone_11' + "/4));\n"+
+                "   " + 'this.code_zone_12' + "(\"코사인 60도=%f\","+ 'this.code_zone_13' + "(" + 'this.code_zone_14' + "/3));\n"+
+                "   }\n" +
                 "}"
 
             // Second_stage의 앱에 들어가는 코드
             this.app_code_text =
-                "#include <stdio.h>\n" +
+                "        " +"           \n" +
                 "        " +"           \n" +
                 "int main(){\n" +
-                "   " + "printf" + "(\"ㅠ=%f\"," + "             " + ");\n"+
-                "   " + "printf" + "(\"√64=%f\","+ "            " + "(64));\n"+
-                "   " + "printf" + "(\"sin(45°)=%f\",\n"+ "                         " + "("+"            "+"/4));\n"+
-                "   " + "printf" + "(\"cos(60°)=%f\",\n"+ "                         " + "("+"            "+"/3));\n"+
+                "   " + "            " + "(\"원주율=%f\"," + "       " + ");\n"+
+                "   " + "            " + "(\"64의 제곱근=%f\","+ "      " + "(64));\n"+
+                "   " + "            " + "(\"사인 45도=%f\","+ "      " + "("+"   "+"/4));\n"+
+                "   " + "            " + "(\"코사인 60도=%f\","+ "      " + "("+"   "+"/3));\n"+
+                "   }\n" +
                 "}"
-        }
-
-
-        /** 아이템 획득하는 경우 **/
-        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
-            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-            this.itemicon.setVisible(false);
-            this.itemget.setVisible(true);
-            this.itemText.setVisible(true);
-            this.tweens.add({
-                targets: [this.itemget, this.itemText],
-                alpha: 0,
-                duration: 2000,
-                ease: 'Linear',
-                repeat: 0,
-                onComplete: ()=>{this.invenPlus = true;}
-            }, this);
-        }
-        
-        if(this.invenPlus) {
-            this.item[this.item.length] =  '#include';
-            this.item[this.item.length] =  '<math.h>';
-            this.item[this.item.length] =  'M_PI';
-            this.item[this.item.length] =  'sqrt';
-            this.item[this.item.length] =  'sin';
-            this.item[this.item.length] =  'cos';
-            this.item[this.item.length] =  'tan';
-            this.dropzon_su = 8; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
-            this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 950;
-            this.dropzone3_x = 970;
-            this.dropzone4_x = 985;
-            this.dropzone5_x = 880;
-            this.dropzone6_x = 970;
-            this.dropzone7_x = 880;
-            this.dropzone8_x = 970;
-
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("4");
-            this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("5");
-            this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("6");
-            this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("7");
-            this.draganddrop_8 = new DragAndDrop(this, this.dropzone8_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("8");
-            //this.intro4();
-            this.invenPlus = false;
         }
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
@@ -679,12 +635,12 @@ export default class FifthStage extends Phaser.Scene {
         if(this.draganddrop_6!=undefined) this.draganddrop_6.update(this);
         if(this.draganddrop_7!=undefined) this.draganddrop_7.update(this);
         if(this.draganddrop_8!=undefined) this.draganddrop_8.update(this);
-        //if(this.draganddrop_9!=undefined) this.draganddrop_9.update(this);
-        //if(this.draganddrop_10!=undefined) this.draganddrop_10.update(this);
-        //if(this.draganddrop_11!=undefined) this.draganddrop_11.update(this);
-        //if(this.draganddrop_12!=undefined) this.draganddrop_12.update(this);
-        //if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
-        //if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
+        if(this.draganddrop_9!=undefined) this.draganddrop_9.update(this);
+        if(this.draganddrop_10!=undefined) this.draganddrop_10.update(this);
+        if(this.draganddrop_11!=undefined) this.draganddrop_11.update(this);
+        if(this.draganddrop_12!=undefined) this.draganddrop_12.update(this);
+        if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
+        if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -741,9 +697,6 @@ export default class FifthStage extends Phaser.Scene {
 
         inZone5_2 = false;
 
-        /* 바운더리 정하기 */
-       this.physics.world.setBounds(0, 0, 1800, 600);
-       this.player.player.body.setCollideWorldBounds()
 
     }
     
@@ -1072,7 +1025,6 @@ export default class FifthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             console.log("stage5_8");
-            this.textBoxDelete = true;
             var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
             var script = this.add.text(textBox.x + 200, textBox.y +50, this.dialog_text, {
                 fontFamily: 'Arial', 
@@ -1081,16 +1033,7 @@ export default class FifthStage extends Phaser.Scene {
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
             var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 31);
-
-            this.keyX.on('down', () => {
-                console.log("click");
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-                this.function=8;       
-             }); //x키 입력 가능하게 함!!
-
-             /*
+            
             this.input.once('pointerdown', function() {
                 console.log("click");
                     textBox.setVisible(false);
@@ -1098,10 +1041,10 @@ export default class FifthStage extends Phaser.Scene {
                     playerFace.setVisible(false);
                     this.function=8;       
             }, this);
-            */
         });
         
     }
+    
     stage5_9(){
         console.log("stage5_9");
         this.tweens.add({
@@ -1144,7 +1087,6 @@ export default class FifthStage extends Phaser.Scene {
             }
         }, this);
     }
-    
     //=================================================================================================================================
 
     stage5_11(){
