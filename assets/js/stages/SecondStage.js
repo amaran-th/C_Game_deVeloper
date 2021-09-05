@@ -4,6 +4,7 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
+var stage;
 var tag_drop_state = false; // temp 가 드랍존에 들어가면 텍스트 오브젝트만 남도록
 var tag_text = '';
 var isDragging = false;
@@ -15,7 +16,17 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
 
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
         this.load.tilemapTiledJSON("second_stage", "./assets/second_stage.json");
     
     }
@@ -156,6 +167,18 @@ export default class SecondStage extends Phaser.Scene {
 
         //플레이어 위 pressX 생성해두기(door) => stage3로 
         this.pressX_2 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(door) => stage2로 
+        this.pressX_quest1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to have a talk', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //플레이어 위 pressX 생성해두기(door) => stage2로 
+        this.pressX_quest2 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to have a talk', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -419,8 +442,25 @@ export default class SecondStage extends Phaser.Scene {
         
         //초반 대사
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage2_1();
+    
+        if (stage==2){ //처음 (stage = 2)
+            this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage2_1(); 
+            this.mission1Complete = false;
+            this.cantGoFarther = true;
+        }
+        else if (stage == 3){//할아버지 미션 성공했을때(stage = 3)
+            this.mission1Complete = true;
+            this.cantGoFarther = false;
+        }
+        else{//할아버지, 초딩 다 성공했을때(stage = 4) => 이제야 퀘스트 다시 할 수 있음!
+            this.mission1Complete = true;
+
+            //미션 완료 상태 이미지 (공 꺼낸 물)
+            this.waterWball.destroy();
+            this.water.setVisible(true);
+            this.water.play('water');
+        }
 
         //=========================================변수 초기화=================================
 
@@ -463,9 +503,9 @@ export default class SecondStage extends Phaser.Scene {
         //미니맵에서 사용할 전역변수
         stagenum = 2;
 
-        this.mission1Complete = false;
+        
         //this.mission1Complete = true;    //두번째 미션 먼저보고싶을때 활성화
-        this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
+        //this.cantGoFarther = true; //플레이어가 1100 이상 움직였을 때 '한번만' 대사가 나오도록 
         this.firstTalk = true; //플레이어가 유치원생과 한 번만 대화할 수 있도록
 
         this.reset_state = false; // 태그조각 리셋 버튼과 연동하기 위함
@@ -481,6 +521,8 @@ export default class SecondStage extends Phaser.Scene {
         //코드 앱에 텍스트 업데이트 시키는 변수
         this.code_on1=false;
         this.code_on2=false;
+
+        this.isdownX=true;//x키 중복 방지. 이거 필수. 아니면 대사가 안 넘어감..
 
     }
 
@@ -852,17 +894,31 @@ export default class SecondStage extends Phaser.Scene {
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 this.mission1 = undefined;
-                this.mission2 = true;
-                this.stage2_3_1();  
+                //this.mission2 = true;
+                if (stage==2){
+                    this.stage2_3_1(); //날이 덥다고? 조금만 기다리게
+                    this.mission2 = true; //이때만 바로 미션2로, 
+                    //반복퀘스트에선 유치원생을 눌러야 미션2로 넘어갈수 잇음.
+                }
+                else { //반복퀘스트에서 완료한 경우, 애니메이션 나중에 넣겠음
+                    this.stage2_13();
+                }
+                 
             }else if(this.msg==this.wrong_msg){
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 this.stage2_4_1(); 
-            }else if(this.msg==this.correct_msg2){
+            }else if(this.msg==this.correct_msg2){//2번째 어린이에서 완료할때
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 this.mission2 = undefined;
-                this.stage2_10();
+                
+                if (stage==3){
+                    this.stage2_10();
+                }
+                else { //반복퀘스트에서 완료한 경우
+                    this.stage2_15();
+                }
             }else{
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
@@ -934,6 +990,36 @@ export default class SecondStage extends Phaser.Scene {
                 this.scene.switch('third_stage_0'); 
             }
         }else this.pressX_2.setVisible(false);
+
+        inZone2_2 = false;
+
+        //모든 퀘스트 완료후,  할아버지한테 퀘스트 다시(무한 반복) => 할아버지한테 말걸면, 코드창 나옴. 
+        if(this.player.player.x<700&&this.player.player.x>500&&stage>=4&&this.isdownX){
+            this.pressX_quest1.setVisible(true);
+            this.pressX_quest1.x = this.player.player.x-50;
+            this.pressX_quest1.y = this.player.player.y-100;
+
+            if(this.keyX.isDown) {
+                this.stage2_12();
+
+                this.isdownX = false;
+            }
+        }
+        else this.pressX_quest1.setVisible(false);
+
+        //모든 퀘스트 완료후,  유치원생한테 퀘스트 다시(무한 반복) => 유치원생한테 말걸면, 코드창 나옴. 
+        if(this.player.player.x<1450&&this.player.player.x>1300&&stage>=4&&this.isdownX){
+            this.pressX_quest2.setVisible(true);
+            this.pressX_quest2.x = this.player.player.x-50;
+            this.pressX_quest2.y = this.player.player.y-100;
+
+            if(this.keyX.isDown) {
+                this.stage2_14();
+
+                this.isdownX = false;
+            }
+        }
+        else this.pressX_quest2.setVisible(false);
         
         /** 미션1 안끝났는데 넘어가려고 할 때 **/
         
@@ -962,7 +1048,7 @@ export default class SecondStage extends Phaser.Scene {
         else this.cantGoFarther = true;
         
 
-        if(1300 <= this.player.player.x && this.player.player.x <= 1350) {
+        if(1300 <= this.player.player.x && this.player.player.x <= 1350&&stage==3) {
             if(this.firstTalk) {
                 this.playerPaused = true;
                 this.firstTalk = undefined;
@@ -1213,14 +1299,14 @@ export default class SecondStage extends Phaser.Scene {
                     this.npc7.anims.stop();
                     this.npc7.setVelocityX(0); 
                     this.stage2_3_2();
-
+                    
                     
                  }, [] , this); 
              }, [] , this);    
         
         });  
     }
-    stage2_3_2() {
+    stage2_3_2() {//미션 완료 후 대사 + 할아버지 다시 카페로 + db stage 증가 
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -1228,8 +1314,32 @@ export default class SecondStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.mission1Complete = true; //1100이상으로 계속 이동할 수 있도록
-            this.stage2_6() //미션 2 시작
-            //this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage2_6() //미션 2 시작 + 할아버지 다시 카페로 들어감
+            
+            //할아버지 걸어서 다시 카페감.
+            this.npc7.setFlipX(false);
+            this.npc7.play('npc_hot_walk',true);
+            this.npc7.setVelocityX(+100); //걸어감
+            
+            this.time.delayedCall( 2000, () => { //2초간 걷다가 
+            this.npc7.anims.stop();
+            this.npc7.setVelocityX(0); 
+            this.cafe.setVisible(false); //다시 할아버지 카페에 앉아있게
+            this.npc7.setVisible(false);
+
+            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+            var result = JSON.parse(xhr.responseText);
+
+                console.log("========stage 추가된다!: " + result.stage)
+                stage = result.stage;          
+            });
+            });
         });     
     }
 
@@ -1281,7 +1391,7 @@ export default class SecondStage extends Phaser.Scene {
             }, [], this);  
     }
  
-    stage2_6() {
+    stage2_6() {//으아앙! => 이게 무슨소리? + 할아버지 카페로 다시 들어감
         this.player.playerPaused = true;
 
         this.cry.setVisible(true);
@@ -1298,7 +1408,7 @@ export default class SecondStage extends Phaser.Scene {
             .load(this.dialog.stage2_6, this.dialog)
             .start();
             seq.on('complete', () => {
-                this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+                this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록             
             });     
         }, [] , this);
         
@@ -1405,7 +1515,7 @@ export default class SecondStage extends Phaser.Scene {
                 .load(this.dialog.stage2_10, this.dialog)
                 .start();
                 seq.on('complete', () => {
-                    this.stage2_11();
+                    this.stage2_11();   
                 });   
             }
         }, this);
@@ -1416,7 +1526,88 @@ export default class SecondStage extends Phaser.Scene {
         this.water.setVisible(true);
         this.water.play('water');
         this.player.playerPaused=false;
+        /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
 
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+
+            console.log("========stage 추가된다!: " + result.stage)
+            stage = result.stage;          
+        });
+    }
+
+    stage2_12() { //할아버지 퀘스트 다시
+        this.player.playerPaused = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_12, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+
+            this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
+            this.quest_text1.setVisible(true);
+            this.quest_text2.setVisible(false);
+            this.code_on1=true;
+
+            this.player.playerPaused = false;
+            this.invenPlus = true;
+            this.mission1 = true;
+        });     
+    }
+    stage2_13() { //할아버지 퀘스트 완료한경우
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_13, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused=false; 
+            this.time.delayedCall( 2000, () => { 
+                this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
+            });
+        });     
+    }
+
+    stage2_14() { //유치원 퀘스트 다시
+        this.player.playerPaused = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_14, this.dialog)
+        .start();
+        seq.on('complete', () => { //코드+드랍존 업데이트
+            this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
+            this.quest_text1.setVisible(false);
+            this.quest_text2.setVisible(true);
+            this.code_on2=true;
+
+            this.player.playerPaused = false;
+            this.invenPlus2 = true;
+            this.mission2 = true;
+        });     
+    }
+
+    stage2_15() { //유치원 퀘스트 완료한경우
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage2_15, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused=false; 
+            this.time.delayedCall( 2000, () => { 
+                this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
+            });
+           
+        });     
     }
  
     reset_before_mission() {
