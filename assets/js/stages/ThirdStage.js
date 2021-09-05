@@ -268,9 +268,16 @@ export default class ThirdStage extends Phaser.Scene {
         //초반 대사
         this.cameras.main.fadeIn(1000,0,0,0);
 
-        if (stage==3){
+        if (stage==4){ //빵집거리(stage=4)에서 집으로 들어온뒤, 바로 대사 뜸
+            //
             this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-            this.stage3_1();//대화 끝나면 stage값 1증가.
+            this.stage3_1();//대화 끝나면 stage값 1증가 => stage5
+
+        }
+        else if (stage == 5){//빵집 퀘스트 받음. 완료하면 stage 6됨.
+            this.stage3_2_1();//중간에 들어왔을때도 가능
+        }
+        else{ //미션 다 깼을때,
 
         }
 
@@ -534,11 +541,7 @@ export default class ThirdStage extends Phaser.Scene {
         .load(this.dialog.stage3_2, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
-            this.code_on=true;
-            this.questbox.setVisible(true);
-            this.help_icon.setVisible(true);
-            this.quest_text.setVisible(true);
+            this.time.delayedCall( 500, () => {this.stage3_2_1() }, [] , this);
 
             /*** db에서 stage값을 1 증가시켜줌. because,, ***/
             var xhr = new XMLHttpRequest();
@@ -555,6 +558,22 @@ export default class ThirdStage extends Phaser.Scene {
         });     
     }
 
+    stage3_2_1() {
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage3_2_1, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.code_on=true; //퀘스트 창, 코드 뜸.
+            this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
+            this.quest_text.setVisible(true);
+           
+            
+        });     
+    }
     stage3_3() {
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -564,8 +583,21 @@ export default class ThirdStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
             
-        });     
+        });   
+        /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+
+        console.log("========stage 추가된다!: " + result.stage)
+            stage = result.stage;          
+        });
     }
+    
     /*
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 zero_stage을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.

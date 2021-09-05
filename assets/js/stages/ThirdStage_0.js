@@ -174,7 +174,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
 
         //처음 시작하면 .....
         //초반 대사
-        if (stage==3){
+        if (stage==4){
             //나중에 플레이가 빵집 들어가서 퀘스트받으면 stage값 1증가.
             this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
             this.stage3_0_1();
@@ -259,7 +259,6 @@ export default class ThirdStage_0 extends Phaser.Scene {
                 console.log("[맵이동] stage3 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('third_stage'); 
-                this.quest_text.setText('김핑퐁씨의 퀘스트를 완료하자!');
             }
         }else this.pressX_2.setVisible(false);
 
@@ -268,13 +267,15 @@ export default class ThirdStage_0 extends Phaser.Scene {
             this.pressX_3.x = this.player.player.x-50;
             this.pressX_3.y = this.player.player.y-100;
             this.pressX_3.setVisible(true);
-            if (this.keyX.isDown&&stage>3){ //stage3보다 클시에만 4로 이동.
+            
+            if (this.keyX.isDown&&stage>5){ //5보다 클시에만(퀘스트 못깼다면 stage = 5) 다음 스테이지로 이동.
                 console.log("[맵이동] stage4 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('fourth_stage'); 
-            }else if(this.keyX.isDown&&stage<=3&&this.isdownX){ //스테이지 클리어 못하고 stage4 나가려할때
+            }else if(this.keyX.isDown&&stage<=5&&this.isdownX){ //스테이지 클리어 못하고 stage4 나가려할때
                 this.isdownX=false;
                 this.stage3_0_2();
+                
             }
         }else this.pressX_3.setVisible(false);
         inZone3_2 = false;
@@ -312,7 +313,10 @@ export default class ThirdStage_0 extends Phaser.Scene {
                 .start();
                 seq.on('complete', () => {
                     this.player.playerPaused = false;
-                    this.isdownX=true;
+                    this.time.delayedCall( 2000, () => { 
+                        this.isdownX = true; //바로바로 하게되면 무한으로 대사창 뜸. 2초 기다림.
+                    });
+                    
                 });
 
     }    

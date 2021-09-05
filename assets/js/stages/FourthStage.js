@@ -4,7 +4,7 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 import ThirdStage from "./ThirdStage.js";
-
+var stage;
 var droppedText; //드랍된 텍스트 무엇인지 판별할때 gameobject._text 값 저장하는 용으로 쓰임
 var graphics; //퀴즈 넘어갈때마다 드랍존 지워야 해서 전역으로 뺐음
 var inZone4_1;
@@ -15,7 +15,17 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
 
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
         this.load.image("stage4_tiles", "./assets/images/stage4/map_stage4.png");
         this.load.tilemapTiledJSON("fourth_stage", "./assets/fourth_stage.json");
     }
@@ -207,23 +217,51 @@ export default class FourthStage extends Phaser.Scene {
          this.out = "";
 
          /* 시작 대사 */
-        this.player.playerPaused = true;
-        var seq = this.plugins.get('rexsequenceplugin').add();
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.stage4_0, this.dialog)
-        .start();
-        seq.on('complete', () => {
-            this.player.playerPaused = false;
-            this.questbox.setVisible(true);
-            this.quest_text.setVisible(true);
-        });
+
+        if(stage==6){//처음 들어왔을때
+            this.player.playerPaused = true;
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage4_0, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.player.playerPaused = false;
+                this.questbox.setVisible(true);
+                this.quest_text.setVisible(true);
+
+            });
+
+
+            this.cantalk=true;
+
+            //npc에게 말을 건 횟수(순차적 실행을 위함)
+            this.talk_num=0
+        }
+        else {//무한 반복 퀘스트
+            this.tweens.add({
+                targets: [this.wall],
+                y:-400,
+                duration: 3000,
+                ease: 'Linear',
+                repeat: 0,
+                onComplete: ()=>{
+                    
+                }
+            }, this);
+
+            //npc에게 말을 건 횟수(순차적 실행을 위함)
+            this.talk_num=2
+            this.cantalk=true;
+
+           
+        }
 
 
         stagenum = 4;
 
         this.npcTalk = true; //npc랑 한번만 말하게 
-        this.firstTalk = true ;//악마 앞에서 x키 누를때 필요
+       // this.firstTalk = true ;//악마 앞에서 x키 누를때 필요
         this.quiz1 = true;
         this.quiz2 = false;
         this.quiz3 = false;
@@ -232,7 +270,7 @@ export default class FourthStage extends Phaser.Scene {
         this.door = true; //문 앞에서 퀴즈 맞출때;
 
         //악마에게 말을 걸 수 있는지 여부
-        this.cantalk=true;
+
     
     }
 
@@ -355,7 +393,10 @@ export default class FourthStage extends Phaser.Scene {
                 this.dragAndDrop.reset_before_mission(this);
                 this.item.length = 0; //배열 비워버리기
                 this.temp_getItem() //배열 다시 채우기
-                this.stage4_5()
+                if(stage==6){
+                    this.stage4_5()
+                }else this.stage4_10()
+                
             },[],this);
         }
         else if(this.quiz4 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
@@ -396,7 +437,7 @@ export default class FourthStage extends Phaser.Scene {
 
 
         /* 아이템 얻기 */
-        if(this.player.player.x >=this.npc9.x -100 && this.npc9.x +100 >= this.player.player.x ){
+        if(this.player.player.x >=this.npc9.x -100 && this.npc9.x +100 >= this.player.player.x && stage == 6){
             if(this.npcTalk) {
                 this.npcTalk = undefined;
                 this.player.playerPaused = true;
@@ -406,13 +447,57 @@ export default class FourthStage extends Phaser.Scene {
         }
         else this.pressX.setVisible(false);
 
+        // 악마에게 말을 걸 때
+        if(this.cantalk&&this.player.player.x >=this.devil.x -100 && this.devil.x +100 >= this.player.player.x){
+            this.pressX.setVisible(true);
+
+            if(this.keyX.isDown&&this.talk_num==0) {
+                if(this.cantalk){
+                    this.cantalk=false;
+                    //devil에게 처음 말을 걸었을 때(퀴즈 해결 전)
+                    this.devil.anims.stop();
+                    this.devil.setFrame(1);
+                
+                    this.player.playerPaused = true;
+                    this.questbox.setVisible(false);
+                    this.quest_text.setVisible(false);
+                    this.item.length = 0; //배열 비워버리기
+                    this.temp_getItem() //배열 다시 채우기
+                    this.stage4_0_1();
+
+                    this.talk_num++;
+                }
+            }else if(this.keyX.isDown&&this.talk_num==1){
+                //devil에게 말을 건 이후에 또 말을 걸 때
+                if(this.cantalk){
+                    this.cantalk=false;
+                    this.devil.anims.stop();
+                    this.devil.setFrame(1);
+                
+                    this.player.playerPaused = true;
+                    this.stage4_8();
+
+                    this.talk_num++; //second talk 악마 말하기
+                    
+                }
+            }else if (this.keyX.isDown&&this.talk_num==2){//무한 반복 퀘스트
+                if(this.cantalk){
+                    this.cantalk=false;
+                    this.player.playerPaused = true;
+                    this.stage4_9();
+                }
+            }
+            
+        }else this.pressX.setVisible(false);
+
+
 
         /* 시험 시작! */
-        if(this.player.player.x >=this.devil.x -100 && this.devil.x +100 >= this.player.player.x&&this.cantalk){
+   /*     if(this.player.player.x >=this.devil.x -100 && this.devil.x +100 >= this.player.player.x&&this.cantalk){
             this.pressX.setVisible(true);
             if(this.keyX.isDown){
                 this.cantalk=false;
-                if(this.firstTalk==true) {
+                if(this.firstTalk==true&& stage == 6) {
                     this.devil.anims.stop();
                     this.devil.setFrame(1);
                     this.firstTalk = undefined;
@@ -422,19 +507,22 @@ export default class FourthStage extends Phaser.Scene {
                     this.item.length = 0; //배열 비워버리기
                     this.temp_getItem() //배열 다시 채우기
                     this.stage4_0_1();
-                }else if(this.firstTalk==false){
+                }else if(this.firstTalk==false&& stage > 6){
                     this.devil.anims.stop();
                     this.devil.setFrame(1);
                     this.firstTalk = undefined;
                     this.player.playerPaused = true;
                     this.stage4_8();
                 }
+                
             }
         }
         else this.pressX.setVisible(false);
 
+
+
         /*두번째 관문*/
-        if(this.player.player.x >= 1400 && 1500 >= this.player.player.x ){
+        if(this.player.player.x >= 1400 && 1500 >= this.player.player.x &&stage==7 ){
             this.pressXDoor.setVisible(true);
             this.pressXDoor.x = this.player.player.x-30;
             if(this.keyX.isDown){
@@ -683,7 +771,7 @@ export default class FourthStage extends Phaser.Scene {
     }
 
 
-    stage4_5() {
+    stage4_5() {//처음으로 퀘스트 완료했을떼
         //this.temp_getItem();
         this.deleteDropzone();
         this.zone = undefined;
@@ -701,6 +789,7 @@ export default class FourthStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false;
             this.command.entire_code_button.input.enabled = true;
+            
             //this.wall.body.setImmovable(false);
             this.cameras.main.shake(3000, 0.01);
             this.tweens.add({
@@ -711,10 +800,24 @@ export default class FourthStage extends Phaser.Scene {
                 repeat: 0,
                 onComplete: ()=>{
                     this.devil.play('devil_touch_phone2');
-                    this.cantalk=true;
-                    this.firstTalk=false;
+                    //this.firstTalk=false;
+                    this.cantalk = true;
                 }
             }, this);
+            
+
+            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+            var result = JSON.parse(xhr.responseText);
+
+                console.log("========stage 추가된다!: " + result.stage)
+                stage = result.stage;          
+            });
         });
     }
 
@@ -760,9 +863,37 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false;
-            this.firstTalk=false;
-            this.cantalk=true;
+           // this.firstTalk=false;
             this.devil.play('devil_touch_phone2');
+            
+            this.cantalk = true; //퀘스트 완료해야, 또 한번 더 가능하게
+            
+        });
+    }
+
+    stage4_9(){//무한 반복 퀘
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_9, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+            this.stage4_quiz_1();
+        });
+    }
+
+    stage4_10(){//무한 반복 퀘 완료
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_10, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+            this.time.delayedCall( 2000, () => { 
+                this.cantalk = true; //퀘스트 완료해야, 또 한번 더 가능하게
+            });
         });
     }
 

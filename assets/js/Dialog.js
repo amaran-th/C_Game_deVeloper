@@ -974,6 +974,13 @@ visible(visible) {
     ['setFace', 1],
     ['print', '아..넵..'],
     ['wait-click'],
+    ['visible',false],
+  ]
+
+  //나중에 빵집 도중에 새로고침으로 다시 들어왔을때 미션이 뜨게.
+  stage3_2_1=[
+    ['visible',true],
+    ['place', 40,10],
     ['setFace', 4],
     ['print', '* Quest : 핑퐁씨에게 빵을 25개 만들어주자. *'],
     ['wait-click'],
@@ -1279,7 +1286,22 @@ visible(visible) {
     ['wait-time',0.5]
   ]
 
-
+  stage4_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 40],
+    ['print', '게임 한번 더 할거야?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage4_10 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '난 천재야!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
   //독백
   stage5_1 = [
     ['visible',true],

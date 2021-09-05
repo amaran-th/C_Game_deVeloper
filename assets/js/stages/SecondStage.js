@@ -457,6 +457,11 @@ export default class SecondStage extends Phaser.Scene {
         }
         else{//할아버지, 초딩 다 성공했을때(stage = 4) => 이제야 퀘스트 다시 할 수 있음!
             this.mission1Complete = true;
+
+            //미션 완료 상태 이미지 (공 꺼낸 물)
+            this.waterWball.destroy();
+            this.water.setVisible(true);
+            this.water.play('water');
         }
 
         //=========================================변수 초기화=================================
@@ -977,6 +982,8 @@ export default class SecondStage extends Phaser.Scene {
             }
         }else this.pressX_2.setVisible(false);
 
+        inZone2_2 = false;
+
         //모든 퀘스트 완료후,  할아버지한테 퀘스트 다시(무한 반복) => 할아버지한테 말걸면, 코드창 나옴. 
         if(this.player.player.x<700&&this.player.player.x>500&&stage>=4&&this.isdownX){
             this.pressX_quest1.setVisible(true);
@@ -986,25 +993,19 @@ export default class SecondStage extends Phaser.Scene {
             if(this.keyX.isDown) {
                 this.stage2_12();
 
-                this.mission1 = true;
-                this.code_on1 = true;
-
                 this.isdownX = false;
             }
         }
         else this.pressX_quest1.setVisible(false);
 
         //모든 퀘스트 완료후,  유치원생한테 퀘스트 다시(무한 반복) => 유치원생한테 말걸면, 코드창 나옴. 
-        if(this.player.player.x<1300&&this.player.player.x>1100&&stage>=4&&this.isdownX){
+        if(this.player.player.x<1450&&this.player.player.x>1300&&stage>=4&&this.isdownX){
             this.pressX_quest2.setVisible(true);
             this.pressX_quest2.x = this.player.player.x-50;
             this.pressX_quest2.y = this.player.player.y-100;
 
             if(this.keyX.isDown) {
                 this.stage2_14();
-
-                this.mission2 = true;
-                this.code_on2 = true;
 
                 this.isdownX = false;
             }
@@ -1286,7 +1287,7 @@ export default class SecondStage extends Phaser.Scene {
                     this.npc7.anims.stop();
                     this.npc7.setVelocityX(0); 
                     this.stage2_3_2();
-
+                    
                     
                  }, [] , this); 
              }, [] , this);    
@@ -1519,12 +1520,24 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     stage2_12() { //할아버지 퀘스트 다시
+        this.player.playerPaused = true;
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.stage2_12, this.dialog)
         .start();
         seq.on('complete', () => {
+            this.player.playerPaused = false;
+
+            this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
+            this.quest_text1.setVisible(true);
+            this.quest_text2.setVisible(false);
+            this.code_on1=true;
+
+            this.player.playerPaused = false;
+            this.invenPlus = true;
+            this.mission1 = true;
         });     
     }
     stage2_13() { //할아버지 퀘스트 완료한경우
@@ -1535,17 +1548,29 @@ export default class SecondStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused=false; 
-            this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
+            this.time.delayedCall( 2000, () => { 
+                this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
+            });
         });     
     }
 
     stage2_14() { //유치원 퀘스트 다시
+        this.player.playerPaused = true;
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.stage2_14, this.dialog)
         .start();
-        seq.on('complete', () => {
+        seq.on('complete', () => { //코드+드랍존 업데이트
+            this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
+            this.quest_text1.setVisible(false);
+            this.quest_text2.setVisible(true);
+            this.code_on2=true;
+
+            this.player.playerPaused = false;
+            this.invenPlus2 = true;
+            this.mission2 = true;
         });     
     }
 
@@ -1557,7 +1582,10 @@ export default class SecondStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused=false; 
-            this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
+            this.time.delayedCall( 2000, () => { 
+                this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
+            });
+           
         });     
     }
  

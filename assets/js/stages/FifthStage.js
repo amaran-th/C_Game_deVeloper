@@ -3,7 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
-
+var stage;
 var inZone5_1;
 var inZone5_2;
 
@@ -13,6 +13,17 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
 
         this.load.image("stage5_tiles", "./assets/images/stage5/map_stage5.png");
         this.load.tilemapTiledJSON("fifth_stage", "./assets/fifth_stage.json");
@@ -234,8 +245,18 @@ export default class FifthStage extends Phaser.Scene {
         
         /** 초반 대사 **/
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage5_1();
+
+        if (stage==9){//맨 처음 대사 + 대여증
+            this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage5_1();
+
+        }
+        else if (stage==10){//회원증 받고 나서. 퀘스트 완료 전까지
+            this.stage5_1();
+        }
+        else{//퀘스트 완료후, 무한반복 퀘
+
+        }
 
         
         this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
@@ -565,7 +586,7 @@ export default class FifthStage extends Phaser.Scene {
             this.function=0;
         }
 
-        //사서1과의 초기 이벤트를 본 이후의 이벤트
+        //사서1과의 초기 이벤트를 본 이후의 이벤트//라이브러리 대여 관련
         if(this.function==6){
             this.stage5_7();
             this.function=0;
@@ -1024,8 +1045,12 @@ export default class FifthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.firsttalked=true;
-            this.cantalking=true;
+          //  this.cantalking=true;
             this.player.playerPaused = false;
+            //간격이 있게. 바로바로 x키
+            this.time.delayedCall( 1000, () => {
+                this.cantalking=true;
+             }, [] , this);
         }); 
     }
 
@@ -1206,9 +1231,14 @@ export default class FifthStage extends Phaser.Scene {
                                 seq.on('complete', () => {
                                     this.librarian1.setFlipX(false);
                                     this.librarian1.play('working_librarian1',true);
-                                    this.cantalking=true;
+                                    
                                     this.player.playerPaused = false;
-                                    this.function=0;
+                                    //간격이 있게. 바로바로 x키 못누르게
+                                    this.time.delayedCall( 2000, () => {
+                                        this.function=0;
+                                        this.cantalking=true;
+                                     }, [] , this);
+                                    
                                 });
                         
                             }
