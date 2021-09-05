@@ -357,9 +357,10 @@ export default class FifthStage extends Phaser.Scene {
     update() {
         this.player.update();
         this.inventory.update(this);
-        if(this.library_added) this.library_inventory_update();
         this.command.update(this);
         this.code_piece.update(this);
+        if(this.unique_code_piece != undefined) this.unique_code_piece.update(this);
+        if(this.library_added) this.library_inventory_update();
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -647,35 +648,8 @@ export default class FifthStage extends Phaser.Scene {
                 "}"
         }
 
-        /** 아이템 획득하는 경우 **/
-        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
-            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-            this.itemicon.setVisible(false);
-            this.itemget.setVisible(true);
-            this.itemText.setVisible(true);
-            this.tweens.add({
-                targets: [this.itemget, this.itemText],
-                alpha: 0,
-                duration: 2000,
-                ease: 'Linear',
-                repeat: 0,
-                onComplete: ()=>{this.invenPlus = true;}
-            }, this);
-        }
-        
         if(this.invenPlus) {
-            this.item[this.item.length] =  '#include';
-            this.item[this.item.length] =  '<math.h>';
-            this.item[this.item.length] =  'M_PI';
-            this.item[this.item.length] =  'M_PI';
-            this.item[this.item.length] =  'M_PI';
-            this.item[this.item.length] =  'M_E';
-            this.item[this.item.length] =  'sqrt';
-            this.item[this.item.length] =  'pow';
-            this.item[this.item.length] =  'log';
-            this.item[this.item.length] =  'sin';
-            this.item[this.item.length] =  'cos';
-            this.item[this.item.length] =  'tan';
+
             this.dropzon_su = 8; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
             this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
@@ -1304,6 +1278,13 @@ export default class FifthStage extends Phaser.Scene {
         }).setOrigin(0,0);
 
         this.library_added = true; // 라이브러리 추가되었다는 걸 알려줘서 update에서 library_inventory_update 함수 실행시켜줌
+
+        if(this.present_library == "<math.h>") {
+            this.get_math_library_codepiece();
+        }
+        else if(this.present_library == "<string.h>") {
+            this.get_string_library_codepiece();
+        }
     }
     // 라이브러리 인벤토리 삭제하는 함수
     delete_library_inventory() {
@@ -1311,6 +1292,8 @@ export default class FifthStage extends Phaser.Scene {
         this.library_inventory.destroy();
         this.library_inventory_button.destroy();
         this.library_added = false;
+
+        this.unique_code_piece.delete_unique_codepiece();
     }
     // 라이브러리 인벤토리 버튼 누를때 열고 닫히게 하는 함수
     library_inventory_update() {
@@ -1330,5 +1313,23 @@ export default class FifthStage extends Phaser.Scene {
                 this.library_invenIn = false;
             });
         }
+        this.unique_code_piece.updownwithinven(this,this.library_invenIn); // 코드조각 인벤 따라가도록
+    }
+
+    get_math_library_codepiece() {
+        this.unique_codepiece_string_arr = [];
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'M_PI';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'M_E';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'sqrt';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'pow';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'log';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'sin';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'cos';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'tan';
+        this.unique_code_piece = new UniqueCodePiece(this, 175, 130); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+    }
+
+    get_string_library_codepiece() {
+        
     }
 }
