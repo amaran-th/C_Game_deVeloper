@@ -328,9 +328,6 @@ export default class ZeroStage extends Phaser.Scene {
         this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
         this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
-
-        this.out=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
-        ////나중에 "아-아-마이크 테스트"로 바꾸어야 함.////
         
     }
 
@@ -407,26 +404,7 @@ export default class ZeroStage extends Phaser.Scene {
         if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
         if(this.draganddrop_4!=undefined) this.draganddrop_4.update(this);
 
-        /* 플레이어가 문 앞에 서면 작동하도록 함 */
-        if(this.player.player.x < 175 && 100 < this.player.player.x && this.canexit ) {
-            this.pressX.x = this.player.player.x-50;
-            this.pressX.y = this.player.player.y-100;
-            this.pressX.setVisible(true);
         
-            if(this.keyX.isDown) {
-                this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-                console.log('맵이동');
-
-                
-                /** 휴대폰 킨 상태로 맵 이동했을때 휴대폰 꺼져있도록**/
-                this.command.remove_phone(this);
-
-
-                this.scene.stop('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-                this.scene.run("first_stage");
-            }
-        }
-        else this.pressX.setVisible(false);
 
 
         
