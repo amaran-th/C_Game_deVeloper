@@ -110,7 +110,7 @@ export default class FifthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x+100, 430);
+        this.player = new Player(this, spawnPoint.x + 100, 430);
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -355,11 +355,15 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     update() {
+        //console.log(this.function);
+
+
         this.player.update();
         this.inventory.update(this);
-        if(this.library_added) this.library_inventory_update();
         this.command.update(this);
         this.code_piece.update(this);
+        if(this.unique_code_piece != undefined) this.unique_code_piece.update(this);
+        if(this.library_added) this.library_inventory_update();
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -647,35 +651,8 @@ export default class FifthStage extends Phaser.Scene {
                 "}"
         }
 
-        /** 아이템 획득하는 경우 **/
-        if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
-            this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-            this.itemicon.setVisible(false);
-            this.itemget.setVisible(true);
-            this.itemText.setVisible(true);
-            this.tweens.add({
-                targets: [this.itemget, this.itemText],
-                alpha: 0,
-                duration: 2000,
-                ease: 'Linear',
-                repeat: 0,
-                onComplete: ()=>{this.invenPlus = true;}
-            }, this);
-        }
-        
         if(this.invenPlus) {
-            this.item[this.item.length] =  '#include';
-            this.item[this.item.length] =  '<math.h>';
-            this.item[this.item.length] =  'M_PI';
-            this.item[this.item.length] =  'M_PI';
-            this.item[this.item.length] =  'M_PI';
-            this.item[this.item.length] =  'M_E';
-            this.item[this.item.length] =  'sqrt';
-            this.item[this.item.length] =  'pow';
-            this.item[this.item.length] =  'log';
-            this.item[this.item.length] =  'sin';
-            this.item[this.item.length] =  'cos';
-            this.item[this.item.length] =  'tan';
+
             this.dropzon_su = 8; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
             this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
@@ -714,7 +691,7 @@ export default class FifthStage extends Phaser.Scene {
         //if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
         //if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
 
-        if(this.codeComplied && this.keyX.isDown) { 
+        if(this.codeComplied) { 
             console.log('컴파일 사라지는 용의 x키');
             this.codeComplied = false;
 
@@ -840,21 +817,27 @@ export default class FifthStage extends Phaser.Scene {
             boundsAlignH: "center",
             boundsAlignV: "middle"
           }).setOrigin(0.5)
+          this.tweens.add({
+            targets: [this.textBox, this.script],
+            alpha: 0,
+            duration: 2000,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{  this.codeComplied = true; }
+        }, this);
           this.player.playerPaused=true;    //플레이어 얼려두기
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
-            this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(이게 답이 아닌 것 같아.)", {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
-
-            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.intro_wrong, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.codeComplied = true;
+            });
         }
-        this.codeComplied = true;
     
     }
 
@@ -911,6 +894,7 @@ export default class FifthStage extends Phaser.Scene {
             .start();
             seq.on('complete', () => {
                 //닉네임 말하는 대사 출력하기
+                console.log('대사 출력');
                 var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
                 var script = this.add.text(textBox.x + 200, textBox.y +50, '\''+username+'\' 이에요.', {
                 fontFamily: 'Arial', 
@@ -929,6 +913,22 @@ export default class FifthStage extends Phaser.Scene {
                     this.librarian1.play('working_librarian1',true);
                     this.function=3;
                 }, this);
+
+                var onlyOnce = true;
+                this.keyX.on('down', () => {
+                    if(onlyOnce) {
+                        console.log('대사 지워짐');
+                        onlyOnce = undefined;
+                        textBox.setVisible(false);
+                        script.setVisible(false);
+                        playerFace.setVisible(false);
+                        this.librarian1.setFlipX(false);
+                        this.librarian1.play('working_librarian1',true);
+                        this.function=3;
+                    }
+                 }); //x키 입력 가능하게 함!
+
+
             });
     }
 
@@ -1145,6 +1145,18 @@ export default class FifthStage extends Phaser.Scene {
                     playerFace.setVisible(false);
                     this.function=8;       
             }, this);
+
+            var onlyOnce = true;
+            this.keyX.on('down', () => {
+                if(onlyOnce) {
+                    onlyOnce = undefined;
+                    textBox.setVisible(false);
+                    script.setVisible(false);
+                    playerFace.setVisible(false);
+                    this.function=8;   
+                }
+             }); //x키 입력 가능하게 함!
+
         });
         
     }
@@ -1304,6 +1316,13 @@ export default class FifthStage extends Phaser.Scene {
         }).setOrigin(0,0);
 
         this.library_added = true; // 라이브러리 추가되었다는 걸 알려줘서 update에서 library_inventory_update 함수 실행시켜줌
+
+        if(this.present_library == "<math.h>") {
+            this.get_math_library_codepiece();
+        }
+        else if(this.present_library == "<string.h>") {
+            this.get_string_library_codepiece();
+        }
     }
     // 라이브러리 인벤토리 삭제하는 함수
     delete_library_inventory() {
@@ -1311,6 +1330,8 @@ export default class FifthStage extends Phaser.Scene {
         this.library_inventory.destroy();
         this.library_inventory_button.destroy();
         this.library_added = false;
+
+        this.unique_code_piece.delete_unique_codepiece();
     }
     // 라이브러리 인벤토리 버튼 누를때 열고 닫히게 하는 함수
     library_inventory_update() {
@@ -1330,5 +1351,23 @@ export default class FifthStage extends Phaser.Scene {
                 this.library_invenIn = false;
             });
         }
+        this.unique_code_piece.updownwithinven(this,this.library_invenIn); // 코드조각 인벤 따라가도록
+    }
+
+    get_math_library_codepiece() {
+        this.unique_codepiece_string_arr = [];
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'M_PI';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'M_E';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'sqrt';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'pow';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'log';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'sin';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'cos';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'tan';
+        this.unique_code_piece = new UniqueCodePiece(this, 175, 130); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+    }
+
+    get_string_library_codepiece() {
+        
     }
 }
