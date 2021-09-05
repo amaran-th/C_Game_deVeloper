@@ -3,7 +3,6 @@ import Inventory from "./Inventory.js";
 import Dialog from "./Dialog.js";
 import Command from "./Command.js";
 import DragAndDrop from "./DragAndDrop.js";
-import ThirdStage from "./stages/ThirdStage.js";
 
 var inZone;
 const sleep = ms => {
@@ -159,6 +158,7 @@ export default class ZeroStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'tutorial_text').setOrigin(1,0);
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "zero_stage");
@@ -326,6 +326,7 @@ export default class ZeroStage extends Phaser.Scene {
         this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
         this.code_on=false; //베이스 코드가 설정되었는지 여부
         this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
+        this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
 
         this.out=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
@@ -334,8 +335,13 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     update() {
+        this.player.update();
+        this.inventory.update(this);
+        this.command.update(this);
 
-
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
+        
         if(this.code_on){
            // zero_stage 씬의 전체코드
             this.contenttext = 
@@ -357,9 +363,7 @@ export default class ZeroStage extends Phaser.Scene {
         }
 
 
-        this.player.update();
-        this.inventory.update(this);
-        this.command.update(this);
+        
                 
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
@@ -486,7 +490,16 @@ export default class ZeroStage extends Phaser.Scene {
             }
         }
 
+        if(this.codeError && this.keyX.isDown) { 
+            console.log('Error 사라지는 용의 x키');
+            this.codeError = false;
 
+            this.textBox.setVisible(false);
+            this.script.setVisible(false);
+            this.playerFace.setVisible(false);
+            this.player.playerPaused=false;
+            
+        }
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -692,23 +705,19 @@ export default class ZeroStage extends Phaser.Scene {
 
     printerr(scene){
         console.log("printerr");
-        var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
+            this.player.playerPaused=true;
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+            this.codeError = true;
+
         
-        scene.input.once('pointerdown', function() {
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-        }, this);
-
-        this.codeComplied = true;
     }
     
     intro6() {

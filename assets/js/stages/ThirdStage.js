@@ -120,6 +120,8 @@ export default class ThirdStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage3_text').setOrigin(1,0);
+
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "third_stage");
@@ -237,7 +239,7 @@ export default class ThirdStage extends Phaser.Scene {
         //코드 실행 후 비교할 목표 텍스트(리눅스용/윈도우용)
         this.msg="";
 
-        //this.correct_msg="bread=25";
+        //his.correct_msg="bread=25";
         /* */
         this.correct_msg="#include <stdio.h>\n" + 
         "int main(){\n" +
@@ -264,11 +266,15 @@ export default class ThirdStage extends Phaser.Scene {
     this.physics.add.collider(this.breadGroup, this.breadGroup);
     
     this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
-
+    this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
 }
 
     update() {
+        this.player.update();
+        this.inventory.update(this);
+        this.command.update(this);
 
+        
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
             this.questbox.x=this.worldView.x+30;
@@ -277,6 +283,9 @@ export default class ThirdStage extends Phaser.Scene {
             this.help_box.x=this.help_icon.x-418;
             this.help_text.x=this.help_box.x+30;
         }
+
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
 
         if(this.code_on){
             this.contenttext = 
@@ -434,6 +443,17 @@ export default class ThirdStage extends Phaser.Scene {
                     this.playerFace.setVisible(false);
                     this.player.playerPaused=false;
                 }
+        }
+
+        if(this.codeError && this.keyX.isDown) { 
+            console.log('Error 사라지는 용의 x키');
+            this.codeError = false;
+
+            this.textBox.setVisible(false);
+            this.script.setVisible(false);
+            this.playerFace.setVisible(false);
+            this.player.playerPaused=false;
+            
         }
 
 
@@ -650,8 +670,8 @@ export default class ThirdStage extends Phaser.Scene {
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
-            var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+            this.textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
@@ -659,72 +679,29 @@ export default class ThirdStage extends Phaser.Scene {
             }).setOrigin(0,0);
             this.player.playerPaused=true;
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            this.playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
 
         this.codeComplied = true;
         this.msg = msg;
-        /*
-        scene.input.once('pointerdown', function() {
-            if(msg==scene.correct_msg){
-                console.log("===stage3 클리어!===");
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.bread.setVisible(true);
-                this.questbox.setVisible(false);
-                this.quest_text.setVisible(false);
-                this.help_icon.setVisible(false);
-
-                for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
-                    (x => {
-                        setTimeout(() => {
-                            console.log('빵');
-                            var bread = this.breadGroup.create(Phaser.Math.Between(this.player.player.x -100, this.player.player.x +100), 0, 'bread');
-                            bread.setFrictionX(1); //이거 마찰인데... 안 먹히는 듯ㅠㅠ
-                        },100*x) //이러면 1초 간격으로 실행됨
-                    })(i)
-                }
-                //this.full_bread_1.setVisible(true);
-                //this.full_bread_2.setVisible(true);
-                //this.out = "";
-                
-                //this.cameras.main.fadeIn(1000,0,0,0);
-                this.time.delayedCall(3000, function() {
-                    this.exclamMark.setVisible(true);
-                    this.exclamMark.play('exclam');
-                    this.stage3_3();
-                }, [], this);
-
-            }else{
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-                this.player.playerPaused=false;
-            }
-            
-        }, this);
-        */
-    
     }
+
+
     printerr(scene){
         console.log("printerr");
-        var textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
-                fontSize: '30px', 
+                fontSize: '30px',
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
             this.player.playerPaused=true;
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+            
+            this.codeError = true;
         
-        scene.input.once('pointerdown', function() {
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-                this.player.playerPaused=false;
-        }, this);
     }
 
 

@@ -132,6 +132,8 @@ export default class SixthStage extends Phaser.Scene {
             color: '#ffffff'
         }).setOrigin(0,0);
 
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage6_text').setOrigin(1,0);
+
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "sixth_stage");
@@ -313,6 +315,9 @@ export default class SixthStage extends Phaser.Scene {
             this.questbox.x=this.worldView.x+30;
             this.quest_text1.x=this.questbox.x+430;
         }
+
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
                 
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([

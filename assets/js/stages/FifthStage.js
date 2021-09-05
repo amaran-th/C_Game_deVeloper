@@ -152,6 +152,8 @@ export default class FifthStage extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage5_text').setOrigin(1,0);
+
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
         this.command = new Command(this, map, "fifth_stage");
@@ -331,6 +333,25 @@ export default class FifthStage extends Phaser.Scene {
         this.select_case1= ['<math.h>을 반납한다.','<math.h>을 반납하고 <string.h>을 대여한다.','아무것도 하지 않는다.'];
         this.select_case2= ['<string.h>을 반납한다.','<string.h>을 반납하고 <math.h>을 대여한다.','아무것도 하지 않는다.'];
         
+        this.msg="";
+        //this.correct_msg="ㅠ=3.14\n√64=8.00\nsin(45°)=0.71\ncos(60°)=0.50"
+        /*window */
+        this.correct_msg = 
+            "#include <stdio.h>\n" +            
+            this.code_zone_1 +this.code_zone_2+"\n" +
+            "int main(){\n" +
+            "   " + "printf" + "(\"ㅠ=%.2f\\n\"," + this.code_zone_3 + ");\n"+
+            "   " + "printf" + "(\"√64=%.2f\\n\","+ this.code_zone_4 + "(64));\n"+
+            "   " + "printf" + "(\"sin(45°)=%.2f\\n\","+ this.code_zone_5 + "(" + this.code_zone_6 + "/4));\n"+
+            "   " + "printf" + "(\"cos(60°)=%.2f\","+ this.code_zone_7 + "(" + this.code_zone_8 + "/3));\n"+
+            "}"
+           
+        this.codeComplied = false; //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
+        this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
+        
+        this.paper_on=0;    //시험지 이미지 띄워졌을때 X키로 지우는 용
+
+        
     }
 
     update() {
@@ -339,9 +360,10 @@ export default class FifthStage extends Phaser.Scene {
 
         this.player.update();
         this.inventory.update(this);
-        if(this.library_added) this.library_inventory_update();
         this.command.update(this);
         this.code_piece.update(this);
+        if(this.unique_code_piece != undefined) this.unique_code_piece.update(this);
+        if(this.library_added) this.library_inventory_update();
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -352,6 +374,9 @@ export default class FifthStage extends Phaser.Scene {
             this.help_box.x=this.help_icon.x-418;
             this.help_text.x=this.help_box.x+30;
         }
+
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
 
         if(this.attention&&this.mathOK==false){
             if(this.library_state==1){
@@ -516,12 +541,10 @@ export default class FifthStage extends Phaser.Scene {
                     this.player.playerPaused = true;
                     this.tests_paper.x=this.worldView.x+300;
                     this.tests_paper.setVisible(true);
-                    this.input.once('pointerdown', function() {
-                        this.tests_paper.setVisible(false);
-                        this.player.playerPaused=false;
-                        this.cantalking2=true;
-                            
-                    }, this);
+                    
+                    this.time.delayedCall( 500, () => {
+                        this.paper_on=2;
+                     }, [] , this);
 
                 }
             }else if(this.keyX.isDown&&this.mathOK){
@@ -606,28 +629,51 @@ export default class FifthStage extends Phaser.Scene {
 
         //학생과의 대면 이벤트를 보고 math 문제가 해결되지 않은 동안 코드가 활성화되게
         if(this.attention&&this.mathOK==false){
-            this.contenttext =             
-                this.code_zone_1 +this.code_zone_2+"\n" +
-                this.code_zone_3 +this.code_zone_4+"\n" +
-                "int main(){\n" +
-                "   " + this.code_zone_5 + "(\"원주율=%f\"," + 'this.code_zone_6' + ");\n"+
-                "   " + "this.code_zone_7" + "(\"64의 제곱근=%f\","+ 'this.code_zone_8' + "(64));\n"+
-                "   " + 'this.code_zone_9' + "(\"사인 45도=%f\","+ 'this.code_zone_10' + "(" + 'this.code_zone_11' + "/4));\n"+
-                "   " + 'this.code_zone_12' + "(\"코사인 60도=%f\","+ 'this.code_zone_13' + "(" + 'this.code_zone_14' + "/3));\n"+
-                "   }\n" +
-                "}"
+            this.contenttext = 
+            "#include <stdio.h>\n" +            
+            this.code_zone_1 +this.code_zone_2+"\n" +
+            "int main(){\n" +
+            "   " + "printf" + "(\"ㅠ=%.2f\\n\"," + this.code_zone_3 + ");\n"+
+            "   " + "printf" + "(\"√64=%.2f\\n\","+ this.code_zone_4 + "(64));\n"+
+            "   " + "printf" + "(\"sin(45°)=%.2f\\n\","+ this.code_zone_5 + "(" + this.code_zone_6 + "/4));\n"+
+            "   " + "printf" + "(\"cos(60°)=%.2f\","+ this.code_zone_7 + "(" + this.code_zone_8 + "/3));\n"+
+            "}"
 
             // Second_stage의 앱에 들어가는 코드
             this.app_code_text =
+                "#include <stdio.h>\n" +
                 "        " +"           \n" +
-                "        " +"           \n" +
-                "int main(){\n" +
-                "   " + "            " + "(\"원주율=%f\"," + "       " + ");\n"+
-                "   " + "            " + "(\"64의 제곱근=%f\","+ "      " + "(64));\n"+
-                "   " + "            " + "(\"사인 45도=%f\","+ "      " + "("+"   "+"/4));\n"+
-                "   " + "            " + "(\"코사인 60도=%f\","+ "      " + "("+"   "+"/3));\n"+
-                "   }\n" +
+                "int main(){\n" +
+                "   " + "printf" + "(\"ㅠ=%f\"," + "             " + ");\n"+
+                "   " + "printf" + "(\"√64=%f\","+ "            " + "(64));\n"+
+                "   " + "printf" + "(\"sin(45°)=%f\",\n"+ "                         " + "("+"            "+"/4));\n"+
+                "   " + "printf" + "(\"cos(60°)=%f\",\n"+ "                         " + "("+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"/3));\n"+
                 "}"
+        }
+
+        if(this.invenPlus) {
+
+            this.dropzon_su = 8; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
+
+            this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 950;
+            this.dropzone3_x = 970;
+            this.dropzone4_x = 985;
+            this.dropzone5_x = 880;
+            this.dropzone6_x = 970;
+            this.dropzone7_x = 880;
+            this.dropzone8_x = 970;
+
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("3");
+            this.draganddrofp_4 = new DragAndDrop(this, this.dropzone4_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("4");
+            this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("5");
+            this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("6");
+            this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("7");
+            this.draganddrop_8 = new DragAndDrop(this, this.dropzone8_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("8");
+            
+            this.invenPlus = false;
         }
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
@@ -638,12 +684,64 @@ export default class FifthStage extends Phaser.Scene {
         if(this.draganddrop_6!=undefined) this.draganddrop_6.update(this);
         if(this.draganddrop_7!=undefined) this.draganddrop_7.update(this);
         if(this.draganddrop_8!=undefined) this.draganddrop_8.update(this);
-        if(this.draganddrop_9!=undefined) this.draganddrop_9.update(this);
-        if(this.draganddrop_10!=undefined) this.draganddrop_10.update(this);
-        if(this.draganddrop_11!=undefined) this.draganddrop_11.update(this);
-        if(this.draganddrop_12!=undefined) this.draganddrop_12.update(this);
-        if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
-        if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
+        //if(this.draganddrop_9!=undefined) this.draganddrop_9.update(this);
+        //if(this.draganddrop_10!=undefined) this.draganddrop_10.update(this);
+        //if(this.draganddrop_11!=undefined) this.draganddrop_11.update(this);
+        //if(this.draganddrop_12!=undefined) this.draganddrop_12.update(this);
+        //if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
+        //if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
+
+        if(this.codeComplied && this.keyX.isDown) { 
+            console.log('컴파일 사라지는 용의 x키');
+            this.codeComplied = false;
+
+            if(msg==this.correct_msg){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                
+                if(this.player.player.x>1000&&this.player.player.x<1450){
+                    this.function2=5;
+                }else{
+                    this.function2=4;
+                }
+                
+            }else{
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
+                this.player.playerPaused=false;
+            }
+        }
+
+
+        if(this.codeError && this.keyX.isDown) { 
+            console.log('Error 사라지는 용의 x키');
+            this.codeError = false;
+
+            this.textBox.setVisible(false);
+            this.script.setVisible(false);
+            this.playerFace.setVisible(false);
+            this.player.playerPaused=false;
+            
+        }
+
+        if(this.paper_on!=0&&this.keyX.isDown){
+            if(this.paper_on==1){
+                this.stage5_12_2();
+                this.paper_on=0;
+            }else if(this.paper_on==2){
+                console.log("paper_on=2");
+                this.paper_on=0;
+                this.tests_paper.setVisible(false);
+                this.player.playerPaused=false;
+                this.time.delayedCall( 500, () => {
+                    this.cantalking2=true;
+                 }, [] , this);
+                
+            }
+
+        }
+
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -733,44 +831,24 @@ export default class FifthStage extends Phaser.Scene {
 
             this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
         }
-        scene.input.once('pointerdown', function() {
-            if(msg==scene.out){
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                //playerFace.setVisible(false);
-                if(this.player.player.x>1000&&this.player.player.x<1450){
-                    this.function2=5;
-                }else{
-                    this.function2=4;
-                }
-                
-            }else{
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.playerFace.setVisible(false);
-            }
-            
-        }, this);
+        this.codeComplied = true;
     
     }
 
     printerr(scene){
         console.log("printerr");
-        var textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+        this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
+            this.player.playerPaused=true;
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
         
-        scene.input.once('pointerdown', function() {
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-        }, this);
+            this.codeError = true;
     }
 
     stage5_1(){
@@ -1141,31 +1219,23 @@ export default class FifthStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.tests_paper.x=this.worldView.x+300;
             this.tests_paper.setVisible(true);
-
-            var textBox = this.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            var script = this.add.text(textBox.x + 200, textBox.y +50, '* 코딩 어플리케이션의 스크립트가 업데이트 되었습니다. *', {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
-
-            var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'entire_code_button', 0);
-
-            this.input.once('pointerdown', function() {
-                this.tests_paper.setVisible(false);
-
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-
-                this.attention=true;
-
-                this.player.playerPaused=false;
-                this.cantalking2=true;
-                    
-            }, this);
+            this.time.delayedCall( 500, () => {
+                this.paper_on=1;
+             }, [] , this);
             
+            
+            
+        });
+    }
+    stage5_12_2(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_12_2, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.attention=true;
+            this.paper_on=2;
         });
     }
 
@@ -1240,6 +1310,13 @@ export default class FifthStage extends Phaser.Scene {
         }).setOrigin(0,0);
 
         this.library_added = true; // 라이브러리 추가되었다는 걸 알려줘서 update에서 library_inventory_update 함수 실행시켜줌
+
+        if(this.present_library == "<math.h>") {
+            this.get_math_library_codepiece();
+        }
+        else if(this.present_library == "<string.h>") {
+            this.get_string_library_codepiece();
+        }
     }
     // 라이브러리 인벤토리 삭제하는 함수
     delete_library_inventory() {
@@ -1247,6 +1324,8 @@ export default class FifthStage extends Phaser.Scene {
         this.library_inventory.destroy();
         this.library_inventory_button.destroy();
         this.library_added = false;
+
+        this.unique_code_piece.delete_unique_codepiece();
     }
     // 라이브러리 인벤토리 버튼 누를때 열고 닫히게 하는 함수
     library_inventory_update() {
@@ -1266,5 +1345,23 @@ export default class FifthStage extends Phaser.Scene {
                 this.library_invenIn = false;
             });
         }
+        this.unique_code_piece.updownwithinven(this,this.library_invenIn); // 코드조각 인벤 따라가도록
+    }
+
+    get_math_library_codepiece() {
+        this.unique_codepiece_string_arr = [];
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'M_PI';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'M_E';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'sqrt';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'pow';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'log';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'sin';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'cos';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'tan';
+        this.unique_code_piece = new UniqueCodePiece(this, 175, 130); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+    }
+
+    get_string_library_codepiece() {
+        
     }
 }

@@ -215,4 +215,9 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
             unique_codepiece_reset_y += 30;
         }
     }
+    delete_unique_codepiece() {
+        for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++) {
+            this.unique_codepiece_textObject_arr[i].destroy();
+        }
+    }
 }

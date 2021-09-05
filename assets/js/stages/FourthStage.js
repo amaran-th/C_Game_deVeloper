@@ -118,6 +118,7 @@ export default class FourthStage extends Phaser.Scene {
         /*** 카메라가 비추는 화면 변수 선언 ***/
         this.worldView = this.cameras.main.worldView;
 
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage4_text').setOrigin(1,0);
 
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
@@ -201,7 +202,21 @@ export default class FourthStage extends Phaser.Scene {
          "}"
  
          //코드 실행후 불러올 output값
-         this.out = "";
+         //this.correct_msg="answer=25";
+
+         /* window*/ 
+         this.correct_msg=
+         "#include <stdio.h>\n" +
+            "int main(){\n\n" +
+            "   int password = 0;" +
+            "  "+ 'for' +"(int i=10; i>0; i--) {\n" +
+            "      "+'if'+" (i%2==1){\n" +
+            "          password += i;\n" +
+            "      }\n" +
+            "  }\n" +
+            "   printf(\'"+ '%d' +"\',i);\n" +
+            "}\n";
+
 
          /* 시작 대사 */
         this.player.playerPaused = true;
@@ -230,17 +245,27 @@ export default class FourthStage extends Phaser.Scene {
 
         //악마에게 말을 걸 수 있는지 여부
         this.cantalk=true;
-    
+
+        this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
+        this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
+        
+        this.function=0;    //도어락 미션 관련 함수의 순차적 실행을 위함
     }
 
     update() {
-
+        this.player.update();
+        this.inventory.update(this);
+        this.command.update(this);
+        
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
             this.questbox.x=this.worldView.x+30;
             this.quest_text.x=this.questbox.x+430;
             this.quest_text2.x=this.questbox.x+430;
         }
+
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
 
 
         //console.log('droppedText:',droppedText);
@@ -258,26 +283,6 @@ export default class FourthStage extends Phaser.Scene {
             "  }\n" +
             "   printf(\'"+ this.code_zone_3 +"\',i);\n" +
             "}\n"
-            
-
-        if (this.out == 
-            "#include <stdio.h>\n" +
-            "int main(){\n\n" +
-            "   int password = 0;" +
-            "  "+ 'for' +"(int i=10; i>0; i--) {\n" +
-            "      "+'if'+" (i%2==1){\n" +
-            "          password += i;\n" +
-            "      }\n" +
-            "  }\n" +
-            "   printf(\'"+ '%d' +"\',i);\n" +
-            "}\n"
-            ){
-            console.log("===stage4 클리어!===");
-        }
-        else if(this.out != "") {
-            //this.stage4_7(); //주석 해제하면 '아무일도 일어나지 않는다' 뜨나 compiled 함수에서 바로 visible을 false해버려서 사라지는 듯? 
-            this.out = "";
-        }
 
 
         /* 퀴즈 정답맞추기 */
@@ -439,6 +444,46 @@ export default class FourthStage extends Phaser.Scene {
         }
         else this.pressXDoor.setVisible(false);
 
+        if(this.function==1){
+            this.stage4_11();
+            this.function=0;
+        }else if(this.function==2){
+            this.stage4_12();
+            this.function=0;
+        }
+
+        if(this.codeComplied && this.keyX.isDown) { 
+            console.log('컴파일 사라지는 용의 x키');
+            this.codeComplied = false;
+
+            if(msg==this.correct_msg){
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                
+                if(this.player.player.x>1000&&this.player.player.x<1450){
+                    this.function=2;
+                }else{
+                    this.function=1;
+                }
+                
+            }else{
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
+                this.player.playerPaused=false;
+            }
+        }
+
+        if(this.codeError && this.keyX.isDown) { 
+            console.log('Error 사라지는 용의 x키');
+            this.codeError = false;
+
+            this.textBox.setVisible(false);
+            this.script.setVisible(false);
+            this.playerFace.setVisible(false);
+            this.player.playerPaused=false;
+            
+        }
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -751,11 +796,38 @@ export default class FourthStage extends Phaser.Scene {
         });
     }
 
+    //답은 맞으나 너무 멀리에서 실행했을 시
+    stage4_11(){
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_11, this.dialog)
+        .start();
+        seq.on('complete', () => {  
+            this.player.playerPaused=false;
+        });
+    }
+
+    //doorlock 클리어 시
+    stage4_12(){
+        
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_12, this.dialog)
+        .start();
+        seq.on('complete', () => {  
+            console.log("clear");
+            this.player.playerPaused=false;
+            
+        });
+    }
+
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
         console.log("compiled");
-        if(msg==scene.out){
+        if(msg==this.correct_msg){
             this.command.remove_phone(this);
             this.invenIn=false;
             this.inventory.inventoryBody.y = 600;
@@ -784,21 +856,26 @@ export default class FourthStage extends Phaser.Scene {
 
             this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
         }
-        scene.input.once('pointerdown', function() {
-            if(msg==scene.out){
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                //playerFace.setVisible(false);
-                //this.stage2_3_1();                
-            }else{
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.playerFace.setVisible(false);
-            }
-            
-        }, this);
+        this.codeComplied=true;
     
     }
+
+    printerr(scene){
+        console.log("printerr");
+        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+        this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+                fontFamily: 'Arial', 
+                fill: '#000000',
+                fontSize: '30px', 
+                wordWrap: { width: 450, useAdvancedWrap: true }
+            }).setOrigin(0,0);
+            this.player.playerPaused=true;
+
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+        
+            this.codeError = true;
+    }
+
     add_mini_inven() {
         console.log("here");
         this.mini_inventory = this.add.graphics();

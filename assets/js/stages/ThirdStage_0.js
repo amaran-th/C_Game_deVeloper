@@ -121,6 +121,8 @@ export default class ThirdStage_0 extends Phaser.Scene {
         this.questbox.setVisible(false);
         this.quest_text.setVisible(false);
 
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage3_text').setOrigin(1,0);
+        
         /*** 명령창 불러오기 ***/
         this.command = new Command(this, map, "third_stage_0");
 
@@ -170,6 +172,9 @@ export default class ThirdStage_0 extends Phaser.Scene {
     }
 
     update() {
+        this.player.update();
+        //this.inventory.update();
+        this.command.update(this);
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -177,9 +182,8 @@ export default class ThirdStage_0 extends Phaser.Scene {
             this.quest_text.x=this.questbox.x+430;
         }
 
-        this.player.update();
-        //this.inventory.update();
-        this.command.update(this);
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
 
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([

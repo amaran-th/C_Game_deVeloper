@@ -183,7 +183,7 @@ export default class SecondStage extends Phaser.Scene {
         this.cry = this.add.sprite( 900, 300, 'cry', 0);
         this.cry.setVisible(false);
 
-        
+        this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage2_text').setOrigin(1,0);
 
         /*** 명령창 불러오기 ***/
         this.codeapp_onoff_state = 0; // 명령창 열리고 닫힘을 나타내는 상태 변수 (command, draganddrop에서 쓰임)
@@ -475,6 +475,7 @@ export default class SecondStage extends Phaser.Scene {
 
         this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
         this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
+        this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
 
         //코드 앱에 텍스트 업데이트 시키는 변수
@@ -499,6 +500,9 @@ export default class SecondStage extends Phaser.Scene {
             this.help_text.x=this.help_box.x+30;
             this.help_text2.x=this.help_box.x+30;
         }
+
+        //stage num
+        this.stage_text.x=this.worldView.x+1100;
 
         //강 건너기
         if(this.player.player.x>=1535&&this.player.player.x<=1650&&this.player.player.body.velocity.x>0){
@@ -860,11 +864,22 @@ export default class SecondStage extends Phaser.Scene {
                 this.mission2 = undefined;
                 this.stage2_10();
             }else{
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
+                this.textBox.setVisible(false);
+                this.script.setVisible(false);
+                this.playerFace.setVisible(false);
                 this.player.playerPaused=false;
             }
+        }
+
+        if(this.codeError && this.keyX.isDown) { 
+            console.log('Error 사라지는 용의 x키');
+            this.codeError = false;
+
+            this.textBox.setVisible(false);
+            this.script.setVisible(false);
+            this.playerFace.setVisible(false);
+            this.player.playerPaused=false;
+            
         }
 
         if(this.key1.isDown) {
@@ -1093,8 +1108,8 @@ export default class SecondStage extends Phaser.Scene {
 
     printerr(scene){
         console.log("printerr");
-        var textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
@@ -1102,14 +1117,8 @@ export default class SecondStage extends Phaser.Scene {
             }).setOrigin(0,0);
             this.player.playerPaused=true;
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
-        
-        scene.input.once('pointerdown', function() {
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-                this.player.playerPaused=false;
-        }, this);
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+            this.codeError = true;
     }
 
 
