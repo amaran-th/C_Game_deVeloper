@@ -202,9 +202,9 @@ export default class FourthStage extends Phaser.Scene {
          "}"
  
          //코드 실행후 불러올 output값
-         this.correct_msg="answer=25";
+         //this.correct_msg="answer=25";
 
-         /* window 
+         /* window*/ 
          this.correct_msg=
          "#include <stdio.h>\n" +
             "int main(){\n\n" +
@@ -216,7 +216,7 @@ export default class FourthStage extends Phaser.Scene {
             "  }\n" +
             "   printf(\'"+ '%d' +"\',i);\n" +
             "}\n";
-*/
+
 
          /* 시작 대사 */
         this.player.playerPaused = true;
