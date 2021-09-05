@@ -250,9 +250,6 @@ export default class ZeroStage extends Phaser.Scene {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
         });
 
-        
-        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
-
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
         
@@ -273,6 +270,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -295,6 +293,17 @@ export default class ZeroStage extends Phaser.Scene {
         this.drop_state_5 = 0;
         this.drop_state_6 = 0;
         
+        
+        this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+        this.dropzone2_x = 950;
+        this.dropzone3_x = 815;
+        this.dropzone4_x = 965;
+
+        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
+        this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 170, 25).setRectangleDropZone(170, 25).setName("4");
+
         // zero_stage 씬의 전체코드
         this.contenttext = "" ;
         // zero_stage의 앱에 들어가는 코드
@@ -318,6 +327,7 @@ export default class ZeroStage extends Phaser.Scene {
         this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
         this.code_on=false; //베이스 코드가 설정되었는지 여부
         this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
+        this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
 
         this.out=this.code_zone_1+this.code_zone_2+" \n int main(){ \n " +  this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;;  //플레이어가 얻어야 하는 C코드 출력 텍스트
@@ -384,21 +394,11 @@ export default class ZeroStage extends Phaser.Scene {
         }
         
         if(this.invenPlus) {
-            this.item[this.item.length] =  '#include';
-            this.item[this.item.length] =  '<stdio.h>';
-            this.item[this.item.length] =  'printf';
-            //this.item[this.item.length] =  "아-아-마이크 테스트";
-            this.dropzon_su = 4; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
-            this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 950;
-            this.dropzone3_x = 815;
-            this.dropzone4_x = 965;
-
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 130, 25).setRectangleDropZone(100, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 150, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 150, 170, 25).setRectangleDropZone(170, 25).setName("4");
+            codepiece_string_arr[codepiece_string_arr.length] = '#include';
+            codepiece_string_arr[codepiece_string_arr.length] = '<stdio.h>';
+            codepiece_string_arr[codepiece_string_arr.length] = 'printf';
+            this.code_piece.add_new_stage_codepiece(this);
+            
             this.intro4();
             this.invenPlus = false;
         }
@@ -491,7 +491,16 @@ export default class ZeroStage extends Phaser.Scene {
             }
         }
 
+        if(this.codeError && this.keyX.isDown) { 
+            console.log('Error 사라지는 용의 x키');
+            this.codeError = false;
 
+            this.textBox.setVisible(false);
+            this.script.setVisible(false);
+            this.playerFace.setVisible(false);
+            this.player.playerPaused=false;
+            
+        }
 
         if(this.key1.isDown) {
             console.log('맵이동');
@@ -695,23 +704,19 @@ export default class ZeroStage extends Phaser.Scene {
 
     printerr(scene){
         console.log("printerr");
-        var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
+            this.player.playerPaused=true;
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+            this.codeError = true;
+
         
-        scene.input.once('pointerdown', function() {
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-        }, this);
-
-        this.codeComplied = true;
     }
     
     intro6() {

@@ -26,7 +26,6 @@ export default class ThirdStage extends Phaser.Scene {
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
-
         /** x 키 입력 받기**/
         this.keyX = this.input.keyboard.addKey('X');
         this.key1 = this.input.keyboard.addKey('ONE');
@@ -141,8 +140,6 @@ export default class ThirdStage extends Phaser.Scene {
         },this);
         */
 
-        this.item = new Array(); //저장되는 아이템(드래그앤 드랍할 조각)
-
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
 
@@ -162,6 +159,7 @@ export default class ThirdStage extends Phaser.Scene {
 
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -268,7 +266,7 @@ export default class ThirdStage extends Phaser.Scene {
     this.physics.add.collider(this.breadGroup, this.breadGroup);
     
     this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
-
+    this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
 }
 
     update() {
@@ -342,6 +340,11 @@ export default class ThirdStage extends Phaser.Scene {
         }
         */
 
+        this.player.update();
+        this.inventory.update(this);
+        this.command.update(this);
+        this.code_piece.update(this);
+
         
          /* 플레이어 위치 알려줌*/
          this.playerCoord.setText([
@@ -387,16 +390,9 @@ export default class ThirdStage extends Phaser.Scene {
         }
 
         if(this.invenPlus) {
-            this.item[this.item.length] =  '#include';
-            this.item[this.item.length] =  '<stdio.h>';
-            this.item[this.item.length] =  'printf';
-            this.item[this.item.length] =  'if';
-            this.item[this.item.length] =  '<';
-            this.item[this.item.length] =  '>';
-            this.item[this.item.length] =  'while';
-            this.item[this.item.length] =  'for';
-            this.dropzon_su = 2; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
-
+            codepiece_string_arr[codepiece_string_arr.length] = 'for';
+            this.code_piece.add_new_stage_codepiece(this);
+            
             this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 980;
 
@@ -447,6 +443,17 @@ export default class ThirdStage extends Phaser.Scene {
                     this.playerFace.setVisible(false);
                     this.player.playerPaused=false;
                 }
+        }
+
+        if(this.codeError && this.keyX.isDown) { 
+            console.log('Error 사라지는 용의 x키');
+            this.codeError = false;
+
+            this.textBox.setVisible(false);
+            this.script.setVisible(false);
+            this.playerFace.setVisible(false);
+            this.player.playerPaused=false;
+            
         }
 
 
@@ -663,8 +670,8 @@ export default class ThirdStage extends Phaser.Scene {
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
-            var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
+            this.textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
                 fontSize: '30px', 
@@ -672,72 +679,29 @@ export default class ThirdStage extends Phaser.Scene {
             }).setOrigin(0,0);
             this.player.playerPaused=true;
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            this.playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }
 
         this.codeComplied = true;
         this.msg = msg;
-        /*
-        scene.input.once('pointerdown', function() {
-            if(msg==scene.correct_msg){
-                console.log("===stage3 클리어!===");
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.bread.setVisible(true);
-                this.questbox.setVisible(false);
-                this.quest_text.setVisible(false);
-                this.help_icon.setVisible(false);
-
-                for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
-                    (x => {
-                        setTimeout(() => {
-                            console.log('빵');
-                            var bread = this.breadGroup.create(Phaser.Math.Between(this.player.player.x -100, this.player.player.x +100), 0, 'bread');
-                            bread.setFrictionX(1); //이거 마찰인데... 안 먹히는 듯ㅠㅠ
-                        },100*x) //이러면 1초 간격으로 실행됨
-                    })(i)
-                }
-                //this.full_bread_1.setVisible(true);
-                //this.full_bread_2.setVisible(true);
-                //this.out = "";
-                
-                //this.cameras.main.fadeIn(1000,0,0,0);
-                this.time.delayedCall(3000, function() {
-                    this.exclamMark.setVisible(true);
-                    this.exclamMark.play('exclam');
-                    this.stage3_3();
-                }, [], this);
-
-            }else{
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-                this.player.playerPaused=false;
-            }
-            
-        }, this);
-        */
-    
     }
+
+
     printerr(scene){
         console.log("printerr");
-        var textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
+        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
+            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
                 fontFamily: 'Arial', 
                 fill: '#000000',
-                fontSize: '30px', 
+                fontSize: '30px',
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
             this.player.playerPaused=true;
 
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+            
+            this.codeError = true;
         
-        scene.input.once('pointerdown', function() {
-                textBox.setVisible(false);
-                script.setVisible(false);
-                playerFace.setVisible(false);
-                this.player.playerPaused=false;
-        }, this);
     }
 
 
