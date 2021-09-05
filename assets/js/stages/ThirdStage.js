@@ -406,7 +406,7 @@ export default class ThirdStage extends Phaser.Scene {
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
 
 
-        if(this.codeComplied && this.keyX.isDown) { 
+        if(this.codeComplied) { 
             this.codeComplied = false;
                 if(this.msg==this.correct_msg){
                     console.log("===stage3 클리어!===");
@@ -664,25 +664,33 @@ export default class ThirdStage extends Phaser.Scene {
             boundsAlignH: "center",
             boundsAlignV: "middle"
           }).setOrigin(0.5)
+
+          this.tweens.add({
+            targets: [this.textBox, this.script],
+            alpha: 0,
+            duration: 2000,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{  this.codeComplied = true; }
+        }, this);
+
           this.player.playerPaused=true;    //플레이어 얼려두기
           //this.questbox.setVisible(false);
           //this.quest_text2.setVisible(false);
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
-            this.textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
-            this.script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
-            this.player.playerPaused=true;
-
-            this.playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.intro_wrong, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.codeComplied = true;
+            });
         }
 
-        this.codeComplied = true;
+        
         this.msg = msg;
     }
 

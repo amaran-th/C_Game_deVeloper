@@ -110,7 +110,7 @@ export default class FifthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x+100, 430);
+        this.player = new Player(this, spawnPoint.x + 100, 430);
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
@@ -355,6 +355,9 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     update() {
+        //console.log(this.function);
+
+
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
@@ -688,7 +691,7 @@ export default class FifthStage extends Phaser.Scene {
         //if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
         //if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
 
-        if(this.codeComplied && this.keyX.isDown) { 
+        if(this.codeComplied) { 
             console.log('컴파일 사라지는 용의 x키');
             this.codeComplied = false;
 
@@ -814,21 +817,27 @@ export default class FifthStage extends Phaser.Scene {
             boundsAlignH: "center",
             boundsAlignV: "middle"
           }).setOrigin(0.5)
+          this.tweens.add({
+            targets: [this.textBox, this.script],
+            alpha: 0,
+            duration: 2000,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{  this.codeComplied = true; }
+        }, this);
           this.player.playerPaused=true;    //플레이어 얼려두기
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
-            this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(이게 답이 아닌 것 같아.)", {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
-
-            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.intro_wrong, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.codeComplied = true;
+            });
         }
-        this.codeComplied = true;
     
     }
 
@@ -885,6 +894,7 @@ export default class FifthStage extends Phaser.Scene {
             .start();
             seq.on('complete', () => {
                 //닉네임 말하는 대사 출력하기
+                console.log('대사 출력');
                 var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
                 var script = this.add.text(textBox.x + 200, textBox.y +50, '\''+username+'\' 이에요.', {
                 fontFamily: 'Arial', 
@@ -903,6 +913,22 @@ export default class FifthStage extends Phaser.Scene {
                     this.librarian1.play('working_librarian1',true);
                     this.function=3;
                 }, this);
+
+                var onlyOnce = true;
+                this.keyX.on('down', () => {
+                    if(onlyOnce) {
+                        console.log('대사 지워짐');
+                        onlyOnce = undefined;
+                        textBox.setVisible(false);
+                        script.setVisible(false);
+                        playerFace.setVisible(false);
+                        this.librarian1.setFlipX(false);
+                        this.librarian1.play('working_librarian1',true);
+                        this.function=3;
+                    }
+                 }); //x키 입력 가능하게 함!
+
+
             });
     }
 
@@ -1119,6 +1145,18 @@ export default class FifthStage extends Phaser.Scene {
                     playerFace.setVisible(false);
                     this.function=8;       
             }, this);
+
+            var onlyOnce = true;
+            this.keyX.on('down', () => {
+                if(onlyOnce) {
+                    onlyOnce = undefined;
+                    textBox.setVisible(false);
+                    script.setVisible(false);
+                    playerFace.setVisible(false);
+                    this.function=8;   
+                }
+             }); //x키 입력 가능하게 함!
+
         });
         
     }

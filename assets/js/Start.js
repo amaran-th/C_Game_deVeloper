@@ -362,7 +362,7 @@ class Start extends Phaser.Scene {
         this.isnewgame=1;
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("fourth_stage");
+        this.scene.start('first_stage');
       }, this);
 
     }

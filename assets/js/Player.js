@@ -4,6 +4,7 @@ export default class Player extends Phaser.Scene {
         this.scene = scene;
         const anims = scene.anims;
 
+
         anims.create({
             key: "playerWalk",
             frames: anims.generateFrameNumbers('player',{ start: 0, end: 3}), //TestScene의 preload에 있는 player 들고 옴
@@ -14,6 +15,11 @@ export default class Player extends Phaser.Scene {
 
         this.cursorsKeys = scene.input.keyboard.createCursorKeys();
         //this.player.setCollideWorldBounds(true); //make player don't escape the screen
+        this.cursorsKeys = scene.input.keyboard.addKeys(
+            {up:Phaser.Input.Keyboard.KeyCodes.W,
+            down:Phaser.Input.Keyboard.KeyCodes.S,
+            left:Phaser.Input.Keyboard.KeyCodes.A,
+            right:Phaser.Input.Keyboard.KeyCodes.D});
        
         console.log("construction of Player");
 

@@ -33,9 +33,9 @@ export default class Select extends Phaser.Scene {
                }).setOrigin(0.5)
         }
 
-        this.upKey = this.input.keyboard.addKey('up');
-        this.downKey = this.input.keyboard.addKey('down');
-        this.enter = this.input.keyboard.addKey('enter');
+        this.upKey = this.input.keyboard.addKey('w');
+        this.downKey = this.input.keyboard.addKey('s');
+        this.keyX = this.input.keyboard.addKey('x');
 
         this.answer = 0; 
         console.log('maxnum=',maxnum);
@@ -63,7 +63,7 @@ export default class Select extends Phaser.Scene {
         this.selectList[beforeAnswer].setStrokeStyle(0, 0xFF0000); //이전 정답 위치 선 없애기 위해
         this.selectList[answer].setStrokeStyle(4, 0xFF0000);
 
-        if(this.enter.isDown) {
+        if(this.keyX.isDown) {
             this.scene.stop('selection'); //this.scene.stop('quiz');
             this.finAnswer.answer = answer+1;
         }

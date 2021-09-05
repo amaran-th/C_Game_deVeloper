@@ -1,6 +1,6 @@
 #include <stdio.h>
 int main(){
-   int undefined = 45;
+   int if = 45;
    undefined(undefinedundefined30){
       undefined("더워요");
    }else{
