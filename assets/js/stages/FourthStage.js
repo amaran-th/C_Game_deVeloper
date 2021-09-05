@@ -452,7 +452,7 @@ export default class FourthStage extends Phaser.Scene {
             this.function=0;
         }
 
-        if(this.codeComplied && this.keyX.isDown) { 
+        if(this.codeComplied) { 
             console.log('컴파일 사라지는 용의 x키');
             this.codeComplied = false;
 
@@ -842,21 +842,28 @@ export default class FourthStage extends Phaser.Scene {
                 boundsAlignH: "center",
                 boundsAlignV: "middle"
             }).setOrigin(0.5)
+
+            this.tweens.add({
+                targets: [this.textBox, this.script],
+                alpha: 0,
+                duration: 2000,
+                ease: 'Power1',
+                repeat: 0,
+                onComplete: ()=>{  this.codeComplied = true; }
+            }, this);
             this.player.playerPaused=true;    //플레이어 얼려두기
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
-            this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(이게 답이 아닌 것 같아.)", {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
-
-            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.intro_wrong, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.codeComplied = true;
+            });
         }
-        this.codeComplied=true;
     
     }
 
