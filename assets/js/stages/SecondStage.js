@@ -840,8 +840,7 @@ export default class SecondStage extends Phaser.Scene {
 
         /** 코드 컴파일 이후 말풍선 사라지게 할때 x키 입력이 마우스 클릭과 동일 역할하도록**/
         //이렇게 하면 바로 대사 안뜨고 공백의 텍스트박스가 한번 뜨기는 함. -
-        if(this.codeComplied && this.keyX.isDown) { 
-            console.log('컴파일 사라지는 용의 x키');
+        if(this.codeComplied) {
             this.codeComplied = false;
 
             if(this.msg==this.correct_msg1){
@@ -1059,6 +1058,16 @@ export default class SecondStage extends Phaser.Scene {
             boundsAlignH: "center",
             boundsAlignV: "middle"
           }).setOrigin(0.5)
+
+          this.tweens.add({
+            targets: [this.textBox, this.script],
+            alpha: 0,
+            duration: 2000,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{  this.codeComplied = true; }
+        }, this);
+
           this.player.playerPaused=true;    //플레이어 얼려두기
           this.questbox.setVisible(false);
           this.quest_text1.setVisible(false);
@@ -1067,18 +1076,17 @@ export default class SecondStage extends Phaser.Scene {
 
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
-            var textBox = scene.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
-            var script = scene.add.text(textBox.x + 200, textBox.y +50, "(이게 답이 아닌 것 같아.)", {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
-            this.player.playerPaused=true;
-
-            var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
+            //this.player.playerPaused=true;
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.intro_wrong, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.codeComplied = true;
+            });
         }
-        this.codeComplied = true;
+
 
     }
     //===========================================================================================
