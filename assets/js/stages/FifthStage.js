@@ -364,6 +364,7 @@ export default class FifthStage extends Phaser.Scene {
         this.code_piece.update(this);
         if(this.unique_code_piece != undefined) this.unique_code_piece.update(this);
         if(this.library_added) this.library_inventory_update();
+        if(this.unique_code_piece != undefined) this.unique_code_piece.onoffwithcommand(this, this.library_invenIn); // 코드조각 코드앱 따라가도록
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -1351,7 +1352,7 @@ export default class FifthStage extends Phaser.Scene {
                 this.library_invenIn = false;
             });
         }
-        this.unique_code_piece.updownwithinven(this,this.library_invenIn); // 코드조각 인벤 따라가도록
+        //this.unique_code_piece.updownwithinven(this,this.library_invenIn); // 코드조각 인벤 따라가도록
     }
 
     get_math_library_codepiece() {

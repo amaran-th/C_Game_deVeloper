@@ -74,7 +74,7 @@ class CodePiece extends Phaser.GameObjects.Text {
     }
 
     // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
-    updownwithinven(scene) {
+    /*updownwithinven(scene) {
         if (scene.drop_state_1 == 0) { // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
             if (this.codepiece_textObject_arr.length > 0) {
                 if (scene.invenIn) { // 인벤창이 나와있을 때 코드 보이도록
@@ -90,58 +90,19 @@ class CodePiece extends Phaser.GameObjects.Text {
                 }
             }
         }
-    }
+    }*/
     onoffwithcommand(scene) {
         //console.log("폰 열림상태 > "+scene.codeapp_onoff_state);
         if (scene.codeapp_onoff_state) { // 명령창이 나와있을 때 드랍존과 리셋버튼 나와 있도록
             //console.log('there');
             if (!scene.invenIn) { // 인벤 닫혀있을 때
                 for (var i = 0; i < this.codepiece_textObject_arr.length; i++){
-                    switch (this.codepiece_textObject_arr[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
-                        case scene.code_zone_1:         
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_2:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_3:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_4:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_5:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_6:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_7:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_8:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_9:
+                    //console.log(this.codepiece_textObject_arr[i].x, scene.worldView.x + 715);
+                    if (this.codepiece_textObject_arr[i].x > scene.worldView.x + 715) { // 폰 시작위치보다 오른 쪽에 위치한 코드조각은 드랍존에 들어있다 판단
                         this.codepiece_textObject_arr[i].setVisible(true);
-                        break;
-                        case scene.code_zone_10:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_11:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_12:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_13:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_14:
-                            this.codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        default:
-                            this.codepiece_textObject_arr[i].setVisible(false);
+                    }
+                    else {
+                        this.codepiece_textObject_arr[i].setVisible(false);
                     }
                 }
             } else { // 인벤 열려있을 때
@@ -157,51 +118,12 @@ class CodePiece extends Phaser.GameObjects.Text {
                 }
             } else { // 인벤 열려있을 때
                 for (var i = 0; i < this.codepiece_textObject_arr.length; i++){
-                    switch (this.codepiece_textObject_arr[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
-                        case scene.code_zone_1:         
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_2:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_3:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_4:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_5:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_6:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_7:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_8:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_9:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                        break;
-                        case scene.code_zone_10:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_11:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_12:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_13:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_14:
-                            this.codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        default:
-                            this.codepiece_textObject_arr[i].setVisible(true);
+                    //console.log(this.codepiece_textObject_arr.x[i], scene.worldView.x + 715);
+                    if (this.codepiece_textObject_arr[i].x > scene.worldView.x + 715) {
+                        this.codepiece_textObject_arr[i].setVisible(false);
+                    }
+                    else {
+                        this.codepiece_textObject_arr[i].setVisible(true);
                     }
                 }
             }

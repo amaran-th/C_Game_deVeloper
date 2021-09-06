@@ -256,6 +256,7 @@ export default class FourthStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+        if(this.unique_code_piece != undefined) this.unique_code_piece.onoffwithcommand(this, this.invenIn); // 코드조각 코드앱 따라가도록
         
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -910,6 +911,6 @@ export default class FourthStage extends Phaser.Scene {
             //console.log("there", this.mini_inventoryBody.x, this.mini_inventoryBody.y);
             this.mini_inventoryBody.y = 600;
         }
-        this.unique_code_piece.updownwithinven(this,this.invenIn); // 코드조각 인벤 따라가도록
+        //this.unique_code_piece.updownwithinven(this,this.invenIn); // 코드조각 인벤 따라가도록
     }
 }
