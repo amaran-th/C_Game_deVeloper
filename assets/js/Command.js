@@ -226,6 +226,10 @@ export default class Command extends Phaser.GameObjects.Image {
                 scene.code_piece.codepiece_textObject_arr[i].y = code_piece_reset_y;
                 code_piece_reset_y += 30;
             }
+            
+            if(scene.unique_code_piece != undefined) this.reset_for_unique_codepiece(scene);
+            if(scene.unique_code_piece_for_repetition != undefined) this.reset_for_unique_codepiece_for_repetition(scene);
+
             //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
             scene.drop_state_1 = 0;
             scene.drop_state_2 = 0;
@@ -266,7 +270,7 @@ export default class Command extends Phaser.GameObjects.Image {
                 scene.concern_text.x = scene.bubble.x+20;
                 scene.concern_text.y = scene.bubble.y-87;
             }
-        });
+        }, this);
 
     }
 
@@ -405,19 +409,21 @@ export default class Command extends Phaser.GameObjects.Image {
         state = 0;
 
     }
-    /*** 명령창 슬라이드 함수 ***/
-    //js 파일 분리 후 method?들 적용 안 돼서 에러 뜸 (어차피 지금 slide기능 제대로 작동 안되니 나중에 추가기능 넣을때 마저 수정해보겠음)
-    /*slidebox() {
-        scene.tweens.add({
-            targets: this.commandbox,
-            x: this.worldView.x + 415,
-            ease: 'Power3'
-        });
-        //console.log("3:"+this.commandbox.x);
-    }*/
 
-    /*update(scene) { //@@@@@@@@@ 코드조각 넣은거 바로바로 업데이트 해줌.
-
-        code_text.setText(scene.contenttext);
-    }*/
+    reset_for_unique_codepiece(scene){
+        var unique_code_piece_reset_y = scene.unique_codepiece_y;
+        for (var i = 0; i < scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr.length; i++){
+            scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.unique_codepiece_x;
+            scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr[i].y = unique_code_piece_reset_y;
+            unique_code_piece_reset_y += 30;
+        }
+    }
+    reset_for_unique_codepiece_for_repetition(scene){
+        var unique_code_piece_for_repetition_reset_y = scene.unique_codepiece_for_repetition_y;
+        for (var i = 0; i < scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr.length; i++){
+            scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.unique_codepiece_for_repetition_x;
+            scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr[i].y = unique_code_piece_for_repetition_reset_y;
+            unique_code_piece_for_repetition_reset_y += 30;
+        }
+    }
 }
