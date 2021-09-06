@@ -536,7 +536,10 @@ export default class FourthStage extends Phaser.Scene {
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%s';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%c';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%f';
-        this.unique_code_piece = new UniqueCodePiece(this, 170, 400); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+
+        this.unique_codepiece_x = 170;
+        this.unique_codepiece_y = 400;
+        this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
     }
 
     makeDropzone(x,y,width) {

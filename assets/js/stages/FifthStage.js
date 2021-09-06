@@ -1365,7 +1365,10 @@ export default class FifthStage extends Phaser.Scene {
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'sin';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'cos';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'tan';
-        this.unique_code_piece = new UniqueCodePiece(this, 175, 130); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+        
+        this.unique_codepiece_x = 175;
+        this.unique_codepiece_y = 130;
+        this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
     }
 
     get_string_library_codepiece() {
@@ -1378,6 +1381,9 @@ export default class FifthStage extends Phaser.Scene {
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
-        this.unique_code_piece = new UniqueCodePiece(this, 175, 130); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+        
+        this.unique_codepiece_x = 175;
+        this.unique_codepiece_y = 130;
+        this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
     }
 }

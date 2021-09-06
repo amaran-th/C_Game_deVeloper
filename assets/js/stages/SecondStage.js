@@ -296,8 +296,9 @@ export default class SecondStage extends Phaser.Scene {
         if (codepiece_string_arr.indexOf('printf') != -1) {
             this.unique_codepiece_string_arr = [];
             this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'printf'; // 중복사용을 위해 추가해줌
-            var unique_code_piece_y = 130 + codepiece_string_arr.indexOf('printf')*30 // 중복허용할 코드조각 몇번 째 위치하는 지 받아서 y좌표 적용해줌
-            this.unique_code_piece_for_repetition = new UniqueCodePiece(this, 15, unique_code_piece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌*/
+            this.unique_codepiece_for_repetition_x = 15; // 리턴 적용하기 위해서 x,y좌표 따로 빼줘서 변수 만들어 줘야 함
+            this.unique_codepiece_for_repetition_y = 130 + codepiece_string_arr.indexOf('printf')*30; // 중복허용할 코드조각 몇번 째 위치하는 지 받아서 y좌표 적용해줌
+            this.unique_code_piece_for_repetition = new UniqueCodePiece(this, this.unique_codepiece_for_repetition_x, this.unique_codepiece_for_repetition_y); 
         }
 
 
