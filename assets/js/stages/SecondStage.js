@@ -293,7 +293,7 @@ export default class SecondStage extends Phaser.Scene {
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
         this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
-        if (codepiece_string_arr.indexOf('printf') != -1) {
+        if (codepiece_string_arr.indexOf('printf') != -1) { // 코드조각 중복 사용
             this.unique_codepiece_string_arr = [];
             this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'printf'; // 중복사용을 위해 추가해줌
             this.unique_codepiece_for_repetition_x = 15; // 리턴 적용하기 위해서 x,y좌표 따로 빼줘서 변수 만들어 줘야 함
