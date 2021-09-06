@@ -261,7 +261,7 @@ export default class Command extends Phaser.GameObjects.Image {
             scene.code_zone_13 = undefined;
             scene.code_zone_14 = undefined;
 
-            //scene.reset_state = true;
+            scene.reset_state = true; // 태그 리셋 적용할 때 필요
 
             //zerostage this.concern_text(마이크테스트) 리셋버튼 적용시키기 위해 넣음
             if (scene.concern_text != undefined) {
