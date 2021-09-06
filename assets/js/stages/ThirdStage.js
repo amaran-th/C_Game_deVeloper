@@ -160,6 +160,7 @@ export default class ThirdStage extends Phaser.Scene {
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
         this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
+        this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
@@ -181,6 +182,11 @@ export default class ThirdStage extends Phaser.Scene {
         this.drop_state_5 = 0;
         this.drop_state_6 = 0;
         
+        this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+        this.dropzone2_x = 980;
+
+        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("2");
 
         //Second_stage의 전체 코드
         this.contenttext = "" ;
@@ -393,11 +399,6 @@ export default class ThirdStage extends Phaser.Scene {
             codepiece_string_arr[codepiece_string_arr.length] = 'for';
             this.code_piece.add_new_stage_codepiece(this);
             
-            this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 980;
-
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("2");
             //this.intro2();
             this.invenPlus = false;
         }

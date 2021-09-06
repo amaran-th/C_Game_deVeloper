@@ -1368,6 +1368,15 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     get_string_library_codepiece() {
-        
+        this.unique_codepiece_string_arr = [];
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '아';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '무';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '말';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '아';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '무';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
+        this.unique_code_piece = new UniqueCodePiece(this, 175, 130); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
     }
 }
