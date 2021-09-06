@@ -311,7 +311,7 @@ export default class SecondStage extends Phaser.Scene {
         }).setOrigin(0,0);
         this.itemget.setVisible(false);
         this.itemText.setVisible(false);
-        this.beforeItemGet = true; //한 번만 뜨도록
+        //this.beforeItemGet = true; //한 번만 뜨도록
 
         /** 인벤토리 만들기 **/     
         this.inven = this.inventory.create(this);
@@ -448,10 +448,14 @@ export default class SecondStage extends Phaser.Scene {
             this.stage2_1(); 
             this.mission1Complete = false;
             this.cantGoFarther = true;
+
+            this.beforeItemGet = true; //한 번만 뜨도록
         }
         else if (stage == 3){//할아버지 미션 성공했을때(stage = 3)
             this.mission1Complete = true;
             this.cantGoFarther = false;
+
+            this.itemicon.destroy();//아이템 없애줘야함.
         }
         else{//할아버지, 초딩 다 성공했을때(stage = 4) => 이제야 퀘스트 다시 할 수 있음!
             this.mission1Complete = true;
@@ -460,6 +464,8 @@ export default class SecondStage extends Phaser.Scene {
             this.waterWball.destroy();
             this.water.setVisible(true);
             this.water.play('water');
+
+            this.itemicon.destroy();//아이템 없애줘야함.
         }
 
         //=========================================변수 초기화=================================
@@ -523,6 +529,16 @@ export default class SecondStage extends Phaser.Scene {
         this.code_on2=false;
 
         this.isdownX=true;//x키 중복 방지. 이거 필수. 아니면 대사가 안 넘어감..
+
+
+        //미리 드랍존 지정. 화면 바깥에
+        this.draganddrop_1 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("3");
+        this.draganddrop_4 = new DragAndDrop(this, -100, 0, 40, 25).setRectangleDropZone(80, 25).setName("4");
+        this.draganddrop_5 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("5");
+        this.draganddrop_6 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("6");
+
 
     }
 
@@ -829,9 +845,17 @@ export default class SecondStage extends Phaser.Scene {
         
         if(this.invenPlus) {
             //console.log("here");
-            codepiece_string_arr[codepiece_string_arr.length] = 'if';
-            codepiece_string_arr[codepiece_string_arr.length] = '<';
-            codepiece_string_arr[codepiece_string_arr.length] = '>';
+            if(stage>=3){ //할버지 퀘스트 다 완료상태. 아이템 추가할 필요가 없음.
+
+            }
+            else {
+                codepiece_string_arr[codepiece_string_arr.length] = 'if';
+                codepiece_string_arr[codepiece_string_arr.length] = '<';
+                codepiece_string_arr[codepiece_string_arr.length] = '>';
+            }
+
+            this.reset_before_mission(); // 이전 미션의 드랍은 reset함
+            
             this.code_piece.add_new_stage_codepiece(this);
 
             this.dropzone1_x = 855; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
@@ -855,9 +879,15 @@ export default class SecondStage extends Phaser.Scene {
         if(this.invenPlus2) {
             console.log('inven2')
 
+            if (stage>=4){//퀘스트 다 완료상태. 아이템 추가할 필요가 없음.
+
+            }
+            else {
+                codepiece_string_arr[codepiece_string_arr.length] = 'while';
+            }
             this.reset_before_mission(); // 이전 미션의 드랍은 reset함
 
-            codepiece_string_arr[codepiece_string_arr.length] = 'while';
+            
             this.code_piece.add_new_stage_codepiece(this);
             
             this.dropzone1_x = 810;// 드랍존 x좌표 (플레이어 따라 이동하는데 필요)

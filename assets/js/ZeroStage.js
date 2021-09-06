@@ -59,7 +59,7 @@ export default class ZeroStage extends Phaser.Scene {
 
     }
     
-    create () {
+    create () {  
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -362,6 +362,28 @@ export default class ZeroStage extends Phaser.Scene {
         this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
         
+
+        if (stage>=1){ //집퀘스트를 완료한 상태여야지 코드조각을 얻음.
+            codepiece_string_arr[codepiece_string_arr.length] = '#include';
+            codepiece_string_arr[codepiece_string_arr.length] = '<stdio.h>';
+            codepiece_string_arr[codepiece_string_arr.length] = 'printf';
+           // this.code_piece.add_new_stage_codepiece(this);
+        }
+        if (stage>=3) {//할아버지 퀘스트 완료한 상태 (stage==3)
+            codepiece_string_arr[codepiece_string_arr.length] = 'if';
+            codepiece_string_arr[codepiece_string_arr.length] = '<';
+            codepiece_string_arr[codepiece_string_arr.length] = '>';
+          //  this.code_piece.add_new_stage_codepiece(this);
+        }
+        if (stage>=4) {//초딩 퀘스트 완료한 상태 (stage==4)
+            codepiece_string_arr[codepiece_string_arr.length] = 'while';
+          //  this.code_piece.add_new_stage_codepiece(this);
+        }
+        if (stage>=6) {//요리 퀘스트 완료한 상태 (stage==4)
+            codepiece_string_arr[codepiece_string_arr.length] = 'for';
+          //  this.code_piece.add_new_stage_codepiece(this);
+        }
+        this.code_piece.add_new_stage_codepiece(this);
     }
 
     update() {
