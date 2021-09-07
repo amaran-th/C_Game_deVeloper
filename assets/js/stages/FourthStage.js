@@ -256,6 +256,7 @@ export default class FourthStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+        if(this.unique_code_piece != undefined) this.unique_code_piece.onoffwithcommand(this, this.invenIn); // 코드조각 코드앱 따라가도록
         
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -535,7 +536,10 @@ export default class FourthStage extends Phaser.Scene {
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%s';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%c';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%f';
-        this.unique_code_piece = new UniqueCodePiece(this, 170, 400); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+
+        this.unique_codepiece_x = 170;
+        this.unique_codepiece_y = 400;
+        this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
     }
 
     makeDropzone(x,y,width) {
@@ -910,6 +914,6 @@ export default class FourthStage extends Phaser.Scene {
             //console.log("there", this.mini_inventoryBody.x, this.mini_inventoryBody.y);
             this.mini_inventoryBody.y = 600;
         }
-        this.unique_code_piece.updownwithinven(this,this.invenIn); // 코드조각 인벤 따라가도록
+        //this.unique_code_piece.updownwithinven(this,this.invenIn); // 코드조각 인벤 따라가도록
     }
 }
