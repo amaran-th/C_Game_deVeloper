@@ -39,7 +39,7 @@ export default class inventory {
                 }
 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                scene.code_piece.updownwithinven(scene);
+                //scene.code_piece.updownwithinven(scene);
 
                 scene.invenIn = true;
             });
@@ -48,7 +48,7 @@ export default class inventory {
                 this.inventoryBody.y = 600;
                 
                 // 드래그앤드랍이 호출되어 되어 아이템이 만들어진 이후 아이템도 인벤창 따라 들어갔다 나왔다 하기 위함 
-                scene.code_piece.updownwithinven(scene);
+                //scene.code_piece.updownwithinven(scene);
 
                 scene.invenIn = false;
             });

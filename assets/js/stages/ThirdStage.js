@@ -199,6 +199,11 @@ export default class ThirdStage extends Phaser.Scene {
         this.drop_state_5 = 0;
         this.drop_state_6 = 0;
         
+        this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+        this.dropzone2_x = 980;
+
+        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("2");
 
         //Second_stage의 전체 코드
         this.contenttext = "" ;

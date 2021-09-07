@@ -364,6 +364,7 @@ export default class FifthStage extends Phaser.Scene {
         this.code_piece.update(this);
         if(this.unique_code_piece != undefined) this.unique_code_piece.update(this);
         if(this.library_added) this.library_inventory_update();
+        if(this.unique_code_piece != undefined) this.unique_code_piece.onoffwithcommand(this, this.library_invenIn); // 코드조각 코드앱 따라가도록
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -1351,7 +1352,7 @@ export default class FifthStage extends Phaser.Scene {
                 this.library_invenIn = false;
             });
         }
-        this.unique_code_piece.updownwithinven(this,this.library_invenIn); // 코드조각 인벤 따라가도록
+        //this.unique_code_piece.updownwithinven(this,this.library_invenIn); // 코드조각 인벤 따라가도록
     }
 
     get_math_library_codepiece() {
@@ -1364,10 +1365,25 @@ export default class FifthStage extends Phaser.Scene {
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'sin';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'cos';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'tan';
-        this.unique_code_piece = new UniqueCodePiece(this, 175, 130); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+        
+        this.unique_codepiece_x = 175;
+        this.unique_codepiece_y = 130;
+        this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
     }
 
     get_string_library_codepiece() {
+        this.unique_codepiece_string_arr = [];
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '아';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '무';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '말';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '아';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '무';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
         
+        this.unique_codepiece_x = 175;
+        this.unique_codepiece_y = 130;
+        this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
     }
 }

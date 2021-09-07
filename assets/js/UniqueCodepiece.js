@@ -73,8 +73,8 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
     }
 
     // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
-    updownwithinven(scene, followthing) { // followthing : 인벤창이냐 라이브러리 인벤이냐 나누기 위해 넣은 인자
-        if (scene.drop_state_1 == 0) { // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
+    /*updownwithinven(scene, followthing) { // followthing : 인벤창이냐 라이브러리 인벤이냐 나누기 위해 넣은 인자
+        if (!scene.drop_state_1) { // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
             if (this.unique_codepiece_textObject_arr.length > 0) {
                 if (followthing) { // 인벤창이 나와있을 때 코드 보이도록
                     //console.log('there');
@@ -89,14 +89,24 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
                 }
             }
         }
-    }
-    onoffwithcommand(scene) {
+    }*/
+    onoffwithcommand(scene, followthing) {
         //console.log("폰 열림상태 > "+scene.codeapp_onoff_state);
         if (scene.codeapp_onoff_state) { // 명령창이 나와있을 때 드랍존과 리셋버튼 나와 있도록
             //console.log('there');
-            if (!scene.invenIn) { // 인벤 닫혀있을 때
+            if (!followthing) { // 인벤 닫혀있을 때
                 for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++){
-                    switch (this.unique_codepiece_textObject_arr[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
+                    //console.log('1>',this.unique_codepiece_textObject_arr[0].x,scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5);
+                    if (this.unique_codepiece_textObject_arr[i].x > scene.worldView.x + 715) {
+                        this.unique_codepiece_textObject_arr[i].setVisible(true);
+                        //console.log("here");
+                    }
+                    else {
+                        this.unique_codepiece_textObject_arr[i].setVisible(false);
+                        //console.log("there");
+                    }
+                    
+                    /*switch (this.unique_codepiece_textObject_arr[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
                         case scene.code_zone_1:         
                             this.unique_codepiece_textObject_arr[i].setVisible(true);
                             break;
@@ -141,7 +151,7 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
                             break;
                         default:
                             this.unique_codepiece_textObject_arr[i].setVisible(false);
-                    }
+                    }*/
                 }
             } else { // 인벤 열려있을 때
                 for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++){
@@ -150,13 +160,23 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
             }
         } else { // 명령창이 들어가있을 때 드랍존과 리셋버튼 들어가 있도록
             //console.log('here');
-            if (!scene.invenIn) { // 인벤 닫혀있을 때
+            if (!followthing) { // 인벤 닫혀있을 때
                 for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++){
                     this.unique_codepiece_textObject_arr[i].setVisible(false);
                 }
             } else { // 인벤 열려있을 때
                 for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++){
-                    switch (this.unique_codepiece_textObject_arr[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
+                    //console.log('2>',this.unique_codepiece_textObject_arr[0].x);
+                    if (this.unique_codepiece_textObject_arr[i].x > scene.worldView.x + 715) {
+                        //console.log("here2");
+                        this.unique_codepiece_textObject_arr[i].setVisible(false);
+                    }
+                    else {
+                        //console.log("there2");
+                        this.unique_codepiece_textObject_arr[i].setVisible(true);
+                    }
+                    
+                    /*switch (this.unique_codepiece_textObject_arr[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
                         case scene.code_zone_1:         
                             this.unique_codepiece_textObject_arr[i].setVisible(false);
                             break;
@@ -201,7 +221,7 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
                             break;
                         default:
                             this.unique_codepiece_textObject_arr[i].setVisible(true);
-                    }
+                    }*/
                 }
             }
         }
