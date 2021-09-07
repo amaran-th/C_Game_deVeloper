@@ -40,10 +40,10 @@ export default class Player extends Phaser.Scene {
     update() {
         if(!this.playerPaused) {
             if(this.cursorsKeys.left.isDown){
-                this.player.setVelocityX(-600); //싯...파... 여기서 main의 게임세팅에 접근하는 방법 모르겠음...
+                this.player.setVelocityX(-200); //싯...파... 여기서 main의 게임세팅에 접근하는 방법 모르겠음...
                 this.player.play("playerWalk", true);
             } else if(this.cursorsKeys.right.isDown){
-                this.player.setVelocityX(600);
+                this.player.setVelocityX(200);
                 this.player.play("playerWalk", true);
             }else {
                 this.player.setFrame(1);
