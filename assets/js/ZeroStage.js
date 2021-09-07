@@ -15,6 +15,17 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        }); 
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
         /*
         /*** FROM Minicode.js***/
@@ -48,7 +59,7 @@ export default class ZeroStage extends Phaser.Scene {
 
     }
     
-    create () {
+    create () {  
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -237,17 +248,40 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 초반 인트로 대사 출력 **/
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //플레이어 얼려두기
-        var seq = this.plugins.get('rexsequenceplugin').add();
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.intro, this.dialog)
-        .start();
-        seq.on('complete', () => {
-            this.questbox.setVisible(true);
-            this.quest_text1.setVisible(true);
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
-        });
+
+        if(stage==0){
+            this.player.playerPaused = true; //플레이어 얼려두기
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.intro, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.questbox.setVisible(true);
+                this.quest_text1.setVisible(true);
+                this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            });
+
+
+            this.isintro = -1; //이거에 따라 
+            this.canexit=false; //문 밖으로 나갈 수 있는지 여부
+
+        }
+        else {
+            this.isintro = 4;
+            //폰 이미지 지우기
+            this.phone.destroy();
+            this.myphone.destroy();
+
+            //폰 아이콘 띄우기
+            this.command.entire_code_button.setVisible(true); 
+
+            //나갈 수 있게
+            this.canexit = true; //문 밖으로 나갈 수 있는지 여부
+
+            this.player.playerPaused=false//이거 집밖에 갈때 조건에 없으면 대사창이 안꺼짐.
+        }
+        
 
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
@@ -322,13 +356,34 @@ export default class ZeroStage extends Phaser.Scene {
 
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
         this.isdownX2=true;
-        this.canexit=false; //문 밖으로 나갈 수 있는지 여부
         this.cangetItem=false;  //아이템을 얻을 수 있는지 여부
         this.code_on=false; //베이스 코드가 설정되었는지 여부
         this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
         this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
         
+
+        if (stage>=1){ //집퀘스트를 완료한 상태여야지 코드조각을 얻음.
+            codepiece_string_arr[codepiece_string_arr.length] = '#include';
+            codepiece_string_arr[codepiece_string_arr.length] = '<stdio.h>';
+            codepiece_string_arr[codepiece_string_arr.length] = 'printf';
+           // this.code_piece.add_new_stage_codepiece(this);
+        }
+        if (stage>=3) {//할아버지 퀘스트 완료한 상태 (stage==3)
+            codepiece_string_arr[codepiece_string_arr.length] = 'if';
+            codepiece_string_arr[codepiece_string_arr.length] = '<';
+            codepiece_string_arr[codepiece_string_arr.length] = '>';
+          //  this.code_piece.add_new_stage_codepiece(this);
+        }
+        if (stage>=4) {//초딩 퀘스트 완료한 상태 (stage==4)
+            codepiece_string_arr[codepiece_string_arr.length] = 'while';
+          //  this.code_piece.add_new_stage_codepiece(this);
+        }
+        if (stage>=6) {//요리 퀘스트 완료한 상태 (stage==4)
+            codepiece_string_arr[codepiece_string_arr.length] = 'for';
+          //  this.code_piece.add_new_stage_codepiece(this);
+        }
+        this.code_piece.add_new_stage_codepiece(this);
     }
 
     update() {
@@ -408,8 +463,8 @@ export default class ZeroStage extends Phaser.Scene {
 
 
         
-        //휴대폰 앞에서 x키를 누를 시
-        if(this.player.player.x < 775 && 700 < this.player.player.x ) {
+        //휴대폰 앞에서 x키를 누를 시//맨처음, isintro가 -1일때만 실행. 그뒤엔 1으로 바꿈 -> 대사창
+        if(this.player.player.x < 775 && 700 < this.player.player.x && this.isintro == -1) {
             this.getphone.x = this.player.player.x-50;
             this.getphone.y = this.player.player.y-100;
             this.getphone.setVisible(true);
@@ -503,12 +558,12 @@ export default class ZeroStage extends Phaser.Scene {
             this.pressX.x = this.player.player.x-50;
             this.pressX.y = this.player.player.y-100;
             this.pressX.setVisible(true);
-            if (this.keyX.isDown&&this.canexit&&this.player.playerPaused==false){
+            if (this.keyX.isDown&&stage>0&&this.player.playerPaused==false){
                 console.log("===[맵이동] stage1 으로===");
                 this.command.remove_phone(this);
                 this.scene.sleep('zero_stage')
                 this.scene.run('first_stage'); 
-            }else if(this.keyX.isDown&&this.canexit==false&&this.isdownX2&&this.player.playerPaused==false){
+            }else if(this.keyX.isDown&&stage<=0&&this.player.playerPaused==false){
                 this.isdownX2=false;
                 console.log("아직은 나가지 말자.");
                 this.player.playerPaused = true; //플레이어 얼려두기
@@ -708,7 +763,19 @@ export default class ZeroStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
             this.code_on=false;
+            
+            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
 
+            xhr.addEventListener('load', function() {
+            var result = JSON.parse(xhr.responseText);
+
+            console.log("========stage 추가된다!: " + result.stage)
+                stage = result.stage;          
+            });
         });
     }
 }

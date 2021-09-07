@@ -3,10 +3,23 @@
 class MiniMap extends Phaser.Scene {   
     constructor(){ 
         super("minimap"); //identifier for the scene
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
     }
     
     create () {
         this.stageNum
+
+        console.log("[minimap] 지금까지의 stage : ", stage)
 
         var background=this.add.image(0,0,"map_background").setOrigin(0,0);    //이미지 중심을 0,0 위치로 잡는다.
         var stage_1=this.add.image(80,70,"stage_1_button").setOrigin(0,0);
@@ -41,7 +54,7 @@ class MiniMap extends Phaser.Scene {
             stage_4.setVisible(false);
             stage_5.setVisible(false);
             stage_6.setVisible(false);
-            if(stagenum == 0){
+            if(stagenum == 0){//이거 나중에 stage로 바꾸면 될듯 .맵이동은 나중에
                 this.scene.stop('bootgame');
                 this.scene.run('first_stage');
             }else if(stagenum==1){
