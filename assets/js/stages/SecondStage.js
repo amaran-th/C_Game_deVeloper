@@ -848,11 +848,7 @@ export default class SecondStage extends Phaser.Scene {
         
         if(this.invenPlus) {
             //console.log("here");
-            if(stage>=3){ //할버지 퀘스트 다 완료상태. 아이템 추가할 필요가 없음.
-                console.log("?")
-            }
-            else {
-                console.log("되는디?")
+            if(stage<3){ //할버지 퀘스트 다 완료상태. 아이템 추가할 필요가 없음.
                 codepiece_string_arr[codepiece_string_arr.length] = 'if';
                 codepiece_string_arr[codepiece_string_arr.length] = '<';
                 codepiece_string_arr[codepiece_string_arr.length] = '>';
@@ -884,14 +880,12 @@ export default class SecondStage extends Phaser.Scene {
         if(this.invenPlus2) {
             console.log('inven2')
 
-            if (stage>=4){//퀘스트 다 완료상태. 아이템 추가할 필요가 없음.
-
-            }
-            else {
+            if (stage<4){//퀘스트 다 완료상태. 아이템 추가할 필요가 없음.
                 codepiece_string_arr[codepiece_string_arr.length] = 'while';
 
                 this.code_piece.add_new_stage_codepiece(this);
             }
+            
             this.invenPlus2 = undefined;
         }
 
