@@ -140,17 +140,10 @@ export default class ThirdStage_0 extends Phaser.Scene {
 
         //Second_stage의 앱에 들어가는 코드 ***이거 없으면 에러남. 업데이트에 이걸 계속 해줘서
         this.app_code_text = 
-        "#include <stdio.h>\n" + 
-        "int main(){ \n\n" +
-  
-        "   {int bread = 1;} \n\n   " +
-        "           " + 
-        "(int i=0; i" + "           " + 
-        "100; i++){\n" +
-        "      {bread} = {bread} + 1 ; \n" +
-        "   }\n\n" +
-  
-        "   printf(\"%d\", {bread} );\n}";
+        " ";
+
+        this.command.compile_button.destroy();
+        this.command.reset_button.destroy();
 
         // 드래그앤드랍
         //this.draganddrop_1 = new DragAndDrop(this, 300, 20, 100, 30).setRectangleDropZone(100, 30).setName("1");

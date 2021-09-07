@@ -105,6 +105,12 @@ export default class ThirdStage extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
+        this.pressX_quest = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to have a talk', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+
         
 
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
@@ -281,6 +287,7 @@ export default class ThirdStage extends Phaser.Scene {
         }
         else{ //미션 다 깼을때,
             this.itemicon.destroy(); // 아이템 못먹게.
+
         }
 
     this.breadGroup = this.physics.add.group();
@@ -291,6 +298,8 @@ export default class ThirdStage extends Phaser.Scene {
     
     this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
     this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
+
+    this.isdownX = true;
 }
 
     update() {
@@ -332,6 +341,9 @@ export default class ThirdStage extends Phaser.Scene {
                 "   }\n" +
                 "   printf(\"bread=%d\",bread);\n"+
                 "}";
+        }else{
+            this.contenttext = "" ; 
+            this.app_code_text = "" ;
         }
       
 
@@ -418,18 +430,22 @@ export default class ThirdStage extends Phaser.Scene {
 
         if(this.invenPlus) {
 
-            if (stage<6){//빵집 퀘 완료전
+            if (stage<6){//빵집 퀘 완료전에만 먹을 수 있게. 퀘스트 깬뒤엔 적용 X
                 codepiece_string_arr[codepiece_string_arr.length] = 'for';
                 this.code_piece.add_new_stage_codepiece(this);
             }
+            this.invenPlus = false;
+        }
+
+        if(this.dropPlus){
 
             this.dropzone1_x = 805; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 980;
 
             this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            //this.intro2();
-            this.invenPlus = false;
+            
+            this.dropPlus = false;
         }
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
@@ -446,6 +462,8 @@ export default class ThirdStage extends Phaser.Scene {
                     this.questbox.setVisible(false);
                     this.quest_text.setVisible(false);
                     this.help_icon.setVisible(false);
+
+                    this.code_on = false; //코드줄 끔.
     
                     for(var i =0; i<=25; i++) {//나중에 25를 this.out (문자열 정수로 바꾸는 함수 사용) 으로 바꾸기
                         (x => {
@@ -464,9 +482,16 @@ export default class ThirdStage extends Phaser.Scene {
                     this.time.delayedCall(3000, function() {
                         this.exclamMark.setVisible(true);
                         this.exclamMark.play('exclam');
-                        this.stage3_3();
+                        if (stage==5){//처음 깬다면
+                            this.stage3_3();
+                            
+                        }
+                        else { //반복퀘스트에서 완료한 경우
+                            this.stage3_5();
+                        }
+        
                     }, [], this);
-    
+                    
                 }else{
                     this.textBox.setVisible(false);
                     this.script.setVisible(false);
@@ -522,12 +547,27 @@ export default class ThirdStage extends Phaser.Scene {
         else this.pressX_1.setVisible(false);
         
         // 맵이동 (빵집에서 바깥으로)
-        if (inZone && this.keyX.isDown) {
+        if (inZone && this.keyX.isDown && !this.code_on) {//퀘스트 진행중엔 못나오게
             console.log("[맵이동] stage3_0 으로");
             this.command.remove_phone(this);
             this.scene.switch('third_stage_0'); 
             
+            
         }
+
+        //모든 퀘스트 완료후,   퀘스트 다시(무한 반복) => 말걸면, 코드창 나옴. 
+        if(this.player.player.x<700&&this.player.player.x>500&&stage>=6&&this.isdownX){
+            this.pressX_quest.setVisible(true);
+            this.pressX_quest.x = this.player.player.x-50;
+            this.pressX_quest.y = this.player.player.y-100;
+
+            if(this.keyX.isDown) {
+                this.stage3_4();
+
+                this.isdownX = false;
+            }
+        }
+        else this.pressX_quest.setVisible(false);
           
         inZone =  false;
 
@@ -586,14 +626,20 @@ export default class ThirdStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
-            this.code_on=true; //퀘스트 창, 코드 뜸.
+            
             this.questbox.setVisible(true);
             this.help_icon.setVisible(true);
             this.quest_text.setVisible(true);
+            
+            this.code_on=true; //퀘스트 창, 코드 뜸.
+            this.dropPlus = true; // 드랍존 뜸
         });     
     }
 
     stage3_3() {
+        this.isdownX = false; //대화 다끝나면 바로 무한반복퀘로 넘어가기땜에, 잠시 false로 한다음
+        //2초뒤에 true로 바꿔줄거임.
+
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -602,6 +648,10 @@ export default class ThirdStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
             
+            this.time.delayedCall( 2000, () => { 
+                this.isdownX = true; //2초뒤에 true로 바꿔줄거임. => 무한반복 퀘 가능   
+            });
+
         });   
         /*** db에서 stage값을 1 증가시켜줌. because,, ***/
         var xhr = new XMLHttpRequest();
@@ -615,7 +665,53 @@ export default class ThirdStage extends Phaser.Scene {
         console.log("========stage 추가된다!: " + result.stage)
             stage = result.stage;          
         });
+        this.reset_before_mission();//드랍존 지움.
+
     }
+
+    stage3_4() { //요리사 퀘스트 다시
+        this.player.playerPaused = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage3_4, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+
+            this.questbox.setVisible(true);
+            this.help_icon.setVisible(true);
+            this.quest_text.setVisible(true);
+
+            this.code_on=true;
+
+            this.player.playerPaused = false;
+
+            //this.invenPlus = true;
+            this.dropPlus = true;
+
+        }); 
+        
+        
+    }
+
+    stage3_5() { //할아버지 퀘스트 완료한경우
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage3_5, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused=false; 
+            this.time.delayedCall( 2000, () => { 
+                this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
+                
+            });
+        });     
+        this.reset_before_mission();
+    }
+
+    
     /*
     complied(scene,msg) { //일단 코드 실행하면 무조건 실행된다.
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 zero_stage을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
@@ -778,5 +874,14 @@ export default class ThirdStage extends Phaser.Scene {
         
     }
 
-
+    reset_before_mission() {
+        this.draganddrop_1.reset_before_mission(this);
+        this.draganddrop_2.reset_before_mission(this);
+      
+        
+        this.draganddrop_1 = undefined;
+        this.draganddrop_2 = undefined;
+        
+       
+    }
 }

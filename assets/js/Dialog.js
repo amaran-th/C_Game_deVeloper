@@ -1007,6 +1007,36 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage3_4 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 20],
+    ['print', '앗, 빵 더 만들어주실래요?'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage3_5 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 20],
+    ['print', '고마워요'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage3_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '빨리 도와주고 가자.'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
   stage4_1 = [
     ['visible',true],
     ['place', 40,10],

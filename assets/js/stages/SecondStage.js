@@ -519,7 +519,7 @@ export default class SecondStage extends Phaser.Scene {
 
         this.pointerUnderGround = true //태그가 번쩍거리지 않도록 setvisible true를 한번만 선언해줌
 
-        this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
+        //this.mission1 = true; //미션 1을 진행할때 폰에 미션1용 코드가 뜨도록
         this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
         this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         this.msgEqualOut = true; //컴파일 결과가 정답인지 여부 => x키 눌러서 말풍선 없애는 용
@@ -531,18 +531,12 @@ export default class SecondStage extends Phaser.Scene {
         this.isdownX=true;//x키 중복 방지. 이거 필수. 아니면 대사가 안 넘어감..
 
 
-        //미리 드랍존 지정. 화면 바깥에
-        this.draganddrop_1 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("1");
-        this.draganddrop_2 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("2");
-        this.draganddrop_3 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("3");
-        this.draganddrop_4 = new DragAndDrop(this, -100, 0, 40, 25).setRectangleDropZone(80, 25).setName("4");
-        this.draganddrop_5 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("5");
-        this.draganddrop_6 = new DragAndDrop(this, -100, 0, 80, 25).setRectangleDropZone(80, 25).setName("6");
-
+        
 
     }
 
     update() {
+
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
@@ -722,7 +716,7 @@ export default class SecondStage extends Phaser.Scene {
         this.var_cage3.visible = this.text_ground.visible;
 
 
-        if(this.mission1&&this.code_on1) {
+        if(this.code_on1) {
              // Second_stage의 앱에 들어가는 코드
             this.app_code_text =
             "#include <stdio.h>\n" + 
@@ -747,7 +741,7 @@ export default class SecondStage extends Phaser.Scene {
             "  "+"}\n" +
             "}"
             
-        }else if(this.mission2&&this.code_on2) {
+        }else if(this.code_on2) {
             // Second_stage의 앱에 들어가는 코드
             this.app_code_text =             
             "#include <stdio.h>\n" +
@@ -846,18 +840,20 @@ export default class SecondStage extends Phaser.Scene {
         if(this.invenPlus) {
             //console.log("here");
             if(stage>=3){ //할버지 퀘스트 다 완료상태. 아이템 추가할 필요가 없음.
-
+                console.log("?")
             }
             else {
+                console.log("되는디?")
                 codepiece_string_arr[codepiece_string_arr.length] = 'if';
                 codepiece_string_arr[codepiece_string_arr.length] = '<';
                 codepiece_string_arr[codepiece_string_arr.length] = '>';
+
+                this.code_piece.add_new_stage_codepiece(this);
             }
 
-            this.reset_before_mission(); // 이전 미션의 드랍은 reset함
-            
-            this.code_piece.add_new_stage_codepiece(this);
-
+            this.invenPlus = false;
+        }
+        if(this.dropPlus){ //드랍존 추가
             this.dropzone1_x = 855; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 805;
             this.dropzone3_x = 895;
@@ -872,7 +868,7 @@ export default class SecondStage extends Phaser.Scene {
             this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("5");
             this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 259, 80, 25).setRectangleDropZone(80, 25).setName("6");
 
-            this.invenPlus = false;
+            this.dropPlus = false;
         }
         
 
@@ -884,12 +880,13 @@ export default class SecondStage extends Phaser.Scene {
             }
             else {
                 codepiece_string_arr[codepiece_string_arr.length] = 'while';
-            }
-            this.reset_before_mission(); // 이전 미션의 드랍은 reset함
 
-            
-            this.code_piece.add_new_stage_codepiece(this);
-            
+                this.code_piece.add_new_stage_codepiece(this);
+            }
+            this.invenPlus2 = undefined;
+        }
+
+        if(this.dropPlus2){ //드랍존 추가
             this.dropzone1_x = 810;// 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
             this.dropzone2_x = 940;
             this.dropzone3_x = 1010;
@@ -904,7 +901,7 @@ export default class SecondStage extends Phaser.Scene {
             this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 230, 80, 25).setRectangleDropZone(80, 25).setName("5");
             this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 290, 80, 25).setRectangleDropZone(80, 25).setName("6");
 
-            this.invenPlus2 = undefined;
+            this.dropPlus2 = false;
         }
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
@@ -923,11 +920,13 @@ export default class SecondStage extends Phaser.Scene {
                 console.log("===stage2 성공===");
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
-                this.mission1 = undefined;
+               // this.mission1 = undefined;
                 //this.mission2 = true;
+                this.code_on1 = undefined;
                 if (stage==2){
                     this.stage2_3_1(); //날이 덥다고? 조금만 기다리게
-                    this.mission2 = true; //이때만 바로 미션2로, 
+                  //  this.mission2 = true; //이때만 바로 미션2로, 
+                  //  this.code_on2 = true;
                     //반복퀘스트에선 유치원생을 눌러야 미션2로 넘어갈수 잇음.
                 }
                 else { //반복퀘스트에서 완료한 경우, 애니메이션 나중에 넣겠음
@@ -941,7 +940,8 @@ export default class SecondStage extends Phaser.Scene {
             }else if(this.msg==this.correct_msg2){//2번째 어린이에서 완료할때
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
-                this.mission2 = undefined;
+                //this.mission2 = undefined;
+                this.code_on2 = undefined;
                 
                 if (stage==3){
                     this.stage2_10();
@@ -1000,7 +1000,8 @@ export default class SecondStage extends Phaser.Scene {
             this.pressX_1.x = this.player.player.x-50;
             this.pressX_1.y = this.player.player.y-100;
             this.pressX_1.setVisible(true);
-            if (this.keyX.isDown){
+            if (this.keyX.isDown&&!this.code_on1&&!this.code_on2){ 
+                //퀘스트 진행중일때는 못나가게, 
                 console.log("[맵이동] stage1 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('first_stage'); 
@@ -1014,7 +1015,7 @@ export default class SecondStage extends Phaser.Scene {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
             this.pressX_2.setVisible(true);
-            if (this.keyX.isDown){
+            if (this.keyX.isDown&&!this.code_on1&&!this.code_on2){
                 console.log("[맵이동] stage3_0 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('third_stage_0'); 
@@ -1289,7 +1290,7 @@ export default class SecondStage extends Phaser.Scene {
         });     
     }
 
-    stage2_2_4() {
+    stage2_2_4() {//할아버지한테서 퀘스트 받음.
         this.cameras.main.shake(500, 0.01);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -1302,7 +1303,8 @@ export default class SecondStage extends Phaser.Scene {
             this.help_icon.setVisible(true);
             this.quest_text1.setVisible(true);
             this.quest_text2.setVisible(false);
-            this.code_on1=true;
+            this.code_on1=true;//코드 줄 추가
+            this.dropPlus = true;//드랍존 추가
         });     
     }
 
@@ -1332,6 +1334,9 @@ export default class SecondStage extends Phaser.Scene {
                     
                     
                  }, [] , this); 
+
+
+               //  this.code_on1=false;//@@@@@@@@@@
              }, [] , this);    
         
         });  
@@ -1370,6 +1375,7 @@ export default class SecondStage extends Phaser.Scene {
                 stage = result.stage;          
             });
             });
+            this.reset_before_mission();
         });     
     }
 
@@ -1518,10 +1524,11 @@ export default class SecondStage extends Phaser.Scene {
                     this.code_on2=true;
 
                     this.player.playerPaused = false;
-                    this.invenPlus2 = true;
+                    this.invenPlus2 = true;//인벤
+                    this.dropPlus2 = true;//드랍존 추가 (여기선 같이.)
                     itemget.destroy();
                     itemText.destroy();
-                    this.mission2 = true;
+                   // this.mission2 = true;
                 }
             }, this);
         }, [] , this);
@@ -1530,7 +1537,7 @@ export default class SecondStage extends Phaser.Scene {
 
 
     stage2_10() {
-        //this.camera.x += 400;
+
         this.npc6.setFlipX(false);
         this.tweens.add({
             targets: this.waterWball,
@@ -1549,13 +1556,22 @@ export default class SecondStage extends Phaser.Scene {
                 });   
             }
         }, this);
+        
+        this.reset_before_mission();
     }
 
     stage2_11() {
+        this.isdownX = false; //대화 다끝나면 바로 무한반복퀘로 넘어가기땜에, 잠시 false로 한다음
+        //2초뒤에 true로 바꿔줄거임.
+
         this.waterWball.destroy();
         this.water.setVisible(true);
         this.water.play('water');
         this.player.playerPaused=false;
+
+        this.time.delayedCall( 2000, () => { 
+            this.isdownX = true; //2초뒤에 true로 바꿔줄거임. => 무한반복 퀘 가능   
+        });
         /*** db에서 stage값을 1 증가시켜줌. because,, ***/
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/stage', true);
@@ -1584,11 +1600,12 @@ export default class SecondStage extends Phaser.Scene {
             this.help_icon.setVisible(true);
             this.quest_text1.setVisible(true);
             this.quest_text2.setVisible(false);
-            this.code_on1=true;
+          //  this.code_on1=true;
 
             this.player.playerPaused = false;
-            this.invenPlus = true;
-            this.mission1 = true;
+            this.dropPlus = true;
+         //   this.mission1 = true;
+         this.code_on1 = true;
         });     
     }
     stage2_13() { //할아버지 퀘스트 완료한경우
@@ -1601,8 +1618,11 @@ export default class SecondStage extends Phaser.Scene {
             this.player.playerPaused=false; 
             this.time.delayedCall( 2000, () => { 
                 this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
+                
             });
-        });     
+        });  
+
+        this.reset_before_mission(); //드랍존 리셋
     }
 
     stage2_14() { //유치원 퀘스트 다시
@@ -1620,8 +1640,9 @@ export default class SecondStage extends Phaser.Scene {
             this.code_on2=true;
 
             this.player.playerPaused = false;
-            this.invenPlus2 = true;
-            this.mission2 = true;
+            this.dropPlus2 = true;
+            //this.mission2 = true;
+            
         });     
     }
 
@@ -1636,8 +1657,10 @@ export default class SecondStage extends Phaser.Scene {
             this.time.delayedCall( 2000, () => { 
                 this.isdownX = true; //퀘스트 완료해야, 또 한번 더 가능하게
             });
+            
            
         });     
+        this.reset_before_mission();
     }
  
     reset_before_mission() {
