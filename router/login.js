@@ -3,7 +3,7 @@ const router = express.Router();
 const crypto = require("crypto");
 const { User } = require('../models');
 
-router.route('/check')//중복확인
+router.route('/check')//중복확인 한번더 푸시~!~!
     .post(async(req,res,next)=>{
         console.log('[POST /login/check]');
         const id = req.body.id;
