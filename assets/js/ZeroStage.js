@@ -390,6 +390,11 @@ export default class ZeroStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
+        
+        if (!this.codeapp_onoff_state && this.concern_text.x > this.worldView.x + 715) {
+            this.concern_text.setVisible(false);
+        } // 마잌테스트 드랍존 들어가 있을 때코드앱 따라 보이고 안 보이고 하기
+        else this.concern_text.setVisible(true); 
 
         //stage num
         this.stage_text.x=this.worldView.x+1100;
