@@ -953,10 +953,10 @@ export default class SecondStage extends Phaser.Scene {
                     this.stage2_15();
                 }
             }else{
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.playerFace.setVisible(false);
-                this.player.playerPaused=false;
+                //this.textBox.setVisible(false);
+                //this.script.setVisible(false);
+                //this.playerFace.setVisible(false);
+                //this.player.playerPaused=false;
             }
         }
 

@@ -137,7 +137,7 @@ visible(visible) {
     });
     */
 
-      this.scene.input.once('pointerup', this.complete, this);
+      //this.scene.input.once('pointerup', this.complete, this);
       return this;  // return eventEmitter to pause the sequence
   }
 

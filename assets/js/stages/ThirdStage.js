@@ -498,10 +498,10 @@ export default class ThirdStage extends Phaser.Scene {
                     }, [], this);
                     
                 }else{
-                    this.textBox.setVisible(false);
-                    this.script.setVisible(false);
-                    this.playerFace.setVisible(false);
-                    this.player.playerPaused=false;
+                    //this.textBox.setVisible(false);
+                    //this.script.setVisible(false);
+                    //this.playerFace.setVisible(false);
+                    //this.player.playerPaused=false;
                 }
         }
 
