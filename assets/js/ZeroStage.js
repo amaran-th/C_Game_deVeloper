@@ -96,7 +96,7 @@ export default class ZeroStage extends Phaser.Scene {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
-        this.concern_text = this.add.text(this.bubble.x+20, this.bubble.y-87, '아-마잌테스트', {
+        this.concern_text = this.add.text(map.widthInPixels, this.bubble.y-87, '아-마잌테스트', {
             font:'14px',
             fontFamily: 'Courier',
             color: '#000000'
@@ -390,8 +390,8 @@ export default class ZeroStage extends Phaser.Scene {
         this.player.update();
         this.inventory.update(this);
         this.command.update(this);
-        
-        if (!this.codeapp_onoff_state && this.concern_text.x > this.worldView.x + 715) {
+
+        if (!this.codeapp_onoff_state && (this.code_zone_1 ==this.concern_text._text || this.code_zone_2 ==this.concern_text._text || this.code_zone_3 ==this.concern_text._text || this.code_zone_4 ==this.concern_text._text)) {
             this.concern_text.setVisible(false);
         } // 마잌테스트 드랍존 들어가 있을 때코드앱 따라 보이고 안 보이고 하기
         else this.concern_text.setVisible(true); 
@@ -416,7 +416,21 @@ export default class ZeroStage extends Phaser.Scene {
         if(this.bubble.visible&&this.player.player.body.velocity.x != 0 ){
             this.bubble.x=this.player.player.x;
             this.concern_text0.x=this.bubble.x+10;
-            this.concern_text.x=this.bubble.x+20;
+
+            // 마잌테스트 드랍존에 들어간 경우 플레이어 이동 시 드랍존 위치에 맞게 이동 
+            if (this.code_zone_1 ==this.concern_text._text) { 
+                this.concern_text.x = this.worldView.x + this.dropzone1_x - (this.draganddrop_1.width / 2) + 5; // 현재 드랍존의 위치를 태그 조각에 반영 함.
+            }
+            else if (this.code_zone_2 == this.concern_text._text) { // 같은 태그라도 플레이어 따라 다 이동해야하므로 elseif 말고 if로 함
+                this.concern_text.x = this.worldView.x + this.dropzone2_x - (this.draganddrop_2.width / 2) + 5;
+            }
+            else if (this.code_zone_3 == this.concern_text._text) { 
+                this.concern_text.x = this.worldView.x + this.dropzone3_x - (this.draganddrop_3.width / 2) + 5;
+            }
+            else if (this.code_zone_4 == this.concern_text._text) { 
+                this.concern_text.x = this.worldView.x + this.dropzone4_x - (this.draganddrop_4.width / 2) + 5;
+            }
+            else this.concern_text.x=this.bubble.x+20;
         }
 
 
