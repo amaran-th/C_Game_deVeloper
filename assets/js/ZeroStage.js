@@ -165,9 +165,9 @@ export default class ZeroStage extends Phaser.Scene {
 
         this.command.entire_code_button.setVisible(false);  //처음 시작시 휴대전화 아이콘이 보이지 않게 설정
 
-        /** 플레이어 위치 확인용 **/
+        /** 플레이어 위치 확인용
         this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
-
+ **/
         
         //플레이어 위 pressX 생성해두기(door)
         this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
@@ -311,13 +311,13 @@ export default class ZeroStage extends Phaser.Scene {
         
         
         //코드 실행 후 비교할 목표 텍스트
-
-        //this.correct_msg="아-마잌테스트";
-        /* */
+//
+        this.correct_msg="아-마잌테스트";
+        /* 
         this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
                 "int main(){ \n " + 
                 "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
-
+*/
         stagenum=0;
 
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
@@ -362,7 +362,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         
                 
-         /* 플레이어 위치 알려줌*/
+         /* 플레이어 위치 알려줌
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -370,7 +370,7 @@ export default class ZeroStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
-
+*/
 
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x&&this.cangetItem) {
