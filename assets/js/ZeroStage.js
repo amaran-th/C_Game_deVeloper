@@ -765,6 +765,15 @@ export default class ZeroStage extends Phaser.Scene {
             this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
             this.codeError = true;
 
+            this.tweens.add({
+                targets: [this.textBox, this.script, this.playerFace],
+                alpha: 0,
+                duration: 2000,
+                ease: 'Power1',
+                repeat: 0,
+                onComplete: ()=>{ }
+            }, this);
+
         
     }
     
