@@ -19,6 +19,7 @@ export default class Quiz extends Phaser.Scene {
 
     create(){
         console.log('퀴즈 시작!');
+        player_answer = [3,3,3,3];
         //this.inventory.fillRoundedRect(0, 50, 1094, 173, 20).strokeRoundedRect(0, 50, 1094, 173, 20);
         var screen = this.add.rectangle(150, 100, 10, 10, 0x36385c).setOrigin(0,0);
         //dropzone

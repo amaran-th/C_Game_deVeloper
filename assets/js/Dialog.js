@@ -137,7 +137,7 @@ visible(visible) {
     });
     */
 
-      this.scene.input.once('pointerup', this.complete, this);
+      //this.scene.input.once('pointerup', this.complete, this);
       return this;  // return eventEmitter to pause the sequence
   }
 
@@ -557,8 +557,18 @@ visible(visible) {
     ['wait-time', 0.5],
   ]
 
-  //악마와 대화2(두번째부터)
+  //악마한테 말 안걸고 나가려고 할 때
   stage1_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '아까 그 놈하고 얘기부터 좀 해보자.'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 0.5],
+  ]
+  //악마와 대화2(두번째부터)
+  stage1_10 = [
     ['visible',true],
     ['place', 40,10],
     ['setFace', 1],
@@ -579,19 +589,22 @@ visible(visible) {
     ['visible',false],
     ['wait-time', 0.5],
   ]
-
-  //악마한테 말 안걸고 나가려고 할 때
-  stage1_10 = [
+  stage1_11 = [
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 1],
-    ['print', '아까 그 놈하고 얘기부터 좀 해보자.'],
+    ['setFace', 5],
+    ['print', '뭐야, 잠금 한번 더 걸어줘?'],
     ['wait-click'],
     ['visible',false],
-    ['wait-time', 0.5],
   ]
-
-
+  stage1_12 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '얏호! 또 풀었다!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
   stage2_1 = [
     ['visible',true],
     ['place', 40,10],
@@ -714,15 +727,20 @@ visible(visible) {
     ['setFace', 0],
     ['print', '그럴수가...'],
     ['wait-click'],
+    ['setFace', 10],
+    ['print', '어우 덥다, 난 다시 들어갈랑께! 나중에 또 부탁함세!'],
+    ['wait-click'],
     ['visible',false],
     ['wait-time', 1],
   ]
-  //할아버지 퀘스트 깨고 난 후에 말 걸 수 있게 한다면?
+  //할아버지 퀘스트 깨고 난 후, 다시 카페로 들어감
   stage2_3_3 =[
   ['visible',true],
   ['place', 40,10],
   ['setFace', 10],
-  ['print', '아이고 덥다~~'],
+  ['print', '저 옆에 누가 저렇게 우는거야?'],
+  ['wait-click'],
+  ['print', '난 이제 쉴랑께'],
   ['wait-click'],
   ['visible',false],
 ]
@@ -846,7 +864,43 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
+  //퀘스트 완료후, 할아버지 퀘스트 한번더
+  stage2_12 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 10],
+    ['print', '아 자네! 또 도와주러왔는가?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  //퀘스트 완료후, 할아버지 퀘스트 한번더 => 얏호! 또 풀었다
+  stage2_13 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '얏호! 또 풀었다'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  //퀘스트 완료후, 유치원생 퀘스트 한번더
+  stage2_14 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 15],
+    ['print', '언니! 그때 그 코드가 뭐였죠? 까먹었엉ㅜㅜ'],
+    ['wait-click'],
+    ['visible',false],
+  ]
 
+  //퀘스트 완료후, 유치원생 퀘스트 한번더 => 얏호! 또 풀었다
+  stage2_15 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 15],
+    ['print', '아하! 이거구나! 고마워~!~!~!~!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
   //스테이지 3-0에 들어가면 나오는 대사
   stage3_0 = [
     ['visible',true],
@@ -858,6 +912,15 @@ visible(visible) {
     ['wait-click'],
     ['setFace', 4],
     ['print', '* Quest : 숨을 돌릴 장소를 찾아 들어가자. *'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage3_0_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '저기 빵집, 되게 시원해보이는데,,,'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -916,6 +979,13 @@ visible(visible) {
     ['setFace', 1],
     ['print', '아..넵..'],
     ['wait-click'],
+    ['visible',false],
+  ]
+
+  //나중에 빵집 도중에 새로고침으로 다시 들어왔을때 미션이 뜨게.
+  stage3_2_1=[
+    ['visible',true],
+    ['place', 40,10],
     ['setFace', 4],
     ['print', '* Quest : 핑퐁씨에게 빵을 25개 만들어주자. *'],
     ['wait-click'],
@@ -940,6 +1010,36 @@ visible(visible) {
     ['setFace', 22],
     ['print', '고마워요! 덕분에 오늘은 무사히 장사를 할 수 있겠어요!'],
     ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage3_4 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 20],
+    ['print', '앗, 빵 더 만들어주실래요?'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage3_5 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 20],
+    ['print', '고마워요'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage3_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '빨리 도와주고 가자.'],
+    ['wait-click'],
+
     ['visible',false],
   ]
 
@@ -1224,7 +1324,40 @@ visible(visible) {
     ['wait-time',0.5]
   ]
 
+  stage4_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 40],
+    ['print', '게임 한번 더 할거야?'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage4_10 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '난 천재야!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
 
+  stage4_11 = [//답은 맞지만 너무 멂.
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 4],
+    ['print', '너무 멀어...가까이서 다시 해보자'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage4_12 = [//도어락 성공.
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '이제 문을 열고 나갈 수 있어!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
   //독백
   stage5_1 = [
     ['visible',true],
@@ -1628,6 +1761,45 @@ visible(visible) {
     ['visible',false],
   ]
 
+  stage6_6 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 35],
+    ['print', '와! 고마워! 이제 다음 방으로 들어가봐'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_7 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 35],
+    ['print', '앗, 배열퀴즈 한번 더 풀고 싶구나?'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_8 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 0],
+    ['print', '얏호! 또 풀었다!'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
+
+  stage6_9 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 35],
+    ['print', '어, 어디가요?'],
+    ['wait-click'],
+
+    ['visible',false],
+  ]
   //어디에 넣을 수 있을진 모르겠는데 적당히 엔딩낼때 넣을 텍스트
   final_0=[
     ['visible',true],

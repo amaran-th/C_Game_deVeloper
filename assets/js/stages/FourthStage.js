@@ -4,7 +4,7 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 import ThirdStage from "./ThirdStage.js";
-
+var stage;
 var droppedText; //드랍된 텍스트 무엇인지 판별할때 gameobject._text 값 저장하는 용으로 쓰임
 var graphics; //퀴즈 넘어갈때마다 드랍존 지워야 해서 전역으로 뺐음
 var inZone4_1;
@@ -15,6 +15,17 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
 
         this.load.image("stage4_tiles", "./assets/images/stage4/map_stage4.png");
         this.load.tilemapTiledJSON("fourth_stage", "./assets/fourth_stage.json");
@@ -219,23 +230,51 @@ export default class FourthStage extends Phaser.Scene {
 */ 
 
          /* 시작 대사 */
-        this.player.playerPaused = true;
-        var seq = this.plugins.get('rexsequenceplugin').add();
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.stage4_0, this.dialog)
-        .start();
-        seq.on('complete', () => {
-            this.player.playerPaused = false;
-            this.questbox.setVisible(true);
-            this.quest_text.setVisible(true);
-        });
+         if(stage==6){//처음 들어왔을때
+            this.player.playerPaused = true;
+            var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage4_0, this.dialog) //스테이지 4 들어가자마자 출력되는 대사
+            .start();
+            seq.on('complete', () => {
+                this.player.playerPaused = false;
+                this.questbox.setVisible(true);
+                this.quest_text.setVisible(true);
+            });
+
+            //npc에게 말을 건 횟수(순차적 실행을 위함)
+            this.talk_num=0
+
+         }
+         else {//악마 퀴즈 풀면, 관문은 연 상태. //이어하기를 대비해서 아이템 미리 넣어놔야함.
+            this.tweens.add({
+                targets: [this.wall],
+                y:-400,
+                duration: 3000,
+                ease: 'Linear',
+                repeat: 0,
+                onComplete: ()=>{
+                    
+                }
+            }, this);
+
+            //npc에게 말을 건 횟수(순차적 실행을 위함)
+            this.talk_num=2
+
+            //인벤에 넣기
+            this.add_mini_inven();
+            this.get_type_specifier();
+        }
+
+         
 
 
         stagenum = 4;
 
+        this.cantalk=true;
         this.npcTalk = true; //npc랑 한번만 말하게 
-        this.firstTalk = true ;//악마 앞에서 x키 누를때 필요
+        //this.firstTalk = true ;//악마 앞에서 x키 누를때 필요 =>=> talk_num으로 대체. 비슷하게는 function
         this.quiz1 = true;
         this.quiz2 = false;
         this.quiz3 = false;
@@ -243,8 +282,7 @@ export default class FourthStage extends Phaser.Scene {
         this.quizOver = false;
         this.door = true; //문 앞에서 퀴즈 맞출때;
 
-        //악마에게 말을 걸 수 있는지 여부
-        this.cantalk=true;
+        this.code_on=false;
 
         this.codeComplied = false //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
         this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
@@ -273,17 +311,37 @@ export default class FourthStage extends Phaser.Scene {
 
         /** 현재 퀴즈따라서 컴파일 내용 바꿔주기 (퀴즈 틀리고 맞출때마다 플레이어 말풍선으로 컴파일 내용 뜨는 거 하고싶음)**/
             //console.log('퀴즈바뀜');
-            this.contenttext =
-            "#include <stdio.h>\n" +
-            "int main(){\n\n" +
-            "   int password = 0;" +
-            "  "+ this.code_zone_1 +"(int i=10; i>0; i--) {\n" +
-            "      "+this.code_zone_2+" (i%2==1){\n" +
-            "          password += i;\n" +
-            "      }\n" +
-            "  }\n" +
-            "   printf(\'"+ this.code_zone_3 +"\',i);\n" +
-            "}\n"
+
+            if (this.code_on){
+                // 4_stage의 앱에 들어가는 코드
+                this.app_code_text =
+                "#include <stdio.h>\n" +
+                "int main(){\n" +
+                "\u00a0\u00a0\u00a0int password = 0;\n" +
+                "\u00a0\u00a0\u00a0"+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0(int i=10; i>0; i--) {\n" +
+                "\u00a0\u00a0\u00a0"+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"(i%2==1){\n" +
+                "\u00a0\u00a0\u00a0"+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"password += i;\n" +
+                "\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0}\n" +
+                "\u00a0\u00a0\u00a0}\n" +
+                "   printf(\""+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"\",password);\n" +
+                "}"
+
+                this.contenttext =
+                "#include <stdio.h>\n" +
+                "int main(){\n\n" +
+                "   int password = 0;" +
+                "  "+ this.code_zone_1 +"(int i=10; i>0; i--) {\n" +
+                "      "+this.code_zone_2+" (i%2==1){\n" +
+                "          password += i;\n" +
+                "      }\n" +
+                "  }\n" +
+                "   printf(\'"+ this.code_zone_3 +"\',i);\n" +
+                "}\n"
+
+            }else {
+                this.contenttext = "";
+                this.app_code_text = "";
+            }
 
 
         /* 퀴즈 정답맞추기 */
@@ -350,7 +408,10 @@ export default class FourthStage extends Phaser.Scene {
             this.time.delayedCall(1000,() => {
                 this.dragAndDrop.reset_before_mission(this);
                 this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
-                this.stage4_5()
+                if(stage==6){//처음 퀘스트 완료
+                    this.stage4_5()
+                }else this.stage4_10() //반복으로 퀘 완료
+               
             },[],this);
         }
         else if(this.quiz4 && droppedText != undefined ) {//%d가 드랍된 게 아니라면 
@@ -373,6 +434,18 @@ export default class FourthStage extends Phaser.Scene {
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
         if(this.draganddrop_2!=undefined) this.draganddrop_2.update(this);
         if(this.draganddrop_3!=undefined) this.draganddrop_3.update(this);
+
+        if(this.dropPlus){
+
+            this.dropzone1_x = 814; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+            this.dropzone2_x = 835;
+            this.dropzone3_x = 885;
+            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("1");
+            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 205, 80, 25).setRectangleDropZone(80, 25).setName("2");
+            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 315, 80, 25).setRectangleDropZone(80, 25).setName("3");
+
+            this.dropPlus = false;
+        }
                 
          /* 플레이어 위치 알려줌
          this.playerCoord.setText([
@@ -394,8 +467,8 @@ export default class FourthStage extends Phaser.Scene {
 */
 
         /* 아이템 얻기 */
-        if(this.player.player.x >=this.npc9.x -100 && this.npc9.x +100 >= this.player.player.x ){
-            if(this.npcTalk) {
+        if(this.player.player.x >=this.npc9.x -100 && this.npc9.x +100 >= this.player.player.x && stage == 6){
+            if(this.npcTalk) { //유황불에 태워버려요
                 this.npcTalk = undefined;
                 this.player.playerPaused = true;
                 this.stage4_1();
@@ -405,27 +478,45 @@ export default class FourthStage extends Phaser.Scene {
         else this.pressX.setVisible(false);
 
 
-        /* 시험 시작! */
+        /* 시험 시작! *///악마한테 말걸때.
         if(this.player.player.x >=this.devil.x -100 && this.devil.x +100 >= this.player.player.x&&this.cantalk){
             this.pressX.setVisible(true);
-            if(this.keyX.isDown){
-                this.cantalk=false;
-                if(this.firstTalk==true) {
+
+            if(this.keyX.isDown&&this.talk_num==0) {// 악마와 대화 1
+                if(this.cantalk){
+                    this.cantalk=false;
+                    //devil에게 처음 말을 걸었을 때(퀴즈 해결 전)
                     this.devil.anims.stop();
                     this.devil.setFrame(1);
-                    this.firstTalk = undefined;
+                
                     this.player.playerPaused = true;
                     this.questbox.setVisible(false);
                     this.quest_text.setVisible(false);
                     this.stage4_0_1();
-                }else if(this.firstTalk==false){
+
+                    this.talk_num++;
+                }
+            }else if(this.keyX.isDown&&this.talk_num==1){
+                //devil에게 말을 건 이후에 또 말을 걸 때
+                if(this.cantalk){
+                    this.cantalk=false;
                     this.devil.anims.stop();
                     this.devil.setFrame(1);
-                    this.firstTalk = undefined;
+                
                     this.player.playerPaused = true;
                     this.stage4_8();
+
+                    this.talk_num++; //second talk 악마 말하기
+                    
+                }
+            }else if (this.keyX.isDown&&this.talk_num==2){//무한 반복 퀘스트
+                if(this.cantalk){
+                    this.cantalk=false;
+                    this.player.playerPaused = true;
+                    this.stage4_9();
                 }
             }
+           
         }
         else this.pressX.setVisible(false);
 
@@ -445,10 +536,10 @@ export default class FourthStage extends Phaser.Scene {
         }
         else this.pressXDoor.setVisible(false);
 
-        if(this.function==1){
+        if(this.function==1){ //도어락 성공!
             this.stage4_11();
             this.function=0;
-        }else if(this.function==2){
+        }else if(this.function==2){//도어락 => 답은 맞지만 너무 멀리서.
             this.stage4_12();
             this.function=0;
         }
@@ -457,13 +548,13 @@ export default class FourthStage extends Phaser.Scene {
             console.log('컴파일 사라지는 용의 x키');
             this.codeComplied = false;
 
-            if(msg==this.correct_msg){
+            if(msg==this.correct_msg){//답은 맞음
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 
-                if(this.player.player.x>1000&&this.player.player.x<1450){
+                if(this.player.player.x>1000&&this.player.player.x<1450){//너무 멂
                     this.function=2;
-                }else{
+                }else{//도어락 퀘 성공!
                     this.function=1;
                 }
                 
@@ -536,7 +627,7 @@ export default class FourthStage extends Phaser.Scene {
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%s';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%c';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '%f';
-
+        
         this.unique_codepiece_x = 170;
         this.unique_codepiece_y = 400;
         this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
@@ -596,7 +687,7 @@ export default class FourthStage extends Phaser.Scene {
     }
 
 
-    stage4_1() {
+    stage4_1() { //유황불에 태워버려요
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -609,8 +700,8 @@ export default class FourthStage extends Phaser.Scene {
             this.get_type_specifier();
         });
     }
-
-    stage4_0_1(){
+ 
+    stage4_0_1(){ //악마한테 처음 말걸면
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -718,11 +809,11 @@ export default class FourthStage extends Phaser.Scene {
     }
 
 
-    stage4_5() {
+    stage4_5() {//퀴즈 완료후 악마 대화 (퀴즈 끝나면 자동으로)
         //this.get_type_specifier();
         this.deleteDropzone();
         this.zone = undefined;
-        this.dragAndDrop.reset_before_mission(this);
+        this.dragAndDrop.reset_before_mission(this); //드랍존 리셋
         this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
         this.dragAndDrop = undefined; // 드랍존 들어가면 인벤,코드앱 따라 보이고 안 보이고 안 따라가는 거 해결위해 필요
         
@@ -747,13 +838,27 @@ export default class FourthStage extends Phaser.Scene {
                 onComplete: ()=>{
                     this.devil.play('devil_touch_phone2');
                     this.cantalk=true;
-                    this.firstTalk=false;
+                   // this.firstTalk=false;
                 }
             }, this);
+
+            /*** db에서 stage값을 1 증가시켜줌. ***/
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+            var result = JSON.parse(xhr.responseText);
+
+                console.log("========stage 추가된다!: " + result.stage)
+                stage = result.stage;          
+            });
+
         });
     }
 
-    stage4_6() {
+    stage4_6() {//도어락 퀘스트 대사
         this.player.playerPaused = true;
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -765,16 +870,12 @@ export default class FourthStage extends Phaser.Scene {
             this.quest_text2.setVisible(true);
             this.code_on=true;
             this.player.playerPaused = false;
-            this.dropzone1_x = 814; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-            this.dropzone2_x = 835;
-            this.dropzone3_x = 885;
-            this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("1");
-            this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 205, 80, 25).setRectangleDropZone(80, 25).setName("2");
-            this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 315, 80, 25).setRectangleDropZone(80, 25).setName("3");
+
+            this.dropPlus = true;//드랍존 생성
         });
     }
 
-    stage4_7(){
+    stage4_7(){//안씀
         this.player.playerPaused = true;
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -786,7 +887,7 @@ export default class FourthStage extends Phaser.Scene {
         });
     }
 
-    stage4_8(){
+    stage4_8(){//악마 대화2번째
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -794,36 +895,71 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
             this.player.playerPaused = false;
-            this.firstTalk=false;
+            //this.firstTalk=false;
             this.cantalk=true;
             this.devil.play('devil_touch_phone2');
         });
     }
 
-    //답은 맞으나 너무 멀리에서 실행했을 시
+    stage4_9(){//무한 반복 퀘
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_9, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = true;
+            this.stage4_quiz_1();
+        });
+    }
+    stage4_10(){//무한 반복 퀘 완료
+        this.deleteDropzone();
+        this.zone = undefined;
+        this.dragAndDrop.reset_before_mission(this); //드랍존 리셋
+        this.unique_code_piece.reset_unique_codepiece_position(this); // 형식지정자 코드조각 원래 위치로 보내기
+        this.dragAndDrop = undefined; // 드랍존 들어가면 인벤,코드앱 따라 보이고 안 보이고 안 따라가는 거 해결위해 필요
+        
+        this.dialog.visible(false);
+
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage4_10, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+            this.time.delayedCall( 2000, () => { 
+                this.cantalk = true; //퀘스트 완료해야, 또 한번 더 가능하게
+            });
+        });
+    }
+
+    //doorlock 클리어 시
     stage4_11(){
+        
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.stage4_11, this.dialog)
         .start();
         seq.on('complete', () => {  
+            console.log("clear");
             this.player.playerPaused=false;
+
+            this.code_on = false;
+            this.reset_before_mission();//드랍존 지움.
         });
     }
 
-    //doorlock 클리어 시
+    //답은 맞으나 너무 멀리에서 실행했을 시
     stage4_12(){
-        
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.stage4_12, this.dialog)
         .start();
         seq.on('complete', () => {  
-            console.log("clear");
             this.player.playerPaused=false;
-            
         });
     }
 

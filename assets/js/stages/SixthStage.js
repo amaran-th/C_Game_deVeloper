@@ -3,7 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
-
+var stage;
 var inZone6_1;
 var inZone6_2;
 export default class SixthStage extends Phaser.Scene {   
@@ -12,6 +12,17 @@ export default class SixthStage extends Phaser.Scene {
     }
 
     preload() {
+        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage/check', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        stage = result.stage;
+        });
 
         this.load.image("stage6_tiles", "./assets/images/stage6/map_stage6.png");
         this.load.tilemapTiledJSON("sixth_stage", "./assets/sixth_stage.json");
@@ -74,7 +85,7 @@ export default class SixthStage extends Phaser.Scene {
 
         /*** 플레이어 스폰 위치에 스폰 Spawn player at spawn point ***/
         //this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player');
-        this.player = new Player(this, spawnPoint.x, spawnPoint.y);
+        this.player = new Player(this, spawnPoint.x + 100, 430);
     
         this.anims.create({
             key: "exclam",
@@ -132,6 +143,12 @@ export default class SixthStage extends Phaser.Scene {
             color: '#ffffff'
         }).setOrigin(0,0);
 
+        //플레이어 위 pressX 생성해두기(책 주기)
+        this.pressX_talk = this.add.text(200,130, 'Press X to have a talk', {
+            fontFamily: ' Courier',
+            color: '#ffffff'
+        }).setOrigin(0,0);
+
         this.stage_text=this.add.image(this.worldView.x+1100, 0, 'stage6_text').setOrigin(1,0);
 
         /*** 명령창 불러오기 ***/
@@ -167,7 +184,7 @@ export default class SixthStage extends Phaser.Scene {
         // 인벤창 팝업 여부를 나타내는 상태변수
         this.invenIn = false;
 
-        /** 인벤토리 만들기 **/     
+        /** 인벤토리 만들기 **/    
         this.inven = this.inventory.create(this);
         this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
@@ -176,8 +193,8 @@ export default class SixthStage extends Phaser.Scene {
 
         /** 초반 대사 **/
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage6_1();
+
+
 
         this.somethingup = false; //플래그변수
         this.bookok = false; // 플래그변수
@@ -246,13 +263,17 @@ export default class SixthStage extends Phaser.Scene {
                         this.X.setVisible(true);
                         this.time.delayedCall( 1000, () => { this.X.setVisible(false);}, [] , this);
                         break;
-                    case 1:
+                    case 1://퀴즈 다끝남!!
                         this.X.setVisible(false);
                         this.O.setVisible(true);
                         this.quiz1 = false;
                         this.quiz2 = true;
-                        this.time.delayedCall( 1000, () => { this.O.setVisible(false);}, [] , this);
+                        this.time.delayedCall( 1000, () => {
+                            //퀴즈를 모두 맞춘 경우
+                            this.O.setVisible(false);
+                        }, [] , this);
                         this.quiz2 = false;
+                        this.quiz_finish = true;
                         
                         break;
                     case 2:
@@ -284,8 +305,18 @@ export default class SixthStage extends Phaser.Scene {
         this.scene.run('selection',{ msgArr: msgArr, num: msgArr.length, finAnswer: this.finAnswer });
         //정답(1 ~ maxnum)은 this.finAnswer.andswer에 들어감
    */     
+        this.isdownX=true;
 
-        
+        if (stage==12){
+
+            this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage6_1();
+
+        }
+        else{//이어하기 (미션 끝난 상태로 만들어줌)
+            this.books.destroy();  //쌓인 책 이미지 없앰
+            this.bookswhy = this.add.image(340, 478, 'bookswhy'); //책 무너진 이미지 띄움
+        }
 
     }
 
@@ -315,7 +346,7 @@ export default class SixthStage extends Phaser.Scene {
             this.questbox.x=this.worldView.x+30;
             this.quest_text1.x=this.questbox.x+430;
         }
-
+           
         //stage num
         this.stage_text.x=this.worldView.x+1100;
                 
@@ -329,7 +360,7 @@ export default class SixthStage extends Phaser.Scene {
         this.playerCoord.y = this.worldView.y + 10;
 */
         //1. 책 주변으로 갔을때 X누르면 머리위로 책 얻음!
-        if( this.player.player.x > 600 && this.player.player.x < 730 && this.bookok == false && this.somethingup == false){
+        if( this.player.player.x > 600 && this.player.player.x < 730 && this.bookok == false && this.somethingup == false && stage == 12){
             this.pressX_getbook.x = this.player.player.x-50;
             this.pressX_getbook.y = this.player.player.y-100;
             this.pressX_getbook.setVisible(true);
@@ -359,6 +390,29 @@ export default class SixthStage extends Phaser.Scene {
             }
         }
         else this.pressX_return_book.setVisible(false);
+
+        
+        //4. (첫번째) 퀴즈2개 다 완료했을때 대화 뜸
+        if(this.quiz_finish && stage==12){
+            this.stage6_6();
+            this.quiz_finish = false;
+        }
+        //4_1. (무한반복) 퀴즈2개 다 완료했을때 대화 뜸
+        if(this.quiz_finish && stage>12){
+            this.stage6_8(); //얏호! 또 풀었다!
+            this.quiz_finish = false;
+        }
+
+        //5. (미션 반복) 배열 퀴즈 계속 받기
+        if(this.player.player.x > 300 && this.player.player.x < 400 && stage > 12&&this.isdownX){
+            this.pressX_talk.setVisible(true);
+
+            if(this.keyX.isDown) {
+                this.stage6_7();
+                this.isdownX = false;
+            }
+        }
+        else this.pressX_talk.setVisible(false);
 
         if(this.quiz1 === true){
             this.quizimage.setVisible(true);
@@ -427,10 +481,13 @@ export default class SixthStage extends Phaser.Scene {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
             this.pressX_2.setVisible(true);
-            if (this.keyX.isDown){
+            if (this.keyX.isDown&&stage>12){
                 console.log("[맵이동] Ending Room 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('bootGame'); 
+            }else if(this.keyX.isDown&&stage<=12&&this.isdownX){ //스테이지 클리어 못하고 나가려할때
+                this.isdownX=false;
+                this.stage6_9();
             }
         }else this.pressX_2.setVisible(false);
         
@@ -512,7 +569,73 @@ export default class SixthStage extends Phaser.Scene {
                 this.page1.destroy();
                 this.page2.destroy();
                 this.quiz1 = true; //퀴즈 시작
+
+                
             });
+    }
+
+
+    stage6_6(){ //처음으로 퀴즈 2개 다 풀었을때 
+    
+        var seq = this.plugins.get('rexsequenceplugin').add();
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage6_6, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                 /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/stage', true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send();
+
+                xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
+
+                console.log("========stage 추가된다!: " + result.stage)
+                    stage = result.stage;          
+                });
+
+                
+            });
+
+    }
+    stage6_7() { //사서에게 퀴즈 한번 더 (무한 반복)
+
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage6_7, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.quiz1 = true; //퀴즈 시작
+        });  
+    }
+
+    stage6_8() { //사서에게 퀴즈 받고 대사창 (무한 반복) //얏호! 또 풀었다!
+
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage6_8, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.time.delayedCall( 1500, () => { this.isdownX=true;}, [] , this);
+        });  
+    }
+
+    stage6_9() { //못 나가게
+        this.player.playerPaused = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage6_9, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.player.playerPaused = false;
+            this.time.delayedCall( 1500, () => { this.isdownX=true;}, [] , this);
+            
+        });  
     }
 
 
