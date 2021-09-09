@@ -96,7 +96,7 @@ export default class ZeroStage extends Phaser.Scene {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
-        this.concern_text = this.add.text(this.bubble.x+20, this.bubble.y-87, '아-마잌테스트', {
+        this.concern_text = this.add.text(map.widthInPixels, this.bubble.y-87, '아-마잌테스트', {
             font:'14px',
             fontFamily: 'Courier',
             color: '#000000'
@@ -345,13 +345,13 @@ export default class ZeroStage extends Phaser.Scene {
         
         
         //코드 실행 후 비교할 목표 텍스트
-
-        //this.correct_msg="아-마잌테스트";
-        /* */
+//
+        this.correct_msg="아-마잌테스트";
+        /* 
         this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
                 "int main(){ \n " + 
                 "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
-
+*/
         stagenum=0;
 
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
@@ -391,6 +391,11 @@ export default class ZeroStage extends Phaser.Scene {
         this.inventory.update(this);
         this.command.update(this);
 
+        if (!this.codeapp_onoff_state && (this.code_zone_1 ==this.concern_text._text || this.code_zone_2 ==this.concern_text._text || this.code_zone_3 ==this.concern_text._text || this.code_zone_4 ==this.concern_text._text)) {
+            this.concern_text.setVisible(false);
+        } // 마잌테스트 드랍존 들어가 있을 때코드앱 따라 보이고 안 보이고 하기
+        else this.concern_text.setVisible(true); 
+
         //stage num
         this.stage_text.x=this.worldView.x+1100;
         
@@ -411,14 +416,27 @@ export default class ZeroStage extends Phaser.Scene {
         if(this.bubble.visible&&this.player.player.body.velocity.x != 0 ){
             this.bubble.x=this.player.player.x;
             this.concern_text0.x=this.bubble.x+10;
-            this.concern_text.x=this.bubble.x+20;
+
+            // 마잌테스트 드랍존에 들어간 경우 플레이어 이동 시 드랍존 위치에 맞게 이동 
+            if (this.code_zone_1 ==this.concern_text._text) { 
+                this.concern_text.x = this.worldView.x + this.dropzone1_x - (this.draganddrop_1.width / 2) + 5; // 현재 드랍존의 위치를 태그 조각에 반영 함.
+            }
+            else if (this.code_zone_2 == this.concern_text._text) { // 같은 태그라도 플레이어 따라 다 이동해야하므로 elseif 말고 if로 함
+                this.concern_text.x = this.worldView.x + this.dropzone2_x - (this.draganddrop_2.width / 2) + 5;
+            }
+            else if (this.code_zone_3 == this.concern_text._text) { 
+                this.concern_text.x = this.worldView.x + this.dropzone3_x - (this.draganddrop_3.width / 2) + 5;
+            }
+            else if (this.code_zone_4 == this.concern_text._text) { 
+                this.concern_text.x = this.worldView.x + this.dropzone4_x - (this.draganddrop_4.width / 2) + 5;
+            }
+            else this.concern_text.x=this.bubble.x+20;
         }
 
 
         
                 
-         /* 플레이어 위치 알려줌*/
-         /*
+         /* 플레이어 위치 알려줌
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -426,8 +444,7 @@ export default class ZeroStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
-        */
-
+*/
 
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x&&this.cangetItem) {

@@ -204,8 +204,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
-        */
-
+*/
         if(this.key1.isDown) {
             console.log('맵이동');
             this.scene.sleep('third_stage_0'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)

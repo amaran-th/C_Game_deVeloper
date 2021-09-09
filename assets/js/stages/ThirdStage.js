@@ -262,8 +262,8 @@ export default class ThirdStage extends Phaser.Scene {
         //코드 실행 후 비교할 목표 텍스트(리눅스용/윈도우용)
         this.msg="";
 
-        //his.correct_msg="bread=25";
-        /* */
+        this.correct_msg="bread=25";
+        /* 
         this.correct_msg="#include <stdio.h>\n" + 
         "int main(){\n" +
         "   int bread=1;\n" +
@@ -273,7 +273,7 @@ export default class ThirdStage extends Phaser.Scene {
         "   }\n" +
         "   printf(\"bread=%d\",bread);\n"+
         "}"
-
+*/
 
         stagenum = 3;
 
@@ -387,8 +387,7 @@ export default class ThirdStage extends Phaser.Scene {
         this.code_piece.update(this);
 
         
-         /* 플레이어 위치 알려줌*/
-         /*
+         /* 플레이어 위치 알려줌
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -396,8 +395,7 @@ export default class ThirdStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
-        */
-
+*/
         /** 오븐 근처에서 x키 누르면 오븐 열리게**/
         if(this.player.player.x <= this.oven.x + 100 && this.player.player.x >= this.oven.x) {
             //console.log('오븐근처')
