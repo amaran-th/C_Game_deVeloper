@@ -176,9 +176,9 @@ export default class ZeroStage extends Phaser.Scene {
 
         this.command.entire_code_button.setVisible(false);  //처음 시작시 휴대전화 아이콘이 보이지 않게 설정
 
-        /** 플레이어 위치 확인용
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
- **/
+        /** 플레이어 위치 확인용 **/
+        //this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+
         
         //플레이어 위 pressX 생성해두기(door)
         this.pressX = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
@@ -525,15 +525,16 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 코드 컴파일 이후 말풍선 사라지게 할때 x키 입력이 마우스 클릭과 동일 역할하도록**/
         //이렇게 하면 바로 대사 안뜨고 공백의 텍스트박스가 한번 뜨기는 함. -
+        /*
         if(this.codeComplied && this.keyX.isDown) { 
             console.log('컴파일 사라지는 용의 x키');
             this.codeComplied = false;
 
             if(this.msgEqualOut){ //정답이라면
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
+                //this.textBox.setVisible(false);
+                //this.script.setVisible(false);
                 //playerFace.setVisible(false);
-                this.intro6();
+                //this.intro6();
                 this.msgEqualOut = false
             }else{
                 this.textBox.setVisible(false);
@@ -541,6 +542,7 @@ export default class ZeroStage extends Phaser.Scene {
                 this.playerFace.setVisible(false);
             }
         }
+        */
 
         if(this.codeError && this.keyX.isDown) { 
             console.log('Error 사라지는 용의 x키');
@@ -582,7 +584,7 @@ export default class ZeroStage extends Phaser.Scene {
                 this.command.remove_phone(this);
                 this.scene.sleep('zero_stage')
                 this.scene.run('first_stage'); 
-            }else if(this.keyX.isDown&&stage<=0&&this.player.playerPaused==false){
+            }else if(this.keyX.isDown&&stage<=0&&this.player.playerPaused==false && this.isdownX2){
                 this.isdownX2=false;
                 console.log("아직은 나가지 말자.");
                 this.player.playerPaused = true; //플레이어 얼려두기
@@ -724,6 +726,17 @@ export default class ZeroStage extends Phaser.Scene {
             boundsAlignH: "center",
             boundsAlignV: "middle"
           }).setOrigin(0.5)
+
+          this.tweens.add({
+            targets: [this.textBox, this.script],
+            alpha: 0,
+            duration: 2000,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{  this.codeComplied = true; this.intro6(); }
+        }, this);
+
+
           this.player.playerPaused=true;    //플레이어 얼려두기
           this.questbox.setVisible(false);
           this.quest_text2.setVisible(false);
@@ -768,6 +781,15 @@ export default class ZeroStage extends Phaser.Scene {
 
             this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
             this.codeError = true;
+
+            this.tweens.add({
+                targets: [this.textBox, this.script, this.playerFace],
+                alpha: 0,
+                duration: 2000,
+                ease: 'Power1',
+                repeat: 0,
+                onComplete: ()=>{ }
+            }, this);
 
         
     }

@@ -152,9 +152,9 @@ export default class FirstStage extends Phaser.Scene {
         this.quest_text1.setVisible(false);
 
 
-        /** 플레이어 위치 확인용
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
- **/
+        /** 플레이어 위치 확인용 **/
+        //this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+
         /*** 미니맵버튼 활성화  //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
         this.minimap_button.setInteractive();
