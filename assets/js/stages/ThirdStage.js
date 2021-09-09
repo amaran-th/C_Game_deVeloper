@@ -146,7 +146,7 @@ export default class ThirdStage extends Phaser.Scene {
 
 
         /** 플레이어 위치 확인용 **/
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        //this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
         /*
         // 미니맵버튼 활성화/ //@@@@@@@@@@@
@@ -388,6 +388,7 @@ export default class ThirdStage extends Phaser.Scene {
 
         
          /* 플레이어 위치 알려줌*/
+         /*
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -395,6 +396,7 @@ export default class ThirdStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
+        */
 
         /** 오븐 근처에서 x키 누르면 오븐 열리게**/
         if(this.player.player.x <= this.oven.x + 100 && this.player.player.x >= this.oven.x) {

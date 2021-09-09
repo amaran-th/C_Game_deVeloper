@@ -155,7 +155,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
 
 
         /** 플레이어 위치 확인용 **/
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        //this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
         /*** 미니맵버튼 활성화  //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
@@ -196,6 +196,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
         this.stage_text.x=this.worldView.x+1100;
 
          /* 플레이어 위치 알려줌*/
+         /*
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -203,6 +204,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
+        */
 
         if(this.key1.isDown) {
             console.log('맵이동');
