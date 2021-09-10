@@ -334,8 +334,8 @@ export default class FifthStage extends Phaser.Scene {
         this.select_case2= ['<string.h>을 반납한다.','<string.h>을 반납하고 <math.h>을 대여한다.','아무것도 하지 않는다.'];
         
         this.msg="";
-        this.correct_msg="ㅠ=3.14\n√64=8.00\nsin(45°)=0.71\ncos(60°)=0.50"
-        /*window 
+        //this.correct_msg="ㅠ=3.14\n√64=8.00\nsin(45°)=0.71\ncos(60°)=0.50"
+        /*window */
         this.correct_msg = 
             "#include <stdio.h>\n" +            
             this.code_zone_1 +this.code_zone_2+"\n" +
@@ -345,7 +345,7 @@ export default class FifthStage extends Phaser.Scene {
             "   " + "printf" + "(\"sin(45°)=%.2f\\n\","+ this.code_zone_5 + "(" + this.code_zone_6 + "/4));\n"+
             "   " + "printf" + "(\"cos(60°)=%.2f\","+ this.code_zone_7 + "(" + this.code_zone_8 + "/3));\n"+
             "}"
-           */
+           
         this.codeComplied = false; //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
         this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         
@@ -365,6 +365,8 @@ export default class FifthStage extends Phaser.Scene {
         if(this.unique_code_piece != undefined) this.unique_code_piece.update(this);
         if(this.library_added) this.library_inventory_update();
         if(this.unique_code_piece != undefined) this.unique_code_piece.onoffwithcommand(this, this.library_invenIn); // 코드조각 코드앱 따라가도록
+        if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.update(this);
+        if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.onoffwithcommand(this, this.library_invenIn); // 코드조각 코드앱 따라가도록
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
@@ -1368,7 +1370,16 @@ export default class FifthStage extends Phaser.Scene {
         
         this.unique_codepiece_x = 175;
         this.unique_codepiece_y = 130;
-        this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+        this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌/* 스테이지 5 사서 대사 반복 해결되야 테스트 해볼 수 있을듯!
+        
+        if (this.unique_codepiece_string_arr.indexOf('M_PI') != -1) { // 코드조각 중복 사용
+            this.unique_codepiece_string_arr = [];
+            this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'M_PI'; // 중복사용을 위해 추가해줌
+            this.unique_codepiece_for_repetition_x = 175; // 리턴 적용하기 위해서 x,y좌표 따로 빼줘서 변수 만들어 줘야 함s
+            this.unique_codepiece_for_repetition_y = 130 + this.unique_codepiece_string_arr.indexOf('M_PI')*30; // 중복허용할 코드조각 몇번 째 위치하는 지 받아서 y좌표 적용해줌
+            this.unique_code_piece_for_repetition = new UniqueCodePiece(this, this.unique_codepiece_for_repetition_x, this.unique_codepiece_for_repetition_y); 
+            //this.unique_code_piece_for_repetition = new UniqueCodePiece(this, this.unique_codepiece_for_repetition_x, this.unique_codepiece_for_repetition_y); 
+        }
     }
 
     get_string_library_codepiece() {
