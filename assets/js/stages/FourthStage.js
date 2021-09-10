@@ -54,6 +54,16 @@ export default class FourthStage extends Phaser.Scene {
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone4_1 = this.physics.add.staticImage(30, 420).setSize(100,160);
 
+        /*문 열리는 거*/
+        this.anims.create({
+            key: "open",
+            frames: this.anims.generateFrameNumbers('door',{ start: 0, end: 3}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+        this.door = this.add.sprite(1300 ,500,'door').setOrigin(0,1);
+        this.door.play('open');
+
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
@@ -95,6 +105,8 @@ export default class FourthStage extends Phaser.Scene {
         }).setOrigin(0,0);
 
 
+
+
         /*벽 이미지 만들기*/
 
         this.wall = this.physics.add.image(1150,0,'wall').setOrigin(0,0);
@@ -114,6 +126,7 @@ export default class FourthStage extends Phaser.Scene {
             boundsAlignH: "center",
             boundsAlignV: "middle"
         });
+
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player

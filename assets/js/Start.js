@@ -247,6 +247,12 @@ class Start extends Phaser.Scene {
         frameWidth: 81,
         frameHeight: 95,
       });
+
+      //문 이미지 로드
+      this.load.spritesheet('door', './assets/images/stage4/door.png', {
+        frameWidth: 400,
+        frameHeight: 500,
+      });
       
       //5번째 스테이지의 desk 이미지 로드
       this.load.image("library_desk", "./assets/images/stage5/desk.png");
