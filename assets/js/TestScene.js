@@ -173,7 +173,7 @@ export default class TestScene extends Phaser.Scene {
         
         
          //minimap에서 사용될 전역변수
-         stagenum = 0;
+        // stagenum = 0;
          this.inevent=true;
         
     }

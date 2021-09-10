@@ -242,6 +242,25 @@ export default class ZeroStage extends Phaser.Scene {
             this.help_text.setVisible(false);
             this.help_icon.clearTint();
         },this);
+//**나중에 지울것!!!!!!!!!!!!!!!!!!!!!!!!!! */
+//테이블 클릭하면 stage값 1 증가.
+        this.table.setInteractive();
+        this.table.on('pointerdown', function(){
+                /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+            var result = JSON.parse(xhr.responseText);
+
+            console.log("========stage 추가된다!: " + result.stage)
+                stage = result.stage;          
+        });
+
+        },this)
+        //****************** */
 
 
         
@@ -347,7 +366,7 @@ export default class ZeroStage extends Phaser.Scene {
         //코드 실행 후 비교할 목표 텍스트
 //
         this.correct_msg="아-마잌테스트";
-        /* 
+         /*
         this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
                 "int main(){ \n " + 
                 "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
