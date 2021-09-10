@@ -57,13 +57,6 @@ export default class ThirdStage extends Phaser.Scene {
         this.npc_chef = this.add.image(350,350,'npc_chef').setOrigin(0,0);
         this.npc_chef.setInteractive();
 
-        /***bread 불러오기 */
-        this.bread = this.add.image(370,250,'bread').setOrigin(0,0);
-        this.full_bread_1 = this.add.image(50,151,'full_bread').setOrigin(0,0)
-        this.full_bread_2 = this.add.image(200,151,'full_bread').setOrigin(0,0)
-        this.bread.setVisible(false);
-        this.full_bread_1.setVisible(false);
-        this.full_bread_2.setVisible(false);
 
         /*** 오븐 이미지 불러오기 */
         this.oven = this.add.image(851,300,'oven').setOrigin(0,0).setInteractive();
@@ -103,6 +96,11 @@ export default class ThirdStage extends Phaser.Scene {
         this.pressX_1 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to Exit', {
             fontFamily: ' Courier',
             color: '#000000'
+        }).setOrigin(0,0);
+        //플레이어 위 pressX 생성해두기(oven) => 오븐열기,
+        this.pressX_2 = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X', {
+            fontFamily: ' Courier',
+            color: '#ffffff'
         }).setOrigin(0,0);
 
         this.pressX_quest = this.add.text(this.player.player.x, this.player.player.y-125, 'Press X to have a talk', {
@@ -217,7 +215,7 @@ export default class ThirdStage extends Phaser.Scene {
         
 
         //quest box 이미지 로드
-        this.questbox = this.add.image(0,500,'quest_box').setOrigin(0,0);
+        this.questbox = this.add.image(this.worldView.x,500,'quest_box').setOrigin(0,0);
         //quest text
         this.quest_text = this.add.text(this.questbox.x+430, this.worldView.y+540, '핑퐁씨에게 빵을 25개 만들어주자.', {
             font:'25px',
@@ -262,8 +260,8 @@ export default class ThirdStage extends Phaser.Scene {
         //코드 실행 후 비교할 목표 텍스트(리눅스용/윈도우용)
         this.msg="";
 
-        this.correct_msg="bread=25";
-        /* 
+        /* this.correct_msg="bread=25";*/
+        
         this.correct_msg="#include <stdio.h>\n" + 
         "int main(){\n" +
         "   int bread=1;\n" +
@@ -273,7 +271,7 @@ export default class ThirdStage extends Phaser.Scene {
         "   }\n" +
         "   printf(\"bread=%d\",bread);\n"+
         "}"
-*/
+
 
         stagenum = 3;
 
@@ -399,7 +397,11 @@ export default class ThirdStage extends Phaser.Scene {
         /** 오븐 근처에서 x키 누르면 오븐 열리게**/
         if(this.player.player.x <= this.oven.x + 100 && this.player.player.x >= this.oven.x) {
             //console.log('오븐근처')
+            this.pressX_2.setVisible(true);
+            this.pressX_2.x = this.player.player.x-50;
+            this.pressX_2.y = this.player.player.y-100;
             if(this.keyX.isDown) {
+                this.pressX_2.destroy();
                 this.oven_open.setVisible(true);
                 if (stage == 5){
                     this.oven_on = true;
@@ -413,6 +415,7 @@ export default class ThirdStage extends Phaser.Scene {
                  clearInterval(this.ovenShake) //오븐 반복적으로 흔들리게 하는거 멈춤
             }
         }
+        else this.pressX_2.setVisible(false);
 
         /** 아이템 획득하는 경우 **/
         if (this.oven_on && this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
@@ -463,7 +466,6 @@ export default class ThirdStage extends Phaser.Scene {
                     console.log("===stage3 클리어!===");
                     this.textBox.setVisible(false);
                     this.script.setVisible(false);
-                    this.bread.setVisible(true);
                     this.questbox.setVisible(false);
                     this.quest_text.setVisible(false);
                     this.help_icon.setVisible(false);

@@ -213,11 +213,11 @@ class Start extends Phaser.Scene {
       });
       this.load.spritesheet("waterWball", "./assets/images/stage2/waterWball.png", {
         frameWidth: 200,
-        frameHeight: 100,
+        frameHeight: 200,
       });
       this.load.spritesheet("water", "./assets/images/stage2/water.png", {
         frameWidth: 200,
-        frameHeight: 100,
+        frameHeight: 200,
       });
       this.load.spritesheet("cry", "./assets/images/stage2/cry.png", {
         frameWidth: 125,
@@ -246,6 +246,12 @@ class Start extends Phaser.Scene {
       this.load.spritesheet('npc9', './assets/images/npc/npc9.png', {
         frameWidth: 81,
         frameHeight: 95,
+      });
+
+      //문 이미지 로드
+      this.load.spritesheet('door', './assets/images/stage4/door.png', {
+        frameWidth: 400,
+        frameHeight: 500,
       });
       
       //5번째 스테이지의 desk 이미지 로드

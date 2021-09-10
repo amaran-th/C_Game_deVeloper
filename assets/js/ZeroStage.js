@@ -369,8 +369,8 @@ export default class ZeroStage extends Phaser.Scene {
         
         //코드 실행 후 비교할 목표 텍스트
 
-       // this.correct_msg="아-마잌테스트";
-         
+        //this.correct_msg="아-마잌테스트";
+         /**/
         this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
                 "int main(){ \n " + 
                 "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
