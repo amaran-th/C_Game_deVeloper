@@ -985,7 +985,7 @@ visible(visible) {
   //나중에 빵집 도중에 새로고침으로 다시 들어왔을때 미션이 뜨게.
   stage3_2_1=[
     ['visible',true],
-    ['place', 40,10],
+    ['place', 80,10], //40으로 하니까 치우쳐서 뜸... 왜지?
     ['setFace', 4],
     ['print', '* Quest : 핑퐁씨에게 빵을 25개 만들어주자. *'],
     ['wait-click'],
