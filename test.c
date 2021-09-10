@@ -1,9 +1,9 @@
 #include <stdio.h>
 int main(){
-   int undefined = 45;
-   undefined(undefinedundefined30){
-      undefined("더워요");
-   }else{
-      undefined("추워요");
-  }
+   int water=0;
+   int ground=100;
+   undefined(waterundefinedundefined){
+      undefined = undefined + 1;
+   }
+   undefined("water=%d",water);
 }
