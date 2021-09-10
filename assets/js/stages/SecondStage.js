@@ -285,7 +285,7 @@ export default class SecondStage extends Phaser.Scene {
 
 
         /** 플레이어 위치 확인용 **/
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+       // this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
         /*
         //미니맵버튼 활성화
@@ -485,12 +485,12 @@ export default class SecondStage extends Phaser.Scene {
         //코드 실행 후 비교할 목표 텍스트
         this.msg="";
 
-        //this.correct_msg1="더워요";
+        this.correct_msg1="더워요";
         this.wrong_msg="추워요";
-        //this.correct_msg2="water=100";
+        this.correct_msg2="water=100";
 
         //윈도우용
-        /* */
+        /* 
         this.correct_msg1="#include <stdio.h>\n" + 
             "int main(){\n" +
             "   "+"int "+this.code_zone_1+" = 45;\n" +
@@ -510,7 +510,7 @@ export default class SecondStage extends Phaser.Scene {
             "   }\n" +
             "   " + this.code_zone_6 + "(\"water=%d\",water);\n"+
             "}";
-
+*/
 
 
         //미니맵에서 사용할 전역변수
@@ -820,7 +820,7 @@ export default class SecondStage extends Phaser.Scene {
 
         
                 
-        /* 플레이어 위치 알려줌*/
+        /* 플레이어 위치 알려줌
         this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -828,7 +828,7 @@ export default class SecondStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
-
+*/
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함

@@ -160,7 +160,7 @@ export default class FifthStage extends Phaser.Scene {
 
 
         /** 플레이어 위치 확인용 **/
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        //this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
         /*** 미니맵버튼 활성화/ //@@@@@@@@@@@
         this.minimap_button = this.add.image(20,300,'map_button').setOrigin(0,0);
@@ -334,8 +334,8 @@ export default class FifthStage extends Phaser.Scene {
         this.select_case2= ['<string.h>을 반납한다.','<string.h>을 반납하고 <math.h>을 대여한다.','아무것도 하지 않는다.'];
         
         this.msg="";
-        //this.correct_msg="ㅠ=3.14\n√64=8.00\nsin(45°)=0.71\ncos(60°)=0.50"
-        /*window */
+        this.correct_msg="ㅠ=3.14\n√64=8.00\nsin(45°)=0.71\ncos(60°)=0.50"
+        /*window 
         this.correct_msg = 
             "#include <stdio.h>\n" +            
             this.code_zone_1 +this.code_zone_2+"\n" +
@@ -345,7 +345,7 @@ export default class FifthStage extends Phaser.Scene {
             "   " + "printf" + "(\"sin(45°)=%.2f\\n\","+ this.code_zone_5 + "(" + this.code_zone_6 + "/4));\n"+
             "   " + "printf" + "(\"cos(60°)=%.2f\","+ this.code_zone_7 + "(" + this.code_zone_8 + "/3));\n"+
             "}"
-           
+           */
         this.codeComplied = false; //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
         this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         
@@ -479,7 +479,7 @@ export default class FifthStage extends Phaser.Scene {
             
         }
             
-         /* 플레이어 위치 알려줌*/
+         /* 플레이어 위치 알려줌
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -487,7 +487,7 @@ export default class FifthStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
-
+*/
         /* 플레이어가 사서 근처에 다가가면 작동하도록 함 */
         if(this.player.player.x < 500 && 400 < this.player.player.x && this.cantalking ) {
             this.talktext.setVisible(true);

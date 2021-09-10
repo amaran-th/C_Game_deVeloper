@@ -1413,7 +1413,7 @@ visible(visible) {
     ['setFace', 1],
     ['print', '그럼 저도 회원증을 만들게요.'],
     ['wait-click'],
-    ['setFace', 21],
+    ['setFace', 26],
     ['print', '넵 잠시만요...성함이?'],
     ['wait-click'],
     ['visible',false],

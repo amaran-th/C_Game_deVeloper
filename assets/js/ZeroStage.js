@@ -177,7 +177,7 @@ export default class ZeroStage extends Phaser.Scene {
         this.command.entire_code_button.setVisible(false);  //처음 시작시 휴대전화 아이콘이 보이지 않게 설정
 
         /** 플레이어 위치 확인용 **/
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        //this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
         
         //플레이어 위 pressX 생성해두기(door)
@@ -242,6 +242,25 @@ export default class ZeroStage extends Phaser.Scene {
             this.help_text.setVisible(false);
             this.help_icon.clearTint();
         },this);
+//**나중에 지울것!!!!!!!!!!!!!!!!!!!!!!!!!! */
+//테이블 클릭하면 stage값 1 증가.
+        this.table.setInteractive();
+        this.table.on('pointerdown', function(){
+                /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+            var result = JSON.parse(xhr.responseText);
+
+            console.log("========stage 추가된다!: " + result.stage)
+                stage = result.stage;          
+        });
+
+        },this)
+        //****************** */
 
 
         
@@ -345,13 +364,13 @@ export default class ZeroStage extends Phaser.Scene {
         
         
         //코드 실행 후 비교할 목표 텍스트
-
-        //this.correct_msg="아-마잌테스트";
-        /* */
+//
+        this.correct_msg="아-마잌테스트";
+         /*
         this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
                 "int main(){ \n " + 
                 "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
-
+*/
         stagenum=0;
 
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
@@ -436,7 +455,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         
                 
-         /* 플레이어 위치 알려줌*/
+         /* 플레이어 위치 알려줌
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -444,7 +463,7 @@ export default class ZeroStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
-
+*/
 
         /** 아이템 획득하는 경우 **/
         if (this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x&&this.cangetItem) {
@@ -525,15 +544,16 @@ export default class ZeroStage extends Phaser.Scene {
 
         /** 코드 컴파일 이후 말풍선 사라지게 할때 x키 입력이 마우스 클릭과 동일 역할하도록**/
         //이렇게 하면 바로 대사 안뜨고 공백의 텍스트박스가 한번 뜨기는 함. -
+        /*
         if(this.codeComplied && this.keyX.isDown) { 
             console.log('컴파일 사라지는 용의 x키');
             this.codeComplied = false;
 
             if(this.msgEqualOut){ //정답이라면
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
+                //this.textBox.setVisible(false);
+                //this.script.setVisible(false);
                 //playerFace.setVisible(false);
-                this.intro6();
+                //this.intro6();
                 this.msgEqualOut = false
             }else{
                 this.textBox.setVisible(false);
@@ -541,6 +561,7 @@ export default class ZeroStage extends Phaser.Scene {
                 this.playerFace.setVisible(false);
             }
         }
+        */
 
         if(this.codeError && this.keyX.isDown) { 
             console.log('Error 사라지는 용의 x키');
@@ -582,7 +603,7 @@ export default class ZeroStage extends Phaser.Scene {
                 this.command.remove_phone(this);
                 this.scene.sleep('zero_stage')
                 this.scene.run('first_stage'); 
-            }else if(this.keyX.isDown&&stage<=0&&this.player.playerPaused==false){
+            }else if(this.keyX.isDown&&stage<=0&&this.player.playerPaused==false && this.isdownX2){
                 this.isdownX2=false;
                 console.log("아직은 나가지 말자.");
                 this.player.playerPaused = true; //플레이어 얼려두기
@@ -724,6 +745,17 @@ export default class ZeroStage extends Phaser.Scene {
             boundsAlignH: "center",
             boundsAlignV: "middle"
           }).setOrigin(0.5)
+
+          this.tweens.add({
+            targets: [this.textBox, this.script],
+            alpha: 0,
+            duration: 2000,
+            ease: 'Power1',
+            repeat: 0,
+            onComplete: ()=>{  this.codeComplied = true; this.intro6(); }
+        }, this);
+
+
           this.player.playerPaused=true;    //플레이어 얼려두기
           this.questbox.setVisible(false);
           this.quest_text2.setVisible(false);
@@ -768,6 +800,15 @@ export default class ZeroStage extends Phaser.Scene {
 
             this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
             this.codeError = true;
+
+            this.tweens.add({
+                targets: [this.textBox, this.script, this.playerFace],
+                alpha: 0,
+                duration: 2000,
+                ease: 'Power1',
+                repeat: 0,
+                onComplete: ()=>{ }
+            }, this);
 
         
     }

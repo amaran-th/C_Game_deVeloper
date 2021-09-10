@@ -156,9 +156,9 @@ export default class FourthStage extends Phaser.Scene {
 
 
         /** 플레이어 위치 확인용 **/
-        this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        //this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
         /**마우스 위치 확인용 **/
-        this.mouseCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        //this.mouseCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
 
         /*** 미니맵버튼 활성화  //@@@@@@@@@@@
@@ -199,11 +199,23 @@ export default class FourthStage extends Phaser.Scene {
         this.drop_state_5 = 0;
         this.drop_state_6 = 0;
 
+         // 4_stage의 앱에 들어가는 코드
+         this.app_code_text =
+         "#include <stdio.h>\n" +
+         "int main(){\n" +
+         "\u00a0\u00a0\u00a0int password = 0;\n" +
+         "\u00a0\u00a0\u00a0"+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0(int i=10; i>0; i--) {\n" +
+		 "\u00a0\u00a0\u00a0"+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"(i%2==1){\n" +
+		 "\u00a0\u00a0\u00a0"+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"password += i;\n" +
+		 "\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0}\n" +
+	     "\u00a0\u00a0\u00a0}\n" +
+         "   printf(\"정답은 "+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"\",password);\n" +
+         "}"
  
          //코드 실행후 불러올 output값
-         //this.correct_msg="answer=25";
+         this.correct_msg="정답은 25";
 
-         /* window*/ 
+         /* window
          this.correct_msg=
          "#include <stdio.h>\n" +
             "int main(){\n\n" +
@@ -215,7 +227,7 @@ export default class FourthStage extends Phaser.Scene {
             "  }\n" +
             "   printf(\'"+ '%d' +"\',i);\n" +
             "}\n";
-
+*/ 
 
          /* 시작 대사 */
          if(stage==6){//처음 들어왔을때
@@ -435,7 +447,7 @@ export default class FourthStage extends Phaser.Scene {
             this.dropPlus = false;
         }
                 
-         /* 플레이어 위치 알려줌*/
+         /* 플레이어 위치 알려줌
          this.playerCoord.setText([
             '플레이어 위치',
             'x: ' + this.player.player.x,
@@ -443,8 +455,8 @@ export default class FourthStage extends Phaser.Scene {
         ]);
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
-
-        /* 마우스 위치 알려줌 */
+*/
+        /* 마우스 위치 알려줌 
         this.mouseCoord.setText([
             '마우스 위치',
             'x:' + this.input.mousePointer.x + this.worldView.x,
@@ -452,7 +464,7 @@ export default class FourthStage extends Phaser.Scene {
         ]);
         this.mouseCoord.x = this.playerCoord.x;
         this.mouseCoord.y = this.worldView.y + 500;
-
+*/
 
         /* 아이템 얻기 */
         if(this.player.player.x >=this.npc9.x -100 && this.npc9.x +100 >= this.player.player.x && stage == 6){
