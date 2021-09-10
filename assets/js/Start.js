@@ -73,7 +73,7 @@ class Start extends Phaser.Scene {
               this.load.spritesheet('player', './assets/images/heroin.png', {
                 frameWidth: 80,
                 frameHeight: 140
-            });
+              });
     
             /** 텍스트 박스에 사용하는 플러그인 rexUI preload **/
             this.load.scenePlugin({
@@ -289,6 +289,8 @@ class Start extends Phaser.Scene {
       this.load.image("quiz23", "./assets/images/stage6/quiz23.png");
       this.load.image("quiz24", "./assets/images/stage6/quiz24.png");
       this.load.image("quiz25", "./assets/images/stage6/quiz25.png");
+
+      this.load.image("stage_clear", "./assets/images/stage_clear.png" );
 
       //기타
       this.load.image("standing_student", "./assets/images/npc/npc4_student.png");

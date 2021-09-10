@@ -324,6 +324,10 @@ export default class ZeroStage extends Phaser.Scene {
         this.inven = this.inventory.create(this);
         this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
 
+        /* 스테이지 클리어 */
+        this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
+        this.stage_clear.setVisible(false);
+
         /** 드래그앤드랍 **/
         //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
         // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
@@ -364,13 +368,13 @@ export default class ZeroStage extends Phaser.Scene {
         
         
         //코드 실행 후 비교할 목표 텍스트
-//
-        this.correct_msg="아-마잌테스트";
-         /*
+
+       // this.correct_msg="아-마잌테스트";
+         
         this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
                 "int main(){ \n " + 
                 "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
-*/
+
         stagenum=0;
 
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
@@ -836,6 +840,22 @@ export default class ZeroStage extends Phaser.Scene {
             console.log("========stage 추가된다!: " + result.stage)
                 stage = result.stage;          
             });
+
+            
+
+            this.time.delayedCall( 500, () => { 
+                this.stage_clear.setVisible(true);
+
+                this.tweens.add({
+                    targets: this.stage_clear,
+                    alpha: 0,
+                    duration: 3000,
+                    ease: 'Linear',
+                    repeat: 0,
+                }, this);
+            }, [] , this);
+
+        
         });
     }
 }

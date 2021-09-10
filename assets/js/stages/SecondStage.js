@@ -485,12 +485,12 @@ export default class SecondStage extends Phaser.Scene {
         //코드 실행 후 비교할 목표 텍스트
         this.msg="";
 
-        this.correct_msg1="더워요";
-        this.wrong_msg="추워요";
-        this.correct_msg2="water=100";
+      //  this.correct_msg1="더워요";
+      //  this.wrong_msg="추워요";
+     //   this.correct_msg2="water=100";
 
         //윈도우용
-        /* 
+        
         this.correct_msg1="#include <stdio.h>\n" + 
             "int main(){\n" +
             "   "+"int "+this.code_zone_1+" = 45;\n" +
@@ -510,7 +510,7 @@ export default class SecondStage extends Phaser.Scene {
             "   }\n" +
             "   " + this.code_zone_6 + "(\"water=%d\",water);\n"+
             "}";
-*/
+
 
 
         //미니맵에서 사용할 전역변수
