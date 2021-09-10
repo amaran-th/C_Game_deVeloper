@@ -4,6 +4,14 @@ class MiniMap extends Phaser.Scene {
     constructor(){ 
         super("minimap"); //identifier for the scene
         /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+
+        
+    }
+    preload() {
+        
+    }
+    create () {
+        //this.stageNum
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/stage/check', true);
         xhr.setRequestHeader('Content-type', 'application/json');
@@ -11,15 +19,9 @@ class MiniMap extends Phaser.Scene {
 
         xhr.addEventListener('load', function() {
         var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+        console.log("[minimap] 현재 스테이지는 : " + result.stage + " ========")
         stage = result.stage;
         });
-    }
-    
-    create () {
-        this.stageNum
-
-        console.log("[minimap] 지금까지의 stage : ", stage)
 
         var background=this.add.image(0,0,"map_background").setOrigin(0,0);    //이미지 중심을 0,0 위치로 잡는다.
         var stage_1=this.add.image(80,70,"stage_1_button").setOrigin(0,0);
@@ -45,7 +47,57 @@ class MiniMap extends Phaser.Scene {
         stage_5.setInteractive();
         stage_6.setInteractive();
 
-        stage_1.once("pointerdown",function(){
+        stage_1.setVisible(false);
+        stage_2.setVisible(false);
+        stage_3.setVisible(false);
+        stage_4.setVisible(false);
+        stage_5.setVisible(false);
+        stage_6.setVisible(false);
+
+        link_1.setVisible(false);
+        link_2.setVisible(false);
+        link_3.setVisible(false);
+        link_4.setVisible(false);
+        link_5.setVisible(false);
+
+        if (stage>=2){ //악마 퀘 완료해야 악마길거리? 로 갈 수 있음.
+
+            console.log("[]3");
+            stage_1.setVisible(true);
+        }
+        if (stage>=4){//유딩퀘까지 다 완료후, 이제 갈 수 있음.
+            
+            stage_2.setVisible(true);
+
+            link_1.setVisible(true);
+
+        }
+        if (stage>=6){//빵집퀘 완료후
+            stage_3.setVisible(true);
+
+            link_2.setVisible(true);
+        }
+        if (stage>=8){// 관문퀘 완료후
+            stage_4.setVisible(true);
+
+            link_3.setVisible(true);
+
+            
+        }
+        if (stage>=10){// 회원증 받고 나서
+            stage_5.setVisible(true);
+
+            link_4.setVisible(true);
+
+        }
+        if (stage>=13){// 사서2 퀴즈 완료
+            stage_6.setVisible(true);
+
+            link_5.setVisible(true);
+
+        }
+
+        stage_1.once("pointerdown",function(){//집 버튼 눌렀을때.
             background.setVisible(false);
             back_button.setVisible(false);
             stage_1.setVisible(false);
@@ -54,30 +106,16 @@ class MiniMap extends Phaser.Scene {
             stage_4.setVisible(false);
             stage_5.setVisible(false);
             stage_6.setVisible(false);
-            if(stagenum == 0){//이거 나중에 stage로 바꾸면 될듯 .맵이동은 나중에
-                this.scene.stop('bootgame');
-                this.scene.run('first_stage');
-            }else if(stagenum==1){
-                this.scene.stop('first_stage');
-                this.scene.run('first_stage');
-            }
-            else if(stagenum==2){
-                this.scene.stop('second_stage');
-                this.scene.run('first_stage');
-            }
-            else if(stagenum==3){
-                this.scene.stop('third_stage_0');
-                this.scene.run('first_stage');
-            }else if(stagenum==4){
-                this.scene.stop('fourth_stage');
-                this.scene.run('first_stage');
-            }else if(stagenum==5){
-                this.scene.stop('fifth_stage');
-                this.scene.run('first_stage');
-            }else if(stagenum==6){
-                this.scene.stop('sixth_stage');
-                this.scene.run('first_stage');
-            }
+
+            link_1.setVisible(false);
+            link_2.setVisible(false);
+            link_3.setVisible(false);
+            link_4.setVisible(false);
+            link_5.setVisible(false);
+
+            this.scene.stop('minimap');
+            this.scene.run('zero_stage');
+        
         },this);
 
         stage_2.once("pointerdown",function(){
@@ -89,31 +127,15 @@ class MiniMap extends Phaser.Scene {
             stage_4.setVisible(false);
             stage_5.setVisible(false);
             stage_6.setVisible(false);
-            if(stagenum == 0){
-                this.scene.stop('bootgame');
-                this.scene.run('second_stage');
-            }else if(stagenum==1){
-                this.scene.stop('first_stage');
-                this.scene.run('second_stage');
-            }
-            else if(stagenum==2){
-                this.scene.stop('second_stage');
-                this.scene.run('second_stage');
-            }
-            else if(stagenum==3){
-                this.scene.stop('third_stage_0');
-                this.scene.run('second_stage');
-            }
-            else if(stagenum==4){
-                this.scene.stop('fourth_stage');
-                this.scene.run('second_stage');
-            }else if(stagenum==5){
-                this.scene.stop('fifth_stage');
-                this.scene.run('second_stage');
-            }else if(stagenum==6){
-                this.scene.stop('sixth_stage');
-                this.scene.run('second_stage');
-            }
+
+            link_1.setVisible(false);
+            link_2.setVisible(false);
+            link_3.setVisible(false);
+            link_4.setVisible(false);
+            link_5.setVisible(false);
+
+            this.scene.stop('minimap');
+            this.scene.run('second_stage');
         },this);
 
         stage_3.once("pointerdown",function(){
@@ -125,30 +147,17 @@ class MiniMap extends Phaser.Scene {
             stage_4.setVisible(false);
             stage_5.setVisible(false);
             stage_6.setVisible(false);
-            if(stagenum == 0){
-                this.scene.stop('bootgame');
-                this.scene.run('third_stage_0');
-            }else if(stagenum==1){
-                this.scene.stop('first_stage');
-                this.scene.run('third_stage_0');
-            }
-            else if(stagenum==2){
-                this.scene.stop('second_stage');
-                this.scene.run('third_stage_0');
-            }
-            else if(stagenum==3){
-                this.scene.stop('third_stage_0');
-                this.scene.run('third_stage_0');
-            }else if(stagenum==4){
-                this.scene.stop('fourth_stage');
-                this.scene.run('third_stage_0');
-            }else if(stagenum==5){
-                this.scene.stop('fifth_stage');
-                this.scene.run('third_stage_0');
-            }else if(stagenum==6){
-                this.scene.stop('sixth_stage');
-                this.scene.run('third_stage_0');
-            }
+
+            link_1.setVisible(false);
+            link_2.setVisible(false);
+            link_3.setVisible(false);
+            link_4.setVisible(false);
+            link_5.setVisible(false);
+
+
+            this.scene.stop('minimap');
+            this.scene.run('third_stage_0');
+    
         },this);
 
         stage_4.once("pointerdown",function(){
@@ -160,30 +169,17 @@ class MiniMap extends Phaser.Scene {
             stage_4.setVisible(false);
             stage_5.setVisible(false);
             stage_6.setVisible(false);
-            if(stagenum == 0){
-                this.scene.stop('bootgame');
-                this.scene.run('fourth_stage');
-            }else if(stagenum==1){
-                this.scene.stop('first_stage');
-                this.scene.run('fourth_stage');
-            }
-            else if(stagenum==2){
-                this.scene.stop('second_stage');
-                this.scene.run('fourth_stage');
-            }
-            else if(stagenum==3){
-                this.scene.stop('third_stage_0');
-                this.scene.run('fourth_stage');
-            }else if(stagenum==4){
-                this.scene.stop('fourth_stage');
-                this.scene.run('fourth_stage');
-            }else if(stagenum==5){
-                this.scene.stop('fifth_stage');
-                this.scene.run('fourth_stage');
-            }else if(stagenum==6){
-                this.scene.stop('sixth_stage');
-                this.scene.run('fourth_stage');
-            }
+
+            link_1.setVisible(false);
+            link_2.setVisible(false);
+            link_3.setVisible(false);
+            link_4.setVisible(false);
+            link_5.setVisible(false);
+
+            this.scene.stop('minimap');
+            this.scene.run('fourth_stage');
+
+
         },this);
 
         stage_5.once("pointerdown",function(){
@@ -195,30 +191,16 @@ class MiniMap extends Phaser.Scene {
             stage_4.setVisible(false);
             stage_5.setVisible(false);
             stage_6.setVisible(false);
-            if(stagenum == 0){
-                this.scene.stop('bootgame');
-                this.scene.run('fifth_stage');
-            }else if(stagenum==1){
-                this.scene.stop('first_stage');
-                this.scene.run('fifth_stage');
-            }
-            else if(stagenum==2){
-                this.scene.stop('second_stage');
-                this.scene.run('fifth_stage');
-            }
-            else if(stagenum==3){
-                this.scene.stop('third_stage_0');
-                this.scene.run('fifth_stage');
-            }else if(stagenum==4){
-                this.scene.stop('fourth_stage');
-                this.scene.run('fifth_stage');
-            }else if(stagenum==5){
-                this.scene.stop('fifth_stage');
-                this.scene.run('fifth_stage');
-            }else if(stagenum==6){
-                this.scene.stop('sixth_stage');
-                this.scene.run('fifth_stage');
-            }
+
+            link_1.setVisible(false);
+            link_2.setVisible(false);
+            link_3.setVisible(false);
+            link_4.setVisible(false);
+            link_5.setVisible(false);
+            
+            this.scene.stop('minimap');
+            this.scene.run('fifth_stage');
+
         },this);
 
         stage_6.once("pointerdown",function(){
@@ -230,30 +212,16 @@ class MiniMap extends Phaser.Scene {
             stage_4.setVisible(false);
             stage_5.setVisible(false);
             stage_6.setVisible(false);
-            if(stagenum == 0){
-                this.scene.stop('bootgame');
-                this.scene.run('sixth_stage');
-            }else if(stagenum==1){
-                this.scene.stop('first_stage');
-                this.scene.run('sixth_stage');
-            }
-            else if(stagenum==2){
-                this.scene.stop('second_stage');
-                this.scene.run('sixth_stage');
-            }
-            else if(stagenum==3){
-                this.scene.stop('third_stage_0');
-                this.scene.run('sixth_stage');
-            }else if(stagenum==4){
-                this.scene.stop('fourth_stage');
-                this.scene.run('sixth_stage');
-            }else if(stagenum==5){
-                this.scene.stop('fifth_stage');
-                this.scene.run('sixth_stage');
-            }else if(stagenum==6){
-                this.scene.stop('sixth_stage');
-                this.scene.run('sixth_stage');
-            }
+
+            link_1.setVisible(false);
+            link_2.setVisible(false);
+            link_3.setVisible(false);
+            link_4.setVisible(false);
+            link_5.setVisible(false);
+            
+            this.scene.stop('minimap');
+            this.scene.run('sixth_stage');
+
         },this);
 
 
@@ -270,37 +238,48 @@ class MiniMap extends Phaser.Scene {
             stage_4.setVisible(false);
             stage_5.setVisible(false);
             stage_6.setVisible(false);
+
+            link_1.setVisible(false);
+            link_2.setVisible(false);
+            link_3.setVisible(false);
+            link_4.setVisible(false);
+            link_5.setVisible(false);
             
             //this.scene.stop('minimap');
 
             if(stagenum == 0){
-                console.log("back satage0");
+                console.log("back stage0");
                 this.scene.stop('minimap');
                 this.scene.run('zero_stage');
             }else if(stagenum==1){
-                console.log("back satage1");
+                console.log("back stage1");
                 this.scene.stop('minimap');
                 this.scene.run('first_stage');
             }
             else if(stagenum==2){
-                console.log("back satage2");
+                console.log("back stage2");
                 this.scene.stop('minimap');
                 this.scene.run('second_stage');
             }
             else if(stagenum==3){
-                console.log("back satage3");
+                console.log("back stage3");
+                this.scene.stop('minimap');
+                this.scene.run('third_stage');
+            }else if(stagenum==3.1){
+                console.log("back stage3.1");
                 this.scene.stop('minimap');
                 this.scene.run('third_stage_0');
             }else if(stagenum==4){
-                console.log("back satage3");
+                console.log("back stage4");
                 this.scene.stop('minimap');
                 this.scene.run('fourth_stage');
             }else if(stagenum==5){
-                console.log("back satage3");
+                console.log("back satage5");
                 this.scene.stop('minimap');
                 this.scene.run('fifth_stage');
-            }else if(stagenum==6){
-                console.log("back satage3");
+            }
+            else if(stagenum==6){
+                console.log("back satage6");
                 this.scene.stop('minimap');
                 this.scene.run('sixth_stage');
             }
