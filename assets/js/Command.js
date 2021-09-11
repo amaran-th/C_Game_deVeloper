@@ -227,8 +227,15 @@ export default class Command extends Phaser.GameObjects.Image {
                 code_piece_reset_y += 30;
             }
             
-            if(scene.unique_code_piece != undefined) this.reset_for_unique_codepiece(scene);
-            if(scene.unique_code_piece.unique_code_piece_for_repetition_arr != undefined) this.reset_for_unique_codepiece_for_repetition(scene);
+            if(scene.unique_code_piece != undefined) { // 스테이지 고유의 코드조각에 리셋 적용
+                this.reset_for_unique_codepiece(scene);
+
+                if(scene.unique_code_piece.unique_code_piece_for_repetition_arr != undefined) this.reset_for_unique_codepiece_for_repetition(scene); // 여러번 사용되는 코드조각에 리셋 적용
+            }
+            if(scene.code_piece != undefined) { // 여러번 사용되는 코드조각에 리셋 적용
+                if(scene.code_piece.code_piece_for_repetition_arr != undefined) this.reset_for_codepiece_for_repetition(scene);
+            }
+            
 
             //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
             scene.drop_state_1 = 0;
@@ -422,6 +429,12 @@ export default class Command extends Phaser.GameObjects.Image {
         for (var i = 0; i < scene.unique_code_piece.unique_code_piece_for_repetition_arr.length; i++){
             scene.unique_code_piece.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.unique_code_piece.repetition_code_piece_x;
             scene.unique_code_piece.unique_code_piece_for_repetition_arr[i].y = scene.unique_code_piece.repetition_code_piece_y;
+        }
+    }
+    reset_for_codepiece_for_repetition(scene){
+        for (var i = 0; i < scene.code_piece.code_piece_for_repetition_arr.length; i++){
+            scene.code_piece.code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.code_piece.repetition_code_piece_x;
+            scene.code_piece.code_piece_for_repetition_arr[i].y = scene.code_piece.repetition_code_piece_y;
         }
     }
 }

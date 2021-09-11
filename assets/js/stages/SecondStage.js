@@ -317,11 +317,7 @@ export default class SecondStage extends Phaser.Scene {
         this.inven = this.inventory.create(this);
         this.code_piece = new CodePiece(this); // 코드조각 클래스 호출 (inven보다 뒤에 호출해야 inven 위에 올라감)
         if (codepiece_string_arr.indexOf('printf') != -1) { // 코드조각 중복 사용
-            this.unique_codepiece_string_arr = [];
-            this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'printf'; // 중복사용을 위해 추가해줌
-            this.unique_codepiece_for_repetition_x = 15; // 리턴 적용하기 위해서 x,y좌표 따로 빼줘서 변수 만들어 줘야 함
-            this.unique_codepiece_for_repetition_y = 130 + codepiece_string_arr.indexOf('printf')*30; // 중복허용할 코드조각 몇번 째 위치하는 지 받아서 y좌표 적용해줌
-            this.unique_code_piece_for_repetition = new UniqueCodePiece(this, this.unique_codepiece_for_repetition_x, this.unique_codepiece_for_repetition_y); 
+            this.code_piece.code_piece_for_repetition(this, 'printf', 15, 130 + codepiece_string_arr.indexOf('printf')*30, 1);
         }
 
 
@@ -548,8 +544,8 @@ export default class SecondStage extends Phaser.Scene {
         this.inventory.update(this);
         this.command.update(this);
         this.code_piece.update(this);
-        if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.update(this);
-        if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.onoffwithcommand(this, this.invenIn); // 코드조각 코드앱 따라가도록
+        //if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.update(this);
+        //if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.onoffwithcommand(this, this.invenIn); // 코드조각 코드앱 따라가도록
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){

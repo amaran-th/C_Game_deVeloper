@@ -365,8 +365,8 @@ export default class FifthStage extends Phaser.Scene {
         if(this.unique_code_piece != undefined) this.unique_code_piece.update(this);
         if(this.library_added) this.library_inventory_update();
         if(this.unique_code_piece != undefined) this.unique_code_piece.onoffwithcommand(this, this.library_invenIn); // 코드조각 코드앱 따라가도록
-        if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.update(this);
-        if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.onoffwithcommand(this, this.library_invenIn); // 코드조각 코드앱 따라가도록
+        //if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.update(this);
+        //if(this.unique_code_piece_for_repetition != undefined) this.unique_code_piece_for_repetition.onoffwithcommand(this, this.library_invenIn); // 코드조각 코드앱 따라가도록
 
         //퀘스트 박스 및 텍스트 관련 코드
         if(this.questbox.visible==true){
