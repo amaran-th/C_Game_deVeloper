@@ -269,29 +269,25 @@ export default class FifthStage extends Phaser.Scene {
         this.drop_state_6 = 0;
         this.drop_state_7 = 0;
         this.drop_state_8 = 0;
-        this.drop_state_9 = 0;
-        this.drop_state_10 = 0;
-        this.drop_state_11 = 0;
-        this.drop_state_12 = 0;
-        this.drop_state_13 = 0;
-        this.drop_state_14 = 0;
-
+/**/
         // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-        this.dropzone1_x = 790; 
-        this.dropzone2_x = 880;
-        this.dropzone3_x = 790;
-        this.dropzone4_x = 880;
-        this.dropzone5_x = 1000;
-        this.dropzone6_x = 1000;
-        this.dropzone7_x = 1000;
-        // 드랍존 호출
-        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("1");
-        this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 85, 80, 25).setRectangleDropZone(80, 25).setName("2");
-        this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("3");
-        this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 115, 80, 25).setRectangleDropZone(80, 25).setName("4");
-        this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 300, 80, 25).setRectangleDropZone(80, 25).setName("5");
-        this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 350, 80, 25).setRectangleDropZone(80, 25).setName("6");
-        this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 400, 80, 25).setRectangleDropZone(80, 25).setName("7");
+        this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
+        this.dropzone2_x = 950;
+        this.dropzone3_x = 970;
+        this.dropzone4_x = 985;
+        this.dropzone5_x = 880;
+        this.dropzone6_x = 970;
+        this.dropzone7_x = 880;
+        this.dropzone8_x = 970;
+
+        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("1");
+        this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("2");
+        this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("3");
+        this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("4");
+        this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("5");
+        this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("6");
+        this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("7");
+        this.draganddrop_8 = new DragAndDrop(this, this.dropzone8_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("8");
 
 
         //사서와 대화 중인지를 나타내는 플래그 변수
@@ -652,9 +648,10 @@ export default class FifthStage extends Phaser.Scene {
                 "   " + "printf" + "(\"sin(45°)=%f\",\n"+ "                         " + "("+"            "+"/4));\n"+
                 "   " + "printf" + "(\"cos(60°)=%f\",\n"+ "                         " + "("+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"/3));\n"+
                 "}"
+                this.dropPlus = true;
         }
 
-        if(this.invenPlus) {
+        if(this.dropPlus) {
 
             this.dropzon_su = 8; // draganddrop.js안에 코드조각 같은거 한 개만 생성하게 하는데 필요
 
@@ -670,13 +667,13 @@ export default class FifthStage extends Phaser.Scene {
             this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("1");
             this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("2");
             this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("3");
-            this.draganddrofp_4 = new DragAndDrop(this, this.dropzone4_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("4");
+            this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("4");
             this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("5");
             this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("6");
             this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("7");
             this.draganddrop_8 = new DragAndDrop(this, this.dropzone8_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("8");
             
-            this.invenPlus = false;
+            this.dropPlus = false;
         }
 
         if(this.draganddrop_1!=undefined) this.draganddrop_1.update(this);
@@ -687,18 +684,12 @@ export default class FifthStage extends Phaser.Scene {
         if(this.draganddrop_6!=undefined) this.draganddrop_6.update(this);
         if(this.draganddrop_7!=undefined) this.draganddrop_7.update(this);
         if(this.draganddrop_8!=undefined) this.draganddrop_8.update(this);
-        //if(this.draganddrop_9!=undefined) this.draganddrop_9.update(this);
-        //if(this.draganddrop_10!=undefined) this.draganddrop_10.update(this);
-        //if(this.draganddrop_11!=undefined) this.draganddrop_11.update(this);
-        //if(this.draganddrop_12!=undefined) this.draganddrop_12.update(this);
-        //if(this.draganddrop_13!=undefined) this.draganddrop_13.update(this);
-        //if(this.draganddrop_14!=undefined) this.draganddrop_14.update(this);
 
         if(this.codeComplied) { 
             console.log('컴파일 사라지는 용의 x키');
             this.codeComplied = false;
 
-            if(msg==this.correct_msg){
+            if(this.msg==this.correct_msg){
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 
@@ -808,8 +799,12 @@ export default class FifthStage extends Phaser.Scene {
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
         console.log("compiled");
-        if(msg==scene.out){
+        this.msg=msg;
+        if(msg==scene.correct_msg){
             this.command.remove_phone(this);
+            this.invenIn=false;
+            this.inventory.inventoryBody.y = 600;
+
             playerX = this.player.player.x;
             this.textBox = scene.add.image(playerX-70,270,'bubble').setOrigin(0,0);
             this.script = scene.add.text(this.textBox.x + 70, this.textBox.y +30, msg, {
@@ -820,6 +815,7 @@ export default class FifthStage extends Phaser.Scene {
             boundsAlignH: "center",
             boundsAlignV: "middle"
           }).setOrigin(0.5)
+
           this.tweens.add({
             targets: [this.textBox, this.script],
             alpha: 0,
@@ -828,8 +824,9 @@ export default class FifthStage extends Phaser.Scene {
             repeat: 0,
             onComplete: ()=>{  this.codeComplied = true; }
         }, this);
-          this.player.playerPaused=true;    //플레이어 얼려두기
 
+          this.player.playerPaused=true;    //플레이어 얼려두기
+          
             //var playerFace = scene.add.sprite(script.x + 600 ,script.y+50, 'face', 0);
         }else{
             var seq = this.plugins.get('rexsequenceplugin').add();
@@ -1139,7 +1136,7 @@ export default class FifthStage extends Phaser.Scene {
                 fontSize: '30px', 
                 wordWrap: { width: 450, useAdvancedWrap: true }
             }).setOrigin(0,0);
-            var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 31);
+            var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 4);
             
             this.input.once('pointerdown', function() {
                 console.log("click");
@@ -1192,11 +1189,12 @@ export default class FifthStage extends Phaser.Scene {
                                 .load(this.dialog.stage5_8_3, this.dialog)
                                 .start();
                                 seq.on('complete', () => {
-                                    this.librarian1.setFlipX(false);
-                                    this.librarian1.play('working_librarian1',true);
-                                    this.cantalking=true;
                                     this.player.playerPaused = false;
-                                    this.function=0;
+                                    this.time.delayedCall(500, () => {
+                                        this.cantalking=true;
+                                        this.librarian1.setFlipX(false);
+                                        this.librarian1.play('working_librarian1',true);
+                                    }, [], this);
                                 });
                         
                             }
@@ -1283,7 +1281,14 @@ export default class FifthStage extends Phaser.Scene {
         seq.on('complete', () => {  
             this.mathOK=true;
             this.player.playerPaused=false;
-            this.cantalking2=true;
+            this.questbox.setVisible(false);
+            this.quest_text1.setVisible(false);
+            this.quest_text2.setVisible(false);
+            this.help_icon.setVisible(false);
+
+            this.time.delayedCall(500, () => {
+                this.cantalking2=true;
+            }, [], this);
         });
     }
 
