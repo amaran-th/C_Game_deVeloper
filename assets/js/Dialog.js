@@ -1344,13 +1344,22 @@ visible(visible) {
   stage4_11 = [//답은 맞지만 너무 멂.
     ['visible',true],
     ['place', 40,10],
+    ['setFace', 1],
+    ['print', '이제 문을 열고 나갈 수 있어!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  stage4_12 = [//도어락 성공.
+    ['visible',true],
+    ['place', 40,10],
     ['setFace', 4],
     ['print', '너무 멀어...가까이서 다시 해보자'],
     ['wait-click'],
     ['visible',false],
   ]
 
-  stage4_12 = [//도어락 성공.
+  stage4_13 = [//도어락 나감.
     ['visible',true],
     ['place', 40,10],
     ['setFace', 1],

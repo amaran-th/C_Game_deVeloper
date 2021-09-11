@@ -842,13 +842,14 @@ export default class ZeroStage extends Phaser.Scene {
             });
 
             
-
+            //==stage clear이미지==
+            this.stage_clear.setVisible(true);
+            
             this.time.delayedCall( 500, () => { 
-                this.stage_clear.setVisible(true);
 
                 this.tweens.add({
                     targets: this.stage_clear,
-                    alpha: 0,
+                    alpha: 1,
                     duration: 3000,
                     ease: 'Linear',
                     repeat: 0,

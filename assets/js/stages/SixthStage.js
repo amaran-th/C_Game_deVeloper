@@ -496,6 +496,10 @@ export default class SixthStage extends Phaser.Scene {
         inZone6_1 = false;
         inZone6_2 = false;
 
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1500, 600);
+       this.player.player.body.setCollideWorldBounds()
+
     }
 
     stage6_1() {

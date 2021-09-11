@@ -32,6 +32,7 @@ export default class FourthStage extends Phaser.Scene {
     }
     
     create () {
+        this.msg="";
 
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
@@ -62,7 +63,7 @@ export default class FourthStage extends Phaser.Scene {
             repeat: -1,
         });
         this.door = this.add.sprite(1300 ,500,'door').setOrigin(0,1);
-        this.door.play('open');
+        //this.door.play('open');
 
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
@@ -263,8 +264,10 @@ export default class FourthStage extends Phaser.Scene {
             //npc에게 말을 건 횟수(순차적 실행을 위함)
             this.talk_num=0
 
+            this.doorlock = true; //문 앞에서 퀴즈 맞출때;
+
          }
-         else {//악마 퀴즈 풀면, 관문은 연 상태. //이어하기를 대비해서 아이템 미리 넣어놔야함.
+         else if (stage==7){//악마 퀴즈 풀면, 관문은 연 상태. //이어하기를 대비해서 아이템 미리 넣어놔야함.
             this.tweens.add({
                 targets: [this.wall],
                 y:-400,
@@ -274,14 +277,44 @@ export default class FourthStage extends Phaser.Scene {
                 onComplete: ()=>{
                     
                 }
-            }, this);
+            }, this);//벽 열기.
 
             //npc에게 말을 건 횟수(순차적 실행을 위함)
             this.talk_num=2
 
-            //인벤에 넣기
+            this.doorlock = true; //문 앞에서 퀴즈 맞출때;
+
+            //인벤에 넣기 (형식 지정자 조각)
             this.add_mini_inven();
             this.get_type_specifier();
+        }
+        else{//관문,도어락 퀘 모두 완료 => 무한반복 가능.
+            this.tweens.add({
+                targets: [this.wall],
+                y:-400,
+                duration: 3000,
+                ease: 'Linear',
+                repeat: 0,
+                onComplete: ()=>{
+                    
+                }
+            }, this);//벽 열기.
+
+            //npc에게 말을 건 횟수(순차적 실행을 위함)
+            this.talk_num=2
+
+            //인벤에 넣기 (형식 지정자 조각)
+            this.add_mini_inven();
+            this.get_type_specifier();
+
+            //******** 관문퀘1 에서 필요한 것들 *********/
+
+            //문이 열리게. 
+            this.door.setFrame(3);
+
+
+
+
         }
 
          
@@ -297,7 +330,7 @@ export default class FourthStage extends Phaser.Scene {
         this.quiz3 = false;
         this.quiz4 = false;
         this.quizOver = false;
-        this.door = true; //문 앞에서 퀴즈 맞출때;
+        this.doorlock = true; //문 앞에서 퀴즈 맞출때;
 
         this.code_on=false;
 
@@ -541,12 +574,19 @@ export default class FourthStage extends Phaser.Scene {
             this.pressXDoor.setVisible(true);
             this.pressXDoor.x = this.player.player.x-30;
             if(this.keyX.isDown){
-                if(this.door) {
-                    this.door = false;
-                    this.player.player.setFlipX(false);
-                    this.player.playerPaused = true;
+                if(this.doorlock) {
+                    this.doorlock = false;
+                    //this.player.player.setFlipX(false);
+                    //this.player.playerPaused = true;
                     //this.get_type_specifier();
-                    this.stage4_6();
+                    if(stage>=8){//도어락 퀘 완료후, 나갈 수 있음.
+                        this.scene.switch('fifth_stage'); 
+                    }
+                    else{//도어락 퀘 첫번째, 완료전.
+                        this.stage4_6();
+                        
+                    }
+                    
                 }
             }
         }
@@ -633,6 +673,10 @@ export default class FourthStage extends Phaser.Scene {
         }else this.pressX_1.setVisible(false);
         
         inZone4_1 = false;
+
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1500, 600);
+       this.player.player.body.setCollideWorldBounds()
 
     }
 
@@ -965,6 +1009,26 @@ export default class FourthStage extends Phaser.Scene {
 
             this.code_on = false;
             this.reset_before_mission();//드랍존 지움.
+
+            /*** db에서 stage값을 1 증가시켜줌. 도어락 퀘 완료. ***/ 
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/stage', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.send();
+
+            xhr.addEventListener('load', function() {
+            var result = JSON.parse(xhr.responseText);
+
+                console.log("========stage 추가된다!: " + result.stage)
+                stage = result.stage;          
+            });
+
+            //문열리는 애니메이션
+            this.door.play('open')
+            this.time.delayedCall( 1000, () => { this.door.anims.stop(); }, [] , this);
+            this.door.setFrame(3);
+
+            this.doorlock = false;
         });
     }
 
@@ -1021,7 +1085,6 @@ export default class FourthStage extends Phaser.Scene {
                 this.codeComplied = true;
             });
         }
-    
     }
 
     printerr(scene){
