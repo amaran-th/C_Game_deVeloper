@@ -409,8 +409,8 @@ class Start extends Phaser.Scene {
         });
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        //this.scene.start("zero_stage"); //이어하기. 방부터
-        this.scene.start("fifth_stage");
+        this.scene.start("zero_stage"); //이어하기. 방부터
+        //this.scene.start("fifth_stage");
       }, this);
 
     }
