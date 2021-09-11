@@ -1340,8 +1340,16 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
-
-  stage4_11 = [//답은 맞지만 너무 멂.
+stage4_11 = [//도어락 성공.
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '이제 문을 열고 나갈 수 있어!'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  
+  stage4_12 = [//답은 맞지만 너무 멂.
     ['visible',true],
     ['place', 40,10],
     ['setFace', 4],
@@ -1350,14 +1358,7 @@ visible(visible) {
     ['visible',false],
   ]
 
-  stage4_12 = [//도어락 성공.
-    ['visible',true],
-    ['place', 40,10],
-    ['setFace', 1],
-    ['print', '이제 문을 열고 나갈 수 있어!'],
-    ['wait-click'],
-    ['visible',false],
-  ]
+  
   //독백
   stage5_1 = [
     ['visible',true],
