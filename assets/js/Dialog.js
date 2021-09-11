@@ -1285,7 +1285,9 @@ visible(visible) {
     ['visible',true],
     ['place', 40,10],
     ['setFace', 4],
-    ['print', '아무일도 일어나지 않는다.'],
+    ['print', '* Quest : 도어락 비밀번호의 값을 구하자. *'],
+    ['wait-click'],
+    ['print', '* [코딩하기] 어플에 스크립트가 업데이트 되었습니다. *'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1354,6 +1356,14 @@ stage4_11 = [//도어락 성공.
     ['place', 40,10],
     ['setFace', 4],
     ['print', '너무 멀어...가까이서 다시 해보자'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+  stage4_13 = [//도어락 성공.
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '얏호! 난 천재야!'],
     ['wait-click'],
     ['visible',false],
   ]
