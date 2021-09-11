@@ -49,7 +49,7 @@ export default class Quiz extends Phaser.Scene {
 
         //글자...
         var quiz = ['3.14', '-64', '36', '가'];
-        var answer= [ 'Int', 'Double', 'Char'];
+        var answer= [ 'Int', 'Float', 'Char'];
         
         //텍스트
         for(var i=0; i<= 3; i++) {
