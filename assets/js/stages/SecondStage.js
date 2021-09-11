@@ -73,7 +73,7 @@ export default class SecondStage extends Phaser.Scene {
             frameRate: 4,
             repeat: -1,
         });
-        this.waterWball = this.add.sprite( 1600, 630, 'waterWball', 0).setOrigin(0,1).setInteractive();
+        this.waterWball = this.add.sprite( 1600, 680, 'waterWball', 0).setOrigin(0,1).setInteractive();
         this.waterWball.play('waterWball');
         this.water = this.add.sprite( 1600, 600, 'water', 0).setOrigin(0,1)
         this.water.setVisible(false);
@@ -1541,7 +1541,7 @@ export default class SecondStage extends Phaser.Scene {
         this.tweens.add({
             targets: this.waterWball,
             y: 600,
-            duration: 1000,
+            duration: 2000,
             ease: 'Linear',
             repeat: 0,
             onComplete: ()=>{

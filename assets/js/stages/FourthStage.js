@@ -54,6 +54,16 @@ export default class FourthStage extends Phaser.Scene {
         /*** 맵 이동 (문 이미지 불러오기) */
         this.zone4_1 = this.physics.add.staticImage(30, 420).setSize(100,160);
 
+        /*문 열리는 거*/
+        this.anims.create({
+            key: "open",
+            frames: this.anims.generateFrameNumbers('door',{ start: 0, end: 3}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+        this.door = this.add.sprite(1300 ,500,'door').setOrigin(0,1);
+        this.door.play('open');
+
         /***스폰 포인트 설정하기 locate spawn point***/
         const spawnPoint = map.findObject("spawn", obj => obj.name === "spawn_point");
 
@@ -95,6 +105,8 @@ export default class FourthStage extends Phaser.Scene {
         }).setOrigin(0,0);
 
 
+
+
         /*벽 이미지 만들기*/
 
         this.wall = this.physics.add.image(1150,0,'wall').setOrigin(0,0);
@@ -114,11 +126,12 @@ export default class FourthStage extends Phaser.Scene {
             boundsAlignH: "center",
             boundsAlignV: "middle"
         });
+
         
         /*** 화면이 플레이어 따라 이동하도록 Make screen follow player ***/
         this.cameras.main.startFollow(this.player.player); // 현재 파일의 player . player.js 의 player
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        this.cameras.main.setDeadzone(map.widthInPixels/4, map.heightInPixels); //config.width 대신 map.widthInPixels 쓰기
+        this.cameras.main.setDeadzone(map.widthInPixels/10, map.heightInPixels); //config.width 대신 map.widthInPixels 쓰기
 
         /*** 충돌 설정하기 Set Collision ***/
         this.worldLayer.setCollisionByProperty({ collides: true });
@@ -158,7 +171,7 @@ export default class FourthStage extends Phaser.Scene {
         /** 플레이어 위치 확인용 **/
         //this.playerCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
         /**마우스 위치 확인용 **/
-        //this.mouseCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+        this.mouseCoord = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 
 
         /*** 미니맵버튼 활성화  //@@@@@@@@@@@
@@ -229,19 +242,23 @@ export default class FourthStage extends Phaser.Scene {
             "}\n";
 
 
+        
          /* 시작 대사 */
          if(stage==6){//처음 들어왔을때
-            this.player.playerPaused = true;
-            var seq = this.plugins.get('rexsequenceplugin').add();
-            this.dialog.loadTextbox(this);
-            seq
-            .load(this.dialog.stage4_0, this.dialog) //스테이지 4 들어가자마자 출력되는 대사
-            .start();
-            seq.on('complete', () => {
-                this.player.playerPaused = false;
-                this.questbox.setVisible(true);
-                this.quest_text.setVisible(true);
-            });
+            this.cameras.main.fadeIn(1000,0,0,0);
+            this.time.delayedCall(1000, () => {
+                this.player.playerPaused = true;
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.stage4_0, this.dialog) //스테이지 4 들어가자마자 출력되는 대사
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.questbox.setVisible(true);
+                    this.quest_text.setVisible(true);
+                });
+            }, [], this);
 
             //npc에게 말을 건 횟수(순차적 실행을 위함)
             this.talk_num=0
@@ -268,7 +285,7 @@ export default class FourthStage extends Phaser.Scene {
         }
 
          
-
+        
 
         stagenum = 4;
 
@@ -456,15 +473,15 @@ export default class FourthStage extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
 */
-        /* 마우스 위치 알려줌 
+         //마우스 위치 알려줌 
         this.mouseCoord.setText([
             '마우스 위치',
             'x:' + this.input.mousePointer.x + this.worldView.x,
             'y:' + this.input.mousePointer.y,
         ]);
-        this.mouseCoord.x = this.playerCoord.x;
+        this.mouseCoord.x = this.worldView.x + 900;
         this.mouseCoord.y = this.worldView.y + 500;
-*/
+
 
         /* 아이템 얻기 */
         if(this.player.player.x >=this.npc9.x -100 && this.npc9.x +100 >= this.player.player.x && stage == 6){
@@ -475,11 +492,10 @@ export default class FourthStage extends Phaser.Scene {
                 console.log('대사 몇번나오니');
             }
         }
-        else this.pressX.setVisible(false);
 
 
         /* 시험 시작! *///악마한테 말걸때.
-        if(this.player.player.x >=this.devil.x -100 && this.devil.x +100 >= this.player.player.x&&this.cantalk){
+        if(this.player.player.x >=this.devil.x -150 && this.devil.x +150 >= this.player.player.x&&this.cantalk){
             this.pressX.setVisible(true);
 
             if(this.keyX.isDown&&this.talk_num==0) {// 악마와 대화 1
@@ -708,7 +724,8 @@ export default class FourthStage extends Phaser.Scene {
         .load(this.dialog.stage4_0_1, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.stage4_quiz_1()
+            this.stage4_quiz_1();
+            this.quiz1 = true;
         });
     }
 
@@ -723,7 +740,7 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {
         });
-        this.makeDropzone(this.worldView.x + 440 ,75,80);
+        this.makeDropzone(this.worldView.x + 385 ,75,30);
     }
 
 //다음문제로 넘어가면 드랍존이 안뜸... zone이 안지워지고 남아있어서 그런가봄
@@ -749,7 +766,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_2, this.dialog)
         .start();
-        this.makeDropzone(this.worldView.x + 500,75,40);
+        this.makeDropzone(this.worldView.x + 500,75,20);
 
         seq.on('complete', () => {
         });
@@ -777,7 +794,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_3, this.dialog)
         .start();
-        this.makeDropzone(this.worldView.x + 400,75,80);
+        this.makeDropzone(this.worldView.x + 344,75,30);
         seq.on('complete', () => {
         });
     }
@@ -803,7 +820,7 @@ export default class FourthStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage4_quiz_4, this.dialog)
         .start();
-        this.makeDropzone(this.worldView.x + 440,75,80);
+        this.makeDropzone(this.worldView.x + 390,75,20);
         seq.on('complete', () => {
         });
     }
