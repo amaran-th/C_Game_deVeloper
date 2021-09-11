@@ -44,7 +44,12 @@ class CodePiece extends Phaser.GameObjects.Text {
                 if ((scene.code_zone_6 == this.codepiece_textObject_arr[i]._text) && (this.codepiece_textObject_arr[i].x == scene.draganddrop_6.x - (scene.draganddrop_6.width / 2) + 5)) { 
                     this.codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone6_x - (scene.draganddrop_6.width / 2) + 5;
                 }
-                // 수 추가해야 함
+                if ((scene.code_zone_7 == this.codepiece_textObject_arr[i]._text) && (this.codepiece_textObject_arr[i].x == scene.draganddrop_7.x - (scene.draganddrop_7.width / 2) + 5)) { 
+                    this.codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone7_x - (scene.draganddrop_7.width / 2) + 5;
+                }
+                if ((scene.code_zone_8 == this.codepiece_textObject_arr[i]._text) && (this.codepiece_textObject_arr[i].x == scene.draganddrop_8.x - (scene.draganddrop_8.width / 2) + 5)) { 
+                    this.codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone8_x - (scene.draganddrop_8.width / 2) + 5;
+                }
                 if (this.codepiece_textObject_arr[i].x < scene.worldView.x + 160) { // 인벤창 우측 끝보다 왼쪽에 있을 때 코드조각이 인벤창 안에 있다고 판단함 (드랍존에 안 들어가 있는 코드조각 플레이어 따라 이동하도록 하기)
                     this.codepiece_textObject_arr[i].x = scene.worldView.x + 15;
                 }
@@ -120,7 +125,12 @@ class CodePiece extends Phaser.GameObjects.Text {
                     if ((scene.code_zone_6 == this.code_piece_for_repetition_arr[i]._text) && (this.code_piece_for_repetition_arr[i].x == scene.draganddrop_6.x - (scene.draganddrop_6.width / 2) + 5)) { 
                         this.code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone6_x - (scene.draganddrop_6.width / 2) + 5;
                     }
-                    // 수 추가해야 함
+                    if ((scene.code_zone_7 == this.code_piece_for_repetition_arr[i]._text) && (this.code_piece_for_repetition_arr[i].x == scene.draganddrop_7.x - (scene.draganddrop_7.width / 2) + 5)) { 
+                        this.code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone7_x - (scene.draganddrop_7.width / 2) + 5;
+                    }
+                    if ((scene.code_zone_8 == this.code_piece_for_repetition_arr[i]._text) && (this.code_piece_for_repetition_arr[i].x == scene.draganddrop_8.x - (scene.draganddrop_8.width / 2) + 5)) { 
+                        this.code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone8_x - (scene.draganddrop_8.width / 2) + 5;
+                    }
                     if (this.code_piece_for_repetition_arr[i].x < scene.worldView.x + 160) { // 코드조각 위치한 창 우측 끝보다 왼쪽에 있을 때 코드조각이 인벤창 안에 있다고 판단함 (드랍존에 안 들어가 있는 코드조각 플레이어 따라 이동하도록 하기)
                         
                         console.log("오나?????",this.code_piece_for_repetition_arr[i].x)
