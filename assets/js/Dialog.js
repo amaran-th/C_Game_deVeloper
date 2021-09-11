@@ -1844,7 +1844,11 @@ visible(visible) {
   final_npc2 = [
     ['visible',true],
     ['setFace', 4],
-    ['print', '...'],
+    ['print', '안녕하세요 여누예요'],
+    ['wait-click'],
+    ['print', '나 너무 많은 일이 있엇어'],
+    ['wait-click'],
+    ['print', '힘들다 진짜'],
     ['wait-click'],
     ['visible',false],
     ['wait-time', 0.5],
