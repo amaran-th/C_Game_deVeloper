@@ -20,8 +20,35 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
     update(scene) {
         if (scene.worldView.x != this.preworldview_x) { // 코드 조각 플레이어 따라 이동
             for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++) {
+                //console.log(scene.code_zone_1, this.unique_codepiece_textObject_arr[i]._text)
+                //console.log(this.unique_codepiece_textObject_arr[0].x, scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5, scene.worldView.x + scene.dropzone1_x - (scene.draganddrop_1.width / 2) + 5);
+                // 조건 설명
+                // (scene.code_zone_1 == this.unique_codepiece_textObject_arr[i]._text) : 태그조각 문자열과 해당 드랍존에 들어간 문자열이 같을 때 (어떤 드랍존에 위치해있는 지 알아야지 그 드랍존에 맞춰서 위치 이동 가능)
+                // (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5) : 같은 문자열일 경우 위의 조건에서 걸러지지 않음 -> 드랍존의 이전 위치와 비교해서 그 위치에 태그조각이 있을 경우를 추가 조건으로 줌
+                if ((scene.code_zone_1 == this.unique_codepiece_textObject_arr[i]._text) && (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5)) { 
+                    this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone1_x - (scene.draganddrop_1.width / 2) + 5; // 현재 드랍존의 위치를 태그 조각에 반영 함.
+                }
+                if ((scene.code_zone_2 == this.unique_codepiece_textObject_arr[i]._text) && (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_2.x - (scene.draganddrop_2.width / 2) + 5)) { // 같은 태그라도 플레이어 따라 다 이동해야하므로 elseif 말고 if로 함
+                    this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone2_x - (scene.draganddrop_2.width / 2) + 5;
+                }
+                if ((scene.code_zone_3 == this.unique_codepiece_textObject_arr[i]._text) && (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_3.x - (scene.draganddrop_3.width / 2) + 5)) { 
+                    this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone3_x - (scene.draganddrop_3.width / 2) + 5;
+                }
+                if ((scene.code_zone_4 == this.unique_codepiece_textObject_arr[i]._text) && (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_4.x - (scene.draganddrop_4.width / 2) + 5)) { 
+                    this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone4_x - (scene.draganddrop_4.width / 2) + 5;
+                }
+                if ((scene.code_zone_5 == this.unique_codepiece_textObject_arr[i]._text) && (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_5.x - (scene.draganddrop_5.width / 2) + 5)) { 
+                    this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone5_x - (scene.draganddrop_5.width / 2) + 5;
+                }
+                if ((scene.code_zone_6 == this.unique_codepiece_textObject_arr[i]._text) && (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_6.x - (scene.draganddrop_6.width / 2) + 5)) { 
+                    this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone6_x - (scene.draganddrop_6.width / 2) + 5;
+                }
+                // 수 추가해야 함
+                if (this.unique_codepiece_textObject_arr[i].x < scene.worldView.x + this.unique_codepiece_x + 150) { // 코드조각 위치한 창 우측 끝보다 왼쪽에 있을 때 코드조각이 인벤창 안에 있다고 판단함 (드랍존에 안 들어가 있는 코드조각 플레이어 따라 이동하도록 하기)
+                    this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + this.unique_codepiece_x;
+                }
                 //console.log(this.unique_codepiece_textObject_arr[i].x);
-                switch (this.unique_codepiece_textObject_arr[i]._text) { // 드랍존에 들어가지 않은 코드 조각은 그냥 플레이어 따라가고
+                /*switch (this.unique_codepiece_textObject_arr[i]._text) { // 드랍존에 들어가지 않은 코드 조각은 그냥 플레이어 따라가고
                     case scene.code_zone_1:         // 드랍존에 들어간 코드조각은 어는 드랍존인 지 구분하여 해당 드랍존 위치에 맞게 플레이어를 따라가도록 함
                         this.unique_codepiece_textObject_arr[i].x = scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5;
                         break;
@@ -66,30 +93,55 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
                         break;
                     default:
                         this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + this.unique_codepiece_x;
+                }*/
+            }
+            if (this.unique_code_piece_for_repetition_arr != undefined) { // 여러번 사용가능한 코드조각에 대한 위치 이동 적용
+                for (var i = 0; i < this.unique_code_piece_for_repetition_arr.length; i++) {
+                    //console.log(scene.code_zone_1, this.unique_code_piece_for_repetition_arr[i]._text)
+                    //console.log(this.unique_code_piece_for_repetition_arr[0].x, scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5, scene.worldView.x + scene.dropzone1_x - (scene.draganddrop_1.width / 2) + 5);
+                    // 조건 설명
+                    // (scene.code_zone_1 == this.unique_code_piece_for_repetition_arr[i]._text) : 태그조각 문자열과 해당 드랍존에 들어간 문자열이 같을 때 (어떤 드랍존에 위치해있는 지 알아야지 그 드랍존에 맞춰서 위치 이동 가능)
+                    // (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5) : 같은 문자열일 경우 위의 조건에서 걸러지지 않음 -> 드랍존의 이전 위치와 비교해서 그 위치에 태그조각이 있을 경우를 추가 조건으로 줌
+                    if ((scene.code_zone_1 == this.unique_code_piece_for_repetition_arr[i]._text) && (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5)) { 
+                        this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone1_x - (scene.draganddrop_1.width / 2) + 5; // 현재 드랍존의 위치를 태그 조각에 반영 함.
+                    }
+                    if ((scene.code_zone_2 == this.unique_code_piece_for_repetition_arr[i]._text) && (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_2.x - (scene.draganddrop_2.width / 2) + 5)) { // 같은 태그라도 플레이어 따라 다 이동해야하므로 elseif 말고 if로 함
+                        this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone2_x - (scene.draganddrop_2.width / 2) + 5;
+                    }
+                    if ((scene.code_zone_3 == this.unique_code_piece_for_repetition_arr[i]._text) && (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_3.x - (scene.draganddrop_3.width / 2) + 5)) { 
+                        this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone3_x - (scene.draganddrop_3.width / 2) + 5;
+                    }
+                    if ((scene.code_zone_4 == this.unique_code_piece_for_repetition_arr[i]._text) && (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_4.x - (scene.draganddrop_4.width / 2) + 5)) { 
+                        this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone4_x - (scene.draganddrop_4.width / 2) + 5;
+                    }
+                    if ((scene.code_zone_5 == this.unique_code_piece_for_repetition_arr[i]._text) && (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_5.x - (scene.draganddrop_5.width / 2) + 5)) { 
+                        this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone5_x - (scene.draganddrop_5.width / 2) + 5;
+                    }
+                    if ((scene.code_zone_6 == this.unique_code_piece_for_repetition_arr[i]._text) && (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_6.x - (scene.draganddrop_6.width / 2) + 5)) { 
+                        this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone6_x - (scene.draganddrop_6.width / 2) + 5;
+                    }
+                    // 수 추가해야 함
+                    if (this.unique_code_piece_for_repetition_arr[i].x < scene.worldView.x + this.unique_codepiece_x + 150) { // 코드조각 위치한 창 우측 끝보다 왼쪽에 있을 때 코드조각이 인벤창 안에 있다고 판단함 (드랍존에 안 들어가 있는 코드조각 플레이어 따라 이동하도록 하기)
+                        this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + this.repetition_code_piece_x;
+                    }
                 }
             }
             this.preworldview_x = scene.worldView.x;
         }
+        
     }
 
-    // 인벤창 따라 아이템(코드조각)도 나오고 들어가고 하기
-    /*updownwithinven(scene, followthing) { // followthing : 인벤창이냐 라이브러리 인벤이냐 나누기 위해 넣은 인자
-        if (!scene.drop_state_1) { // 드랍존에 들어간 상태에서는 인벤창 따라갈 필요 없으므로 조건문 달아줌
-            if (this.unique_codepiece_textObject_arr.length > 0) {
-                if (followthing) { // 인벤창이 나와있을 때 코드 보이도록
-                    //console.log('there');
-                    for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++) {
-                        this.unique_codepiece_textObject_arr[i].setVisible(true);
-                    }
-                } else { // 인벤창이 들어가있을 때 코드 안 보이도록
-                    //console.log('here');
-                    for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++) {
-                        this.unique_codepiece_textObject_arr[i].setVisible(false);
-                    }
-                }
-            }
+    unique_code_piece_for_repetition(scene, repetition_code, x, y, num) {
+        this.unique_code_piece_for_repetition_arr = [];
+        this.repetition_code_piece_x = x;
+        this.repetition_code_piece_y = y;
+        for (var i = 0; i < num; i++){
+            this.unique_code_piece_for_repetition_arr[i] = scene.add.text(x, y, repetition_code, { font: "25px Arial Black", fill: "#f9cb9c" }).setInteractive();
+            
+            scene.input.setDraggable(this.unique_code_piece_for_repetition_arr[i]); // 드래그 가능하도록
         }
-    }*/
+    }
+
     onoffwithcommand(scene, followthing) {
         //console.log("폰 열림상태 > "+scene.codeapp_onoff_state);
         if (scene.codeapp_onoff_state) { // 명령창이 나와있을 때 드랍존과 리셋버튼 나와 있도록
@@ -106,56 +158,29 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
                         //console.log("there");
                     }
                     
-                    /*switch (this.unique_codepiece_textObject_arr[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
-                        case scene.code_zone_1:         
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_2:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_3:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_4:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_5:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_6:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_7:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_8:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_9:
-                        this.unique_codepiece_textObject_arr[i].setVisible(true);
-                        break;
-                        case scene.code_zone_10:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_11:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_12:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_13:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        case scene.code_zone_14:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                            break;
-                        default:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                    }*/
+                }
+                if (this.unique_code_piece_for_repetition_arr != undefined) { // 코드 조각 여러개 사용가능할 때 적용
+                    for (var i = 0; i < this.unique_code_piece_for_repetition_arr.length; i++){
+                        //console.log('1>',this.unique_code_piece_for_repetition_arr[0].x,scene.draganddrop_1.x - (scene.draganddrop_1.width / 2) + 5);
+                        if (this.unique_code_piece_for_repetition_arr[i].x > scene.worldView.x + 715) {
+                            this.unique_code_piece_for_repetition_arr[i].setVisible(true);
+                            //console.log("here");
+                        }
+                        else {
+                            this.unique_code_piece_for_repetition_arr[i].setVisible(false);
+                            //console.log("there");
+                        }
+                        
+                    }
                 }
             } else { // 인벤 열려있을 때
                 for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++){
                     this.unique_codepiece_textObject_arr[i].setVisible(true);
+                }
+                if (this.unique_code_piece_for_repetition_arr != undefined) { // 코드 조각 여러개 사용가능할 때 적용
+                    for (var i = 0; i < this.unique_code_piece_for_repetition_arr.length; i++){
+                        this.unique_code_piece_for_repetition_arr[i].setVisible(true); 
+                    }
                 }
             }
         } else { // 명령창이 들어가있을 때 드랍존과 리셋버튼 들어가 있도록
@@ -163,6 +188,11 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
             if (!followthing) { // 인벤 닫혀있을 때
                 for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++){
                     this.unique_codepiece_textObject_arr[i].setVisible(false);
+                }
+                if (this.unique_code_piece_for_repetition_arr != undefined) { // 코드 조각 여러개 사용가능할 때 적용
+                    for (var i = 0; i < this.unique_code_piece_for_repetition_arr.length; i++){
+                        this.unique_code_piece_for_repetition_arr[i].setVisible(false); 
+                    }
                 }
             } else { // 인벤 열려있을 때
                 for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++){
@@ -175,53 +205,18 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
                         //console.log("there2");
                         this.unique_codepiece_textObject_arr[i].setVisible(true);
                     }
-                    
-                    /*switch (this.unique_codepiece_textObject_arr[i]._text) { // 드랍존에 들어간 코드조각은 어느 드랍존인 지 구분하여 해당 코드조각 코드앱따라 보이고 안 보이고 하기
-                        case scene.code_zone_1:         
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_2:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_3:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_4:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_5:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_6:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_7:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_8:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_9:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                        break;
-                        case scene.code_zone_10:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_11:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_12:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_13:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        case scene.code_zone_14:
-                            this.unique_codepiece_textObject_arr[i].setVisible(false);
-                            break;
-                        default:
-                            this.unique_codepiece_textObject_arr[i].setVisible(true);
-                    }*/
+                }
+                if (this.unique_code_piece_for_repetition_arr != undefined) { // 코드 조각 여러개 사용가능할 때 적용
+                    for (var i = 0; i < this.unique_code_piece_for_repetition_arr.length; i++){
+                        if (this.unique_code_piece_for_repetition_arr[i].x > scene.worldView.x + 715) {
+                            //console.log("here2");
+                            this.unique_code_piece_for_repetition_arr[i].setVisible(false);
+                        }
+                        else {
+                            //console.log("there2");
+                            this.unique_code_piece_for_repetition_arr[i].setVisible(true);
+                        }
+                    }
                 }
             }
         }
@@ -234,10 +229,21 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
             //console.log(this.unique_codepiece_textObject_arr[i].x, this.unique_codepiece_textObject_arr[i].y);
             unique_codepiece_reset_y += 30;
         }
+        if (this.unique_code_piece_for_repetition_arr != undefined) { // 코드 조각 여러개 사용가능할 때 적용
+            for (var i = 0; i < this.unique_code_piece_for_repetition_arr.length; i++){
+                this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + this.repetition_code_piece_x;
+                this.unique_code_piece_for_repetition_arr[i].y = this.repetition_code_piece_y;
+            }
+        }
     }
     delete_unique_codepiece() {
         for (var i = 0; i < this.unique_codepiece_textObject_arr.length; i++) {
             this.unique_codepiece_textObject_arr[i].destroy();
+        }
+        if (this.unique_code_piece_for_repetition_arr != undefined) { // 코드 조각 여러개 사용가능할 때 적용
+            for (var i = 0; i < this.unique_code_piece_for_repetition_arr.length; i++){
+                this.unique_codepiece_textObject_arr[i].destroy();
+            }
         }
     }
 }

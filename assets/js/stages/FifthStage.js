@@ -1372,12 +1372,13 @@ export default class FifthStage extends Phaser.Scene {
         this.unique_codepiece_y = 130;
         this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌/* 스테이지 5 사서 대사 반복 해결되야 테스트 해볼 수 있을듯!
         
-        if (this.unique_codepiece_string_arr.indexOf('M_PI') != -1) { // 코드조각 중복 사용
-            this.unique_codepiece_string_arr = [];
+        if (this.unique_codepiece_string_arr.indexOf('M_PI') != -1) { // 코드조각 여러번 사용
+            this.unique_code_piece.unique_code_piece_for_repetition(this, 'M_PI', 175, 130 + this.unique_codepiece_string_arr.indexOf('M_PI')*30, 2);
+            /*this.unique_codepiece_string_arr = [];
             this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  'M_PI'; // 중복사용을 위해 추가해줌
             this.unique_codepiece_for_repetition_x = 175; // 리턴 적용하기 위해서 x,y좌표 따로 빼줘서 변수 만들어 줘야 함s
             this.unique_codepiece_for_repetition_y = 130 + this.unique_codepiece_string_arr.indexOf('M_PI')*30; // 중복허용할 코드조각 몇번 째 위치하는 지 받아서 y좌표 적용해줌
-            this.unique_code_piece_for_repetition = new UniqueCodePiece(this, this.unique_codepiece_for_repetition_x, this.unique_codepiece_for_repetition_y); 
+            this.unique_code_piece_for_repetition = new UniqueCodePiece(this, this.unique_codepiece_for_repetition_x, this.unique_codepiece_for_repetition_y); */
             //this.unique_code_piece_for_repetition = new UniqueCodePiece(this, this.unique_codepiece_for_repetition_x, this.unique_codepiece_for_repetition_y); 
         }
     }

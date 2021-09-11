@@ -228,7 +228,7 @@ export default class Command extends Phaser.GameObjects.Image {
             }
             
             if(scene.unique_code_piece != undefined) this.reset_for_unique_codepiece(scene);
-            if(scene.unique_code_piece_for_repetition != undefined) this.reset_for_unique_codepiece_for_repetition(scene);
+            if(scene.unique_code_piece.unique_code_piece_for_repetition_arr != undefined) this.reset_for_unique_codepiece_for_repetition(scene);
 
             //여기 가끔씩 0 대입 안해줌.. 왜그런지 모르겠어
             scene.drop_state_1 = 0;
@@ -412,18 +412,16 @@ export default class Command extends Phaser.GameObjects.Image {
 
     reset_for_unique_codepiece(scene){
         var unique_code_piece_reset_y = scene.unique_codepiece_y;
-        for (var i = 0; i < scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr.length; i++){
-            scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.unique_codepiece_x;
-            scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr[i].y = unique_code_piece_reset_y;
+        for (var i = 0; i < scene.unique_code_piece.unique_codepiece_textObject_arr.length; i++){
+            scene.unique_code_piece.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.unique_codepiece_x;
+            scene.unique_code_piece.unique_codepiece_textObject_arr[i].y = unique_code_piece_reset_y;
             unique_code_piece_reset_y += 30;
         }
     }
     reset_for_unique_codepiece_for_repetition(scene){
-        var unique_code_piece_for_repetition_reset_y = scene.unique_codepiece_for_repetition_y;
-        for (var i = 0; i < scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr.length; i++){
-            scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.unique_codepiece_for_repetition_x;
-            scene.unique_code_piece_for_repetition.unique_codepiece_textObject_arr[i].y = unique_code_piece_for_repetition_reset_y;
-            unique_code_piece_for_repetition_reset_y += 30;
+        for (var i = 0; i < scene.unique_code_piece.unique_code_piece_for_repetition_arr.length; i++){
+            scene.unique_code_piece.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.unique_code_piece.repetition_code_piece_x;
+            scene.unique_code_piece.unique_code_piece_for_repetition_arr[i].y = scene.unique_code_piece.repetition_code_piece_y;
         }
     }
 }
