@@ -71,29 +71,47 @@ export default class TestScene extends Phaser.Scene {
 
         ////npc
         //devil1
-        this.npc1 = this.physics.add.sprite(400 ,330,'npc_devil');
-        this.npc1.setFrame(1);
-        this.npc1.setFlipX(true);
-        this.physics.add.collider(this.npc1, this.worldLayer); //충돌 설정
-        this.npc1_text = this.add.text(this.npc1.x-50, 225, 'X키로 말 걸기', {
+        this.anims.create({
+            key: "seyeon",
+            frames: this.anims.generateFrameNumbers('dev',{ start: 4, end: 5}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.seyeon = this.add.sprite(350,400,'dev').setScale(1.1).setOrigin(0,1);
+        this.seyeon.play('seyeon');
+
+        this.npc1_text = this.add.text(this.seyeon.x, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
 
         //devil2
-        this.npc2 = this.physics.add.sprite(650 ,330,'npc_devil2');
-        this.npc2.setFrame(1);
-        this.npc2.setFlipX(true);
-        this.physics.add.collider(this.npc2, this.worldLayer); //충돌 설정
-        this.npc2_text = this.add.text(this.npc2.x-50, 225, 'X키로 말 걸기', {
+        this.anims.create({
+            key: "yeonu",
+            frames: this.anims.generateFrameNumbers('dev',{ start: 0, end: 1}), 
+            frameRate: 1,
+            repeat: -1,
+        });
+
+        this.yeonu = this.add.sprite(550,400,'dev').setScale(1.1).setOrigin(0,1);
+        this.yeonu.play('yeonu');
+        this.npc2_text = this.add.text(this.yeonu.x, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
         
         //student
-        this.npc3=this.add.image(900,325,'standing_student');
-        this.npc3.setFlipX(true);
-        this.npc3_text = this.add.text(this.npc3.x-50, 225, 'X키로 말 걸기', {
+        this.anims.create({
+            key: "seoyun",
+            frames: this.anims.generateFrameNumbers('dev',{ start: 2, end: 3}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.seoyun = this.add.sprite(800,400,'dev').setScale(1.1).setOrigin(0,1);
+        this.seoyun.play('seoyun');
+        this.npc3_text = this.add.text(this.seoyun.x, 325, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -211,7 +229,7 @@ export default class TestScene extends Phaser.Scene {
 
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.npc1.x-150&&this.player.player.x<this.npc1.x-50){
+        if(this.inevent==false&&this.player.player.x>this.seyeon.x-150&&this.player.player.x<this.seyeon.x-50){
             this.npc1_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
@@ -231,7 +249,7 @@ export default class TestScene extends Phaser.Scene {
         }else this.npc1_text.setVisible(false);
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.npc2.x-150&&this.player.player.x<this.npc2.x-50){
+        if(this.inevent==false&&this.player.player.x>this.yeonu.x-150&&this.player.player.x<this.yeonu.x-50){
             this.npc2_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
@@ -251,7 +269,7 @@ export default class TestScene extends Phaser.Scene {
         }else this.npc2_text.setVisible(false);
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.npc3.x-150&&this.player.player.x<this.npc3.x-50){
+        if(this.inevent==false&&this.player.player.x>this.seoyun.x-150&&this.player.player.x<this.seoyun.x-50){
             this.npc3_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
