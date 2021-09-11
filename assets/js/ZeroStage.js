@@ -403,6 +403,12 @@ export default class ZeroStage extends Phaser.Scene {
           //  this.code_piece.add_new_stage_codepiece(this);
         }
         this.code_piece.add_new_stage_codepiece(this);
+
+
+
+        /* 스테이지 클리어 */
+        this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
+        this.stage_clear.setVisible(false);
     }
 
     update() {
@@ -836,6 +842,19 @@ export default class ZeroStage extends Phaser.Scene {
             console.log("========stage 추가된다!: " + result.stage)
                 stage = result.stage;          
             });
+
+            this.time.delayedCall( 500, () => { 
+                this.stage_clear.setVisible(true);
+
+                this.tweens.add({
+                    targets: this.stage_clear,
+                    alpha: 0,
+                    duration: 3000,
+                    ease: 'Linear',
+                    repeat: 0,
+                }, this);
+            }, [] , this);
+
         });
     }
 }

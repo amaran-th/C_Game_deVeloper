@@ -665,6 +665,10 @@ export default class FourthStage extends Phaser.Scene {
         
         inZone4_1 = false;
 
+        /* 바운더리 정하기 */
+       this.physics.world.setBounds(0, 0, 1800, 600);
+       this.player.player.body.setCollideWorldBounds()
+
     }
 
     get_type_specifier() {
@@ -962,6 +966,8 @@ export default class FourthStage extends Phaser.Scene {
         });
     }
     stage4_10(){//무한 반복 퀘 완료
+        this.command.entire_code_button.input.enabled = true;//폰 다시 클릭가능하게
+
         this.deleteDropzone();
         this.zone = undefined;
         this.dragAndDrop.reset_before_mission(this); //드랍존 리셋
