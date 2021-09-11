@@ -92,7 +92,7 @@ export default class ZeroStage extends Phaser.Scene {
 
         //플레이어 말풍선 띄워두기
         this.bubble=this.add.image(0, 300,'bubble2').setOrigin(0,1);
-        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(                  )', {
+        this.concern_text0 = this.add.text(this.bubble.x+10, this.bubble.y-90, '(           )', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -410,7 +410,6 @@ export default class ZeroStage extends Phaser.Scene {
         this.inventory.update(this);
         this.command.update(this);
 
-        console.log("this.codeComplied", this.codeComplied);
         if (!this.codeapp_onoff_state && (this.code_zone_1 ==this.concern_text._text || this.code_zone_2 ==this.concern_text._text || this.code_zone_3 ==this.concern_text._text || this.code_zone_4 ==this.concern_text._text) || this.codeComplied == true) {
             this.concern_text.setVisible(false);
         } // 마잌테스트 드랍존 들어가 있을 때코드앱 따라 보이고 안 보이고 하기 + 컴파일 상태에 따라
