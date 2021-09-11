@@ -675,7 +675,7 @@ export default class FourthStage extends Phaser.Scene {
         inZone4_1 = false;
 
         /* 바운더리 정하기 */
-       this.physics.world.setBounds(0, 0, 1500, 600);
+       this.physics.world.setBounds(0, 0, 1000, 600);
        this.player.player.body.setCollideWorldBounds()
 
     }

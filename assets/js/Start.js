@@ -306,7 +306,11 @@ class Start extends Phaser.Scene {
         frameWidth: 80,
         frameHeight: 135,
       });
-
+      //엔딩룸_고양이
+      this.load.spritesheet('dev2', './assets/images/npc/dev2.png', {
+        frameWidth: 100,
+        frameHeight: 130,
+      });
     } 
     
     

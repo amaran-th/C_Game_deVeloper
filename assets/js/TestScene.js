@@ -114,9 +114,17 @@ export default class TestScene extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
-        //eunjee
-        this.npc4=this.add.image(950 ,325,'librarian2');
-        this.npc4_text = this.add.text(this.npc4.x-50, 225, 'X키로 말 걸기', {
+        //eunji
+        this.anims.create({
+            key: "eunji",
+            frames: this.anims.generateFrameNumbers('dev2',{ start: 0, end: 3}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.eunji = this.add.sprite(950,400,'dev2').setScale(1.1).setOrigin(0,1);
+        this.eunji.play('eunji');
+        this.npc4_text = this.add.text(this.eunji.x, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -335,7 +343,7 @@ export default class TestScene extends Phaser.Scene {
         }else this.npc3_text.setVisible(false);
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.npc4.x-150&&this.player.player.x<this.npc4.x-50){
+        if(this.inevent==false&&this.player.player.x>this.eunji.x-150&&this.player.player.x<this.eunji.x-50){
             this.npc4_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
