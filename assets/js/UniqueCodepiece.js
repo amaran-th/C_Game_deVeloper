@@ -43,7 +43,12 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
                 if ((scene.code_zone_6 == this.unique_codepiece_textObject_arr[i]._text) && (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_6.x - (scene.draganddrop_6.width / 2) + 5)) { 
                     this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone6_x - (scene.draganddrop_6.width / 2) + 5;
                 }
-                // 수 추가해야 함
+                if ((scene.code_zone_7 == this.unique_codepiece_textObject_arr[i]._text) && (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_7.x - (scene.draganddrop_7.width / 2) + 5)) { 
+                    this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone7_x - (scene.draganddrop_7.width / 2) + 5;
+                }
+                if ((scene.code_zone_8 == this.unique_codepiece_textObject_arr[i]._text) && (this.unique_codepiece_textObject_arr[i].x == scene.draganddrop_8.x - (scene.draganddrop_8.width / 2) + 5)) { 
+                    this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + scene.dropzone8_x - (scene.draganddrop_8.width / 2) + 5;
+                }
                 if (this.unique_codepiece_textObject_arr[i].x < scene.worldView.x + this.unique_codepiece_x + 150) { // 코드조각 위치한 창 우측 끝보다 왼쪽에 있을 때 코드조각이 인벤창 안에 있다고 판단함 (드랍존에 안 들어가 있는 코드조각 플레이어 따라 이동하도록 하기)
                     this.unique_codepiece_textObject_arr[i].x = scene.worldView.x + this.unique_codepiece_x;
                 }
@@ -120,7 +125,12 @@ class UniqueCodePiece extends Phaser.GameObjects.Text {
                     if ((scene.code_zone_6 == this.unique_code_piece_for_repetition_arr[i]._text) && (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_6.x - (scene.draganddrop_6.width / 2) + 5)) { 
                         this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone6_x - (scene.draganddrop_6.width / 2) + 5;
                     }
-                    // 수 추가해야 함
+                    if ((scene.code_zone_7 == this.unique_code_piece_for_repetition_arr[i]._text) && (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_7.x - (scene.draganddrop_7.width / 2) + 5)) { 
+                        this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone7_x - (scene.draganddrop_7.width / 2) + 5;
+                    }
+                    if ((scene.code_zone_8 == this.unique_code_piece_for_repetition_arr[i]._text) && (this.unique_code_piece_for_repetition_arr[i].x == scene.draganddrop_8.x - (scene.draganddrop_8.width / 2) + 5)) { 
+                        this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + scene.dropzone8_x - (scene.draganddrop_8.width / 2) + 5;
+                    }
                     if (this.unique_code_piece_for_repetition_arr[i].x < scene.worldView.x + this.unique_codepiece_x + 150) { // 코드조각 위치한 창 우측 끝보다 왼쪽에 있을 때 코드조각이 인벤창 안에 있다고 판단함 (드랍존에 안 들어가 있는 코드조각 플레이어 따라 이동하도록 하기)
                         this.unique_code_piece_for_repetition_arr[i].x = scene.worldView.x + this.repetition_code_piece_x;
                     }
