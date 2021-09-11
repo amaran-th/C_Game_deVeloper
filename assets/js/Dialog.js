@@ -1796,9 +1796,11 @@ stage4_11 = [//도어락 성공.
     ['visible',true],
     ['place', 40,10],
     ['setFace', 35],
-    ['print', '어, 어디가요?'],
+    ['print', '어, 어디가시는거에요?'],
     ['wait-click'],
-
+    ['setFace', 36],
+    ['print', '한 번만 도와주세요ㅠㅠ 부탁드릴게요.'],
+    ['wait-click'],
     ['visible',false],
   ]
   //어디에 넣을 수 있을진 모르겠는데 적당히 엔딩낼때 넣을 텍스트
@@ -1810,10 +1812,11 @@ stage4_11 = [//도어락 성공.
     ['print', '캐릭터에게 말을 걸면 개발진의 후기를 볼 수 있습니다.'],
     ['wait-click'],
     ['visible',false],
-    ['wait-time',0.5]
+    ['wait-time', 0.5],
   ]
 
   final_npc1 = [
+    ['place', 40,400],
     ['visible',true],
     ['setFace', 5],
     ['print', '...'],
@@ -1839,10 +1842,10 @@ stage4_11 = [//도어락 성공.
     ['print', '나중에 캐릭터마다 저희 구성원 각각의 개발후기를 대사로 넣어줄거에요.'],
     ['wait-click'],
     ['visible',false],
-    ['wait-time', 0.5],
   ]
 
   final_npc2 = [
+    ['place', 40,400],
     ['visible',true],
     ['setFace', 4],
     ['print', '안녕하세요 여누예요'],
@@ -1852,24 +1855,41 @@ stage4_11 = [//도어락 성공.
     ['print', '힘들다 진짜'],
     ['wait-click'],
     ['visible',false],
-    ['wait-time', 0.5],
   ]
   final_npc3 = [
+    ['place', 40,400],
     ['visible',true],
     ['setFace', 4],
     ['print', '...'],
     ['wait-click'],
     ['visible',false],
-    ['wait-time', 0.5],
   ]
 
   final_npc4 = [
+    ['place', 40,400],
     ['visible',true],
     ['setFace', 4],
     ['print', '...'],
     ['wait-click'],
     ['visible',false],
-    ['wait-time', 0.5],
+  ]
+
+  final_npc5 = [
+    ['place', 40,400],
+    ['visible',true],
+    ['setFace', 4],
+    ['print', '...'],
+    ['wait-click'],
+    ['visible',false],
+  ]
+
+  final_select = [
+    ['place', 40,400],
+    ['visible',true],
+    ['setFace', 4],
+    ['print', '메인 화면으로 나가시겠습니까?'],
+    ['wait-click'],
+    ['visible',false],
   ]
 
   
