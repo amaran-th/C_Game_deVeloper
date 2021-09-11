@@ -301,6 +301,12 @@ class Start extends Phaser.Scene {
       //기타
       this.load.image("standing_student", "./assets/images/npc/npc4_student.png");
 
+      //엔딩룸
+      this.load.spritesheet('dev', './assets/images/npc/dev.png', {
+        frameWidth: 80,
+        frameHeight: 135,
+      });
+
     } 
     
     
@@ -393,7 +399,8 @@ class Start extends Phaser.Scene {
         });
       }, this);
       this.CONTINUE_button.once("pointerup", function () {
-        this.scene.start("zero_stage"); //이어하기. 방부터
+        //this.scene.start("zero_stage"); //이어하기. 방부터
+        this.scene.start("bootGame");
       }, this);
 
     }

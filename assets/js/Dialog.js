@@ -1340,8 +1340,7 @@ visible(visible) {
     ['wait-click'],
     ['visible',false],
   ]
-
-  stage4_11 = [//답은 맞지만 너무 멂.
+stage4_11 = [//도어락 성공.
     ['visible',true],
     ['place', 40,10],
     ['setFace', 1],
@@ -1362,11 +1361,13 @@ visible(visible) {
   stage4_13 = [//도어락 나감.
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 1],
-    ['print', '이제 문을 열고 나갈 수 있어!'],
+    ['setFace', 4],
+    ['print', '너무 멀어...가까이서 다시 해보자'],
     ['wait-click'],
     ['visible',false],
   ]
+
+  
   //독백
   stage5_1 = [
     ['visible',true],
@@ -1853,7 +1854,11 @@ visible(visible) {
   final_npc2 = [
     ['visible',true],
     ['setFace', 4],
-    ['print', '...'],
+    ['print', '안녕하세요 여누예요'],
+    ['wait-click'],
+    ['print', '나 너무 많은 일이 있엇어'],
+    ['wait-click'],
+    ['print', '힘들다 진짜'],
     ['wait-click'],
     ['visible',false],
     ['wait-time', 0.5],

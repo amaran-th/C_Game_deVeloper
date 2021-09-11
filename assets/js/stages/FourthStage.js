@@ -227,20 +227,20 @@ export default class FourthStage extends Phaser.Scene {
          "}"
  
          //코드 실행후 불러올 output값
-         /*this.correct_msg="정답은 25";
+         //this.correct_msg="정답은 25";
 
-          window*/ 
+          /*window */
          this.correct_msg=
          "#include <stdio.h>\n" +
-            "int main(){\n\n" +
-            "   int password = 0;" +
-            "  "+ 'for' +"(int i=10; i>0; i--) {\n" +
-            "      "+'if'+" (i%2==1){\n" +
-            "          password += i;\n" +
-            "      }\n" +
-            "  }\n" +
-            "   printf(\'"+ '%d' +"\',i);\n" +
-            "}\n";
+                "int main(){\n" +
+                "   int password = 0;\n" +
+                "  "+ this.code_zone_1 +"(int i=10; i>0; i--) {\n" +
+                "      "+this.code_zone_2+" (i%2==1){\n" +
+                "          password += i;\n" +
+                "      }\n" +
+                "  }\n" +
+                "   printf(\"정답은 "+ this.code_zone_3 +"\",password);\n" +
+                "}"
 
 
         
@@ -378,15 +378,15 @@ export default class FourthStage extends Phaser.Scene {
 
                 this.contenttext =
                 "#include <stdio.h>\n" +
-                "int main(){\n\n" +
-                "   int password = 0;" +
+                "int main(){\n" +
+                "   int password = 0;\n" +
                 "  "+ this.code_zone_1 +"(int i=10; i>0; i--) {\n" +
                 "      "+this.code_zone_2+" (i%2==1){\n" +
                 "          password += i;\n" +
                 "      }\n" +
                 "  }\n" +
-                "   printf(\'"+ this.code_zone_3 +"\',i);\n" +
-                "}\n"
+                "   printf(\"정답은 "+ this.code_zone_3 +"\",password);\n" +
+                "}"
 
             }else {
                 this.contenttext = "";
@@ -604,7 +604,7 @@ export default class FourthStage extends Phaser.Scene {
             console.log('컴파일 사라지는 용의 x키');
             this.codeComplied = false;
 
-            if(msg==this.correct_msg){//답은 맞음
+            if(this.msg==this.correct_msg){//답은 맞음
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 
@@ -1008,7 +1008,7 @@ export default class FourthStage extends Phaser.Scene {
             this.player.playerPaused=false;
 
             this.code_on = false;
-            this.reset_before_mission();//드랍존 지움.
+           
 
             /*** db에서 stage값을 1 증가시켜줌. 도어락 퀘 완료. ***/ 
             var xhr = new XMLHttpRequest();
@@ -1029,6 +1029,9 @@ export default class FourthStage extends Phaser.Scene {
             this.door.setFrame(3);
 
             this.doorlock = false;
+            this.draganddrop_1.reset_before_mission(this);//드랍존 지움.
+            this.draganddrop_2.reset_before_mission(this)
+            this.draganddrop_3.reset_before_mission(this)
         });
     }
 
@@ -1048,6 +1051,7 @@ export default class FourthStage extends Phaser.Scene {
         //complied를 호출하는 코드가 command의 constructure에 있음, constructure에서 scene으로 stage1을 받아왔었음. 그래서??? complied를 호출할때 인자로 scene을 넣어줬음.
         //console.log(scene.out);
         console.log("compiled");
+        this.msg=msg;
         if(msg==this.correct_msg){
             this.command.remove_phone(this);
             this.invenIn=false;
