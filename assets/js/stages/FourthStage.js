@@ -1171,7 +1171,7 @@ export default class FourthStage extends Phaser.Scene {
                 targets: [this.textBox, this.script],
                 alpha: 0,
                 duration: 2000,
-                ease: 'Power1',
+                ease: 'Quart.easeIn',
                 repeat: 0,
                 onComplete: ()=>{  this.codeComplied = true; }
             }, this);
@@ -1247,7 +1247,7 @@ export default class FourthStage extends Phaser.Scene {
                     targets: this.stage_clear,
                     x: this.worldView.x,
                     duration: 500,
-                    ease: 'Linear',
+                    ease: 'Expo',
                     repeat: 0,
                     onComplete: ()=>{
                         var seq = this.plugins.get('rexsequenceplugin').add();
@@ -1260,7 +1260,7 @@ export default class FourthStage extends Phaser.Scene {
                             targets: this.stage_clear,
                             x: this.worldView.x-1100,
                             duration: 500,
-                            ease: 'Linear',
+                            ease: 'Expo.easeIn',
                             repeat: 0,
                             onComplete: ()=>{ 
                                 this.player.playerPaused=false;

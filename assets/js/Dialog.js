@@ -329,6 +329,16 @@ visible(visible) {
     ['wait-time',0.5],
     ['visible',false],
   ]
+
+  //에러났을 때
+  intro_err = [
+    ['place', 40,10],
+    ['visible',true],
+    ['setFace', 0],
+    ['print', '(코드에 에러가 생긴 거 같아)'],
+    ['wait-time',0.5],
+    ['visible',false],
+  ]
   
   //퀘스트가 남아있을 때 나가려고 하면 출력
   intro_cannot_exit = [
@@ -1595,7 +1605,7 @@ stage4_11 = [//도어락 성공.
     ['place', 40,10],
     ['visible',true],
     ['setFace', 0],
-    ['print', '(음, 이게 맞는 것 같긴 한데, 이제 학생 가까이에 가서 말해주면 될 것 같아.)'],
+    ['print', '(음, 이게 맞는 것 같긴 한데, 너무 멀어서 안들리는 거 같다....)'],
     ['wait-click'],
     ['visible',false],
   ]
