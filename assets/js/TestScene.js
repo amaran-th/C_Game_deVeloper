@@ -18,7 +18,7 @@ export default class TestScene extends Phaser.Scene {
         /*** FROM Minicode.js***/
 
         
-        this.load.tilemapTiledJSON("map", "./assets/ending_room.json");
+        this.load.tilemapTiledJSON("end_map", "./assets/ending_room.json");
 
         /*
         this.load.image("tiles", "./assets/images/map.png");
@@ -48,8 +48,6 @@ export default class TestScene extends Phaser.Scene {
     
     create () {
 
-
-
         this.dialog = new Dialog(this);
 
         /** x 키 입력 받기**/
@@ -60,7 +58,7 @@ export default class TestScene extends Phaser.Scene {
         this.key3 = this.input.keyboard.addKey('THREE');
 
         /*** 맵 만들기 Create Map ***/
-        const map = this.make.tilemap({ key: "map" });
+        const map = this.make.tilemap({ key: "end_map" });
         
         const tileset = map.addTilesetImage("ending_room", "tiles"); //name of tileset(which is same as Png tileset) , source
         this.worldLayer = map.createLayer("ground", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
@@ -70,7 +68,7 @@ export default class TestScene extends Phaser.Scene {
         this.zone = this.physics.add.staticImage(150, 320).setSize(100,160);
 
         ////npc
-        //devil1
+        //seyeon
         this.anims.create({
             key: "seyeon",
             frames: this.anims.generateFrameNumbers('dev',{ start: 4, end: 5}), 
@@ -86,7 +84,7 @@ export default class TestScene extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
-        //devil2
+        //yeounu
         this.anims.create({
             key: "yeonu",
             frames: this.anims.generateFrameNumbers('dev',{ start: 0, end: 1}), 
@@ -101,7 +99,7 @@ export default class TestScene extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
         
-        //student
+        //seoyun
         this.anims.create({
             key: "seoyun",
             frames: this.anims.generateFrameNumbers('dev',{ start: 2, end: 3}), 
@@ -109,16 +107,32 @@ export default class TestScene extends Phaser.Scene {
             repeat: -1,
         });
 
-        this.seoyun = this.add.sprite(800,400,'dev').setScale(1.1).setOrigin(0,1);
+        this.seoyun = this.add.sprite(750,400,'dev').setScale(1.1).setOrigin(0,1);
         this.seoyun.play('seoyun');
         this.npc3_text = this.add.text(this.seoyun.x, 325, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
 
-        //librarian2
-        this.npc4=this.add.image(1150 ,325,'librarian2');
-        this.npc4_text = this.add.text(this.npc4.x-50, 225, 'X키로 말 걸기', {
+        //eunjee
+        //eunji
+        this.anims.create({
+            key: "eunji",
+            frames: this.anims.generateFrameNumbers('dev2',{ start: 0, end: 3}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.eunji = this.add.sprite(950,400,'dev2').setScale(1.1).setOrigin(0,1);
+        this.eunji.play('eunji');
+        this.npc4_text = this.add.text(this.eunji.x, 225, 'X키로 말 걸기', {
+            fontFamily: ' Courier',
+            color: '#000000'
+        }).setOrigin(0,0);
+
+        //daeun
+        this.npc5=this.add.image(1150 ,325,'devil2');
+        this.npc5_text = this.add.text(this.npc5.x-50, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -192,6 +206,15 @@ export default class TestScene extends Phaser.Scene {
         
          //minimap에서 사용될 전역변수
         // stagenum = 0;
+        //select 관련 함수 트리거 변수
+        this.select_trigger=false;
+
+        this.select_case0= ['예','아니오']; //msgArr.length = 2
+        this.finAnswer = { //주소
+            answer: 0 //값
+        };
+
+
          this.inevent=true;
         
     }
@@ -201,7 +224,32 @@ export default class TestScene extends Phaser.Scene {
         this.player.update();
         
         this.text.x=this.worldView.x+380;
-        
+
+        //select
+        if(this.select_trigger){
+            this.select0();
+            this.select_trigger=false;
+        }
+
+        if(!this.scene.isVisible('selection') && this.finAnswer.answer){ //selection 화면이 꺼졌다면
+            switch(this.finAnswer.answer) {
+            case 1: console.log('1의 선택지로 대답 했을때');
+                this.finAnswer.answer = 0;
+                this.player.playerPaused=false;
+                this.scene.sleep('bootGame')
+                this.scene.run('startGame'); 
+                return;
+            case 2: console.log('2의 선택지로 대답 했을때');
+                this.finAnswer.answer = 0;
+                this.player.playerPaused=false;
+                this.time.delayedCall(500, () => {
+                    this.inevent=false;
+                }, [], this);
+                return;  
+        }
+    }
+
+
         //맵이동 (stage6) 로
         if (inZone&&this.inevent==false) {
             this.pressX.x = this.player.player.x-50;
@@ -209,8 +257,9 @@ export default class TestScene extends Phaser.Scene {
             this.pressX.setVisible(true);
             if (this.keyX.isDown){
                 console.log("===[맵이동] stage6으로===");
-                this.scene.sleep('bootGame')
-                this.scene.run('sixth_stage'); 
+                this.inevent=true;
+                this.player.playerPaused=true;
+                this.select_trigger=true;
             }
         }else this.pressX.setVisible(false);
         inZone = false;
@@ -242,7 +291,9 @@ export default class TestScene extends Phaser.Scene {
                 .start();
                 seq.on('complete', () => {
                     this.player.playerPaused = false;
-                    this.inevent=false;
+                    this.time.delayedCall(500, () => {
+                        this.inevent=false;
+                    }, [], this);
                 });
             }
             
@@ -262,7 +313,9 @@ export default class TestScene extends Phaser.Scene {
                 .start();
                 seq.on('complete', () => {
                     this.player.playerPaused = false;
-                    this.inevent=false;
+                    this.time.delayedCall(500, () => {
+                        this.inevent=false;
+                    }, [], this);
                 });
             }
             
@@ -282,14 +335,16 @@ export default class TestScene extends Phaser.Scene {
                 .start();
                 seq.on('complete', () => {
                     this.player.playerPaused = false;
-                    this.inevent=false;
+                    this.time.delayedCall(500, () => {
+                        this.inevent=false;
+                    }, [], this);
                 });
             }
             
         }else this.npc3_text.setVisible(false);
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.npc4.x-150&&this.player.player.x<this.npc4.x-50){
+        if(this.inevent==false&&this.player.player.x>this.eunji.x-150&&this.player.player.x<this.eunji.x-50){
             this.npc4_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
@@ -302,11 +357,35 @@ export default class TestScene extends Phaser.Scene {
                 .start();
                 seq.on('complete', () => {
                     this.player.playerPaused = false;
-                    this.inevent=false;
+                    this.time.delayedCall(500, () => {
+                        this.inevent=false;
+                    }, [], this);
                 });
             }
             
         }else this.npc4_text.setVisible(false);
+
+        //npc에게 말걸기
+        if(this.inevent==false&&this.player.player.x>this.npc5.x-150&&this.player.player.x<this.npc5.x-50){
+            this.npc5_text.setVisible(true);
+            if(this.keyX.isDown){
+                this.inevent=true;
+                this.player.player.setFlipX(false);
+                this.player.playerPaused=true;
+                var seq = this.plugins.get('rexsequenceplugin').add();
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.final_npc5, this.dialog)
+                .start();
+                seq.on('complete', () => {
+                    this.player.playerPaused = false;
+                    this.time.delayedCall(500, () => {
+                        this.inevent=false;
+                    }, [], this);
+                });
+            }
+            
+        }else this.npc5_text.setVisible(false);
         
 
 
@@ -320,6 +399,18 @@ export default class TestScene extends Phaser.Scene {
         }
 
         
+        
+    }
+    select0(){    
+        console.log("endingroom_select0");
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.final_select, this.dialog)
+        .start();
+        seq.on('complete', () => {
+            this.scene.run('selection',{ msgArr: this.select_case0, num: this.select_case0.length, finAnswer: this.finAnswer });
+        });
         
     }
 }

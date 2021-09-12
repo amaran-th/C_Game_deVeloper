@@ -1,5 +1,5 @@
 var answer = 0;
-var beforeAnswer = 2;
+var beforeAnswer = 1;
 var maxnum;
 
 export default class Select extends Phaser.Scene {

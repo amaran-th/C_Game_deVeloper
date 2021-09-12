@@ -299,11 +299,23 @@ class Start extends Phaser.Scene {
       //기타
       this.load.image("standing_student", "./assets/images/npc/npc4_student.png");
 
+      //stage clear시 뜨는 이미지
+      this.load.image("stage_clear", "./assets/images/stage_clear.png" );
+
+
       //엔딩룸
       this.load.spritesheet('dev', './assets/images/npc/dev.png', {
         frameWidth: 80,
         frameHeight: 135,
       });
+
+      //엔딩룸_고양이
+      this.load.spritesheet('dev2', './assets/images/npc/dev2.png', {
+        frameWidth: 100,
+        frameHeight: 130,
+      });
+
+      this.load.image("stage_clear", "./assets/images/stage_clear.png" );
 
     } 
     

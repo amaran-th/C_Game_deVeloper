@@ -403,6 +403,12 @@ export default class ZeroStage extends Phaser.Scene {
           //  this.code_piece.add_new_stage_codepiece(this);
         }
         this.code_piece.add_new_stage_codepiece(this);
+
+
+
+        /* 스테이지 클리어 */
+        this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
+        this.stage_clear.setVisible(false);
     }
 
     update() {
@@ -821,7 +827,7 @@ export default class ZeroStage extends Phaser.Scene {
         .load(this.dialog.intro6, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+            
             this.code_on=false;
             
             /*** db에서 stage값을 1 증가시켜줌. because,, ***/
@@ -836,6 +842,40 @@ export default class ZeroStage extends Phaser.Scene {
             console.log("========stage 추가된다!: " + result.stage)
                 stage = result.stage;          
             });
+            this.stage_clear.x=this.worldView.x+1100;
+            this.time.delayedCall( 500, () => { 
+                
+                this.stage_clear.setVisible(true);
+
+                this.tweens.add({
+                    targets: this.stage_clear,
+                    x: this.worldView.x,
+                    duration: 1000,
+                    ease: 'Linear',
+                    repeat: 0,
+                    onComplete: ()=>{
+                        var seq = this.plugins.get('rexsequenceplugin').add();
+                        this.dialog.loadTextbox(this);
+                        seq
+                        .load(this.dialog.save_message, this.dialog)
+                        .start();
+                        seq.on('complete', () => {
+                            this.tweens.add({
+                            targets: this.stage_clear,
+                            x: this.worldView.x-1100,
+                            duration: 1000,
+                            ease: 'Linear',
+                            repeat: 0,
+                            onComplete: ()=>{ 
+                                this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+                                this.stage_clear.setVisible(false);
+                            }
+                        }, this);
+                        });
+                    }
+                }, this);
+            }, [] , this);
+
         });
     }
 }
