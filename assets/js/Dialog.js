@@ -1380,6 +1380,14 @@ stage4_11 = [//도어락 성공.
     ['wait-click'],
     ['visible',false],
   ]
+  stage5_1_2 = [
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 1],
+    ['print', '왼쪽에 사서한테 가보자.'],
+    ['wait-click'],
+    ['visible',false],
+  ]
   stage5_2 = [
     ['visible',true],
     ['place', 40,10],
@@ -1620,6 +1628,38 @@ stage4_11 = [//도어락 성공.
     ['wait-click'],
     ['visible',false],
     ['wait-time', 0.5],
+  ]
+
+  stage5_17=[
+    ['visible',true],
+    ['place', 40,10],
+    ['setFace', 32],
+    ['print', '...'],
+    ['wait-click'],
+    ['setFace', 31],
+    ['print', '앗, 잠깐 졸았네! '],
+    ['wait-click'],
+    ['setFace', 30],
+    ['print', '다시 풀어봐야지 이건.. 그러니까..'],
+    ['wait-click'],
+    ['print', '어, 아직 안가셨네요?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '...'],
+    ['wait-click'],
+    ['setFace', 30],
+    ['print', '하핫 다시 부탁드립니다!'],
+    ['wait-click'],
+    ['visible',false],
+    ['wait-time', 0.5],
+  ]
+  stage5_18=[
+    ['place', 40,10],
+    ['visible',true],
+    ['setFace', 0],
+    ['print', '감사합니다! 이젠 진짜 안 까먹을게요'],
+    ['wait-click'],
+    ['visible',false],
   ]
 
 
