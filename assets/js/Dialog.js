@@ -1286,8 +1286,6 @@ visible(visible) {
     ['wait-click'],
     ['print', '* [코딩하기] 어플에 스크립트가 업데이트 되었습니다. *'],
     ['wait-click'],
-    ['print', '**스테이지 4의 도어락 퀘스트는 구현이 덜 되었습니다! 숫자 5키를 눌러서 다음 맵으로 이동해주세요!**'],
-    ['wait-click'],
     ['visible',false],
     
   ]

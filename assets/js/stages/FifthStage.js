@@ -989,14 +989,17 @@ export default class FifthStage extends Phaser.Scene {
 
                 var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 1);
 
-               /* this.input.once('pointerdown', function() {
+                /*
+                this.input.once('pointerdown', function() {
                     textBox.setVisible(false);
                     script.setVisible(false);
                     playerFace.setVisible(false);
                     this.librarian1.setFlipX(false);
                     this.librarian1.play('working_librarian1',true);
                     this.function=3;
-                }, this);*/
+                }, this);
+                */
+
 
                 var onlyOnce = true;
                 this.keyX.on('down', () => {
@@ -1236,14 +1239,17 @@ export default class FifthStage extends Phaser.Scene {
             }).setOrigin(0,0);
             var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 4);
             
-          /*  this.input.once('pointerdown', function() {
+            /*
+            this.input.once('pointerdown', function() {
                 console.log("click");
                     textBox.setVisible(false);
                     script.setVisible(false);
                     playerFace.setVisible(false);
                     this.function=8;       
-            }, this);*/
+            }, this);
+            */
 
+            
             var onlyOnce = true;
             this.keyX.on('down', () => {
                 if(onlyOnce) {
