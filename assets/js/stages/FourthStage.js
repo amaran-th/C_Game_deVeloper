@@ -367,6 +367,9 @@ export default class FourthStage extends Phaser.Scene {
         this.finAnswer = { //주소
             answer: 0 //값
         };
+        /* 스테이지 클리어 */
+        this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
+        this.stage_clear.setVisible(false);
     }
 
     update() {
@@ -563,7 +566,7 @@ export default class FourthStage extends Phaser.Scene {
         this.playerCoord.y = this.worldView.y + 10;
 */
 
-         //마우스 위치 알려줌 
+         /*마우스 위치 알려줌 
         this.mouseCoord.setText([
             '마우스 위치',
             'x:' + this.input.mousePointer.x + this.worldView.x,
@@ -571,7 +574,7 @@ export default class FourthStage extends Phaser.Scene {
         ]);
         this.mouseCoord.x = this.worldView.x + 900;
         this.mouseCoord.y = this.worldView.y + 500;
-
+*/
 
         /* 아이템 얻기 */
         if(this.player.player.x >=this.npc9.x -100 && this.npc9.x +100 >= this.player.player.x && stage == 6){
@@ -1077,7 +1080,7 @@ export default class FourthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {  
             console.log("clear");
-            this.player.playerPaused=false;
+            
             this.questbox.setVisible(false);
             this.quest_text2.setVisible(false);
             this.help_icon.setVisible(false);
@@ -1099,15 +1102,8 @@ export default class FourthStage extends Phaser.Scene {
                 console.log("========stage 추가된다!: " + result.stage)
                 stage = result.stage;          
             });
-
-            //문열리는 애니메이션
-            this.door.play('open')
-            //this.time.delayedCall( 3000, () => { this.door.anims.stop(); }, [] , this);
-            //this.door.setFrame(3);
-
-            this.time.delayedCall(3000,() => {//문 다 열려야 이동 가능하게.
-                this.doorlock = true;
-            },[],this);
+            this.clearEvent();
+            
         });
     }
 
@@ -1239,5 +1235,49 @@ export default class FourthStage extends Phaser.Scene {
             this.mini_inventoryBody.y = 600;
         }
         //this.unique_code_piece.updownwithinven(this,this.invenIn); // 코드조각 인벤 따라가도록
+    }
+    
+    clearEvent(){
+        this.stage_clear.x=this.worldView.x+1100;
+            this.time.delayedCall( 500, () => { 
+                
+                this.stage_clear.setVisible(true);
+
+                this.tweens.add({
+                    targets: this.stage_clear,
+                    x: this.worldView.x,
+                    duration: 500,
+                    ease: 'Linear',
+                    repeat: 0,
+                    onComplete: ()=>{
+                        var seq = this.plugins.get('rexsequenceplugin').add();
+                        this.dialog.loadTextbox(this);
+                        seq
+                        .load(this.dialog.save_message, this.dialog)
+                        .start();
+                        seq.on('complete', () => {
+                            this.tweens.add({
+                            targets: this.stage_clear,
+                            x: this.worldView.x-1100,
+                            duration: 500,
+                            ease: 'Linear',
+                            repeat: 0,
+                            onComplete: ()=>{ 
+                                this.player.playerPaused=false;
+                                //문열리는 애니메이션
+                                this.door.play('open')
+                                //this.time.delayedCall( 3000, () => { this.door.anims.stop(); }, [] , this);
+                                //this.door.setFrame(3);
+
+                                this.time.delayedCall(3000,() => {//문 다 열려야 이동 가능하게.
+                                    this.doorlock = true;
+                                },[],this);
+                                this.stage_clear.setVisible(false);
+                            }
+                        }, this);
+                        });
+                    }
+                }, this);
+            }, [] , this);
     }
 }

@@ -382,7 +382,9 @@ export default class FifthStage extends Phaser.Scene {
         
         this.paper_on=0;    //시험지 이미지 띄워졌을때 X키로 지우는 용
 
-        
+        /* 스테이지 클리어 */
+        this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
+        this.stage_clear.setVisible(false);
     }
 
     update() {
@@ -1390,8 +1392,6 @@ export default class FifthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {  
             
-                
-
                 /*** db에서 stage값을 1 증가시켜줌. because,, ***/
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '/stage', true);
@@ -1405,17 +1405,13 @@ export default class FifthStage extends Phaser.Scene {
                     stage = result.stage;          
                 });
            
-            
-            this.player.playerPaused=false;
-            this.questbox.setVisible(false);
-            this.quest_text1.setVisible(false);
-            this.quest_text2.setVisible(false);
-            this.help_icon.setVisible(false);
+                this.clearEvent();
+                
+                this.questbox.setVisible(false);
+                this.quest_text1.setVisible(false);
+                this.quest_text2.setVisible(false);
+                this.help_icon.setVisible(false);
 
-            this.time.delayedCall(700, () => {
-                this.cantalking2=true;
-                this.talk_num=1;//처음 클리어
-            }, [], this);
         });
     }
 
@@ -1563,5 +1559,45 @@ export default class FifthStage extends Phaser.Scene {
         this.unique_codepiece_x = 175;
         this.unique_codepiece_y = 130;
         this.unique_code_piece = new UniqueCodePiece(this, this.unique_codepiece_x, this.unique_codepiece_y); // 현스테이지에서만 사용하는 형식지정자 코드조각 생성, 코드조각의 x좌표, 시작 y좌표를 인자로 넣어줌
+    }
+    clearEvent(){
+        this.stage_clear.x=this.worldView.x+1100;
+        this.time.delayedCall( 500, () => { 
+            
+            this.stage_clear.setVisible(true);
+
+            this.tweens.add({
+                targets: this.stage_clear,
+                x: this.worldView.x,
+                duration: 500,
+                ease: 'Linear',
+                repeat: 0,
+                onComplete: ()=>{
+                    var seq = this.plugins.get('rexsequenceplugin').add();
+                    this.dialog.loadTextbox(this);
+                    seq
+                    .load(this.dialog.save_message, this.dialog)
+                    .start();
+                    seq.on('complete', () => {
+                        this.tweens.add({
+                        targets: this.stage_clear,
+                        x: this.worldView.x-1100,
+                        duration: 500,
+                        ease: 'Linear',
+                        repeat: 0,
+                        onComplete: ()=>{ 
+                            this.player.playerPaused=false;
+                            this.time.delayedCall(700, () => {
+                                this.cantalking2=true;
+                                this.talk_num=1;//처음 클리어
+                            }, [], this);
+                            this.stage_clear.setVisible(false);
+                        }
+                    }, this);
+                    });
+                }
+            }, this);
+        }, [] , this);
+        
     }
 }

@@ -1004,8 +1004,11 @@ visible(visible) {
   stage3_2_2=[
     ['visible',true],
     ['place', 40,10],
-    ['setFace', 1],
+    ['setFace', 0],
     ['print', '이게 왜 이런 곳에 있는거지...?'],
+    ['wait-click'],
+    ['setFace', 1],
+    ['print', '...여기 위생 상태 괜찮은거야?'],
     ['wait-click'],
     ['visible',false],
   ]

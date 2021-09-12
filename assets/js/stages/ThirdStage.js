@@ -303,6 +303,10 @@ export default class ThirdStage extends Phaser.Scene {
     this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
 
     this.isdownX = true;
+
+    /* 스테이지 클리어 */
+    this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
+    this.stage_clear.setVisible(false);
 }
 
     update() {
@@ -420,7 +424,7 @@ export default class ThirdStage extends Phaser.Scene {
         /** 아이템 획득하는 경우 **/
         if (this.oven_on && this.beforeItemGet && this.player.player.x < this.itemicon.x+54 && this.itemicon.x < this.player.player.x) {
             this.beforeItemGet = false; //여기다가 해야 여러번 인식 안함
-
+            this.player.playerPaused=true;
             this.itemicon.setVisible(false);
             this.itemget.x = this.worldView.x
             this.itemText.x = this.worldView.x + 530;
@@ -432,7 +436,17 @@ export default class ThirdStage extends Phaser.Scene {
                 duration: 2000,
                 ease: 'Linear',
                 repeat: 0,
-                onComplete: ()=>{this.invenPlus = true;}
+                onComplete: ()=>{
+                    var seq = this.plugins.get('rexsequenceplugin').add(); 
+                    this.dialog.loadTextbox(this);
+                    seq
+                    .load(this.dialog.stage3_2_2, this.dialog)
+                    .start();
+                    seq.on('complete', () => {
+                        this.player.playerPaused=false;
+                    });
+                    this.invenPlus = true;
+                }
             }, this);
         }
 
@@ -586,17 +600,17 @@ export default class ThirdStage extends Phaser.Scene {
     }
     stage3_1() {
         this.time.delayedCall( 1000, () => { 
-        var seq = this.plugins.get('rexsequenceplugin').add(); 
-        this.dialog.loadTextbox(this);
-        seq
-        .load(this.dialog.stage3_1, this.dialog)
-        .start();
-        seq.on('complete', () => {
-            this.npc_chef.setFlipX(false);
-            this.player.player.setFlipX(true);
-            this.exclamMark.setVisible(true);
-            this.exclamMark.play('exclam');
-            this.time.delayedCall( 1000, () => {this.stage3_2() }, [] , this);
+            var seq = this.plugins.get('rexsequenceplugin').add(); 
+            this.dialog.loadTextbox(this);
+            seq
+            .load(this.dialog.stage3_1, this.dialog)
+            .start();
+            seq.on('complete', () => {
+                this.npc_chef.setFlipX(false);
+                this.player.player.setFlipX(true);
+                this.exclamMark.setVisible(true);
+                this.exclamMark.play('exclam');
+                this.time.delayedCall( 1000, () => {this.stage3_2() }, [] , this);
             });
         }, [], this);
     }
@@ -653,12 +667,9 @@ export default class ThirdStage extends Phaser.Scene {
         .load(this.dialog.stage3_3, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
             
-            this.time.delayedCall( 2000, () => { 
-                this.isdownX = true; //2초뒤에 true로 바꿔줄거임. => 무한반복 퀘 가능   
-            });
-
+            this.clearEvent();
+            this.reset_before_mission();//드랍존 지움.
         });   
         /*** db에서 stage값을 1 증가시켜줌. because,, ***/
         var xhr = new XMLHttpRequest();
@@ -672,7 +683,7 @@ export default class ThirdStage extends Phaser.Scene {
         console.log("========stage 추가된다!: " + result.stage)
             stage = result.stage;          
         });
-        this.reset_before_mission();//드랍존 지움.
+        
 
     }
 
@@ -702,7 +713,7 @@ export default class ThirdStage extends Phaser.Scene {
         
     }
 
-    stage3_5() { //할아버지 퀘스트 완료한경우
+    stage3_5() { //퀘스트 완료한경우
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -890,5 +901,44 @@ export default class ThirdStage extends Phaser.Scene {
         this.draganddrop_2 = undefined;
         
        
+    }
+    clearEvent(){
+        this.stage_clear.x=this.worldView.x+1100;
+            this.time.delayedCall( 500, () => { 
+                
+                this.stage_clear.setVisible(true);
+
+                this.tweens.add({
+                    targets: this.stage_clear,
+                    x: this.worldView.x,
+                    duration: 500,
+                    ease: 'Linear',
+                    repeat: 0,
+                    onComplete: ()=>{
+                        var seq = this.plugins.get('rexsequenceplugin').add();
+                        this.dialog.loadTextbox(this);
+                        seq
+                        .load(this.dialog.save_message, this.dialog)
+                        .start();
+                        seq.on('complete', () => {
+                            this.tweens.add({
+                            targets: this.stage_clear,
+                            x: this.worldView.x-1100,
+                            duration: 500,
+                            ease: 'Linear',
+                            repeat: 0,
+                            onComplete: ()=>{ 
+                                this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+                                this.stage_clear.setVisible(false);
+                                this.time.delayedCall( 2000, () => { 
+                                    this.isdownX = true; //2초뒤에 true로 바꿔줄거임. => 무한반복 퀘 가능   
+                                });
+                                
+                            }
+                        }, this);
+                        });
+                    }
+                }, this);
+            }, [] , this);
     }
 }

@@ -534,7 +534,9 @@ export default class SecondStage extends Phaser.Scene {
         this.isdownX=true;//x키 중복 방지. 이거 필수. 아니면 대사가 안 넘어감..
 
 
-        
+        /* 스테이지 클리어 */
+        this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
+        this.stage_clear.setVisible(false);
 
     }
 
@@ -1347,34 +1349,34 @@ export default class SecondStage extends Phaser.Scene {
         .load(this.dialog.stage2_3_2, this.dialog)
         .start();
         seq.on('complete', () => {
-            this.mission1Complete = true; //1100이상으로 계속 이동할 수 있도록
-            this.stage2_6() //미션 2 시작 + 할아버지 다시 카페로 들어감
-            
             //할아버지 걸어서 다시 카페감.
             this.npc7.setFlipX(false);
             this.npc7.play('npc_hot_walk',true);
             this.npc7.setVelocityX(+100); //걸어감
             
             this.time.delayedCall( 2000, () => { //2초간 걷다가 
-            this.npc7.anims.stop();
-            this.npc7.setVelocityX(0); 
-            this.cafe.setVisible(false); //다시 할아버지 카페에 앉아있게
-            this.npc7.setVisible(false);
+                this.npc7.anims.stop();
+                this.npc7.setVelocityX(0); 
+                this.cafe.setVisible(false); //다시 할아버지 카페에 앉아있게
+                this.npc7.setVisible(false);
 
-            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
+                /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/stage', true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send();
 
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
+                xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
 
-                console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
+                    console.log("========stage 추가된다!: " + result.stage)
+                    stage = result.stage;          
+                });
+                this.clearEvent1();
+                this.reset_before_mission();
             });
-            });
-            this.reset_before_mission();
+            
+            
         });     
     }
 
@@ -1566,11 +1568,7 @@ export default class SecondStage extends Phaser.Scene {
         this.waterWball.destroy();
         this.water.setVisible(true);
         this.water.play('water');
-        this.player.playerPaused=false;
-
-        this.time.delayedCall( 2000, () => { 
-            this.isdownX = true; //2초뒤에 true로 바꿔줄거임. => 무한반복 퀘 가능   
-        });
+        
         /*** db에서 stage값을 1 증가시켜줌. because,, ***/
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/stage', true);
@@ -1583,6 +1581,7 @@ export default class SecondStage extends Phaser.Scene {
             console.log("========stage 추가된다!: " + result.stage)
             stage = result.stage;          
         });
+        this.clearEvent2();
     }
 
     stage2_12() { //할아버지 퀘스트 다시
@@ -1679,6 +1678,86 @@ export default class SecondStage extends Phaser.Scene {
         this.draganddrop_4 = undefined;
         this.draganddrop_5 = undefined;
         this.draganddrop_6 = undefined;
+    }
+    clearEvent1(){
+        this.stage_clear.x=this.worldView.x+1100;
+            this.time.delayedCall( 500, () => { 
+                
+                this.stage_clear.setVisible(true);
+
+                this.tweens.add({
+                    targets: this.stage_clear,
+                    x: this.worldView.x,
+                    duration: 500,
+                    ease: 'Linear',
+                    repeat: 0,
+                    onComplete: ()=>{
+                        var seq = this.plugins.get('rexsequenceplugin').add();
+                        this.dialog.loadTextbox(this);
+                        seq
+                        .load(this.dialog.save_message, this.dialog)
+                        .start();
+                        seq.on('complete', () => {
+                            this.tweens.add({
+                            targets: this.stage_clear,
+                            x: this.worldView.x-1100,
+                            duration: 500,
+                            ease: 'Linear',
+                            repeat: 0,
+                            onComplete: ()=>{ 
+                                this.mission1Complete = true; //1100이상으로 계속 이동할 수 있도록
+                                this.stage2_6() //미션 2 시작 + 할아버지 다시 카페로 들어감
+
+
+                                this.stage_clear.setVisible(false);
+                            }
+                        }, this);
+                        });
+                    }
+                }, this);
+            }, [] , this);
+    }
+
+    clearEvent2(){
+        this.stage_clear.x=this.worldView.x+1100;
+            this.time.delayedCall( 500, () => { 
+                
+                this.stage_clear.setVisible(true);
+
+                this.tweens.add({
+                    targets: this.stage_clear,
+                    x: this.worldView.x,
+                    duration: 500,
+                    ease: 'Linear',
+                    repeat: 0,
+                    onComplete: ()=>{
+                        var seq = this.plugins.get('rexsequenceplugin').add();
+                        this.dialog.loadTextbox(this);
+                        seq
+                        .load(this.dialog.save_message, this.dialog)
+                        .start();
+                        seq.on('complete', () => {
+                            this.tweens.add({
+                            targets: this.stage_clear,
+                            x: this.worldView.x-1100,
+                            duration: 500,
+                            ease: 'Linear',
+                            repeat: 0,
+                            onComplete: ()=>{ 
+                                this.player.playerPaused=false;
+
+                                this.time.delayedCall( 2000, () => { 
+                                    this.isdownX = true; //2초뒤에 true로 바꿔줄거임. => 무한반복 퀘 가능   
+                                });
+
+
+                                this.stage_clear.setVisible(false);
+                            }
+                        }, this);
+                        });
+                    }
+                }, this);
+            }, [] , this);
     }
 }
 

@@ -305,7 +305,7 @@ export default class SixthStage extends Phaser.Scene {
         this.scene.run('selection',{ msgArr: msgArr, num: msgArr.length, finAnswer: this.finAnswer });
         //정답(1 ~ maxnum)은 this.finAnswer.andswer에 들어감
    */     
-        this.isdownX=true;
+        this.isdownX=false;
 
         if (stage==10){
 
@@ -317,7 +317,9 @@ export default class SixthStage extends Phaser.Scene {
             this.books.destroy();  //쌓인 책 이미지 없앰
             this.bookswhy = this.add.image(340, 478, 'bookswhy'); //책 무너진 이미지 띄움
         }
-
+        /* 스테이지 클리어 */
+        this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
+        this.stage_clear.setVisible(false);
     }
 
     update() {
@@ -385,6 +387,7 @@ export default class SixthStage extends Phaser.Scene {
             this.pressX_return_book.setVisible(true);
 
             if(this.keyX.isDown) {
+                this.player.playerPaused=true;
                 this.somethingup = false;
                 this.questbox.setVisible(false);
                 this.quest_text1.setVisible(false);
@@ -601,13 +604,13 @@ export default class SixthStage extends Phaser.Scene {
                 console.log("========stage 추가된다!: " + result.stage)
                     stage = result.stage;          
                 });
-
+                this.clearEvent();
                 
             });
 
     }
     stage6_7() { //사서에게 퀴즈 한번 더 (무한 반복)
-
+        this.player.playerPaused=true;
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -626,6 +629,7 @@ export default class SixthStage extends Phaser.Scene {
         .load(this.dialog.stage6_8, this.dialog)
         .start();
         seq.on('complete', () => {
+            this.player.playerPaused=false;
             this.time.delayedCall( 1500, () => { this.isdownX=true;}, [] , this);
         });  
     }
@@ -644,6 +648,41 @@ export default class SixthStage extends Phaser.Scene {
         });  
     }
 
+    clearEvent(){
+        this.stage_clear.x=this.worldView.x+1100;
+            this.time.delayedCall( 500, () => { 
+                
+                this.stage_clear.setVisible(true);
 
+                this.tweens.add({
+                    targets: this.stage_clear,
+                    x: this.worldView.x,
+                    duration: 500,
+                    ease: 'Linear',
+                    repeat: 0,
+                    onComplete: ()=>{
+                        var seq = this.plugins.get('rexsequenceplugin').add();
+                        this.dialog.loadTextbox(this);
+                        seq
+                        .load(this.dialog.save_message, this.dialog)
+                        .start();
+                        seq.on('complete', () => {
+                            this.tweens.add({
+                            targets: this.stage_clear,
+                            x: this.worldView.x-1100,
+                            duration: 500,
+                            ease: 'Linear',
+                            repeat: 0,
+                            onComplete: ()=>{ 
+                                this.player.playerPaused = false; //대사가 다 나오면 플레이어가 다시 움직이도록
+                                this.stage_clear.setVisible(false);
+                                this.time.delayedCall( 1500, () => { this.isdownX=true;}, [] , this);
+                            }
+                        }, this);
+                        });
+                    }
+                }, this);
+            }, [] , this);
+    }
 
 }
