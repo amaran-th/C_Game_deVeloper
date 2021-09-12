@@ -682,10 +682,6 @@ export default class FourthStage extends Phaser.Scene {
                 }
                 
             }else{
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.playerFace.setVisible(false);
-                this.player.playerPaused=false;
             }
         }
 
