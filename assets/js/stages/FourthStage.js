@@ -685,10 +685,6 @@ export default class FourthStage extends Phaser.Scene {
                 }
                 
             }else{
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.playerFace.setVisible(false);
-                this.player.playerPaused=false;
             }
         }
 
@@ -1175,7 +1171,7 @@ export default class FourthStage extends Phaser.Scene {
                 targets: [this.textBox, this.script],
                 alpha: 0,
                 duration: 2000,
-                ease: 'Power1',
+                ease: 'Quart.easeIn',
                 repeat: 0,
                 onComplete: ()=>{  this.codeComplied = true; }
             }, this);
@@ -1196,19 +1192,13 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     printerr(scene){
-        console.log("printerr");
-        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-        this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
-            this.player.playerPaused=true;
-
-            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
-        
-            this.codeError = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro_err, this.dialog)
+        .start();
+        seq.on('complete', () => {
+        });
     }
 
     add_mini_inven() {
@@ -1251,7 +1241,7 @@ export default class FourthStage extends Phaser.Scene {
                     targets: this.stage_clear,
                     x: this.worldView.x,
                     duration: 500,
-                    ease: 'Linear',
+                    ease: 'Expo',
                     repeat: 0,
                     onComplete: ()=>{
                         var seq = this.plugins.get('rexsequenceplugin').add();
@@ -1264,7 +1254,7 @@ export default class FourthStage extends Phaser.Scene {
                             targets: this.stage_clear,
                             x: this.worldView.x-1100,
                             duration: 500,
-                            ease: 'Linear',
+                            ease: 'Expo.easeIn',
                             repeat: 0,
                             onComplete: ()=>{ 
                                 this.player.playerPaused=false;

@@ -673,10 +673,10 @@ export default class FifthStage extends Phaser.Scene {
             this.stage5_13();
             this.function2=0;
         }else if(this.function2==4){
-            this.stage5_14();
+            this.stage5_14();//멀어서 안들리는 
             this.function2=0;
         }else if(this.function2==5){
-            this.stage5_15();
+            this.stage5_15(); //클리어
             this.function2=0;
         }else if(this.function2==6){
             this.stage5_16();
@@ -772,9 +772,9 @@ export default class FifthStage extends Phaser.Scene {
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 
-                if(this.player.player.x>1000&&this.player.player.x<1450&&stage==9){
+                if(this.player.player.x>700&&this.player.player.x<1600&&stage==9){
                     this.function2=5;//처음 학생 퀘 성공
-                }else if(this.player.player.x>1000&&this.player.player.x<1450){
+                }else if(this.player.player.x>700&&this.player.player.x<1600){
                     this.function2=8;
                 }
                 else{//너무 멀리있을때
@@ -782,10 +782,6 @@ export default class FifthStage extends Phaser.Scene {
                 }
                 
             }else{
-                this.textBox.setVisible(false);
-                this.script.setVisible(false);
-                this.playerFace.setVisible(false);
-                this.player.playerPaused=false;
             }
         }
 
@@ -904,7 +900,7 @@ export default class FifthStage extends Phaser.Scene {
             targets: [this.textBox, this.script],
             alpha: 0,
             duration: 2000,
-            ease: 'Power1',
+            ease: 'Quart.easeIn',
             repeat: 0,
             onComplete: ()=>{  this.codeComplied = true; }
         }, this);
@@ -926,19 +922,13 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     printerr(scene){
-        console.log("printerr");
-        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-        this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
-            this.player.playerPaused=true;
-
-            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
-        
-            this.codeError = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro_err, this.dialog)
+        .start();
+        seq.on('complete', () => {
+        });
     }
 
     stage5_1(){
@@ -989,14 +979,17 @@ export default class FifthStage extends Phaser.Scene {
 
                 var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 1);
 
-               /* this.input.once('pointerdown', function() {
+                /*
+                this.input.once('pointerdown', function() {
                     textBox.setVisible(false);
                     script.setVisible(false);
                     playerFace.setVisible(false);
                     this.librarian1.setFlipX(false);
                     this.librarian1.play('working_librarian1',true);
                     this.function=3;
-                }, this);*/
+                }, this);
+                */
+
 
                 var onlyOnce = true;
                 this.keyX.on('down', () => {
@@ -1236,14 +1229,17 @@ export default class FifthStage extends Phaser.Scene {
             }).setOrigin(0,0);
             var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 4);
             
-          /*  this.input.once('pointerdown', function() {
+            /*
+            this.input.once('pointerdown', function() {
                 console.log("click");
                     textBox.setVisible(false);
                     script.setVisible(false);
                     playerFace.setVisible(false);
                     this.function=8;       
-            }, this);*/
+            }, this);
+            */
 
+            
             var onlyOnce = true;
             this.keyX.on('down', () => {
                 if(onlyOnce) {
@@ -1376,7 +1372,7 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     //math 클리어 시
-    stage5_15(){
+    stage5_15(){ 
         this.cantalking2=false;
         
         var seq = this.plugins.get('rexsequenceplugin').add();
@@ -1515,6 +1511,7 @@ export default class FifthStage extends Phaser.Scene {
 
     get_math_library_codepiece() {
         this.unique_codepiece_string_arr = [];
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '<math.h>';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'M_PI';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'M_E';
         this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'sqrt';
@@ -1564,7 +1561,7 @@ export default class FifthStage extends Phaser.Scene {
                 targets: this.stage_clear,
                 x: this.worldView.x,
                 duration: 500,
-                ease: 'Linear',
+                ease: 'Expo',
                 repeat: 0,
                 onComplete: ()=>{
                     var seq = this.plugins.get('rexsequenceplugin').add();
@@ -1577,7 +1574,7 @@ export default class FifthStage extends Phaser.Scene {
                         targets: this.stage_clear,
                         x: this.worldView.x-1100,
                         duration: 500,
-                        ease: 'Linear',
+                        ease: 'Expo.easeIn',
                         repeat: 0,
                         onComplete: ()=>{ 
                             this.player.playerPaused=false;

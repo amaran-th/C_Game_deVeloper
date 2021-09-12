@@ -329,6 +329,16 @@ visible(visible) {
     ['wait-time',0.5],
     ['visible',false],
   ]
+
+  //에러났을 때
+  intro_err = [
+    ['place', 40,10],
+    ['visible',true],
+    ['setFace', 0],
+    ['print', '(코드에 에러가 생긴 거 같아)'],
+    ['wait-time',0.5],
+    ['visible',false],
+  ]
   
   //퀘스트가 남아있을 때 나가려고 하면 출력
   intro_cannot_exit = [
@@ -1286,8 +1296,6 @@ visible(visible) {
     ['wait-click'],
     ['print', '* [코딩하기] 어플에 스크립트가 업데이트 되었습니다. *'],
     ['wait-click'],
-    ['print', '**스테이지 4의 도어락 퀘스트는 구현이 덜 되었습니다! 숫자 5키를 눌러서 다음 맵으로 이동해주세요!**'],
-    ['wait-click'],
     ['visible',false],
     
   ]
@@ -1597,7 +1605,7 @@ stage4_11 = [//도어락 성공.
     ['place', 40,10],
     ['visible',true],
     ['setFace', 0],
-    ['print', '(음, 이게 맞는 것 같긴 한데, 이제 학생 가까이에 가서 말해주면 될 것 같아.)'],
+    ['print', '(음, 이게 맞는 것 같긴 한데, 너무 멀어서 안들리는 거 같다....)'],
     ['wait-click'],
     ['visible',false],
   ]
@@ -1692,7 +1700,7 @@ stage4_11 = [//도어락 성공.
     ['wait-click'],
     ['print', '아무튼 잘됐다! 책 정리하는 걸 도와주지 않을래?'],
     ['wait-click'],
-    ['print', '저기 책상위에 책 보이지? 나한테 좀 줘봐!'],
+    ['print', '저기 책상위에 책 보이지? 나한테 좀 가져다 줘!'],
     ['wait-click'],
     ['setFace', 0],
     ['print', '(어째 이 세계 사람들은 나한테 부탁하는 게 많은 것 같네...)'],
