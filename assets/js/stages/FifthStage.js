@@ -365,8 +365,8 @@ export default class FifthStage extends Phaser.Scene {
         this.select_case2= ['<string.h>을 반납한다.','<string.h>을 반납하고 <math.h>을 대여한다.','아무것도 하지 않는다.'];
         
         this.msg="";
-        //this.correct_msg="ㅠ=3.14\n√64=8.00\nsin(45°)=0.71\ncos(60°)=0.50"
-        /*window */
+        this.correct_msg="ㅠ=3.14\n√64=8.00\nsin(45°)=0.71\ncos(60°)=0.50"
+        /*window 
         this.correct_msg = 
             "#include <stdio.h>\n" +            
             this.code_zone_1 +this.code_zone_2+"\n" +
@@ -376,7 +376,7 @@ export default class FifthStage extends Phaser.Scene {
             "   " + "printf" + "(\"sin(45°)=%.2f\\n\","+ this.code_zone_5 + "(" + this.code_zone_6 + "/4));\n"+
             "   " + "printf" + "(\"cos(60°)=%.2f\","+ this.code_zone_7 + "(" + this.code_zone_8 + "/3));\n"+
             "}"
-           
+           */
         this.codeComplied = false; //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
         this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         
