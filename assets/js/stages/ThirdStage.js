@@ -876,19 +876,13 @@ export default class ThirdStage extends Phaser.Scene {
 
 
     printerr(scene){
-        console.log("printerr");
-        this.textBox = scene.add.image(this.worldView.x,400,'textbox').setOrigin(0,0); 
-            this.script = scene.add.text(this.textBox.x + 200, this.textBox.y +50, "(코드에 문제가 있는 것 같아.)", {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px',
-                wordWrap: { width: 450, useAdvancedWrap: true }
-            }).setOrigin(0,0);
-            this.player.playerPaused=true;
-
-            this.playerFace = scene.add.sprite(this.script.x + 600 ,this.script.y+50, 'face', 0);
-            
-            this.codeError = true;
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.intro_err, this.dialog)
+        .start();
+        seq.on('complete', () => {
+        });
         
     }
 
