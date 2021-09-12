@@ -171,6 +171,14 @@ visible(visible) {
 
   ]
 
+  save_message=[
+    ['visible',true],
+    ['place', 40,400],
+    ['setFace', 4],
+    ['print', '* 진행 상황이 저장되었습니다 *'],
+    ['wait-click'],
+    ['visible',false],
+  ]
 
   intro = [
     ['visible',false],
