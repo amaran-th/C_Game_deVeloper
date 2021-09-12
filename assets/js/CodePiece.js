@@ -133,7 +133,7 @@ class CodePiece extends Phaser.GameObjects.Text {
                     }
                     if (this.code_piece_for_repetition_arr[i].x < scene.worldView.x + 160) { // 코드조각 위치한 창 우측 끝보다 왼쪽에 있을 때 코드조각이 인벤창 안에 있다고 판단함 (드랍존에 안 들어가 있는 코드조각 플레이어 따라 이동하도록 하기)
                         
-                        console.log("오나?????",this.code_piece_for_repetition_arr[i].x)
+                        //console.log("오나?????",this.code_piece_for_repetition_arr[i].x)
                         this.code_piece_for_repetition_arr[i].x = scene.worldView.x + 15;
                     }
                 }

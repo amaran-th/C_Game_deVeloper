@@ -60,6 +60,9 @@ export default class ZeroStage extends Phaser.Scene {
     }
     
     create () {  
+        this.isstage = new Stage(this);
+        console.log(this.isstage.test);
+
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
