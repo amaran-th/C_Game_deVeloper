@@ -361,7 +361,7 @@ export default class SixthStage extends Phaser.Scene {
         this.playerCoord.y = this.worldView.y + 10;
         */
 
-        //1. 책 주변으로 갔을때 X누르면 머리위로 책 얻음!
+        //1/. 책 주변으로 갔을때 X누르면 머리위로 책 얻음!
         if( this.player.player.x > 600 && this.player.player.x < 730 && this.bookok == false && this.somethingup == false && stage == 10){
             this.pressX_getbook.x = this.player.player.x-50;
             this.pressX_getbook.y = this.player.player.y-100;
