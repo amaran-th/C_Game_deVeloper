@@ -57,7 +57,7 @@
         <div id='left'></div><div id='right'></div>
         <div id='middle'>
             <h1>회원가입</h1><br>
-            <form action="/register" method="post" onsubmit = "return ischeck()"> <!--submit으로 form에 있는 데이터 서버로 보내줌-->
+            <form action="/register" method="post" onsubmit = "return ishack()&&ischeck()"> <!--submit으로 form에 있는 데이터 서버로 보내줌-->
                 <label>nickname</label>
                 <input type="text" name="nick" id="nick" placeholder="닉네임">
                 <br>
@@ -90,18 +90,46 @@
             dpflag=1;
             document.getElementById("icon").innerHTML='X';
         };
+        function ishack(){
+            var ID=document.getElementById('id').value;
+                console.log("[checkdp()]");
+                console.log(ID);
+                if(checkid(ID)!=true) return false;
+                
+                var data={'id':ID};
+                data=JSON.stringify(data);
+                var xhr=new XMLHttpRequest();
+                xhr.open('POST', '/register/checkdp',true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send(data);
+
+                return xhr.addEventListener('load', function() {
+                    var result = JSON.parse(xhr.responseText);
+                    if (result.result == 1){
+                        console.log("[register: 이미 존재하는 id 입니다.]");
+                        alert("Don't Hack!");
+                        document.getElementById("icon").innerHTML='X';
+                        dpflag=1;
+                        return false;
+                    }else{
+                        return true;
+                    }
+                    
+                });
+                
+        }
         function ischeck(){     //회원가입 버튼을 누르면 동작한다.
 
             console.log("[ischeck()]");
-
-            if(dpflag==1){
+            
+            if(dpflag==1||document.getElementById("icon").innerHTML=='X'){
                 alert("아이디 중복 확인을 마쳐주세요");
                 return false;
             }else if(checkinputs()==false){
                 return false;
             }else{
+                console.log("[register: 사용 가능한 id 입니다.]");
                 alert("정상적으로 회원가입이 완료되었습니다.");
-                //return false;
             }
             return true;
         }
@@ -122,12 +150,13 @@
             xhr.addEventListener('load', function() {
                 var result = JSON.parse(xhr.responseText);
                 if (result.result == 1){
-                    console.log("[register: 존재하는 id 입니다.]");
-                    alert("존재하는 id 입니다.");
+                    console.log("[register: 이미 존재하는 id 입니다.]");
+                    alert("이미 존재하는 id 입니다.");
+                    document.getElementById("icon").innerHTML='X';
                     return;
                 }else{
-                    console.log("[register: 가능한 id 입니다.]");
-                    alert("가능한 id 입니다.");
+                    console.log("[register: 사용 가능한 id 입니다.]");
+                    alert("사용 가능한 id 입니다.");
                     dpflag=0;
                     document.getElementById("icon").innerHTML='O';
                 }

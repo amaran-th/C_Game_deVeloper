@@ -222,6 +222,10 @@ export default class FirstStage extends Phaser.Scene {
             inZone1_2 = true;
         });
 
+        /* 스테이지 클리어 */
+        this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
+        this.stage_clear.setVisible(false);
+
     }
 
     update() {
@@ -572,11 +576,7 @@ export default class FirstStage extends Phaser.Scene {
         seq
         .load(this.dialog.stage1_8, this.dialog)
         .start();
-        seq.on('complete', () => {
-            this.player.playerPaused = false;
-            this.cantalk=true;
-            this.devil.play('devil_touch_phone',true);
-            
+        seq.on('complete', () => {            
             /*** db에서 stage값을 1 증가시켜줌. because,, ***/
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/stage', true);
@@ -589,9 +589,7 @@ export default class FirstStage extends Phaser.Scene {
                 console.log("========stage 추가된다!: " + result.stage)
                 stage = result.stage;          
             });
-
-
-            
+            this.clearEvent();
 
         });
     }
@@ -654,5 +652,41 @@ export default class FirstStage extends Phaser.Scene {
              }, [] , this);
         });  
     }
+    clearEvent(){
+        this.stage_clear.x=this.worldView.x+1100;
+            this.time.delayedCall( 500, () => { 
+                
+                this.stage_clear.setVisible(true);
 
+                this.tweens.add({
+                    targets: this.stage_clear,
+                    x: this.worldView.x,
+                    duration: 500,
+                    ease: 'Linear',
+                    repeat: 0,
+                    onComplete: ()=>{
+                        var seq = this.plugins.get('rexsequenceplugin').add();
+                        this.dialog.loadTextbox(this);
+                        seq
+                        .load(this.dialog.save_message, this.dialog)
+                        .start();
+                        seq.on('complete', () => {
+                            this.tweens.add({
+                            targets: this.stage_clear,
+                            x: this.worldView.x-1100,
+                            duration: 500,
+                            ease: 'Linear',
+                            repeat: 0,
+                            onComplete: ()=>{ 
+                                this.player.playerPaused = false;
+                                this.cantalk=true; //대사가 다 나오면 플레이어가 다시 움직이도록
+                                this.devil.play('devil_touch_phone',true);
+                                this.stage_clear.setVisible(false);
+                            }
+                        }, this);
+                        });
+                    }
+                }, this);
+            }, [] , this);
+    }
 }

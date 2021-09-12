@@ -842,7 +842,12 @@ export default class ZeroStage extends Phaser.Scene {
             console.log("========stage 추가된다!: " + result.stage)
                 stage = result.stage;          
             });
-            this.stage_clear.x=this.worldView.x+1100;
+            this.clearEvent();
+
+        });
+    }
+    clearEvent(){
+        this.stage_clear.x=this.worldView.x+1100;
             this.time.delayedCall( 500, () => { 
                 
                 this.stage_clear.setVisible(true);
@@ -850,7 +855,7 @@ export default class ZeroStage extends Phaser.Scene {
                 this.tweens.add({
                     targets: this.stage_clear,
                     x: this.worldView.x,
-                    duration: 1000,
+                    duration: 500,
                     ease: 'Linear',
                     repeat: 0,
                     onComplete: ()=>{
@@ -863,7 +868,7 @@ export default class ZeroStage extends Phaser.Scene {
                             this.tweens.add({
                             targets: this.stage_clear,
                             x: this.worldView.x-1100,
-                            duration: 1000,
+                            duration: 500,
                             ease: 'Linear',
                             repeat: 0,
                             onComplete: ()=>{ 
@@ -875,7 +880,5 @@ export default class ZeroStage extends Phaser.Scene {
                     }
                 }, this);
             }, [] , this);
-
-        });
     }
 }
