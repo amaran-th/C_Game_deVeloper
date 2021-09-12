@@ -3,7 +3,6 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
-var stage;
 var inZone6_1;
 var inZone6_2;
 export default class SixthStage extends Phaser.Scene {   
@@ -12,17 +11,7 @@ export default class SixthStage extends Phaser.Scene {
     }
 
     preload() {
-        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage/check', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-        stage = result.stage;
-        });
+        
 
         this.load.image("stage6_tiles", "./assets/images/stage6/map_stage6.png");
         this.load.tilemapTiledJSON("sixth_stage", "./assets/sixth_stage.json");
@@ -30,6 +19,7 @@ export default class SixthStage extends Phaser.Scene {
     }
     
     create () {
+        this.isstage = new Stage(this);
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -593,17 +583,7 @@ export default class SixthStage extends Phaser.Scene {
             .start();
             seq.on('complete', () => {
                  /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/stage', true);
-                xhr.setRequestHeader('Content-type', 'application/json');
-                xhr.send();
-
-                xhr.addEventListener('load', function() {
-                var result = JSON.parse(xhr.responseText);
-
-                console.log("========stage 추가된다!: " + result.stage)
-                    stage = result.stage;          
-                });
+                 this.isstage.plus(this);
                 this.clearEvent();
                 
             });

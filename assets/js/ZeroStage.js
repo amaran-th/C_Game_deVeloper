@@ -15,17 +15,7 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     preload() {
-        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage/check', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-        stage = result.stage;
-        }); 
+    
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
         /*
         /*** FROM Minicode.js***/
@@ -61,7 +51,6 @@ export default class ZeroStage extends Phaser.Scene {
     
     create () {  
         this.isstage = new Stage(this);
-        console.log(this.isstage.test);
 
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
@@ -245,22 +234,14 @@ export default class ZeroStage extends Phaser.Scene {
             this.help_text.setVisible(false);
             this.help_icon.clearTint();
         },this);
+
 //**나중에 지울것!!!!!!!!!!!!!!!!!!!!!!!!!! */
 //테이블 클릭하면 stage값 1 증가.
         this.table.setInteractive();
         this.table.on('pointerdown', function(){
-                /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
-
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
-
-            console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
-        });
+            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+            this.isstage.plus(this);
+            console.log("테이블 추가..",stage);
 
         },this)
         //****************** */
@@ -816,18 +797,8 @@ export default class ZeroStage extends Phaser.Scene {
             
             this.code_on=false;
             
-            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
+            this.isstage.plus(this);
 
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
-
-            console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
-            });
             this.clearEvent();
 
         });

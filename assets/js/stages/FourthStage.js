@@ -4,7 +4,7 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 import ThirdStage from "./ThirdStage.js";
-var stage;
+
 var droppedText; //드랍된 텍스트 무엇인지 판별할때 gameobject._text 값 저장하는 용으로 쓰임
 var graphics; //퀴즈 넘어갈때마다 드랍존 지워야 해서 전역으로 뺐음
 var inZone4_1;
@@ -15,23 +15,16 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     preload() {
-        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage/check', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-        stage = result.stage;
-        });
+        
 
         this.load.image("stage4_tiles", "./assets/images/stage4/map_stage4.png");
         this.load.tilemapTiledJSON("fourth_stage", "./assets/fourth_stage.json");
     }
     
     create () {
+        this.isstage = new Stage(this);
+        console.log(this.isstage.test);
+
         this.msg="";
 
         this.inventory = new Inventory(this);
@@ -970,17 +963,7 @@ export default class FourthStage extends Phaser.Scene {
             }, this);
 
             /*** db에서 stage값을 1 증가시켜줌. ***/
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
-
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
-
-                console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
-            });
+            this.isstage.plus(this);
 
         });
     }
@@ -1091,17 +1074,7 @@ export default class FourthStage extends Phaser.Scene {
             this.draganddrop_3.reset_before_mission(this)
 
             /*** db에서 stage값을 1 증가시켜줌. 도어락 퀘 완료. ***/ 
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
-
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
-
-                console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
-            });
+            this.isstage.plus(this);
             this.clearEvent();
             
         });
