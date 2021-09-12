@@ -307,7 +307,7 @@ export default class SixthStage extends Phaser.Scene {
    */     
         this.isdownX=true;
 
-        if (stage==12){
+        if (stage==10){
 
             this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
             this.stage6_1();
@@ -361,8 +361,8 @@ export default class SixthStage extends Phaser.Scene {
         this.playerCoord.y = this.worldView.y + 10;
         */
 
-        //1. 책 주변으로 갔을때 X누르면 머리위로 책 얻음!
-        if( this.player.player.x > 600 && this.player.player.x < 730 && this.bookok == false && this.somethingup == false && stage == 12){
+        //1/. 책 주변으로 갔을때 X누르면 머리위로 책 얻음!
+        if( this.player.player.x > 600 && this.player.player.x < 730 && this.bookok == false && this.somethingup == false && stage == 10){
             this.pressX_getbook.x = this.player.player.x-50;
             this.pressX_getbook.y = this.player.player.y-100;
             this.pressX_getbook.setVisible(true);
@@ -395,18 +395,18 @@ export default class SixthStage extends Phaser.Scene {
 
         
         //4. (첫번째) 퀴즈2개 다 완료했을때 대화 뜸
-        if(this.quiz_finish && stage==12){
+        if(this.quiz_finish && stage==10){
             this.stage6_6();
             this.quiz_finish = false;
         }
         //4_1. (무한반복) 퀴즈2개 다 완료했을때 대화 뜸
-        if(this.quiz_finish && stage>12){
+        if(this.quiz_finish && stage>10){
             this.stage6_8(); //얏호! 또 풀었다!
             this.quiz_finish = false;
         }
 
         //5. (미션 반복) 배열 퀴즈 계속 받기
-        if(this.player.player.x > 300 && this.player.player.x < 400 && stage > 12&&this.isdownX){
+        if(this.player.player.x > 300 && this.player.player.x < 400 && stage > 10&&this.isdownX){
             this.pressX_talk.setVisible(true);
 
             if(this.keyX.isDown) {
@@ -483,11 +483,11 @@ export default class SixthStage extends Phaser.Scene {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
             this.pressX_2.setVisible(true);
-            if (this.keyX.isDown&&stage>12){
+            if (this.keyX.isDown&&stage>10){
                 console.log("[맵이동] Ending Room 으로");
                 this.command.remove_phone(this);
                 this.scene.switch('bootGame'); 
-            }else if(this.keyX.isDown&&stage<=12&&this.isdownX){ //스테이지 클리어 못하고 나가려할때
+            }else if(this.keyX.isDown&&stage<=10&&this.isdownX){ //스테이지 클리어 못하고 나가려할때
                 this.isdownX=false;
                 this.stage6_9();
             }

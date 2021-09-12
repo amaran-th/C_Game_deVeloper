@@ -3,7 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
-
+var stage;
 var inZone5_1;
 var inZone5_2;
 
@@ -13,6 +13,17 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     preload() {
+         /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
+         var xhr = new XMLHttpRequest();
+         xhr.open('POST', '/stage/check', true);
+         xhr.setRequestHeader('Content-type', 'application/json');
+         xhr.send();
+ 
+         xhr.addEventListener('load', function() {
+         var result = JSON.parse(xhr.responseText);
+         console.log("======== 현재 스테이지는 : " + result.stage + " ========")
+         stage = result.stage;
+         });
 
         this.load.image("stage5_tiles", "./assets/images/stage5/map_stage5.png");
         this.load.tilemapTiledJSON("fifth_stage", "./assets/fifth_stage.json");
@@ -233,11 +244,58 @@ export default class FifthStage extends Phaser.Scene {
             this.help_text.setVisible(false);
             this.help_icon.clearTint();
         },this);
-        
-        /** 초반 대사 **/
         this.cameras.main.fadeIn(1000,0,0,0);
-        this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
-        this.stage5_1();
+        /** 초반 대사 **/
+
+        if (stage==8){//처음
+            this.player.playerPaused = true; //대사가 다 나오면 플레이어가 다시 움직이도록
+            this.stage5_1();
+
+            //사서1과의 초기 이벤트를 봤는지 여부
+            this.firsttalked=false;
+            //사서 대화해서 회원증 안받으면 못 지나가게
+            this.cantGoFarther = true;
+            //학생의 어그로 이벤트를 봤는지 여부(저기요!)
+            this.attention=false;
+            //학생의 문제를 해결했는지 여부
+            this.talk_num=0;
+            //학생과 대화중인지를 나타내는 플래그 변수
+            this.cantalking2=false;//어그로 이벤트 안봐서, 아직 대화 못함.
+
+
+        }else if(stage==9){//회원증 발급받음.
+            this.time.delayedCall( 1000, () => {
+                this.function=5;
+            }, [] , this);
+            
+            //학생의 어그로 이벤트를 봤는지 여부(저기요!)
+            this.attention=false;
+            //학생의 문제를 해결했는지 여부
+            this.talk_num=0;
+            //학생과 대화중인지를 나타내는 플래그 변수
+            this.cantalking2=false;//어그로 이벤트 안봐서, 아직 대화 못함.
+
+            this.player.playerPaused = true
+
+        }else{//모든 퀘 완료, 무한반복 퀘 가능
+            //학생의 어그로 이벤트를 봤는지 여부(저기요!)
+            this.attention=true;
+            //학생의 문제를 해결했는지 여부
+            this.talk_num=2;
+
+            //사서1과의 초기 이벤트를 봤는지 여부
+            this.firsttalked=true;
+            //사서 대화해서 회원증 안받으면 못 지나가게
+            this.cantGoFarther = false;
+            //학생의 어그로 이벤트를 봤는지 여부(저기요!)
+            this.attention=true;
+            //학생과 대화중인지를 나타내는 플래그 변수
+            this.cantalking2=true;
+            this.bubble.destroy()
+            this.concern_text.destroy()
+        }
+        
+        
 
 
         // 인벤창 팝업 여부를 나타내는 상태변수
@@ -269,31 +327,11 @@ export default class FifthStage extends Phaser.Scene {
         this.drop_state_6 = 0;
         this.drop_state_7 = 0;
         this.drop_state_8 = 0;
-/**/
-        // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-        this.dropzone1_x = 815; // 드랍존 x좌표 (플레이어 따라 이동하는데 필요)
-        this.dropzone2_x = 950;
-        this.dropzone3_x = 970;
-        this.dropzone4_x = 985;
-        this.dropzone5_x = 880;
-        this.dropzone6_x = 970;
-        this.dropzone7_x = 880;
-        this.dropzone8_x = 970;
-
-        this.draganddrop_1 = new DragAndDrop(this, this.dropzone1_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("1");
-        this.draganddrop_2 = new DragAndDrop(this, this.dropzone2_x, 115, 130, 25).setRectangleDropZone(80, 25).setName("2");
-        this.draganddrop_3 = new DragAndDrop(this, this.dropzone3_x, 175, 80, 25).setRectangleDropZone(80, 25).setName("3");
-        this.draganddrop_4 = new DragAndDrop(this, this.dropzone4_x, 200, 80, 25).setRectangleDropZone(80, 25).setName("4");
-        this.draganddrop_5 = new DragAndDrop(this, this.dropzone5_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("5");
-        this.draganddrop_6 = new DragAndDrop(this, this.dropzone6_x, 257, 80, 25).setRectangleDropZone(80, 25).setName("6");
-        this.draganddrop_7 = new DragAndDrop(this, this.dropzone7_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("7");
-        this.draganddrop_8 = new DragAndDrop(this, this.dropzone8_x, 312, 80, 25).setRectangleDropZone(80, 25).setName("8");
 
 
         //사서와 대화 중인지를 나타내는 플래그 변수
         this.cantalking=true;
-        //학생과 대화중인지를 나타내는 플래그 변수
-        this.cantalking2=false;
+        
         
         //사서 관련이벤트 실행을 위한 플래그 변수
         this.function=0;
@@ -304,12 +342,9 @@ export default class FifthStage extends Phaser.Scene {
         stagenum = 5;
         
         //사서1과의 초기 이벤트를 봤는지 여부
-        this.firsttalked=false;
-        //학생의 어그로 이벤트를 봤는지 여부(저기요!)
-        this.attention=false;
+        //this.firsttalked=false;
 
-        //학생의 문제를 해결했는지 여부
-        this.mathOK=false;
+        
 
         /** 임시로 만들어둔 선택지 예시 **/
         this.finAnswer = { //주소
@@ -377,7 +412,7 @@ export default class FifthStage extends Phaser.Scene {
         //stage num
         this.stage_text.x=this.worldView.x+1100;
 
-        if(this.attention&&this.mathOK==false){
+        if(this.attention&&this.talk_num==0){
             if(this.library_state==1){
                 //math.h를 빌린 상태일 때
                 this.questbox.setVisible(true);
@@ -484,6 +519,30 @@ export default class FifthStage extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
 */
+        if(!this.firsttalked && this.player.player.x >= 800) {
+            if(this.cantGoFarther) {
+                this.cantGoFarther = false;
+                this.player.playerPaused = true;
+                var seq = this.plugins.get('rexsequenceplugin').add(); 
+                this.dialog.loadTextbox(this);
+                seq
+                .load(this.dialog.stage5_1_2, this.dialog) //저기 저 사람한테 말을 걸어보자 .
+                .start();
+                seq.on('complete', () => {
+                    this.player.player.setFlipX(true);
+                    this.tweens.add({
+                        targets: this.player.player,
+                        x: 790,
+                        duration: 300,
+                        ease: 'Linear',
+                        repeat: 0,
+                        onComplete: ()=>{this.player.playerPaused = false;}
+                    });
+                }, [], this); 
+            }   
+        }
+        else this.cantGoFarther = true;
+
         /* 플레이어가 사서 근처에 다가가면 작동하도록 함 */
         if(this.player.player.x < 500 && 400 < this.player.player.x && this.cantalking ) {
             this.talktext.setVisible(true);
@@ -528,13 +587,13 @@ export default class FifthStage extends Phaser.Scene {
         } 
         
         //학생에게 퀘스트를 받은 후 학생 근처에 가면 작동
-        if(this.player.player.x>1350&&this.player.player.x<1440&&this.attention&&this.cantalking2){
+        if(this.player.player.x>1350&&this.player.player.x<1540&&this.attention&&this.cantalking2){
             this.talktext2.setVisible(true);
-            if(this.keyX.isDown&&this.mathOK==false) {
+            if(this.keyX.isDown&&this.talk_num==0) {
                 if(this.cantalking2){
-                    //학생에게 처음 말을 걸었을 때
+                    //학생에게 처음 말을 걸었을 때. 시험지 보여줌!!
                     console.log('first talk with student');
-                    this.talktext2.setVisible(false);
+                    
                     this.player.player.setFlipX(true);
                     this.cantalking2=false;
                     this.player.playerPaused = true;
@@ -546,7 +605,7 @@ export default class FifthStage extends Phaser.Scene {
                      }, [] , this);
 
                 }
-            }else if(this.keyX.isDown&&this.mathOK){
+            }else if(this.keyX.isDown&&this.talk_num==1){
                 if(this.cantalking2){
                     //학생에게 문제 해결 후에 말을 걸었을 때
                     console.log('second talk with student');
@@ -555,6 +614,17 @@ export default class FifthStage extends Phaser.Scene {
                     this.cantalking2=false;
                     this.player.playerPaused = true;
                     this.function2=6;
+
+                    this.talk_num++;
+                }
+            }else if(this.keyX.isDown&&this.talk_num==2){
+                if(this.cantalking2){
+                    //학생 무한반복퀘 받음.
+                    console.log('third talk with student');
+                    this.player.playerPaused = true;
+                    this.cantalking2=false;
+                    
+                    this.function2=7; //무한반복퀘 받음
                 }
             }
         }else this.talktext2.setVisible(false);
@@ -609,6 +679,13 @@ export default class FifthStage extends Phaser.Scene {
         }else if(this.function2==6){
             this.stage5_16();
             this.function2=0;
+        }else if(this.function2==7){
+            this.stage5_17();
+            this.function2=0;
+        }
+        else if(this.function2==8){
+            this.stage5_18();
+            this.function2=0;
         }
 
 
@@ -627,7 +704,7 @@ export default class FifthStage extends Phaser.Scene {
         }
 
         //학생과의 대면 이벤트를 보고 math 문제가 해결되지 않은 동안 코드가 활성화되게
-        if(this.attention&&this.mathOK==false){
+        if(this.attention&&this.talk_num==0){
             this.contenttext = 
             "#include <stdio.h>\n" +            
             this.code_zone_1 +this.code_zone_2+"\n" +
@@ -648,7 +725,7 @@ export default class FifthStage extends Phaser.Scene {
                 "   " + "printf" + "(\"sin(45°)=%f\",\n"+ "                         " + "("+"            "+"/4));\n"+
                 "   " + "printf" + "(\"cos(60°)=%f\",\n"+ "                         " + "("+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"/3));\n"+
                 "}"
-                this.dropPlus = true;
+    
         }
 
         if(this.dropPlus) {
@@ -693,9 +770,12 @@ export default class FifthStage extends Phaser.Scene {
                 this.textBox.setVisible(false);
                 this.script.setVisible(false);
                 
-                if(this.player.player.x>1000&&this.player.player.x<1450){
-                    this.function2=5;
-                }else{
+                if(this.player.player.x>1000&&this.player.player.x<1450&&stage==9){
+                    this.function2=5;//처음 학생 퀘 성공
+                }else if(this.player.player.x>1000&&this.player.player.x<1450){
+                    this.function2=8;
+                }
+                else{//너무 멀리있을때
                     this.function2=4;
                 }
                 
@@ -997,10 +1077,23 @@ export default class FifthStage extends Phaser.Scene {
                     }); 
             }
         }, this);
+
+        /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/stage', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send();
+
+        xhr.addEventListener('load', function() {
+        var result = JSON.parse(xhr.responseText);
+
+            console.log("========stage 추가된다!: " + result.stage)
+            stage = result.stage;          
+        });
         
     }
     
-    stage5_6(){
+    stage5_6(){//일단 여길한번 둘러볼까?!
         this.player.player.setFlipX(true);
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
@@ -1011,6 +1104,7 @@ export default class FifthStage extends Phaser.Scene {
             this.firsttalked=true;
             this.cantalking=true;
             this.player.playerPaused = false;
+            this.cantGoFarther = false;
         }); 
     }
 
@@ -1245,6 +1339,7 @@ export default class FifthStage extends Phaser.Scene {
         seq.on('complete', () => {
             this.attention=true;
             this.paper_on=2;
+            this.dropPlus = true;
         });
     }
 
@@ -1262,6 +1357,8 @@ export default class FifthStage extends Phaser.Scene {
 
     //답은 맞으나 너무 멀리에서 실행했을 시
     stage5_14(){
+        this.cantalking2=false;
+
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
@@ -1269,27 +1366,49 @@ export default class FifthStage extends Phaser.Scene {
         .start();
         seq.on('complete', () => {  
             this.player.playerPaused=false;
+            this.time.delayedCall(700, () => {
+                this.cantalking2=true;
+            
+            }, [], this);
         });
     }
 
     //math 클리어 시
     stage5_15(){
         this.cantalking2=false;
+        
         var seq = this.plugins.get('rexsequenceplugin').add();
         this.dialog.loadTextbox(this);
         seq
         .load(this.dialog.stage5_15, this.dialog)
         .start();
         seq.on('complete', () => {  
-            this.mathOK=true;
+            
+                
+
+                /*** db에서 stage값을 1 증가시켜줌. because,, ***/
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/stage', true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+                xhr.send();
+
+                xhr.addEventListener('load', function() {
+                var result = JSON.parse(xhr.responseText);
+
+                    console.log("========stage 추가된다!: " + result.stage)
+                    stage = result.stage;          
+                });
+           
+            
             this.player.playerPaused=false;
             this.questbox.setVisible(false);
             this.quest_text1.setVisible(false);
             this.quest_text2.setVisible(false);
             this.help_icon.setVisible(false);
 
-            this.time.delayedCall(500, () => {
+            this.time.delayedCall(700, () => {
                 this.cantalking2=true;
+                this.talk_num=1;//처음 클리어
             }, [], this);
         });
     }
@@ -1303,6 +1422,40 @@ export default class FifthStage extends Phaser.Scene {
         seq.on('complete', () => {  
             this.player.playerPaused=false;
             this.cantalking2=true;
+        });
+    }
+
+    stage5_17(){//무한 반복퀘 받음
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_17, this.dialog)
+        .start();
+        seq.on('complete', () => {  
+            this.player.playerPaused=false;
+            this.talk_num = 0;
+
+            this.time.delayedCall(1000, () => {
+                this.cantalking2=true; 
+            }, [], this);
+        });
+    }
+
+    stage5_18(){//무한 반복퀘 성공
+        this.cantalking2=false;
+
+        var seq = this.plugins.get('rexsequenceplugin').add();
+        this.dialog.loadTextbox(this);
+        seq
+        .load(this.dialog.stage5_18, this.dialog)
+        .start();
+        seq.on('complete', () => {  
+            this.player.playerPaused=false;
+            this.talk_num = 2; 
+            
+            this.time.delayedCall(1000, () => {
+                this.cantalking2=true;
+            }, [], this);
         });
     }
 
