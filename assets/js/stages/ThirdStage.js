@@ -3,7 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
-var stage;
+
 var inZone = false;
 
 export default class ThirdStage extends Phaser.Scene {   
@@ -12,17 +12,7 @@ export default class ThirdStage extends Phaser.Scene {
     }
 
     preload() {
-        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage/check', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-        stage = result.stage;
-        });
+       
         /* 흔드는 플러그인 */
         var url;
         url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexshakepositionplugin.min.js';
@@ -34,6 +24,7 @@ export default class ThirdStage extends Phaser.Scene {
     }
     
     create () {
+        this.isstage = new Stage(this);
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -260,8 +251,8 @@ export default class ThirdStage extends Phaser.Scene {
         //코드 실행 후 비교할 목표 텍스트(리눅스용/윈도우용)
         this.msg="";
 
-        /* this.correct_msg="bread=25";*/
-        
+       // this.correct_msg="bread=25";
+         
         this.correct_msg="#include <stdio.h>\n" + 
         "int main(){\n" +
         "   int bread=1;\n" +
@@ -625,17 +616,7 @@ export default class ThirdStage extends Phaser.Scene {
             this.time.delayedCall( 500, () => {this.stage3_2_1() }, [] , this);
 
             /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
-
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
-
-            console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
-            });
+            this.isstage.plus(this);
         });     
     }
 
@@ -672,17 +653,7 @@ export default class ThirdStage extends Phaser.Scene {
             this.reset_before_mission();//드랍존 지움.
         });   
         /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-
-        console.log("========stage 추가된다!: " + result.stage)
-            stage = result.stage;          
-        });
+        this.isstage.plus(this);
         
 
     }

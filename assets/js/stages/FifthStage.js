@@ -3,7 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
-var stage;
+
 var inZone5_1;
 var inZone5_2;
 
@@ -13,17 +13,6 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     preload() {
-         /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-         var xhr = new XMLHttpRequest();
-         xhr.open('POST', '/stage/check', true);
-         xhr.setRequestHeader('Content-type', 'application/json');
-         xhr.send();
- 
-         xhr.addEventListener('load', function() {
-         var result = JSON.parse(xhr.responseText);
-         console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-         stage = result.stage;
-         });
 
         this.load.image("stage5_tiles", "./assets/images/stage5/map_stage5.png");
         this.load.tilemapTiledJSON("fifth_stage", "./assets/fifth_stage.json");
@@ -31,7 +20,7 @@ export default class FifthStage extends Phaser.Scene {
     }
     
     create () {
-
+        this.isstage = new Stage(this);
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
         
@@ -1074,17 +1063,7 @@ export default class FifthStage extends Phaser.Scene {
         }, this);
 
         /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-
-            console.log("========stage 추가된다!: " + result.stage)
-            stage = result.stage;          
-        });
+        this.isstage.plus(this);
         
     }
     
@@ -1383,17 +1362,7 @@ export default class FifthStage extends Phaser.Scene {
         seq.on('complete', () => {  
             
                 /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/stage', true);
-                xhr.setRequestHeader('Content-type', 'application/json');
-                xhr.send();
-
-                xhr.addEventListener('load', function() {
-                var result = JSON.parse(xhr.responseText);
-
-                    console.log("========stage 추가된다!: " + result.stage)
-                    stage = result.stage;          
-                });
+                this.isstage.plus(this);
            
                 this.clearEvent();
                 

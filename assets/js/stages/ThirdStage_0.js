@@ -3,7 +3,6 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 
-var stage;
 var inZone3_1 = false;
 var inZone3_2 = false;
 var inZone3_3 = false;
@@ -14,23 +13,13 @@ export default class ThirdStage_0 extends Phaser.Scene {
     }
 
     preload() {
-        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage/check', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-        stage = result.stage;
-        });
 
         this.load.tilemapTiledJSON("third_0_stage", "./assets/third_stage_0.json");
 
     }
 
     create () {
+        this.isstage = new Stage(this);
 
         //this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
