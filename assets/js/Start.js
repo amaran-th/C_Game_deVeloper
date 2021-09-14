@@ -294,6 +294,12 @@ class Start extends Phaser.Scene {
         frameHeight: 130,
       });
 
+      //엔딩룸_다은
+      this.load.spritesheet('dev3', './assets/images/npc/dev3.png', {
+        frameWidth: 92,
+        frameHeight: 127,
+      });
+
       this.load.image("stage_clear", "./assets/images/stage_clear.png" );
 
     } 

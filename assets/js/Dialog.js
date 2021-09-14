@@ -1951,6 +1951,8 @@ stage4_11 = [//도어락 성공.
     ['setFace', 4],
     ['print', '...'],
     ['wait-click'],
+    ['print', '2021 08 21\n 용병\n 여기 잠들다'],
+    ['wait-click'],
     ['visible',false],
   ]
 
