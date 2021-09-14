@@ -118,7 +118,7 @@ export default class TestScene extends Phaser.Scene {
         //eunji
         this.anims.create({
             key: "eunji",
-            frames: this.anims.generateFrameNumbers('dev2',{ start: 0, end: 3}), 
+            frames: this.anims.generateFrameNumbers('dev2',{ start: 0, end: 2}), 
             frameRate: 2,
             repeat: -1,
         });
@@ -357,6 +357,7 @@ export default class TestScene extends Phaser.Scene {
         if(this.inevent==false&&this.player.player.x>this.eunji.x-140&&this.player.player.x<this.eunji.x-30){
             this.npc4_text.setVisible(true);
             if(this.keyX.isDown){
+                this.eunji.setFrame(3); 
                 this.inevent=true;
                 this.player.player.setFlipX(false);
                 this.player.playerPaused=true;
