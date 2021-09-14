@@ -250,9 +250,9 @@ export default class FourthStage extends Phaser.Scene {
          "}"
  
          //코드 실행후 불러올 output값
-         //this.correct_msg="정답은 25";
+         this.correct_msg="정답은 25";
 
-          /*window */
+          /*window 
           this.correct_msg=
           "#include <stdio.h>\n" +
                  "int main(){\n" +
@@ -264,7 +264,7 @@ export default class FourthStage extends Phaser.Scene {
                  "  }\n" +
                  "   printf(\"정답은 "+ this.code_zone_3 +"\",password);\n" +
                  "}"
- 
+ */
  
         
          /* 시작 대사 */
