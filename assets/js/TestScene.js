@@ -76,7 +76,7 @@ export default class TestScene extends Phaser.Scene {
             repeat: -1,
         });
 
-        this.seyeon = this.add.sprite(350,400,'dev').setScale(1.1).setOrigin(0,1);
+        this.seyeon = this.add.sprite(360,400,'dev').setScale(1.1).setOrigin(0,1);
         this.seyeon.play('seyeon');
 
         this.npc1_text = this.add.text(this.seyeon.x, 225, 'X키로 말 걸기', {
@@ -92,7 +92,7 @@ export default class TestScene extends Phaser.Scene {
             repeat: -1,
         });
 
-        this.yeonu = this.add.sprite(550,400,'dev').setScale(1.1).setOrigin(0,1);
+        this.yeonu = this.add.sprite(565,400,'dev').setScale(1.1).setOrigin(0,1);
         this.yeonu.play('yeonu');
         this.npc2_text = this.add.text(this.yeonu.x, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
@@ -107,7 +107,7 @@ export default class TestScene extends Phaser.Scene {
             repeat: -1,
         });
 
-        this.seoyun = this.add.sprite(750,400,'dev').setScale(1.1).setOrigin(0,1);
+        this.seoyun = this.add.sprite(770,400,'dev').setScale(1.1).setOrigin(0,1);
         this.seoyun.play('seoyun');
         this.npc3_text = this.add.text(this.seoyun.x, 325, 'X키로 말 걸기', {
             fontFamily: ' Courier',
@@ -123,7 +123,7 @@ export default class TestScene extends Phaser.Scene {
             repeat: -1,
         });
 
-        this.eunji = this.add.sprite(950,400,'dev2').setScale(1.1).setOrigin(0,1);
+        this.eunji = this.add.sprite(975,400,'dev2').setScale(1.1).setOrigin(0,1);
         this.eunji.play('eunji');
         this.npc4_text = this.add.text(this.eunji.x, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
@@ -140,7 +140,7 @@ export default class TestScene extends Phaser.Scene {
             repeat: -1,
         });
 
-        this.daeun=this.add.sprite(1150 ,405,'dev3').setScale(1.1).setOrigin(0,1);
+        this.daeun=this.add.sprite(1180 ,405,'dev3').setScale(1.1).setOrigin(0,1);
         this.daeun.play('daeun');
         this.npc5_text = this.add.text(this.daeun.x, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
@@ -396,20 +396,7 @@ export default class TestScene extends Phaser.Scene {
             }
             
         }else this.npc5_text.setVisible(false);
-        
-
-
-
-        /*** 빨리 zero_stage으로 넘어가기 위해 잠시 만들어 두겠습니다.... ***/
-        if(this.keyZ.isDown) {
-            this.cameras.main.fadeOut(100, 0, 0, 0); //is not a function error
-            console.log('맵이동');
-            this.scene.sleep('bootGame'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("zero_stage");
-        }
-
-        
-        
+            
     }
     select0(){    
         console.log("endingroom_select0");
