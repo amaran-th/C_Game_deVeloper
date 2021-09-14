@@ -523,33 +523,6 @@ export default class ThirdStage extends Phaser.Scene {
             
         }
 
-
-        if(this.key1.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('first_stage');
-        }
-        if(this.key2.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('second_stage');
-        }
-        if(this.key4.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('fourth_stage');
-        }
-        if(this.key5.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('fifth_stage');
-        }
-        if(this.key6.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('sixth_stage');
-        }
-
         /* 문에 글자 띄워줌 */
         if(this.player.player.x < 1300 && 1150 < this.player.player.x ) {
             this.pressX_1.x = this.player.player.x-50;
