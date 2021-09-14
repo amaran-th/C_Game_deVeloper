@@ -322,16 +322,6 @@ export default class SecondStage extends Phaser.Scene {
 
 
         /** 드래그앤드랍 **/
-        //드래그앤드롭으로 zone에 있는 코드 받아오기 위한 변수.
-        // 지금 컴파일 테스트를 못해봐서 일단 주석처리해놓고 확이해보고 제대로 되면 이부분 삭제예정
-        /*
-        this.code_zone_1 = "           "; //11칸
-        this.code_zone_2 = "           ";
-        this.code_zone_3 = "           ";
-        this.code_zone_4 = "           ";
-        this.code_zone_5 = "           ";
-        this.code_zone_6 = "           ";*/
-        
         // 드랍여부 확인(새로운 씬에도 반영 하기 위해 씬에 변수 선언 함)
         this.drop_state_1 = 0;
         this.drop_state_2 = 0;
