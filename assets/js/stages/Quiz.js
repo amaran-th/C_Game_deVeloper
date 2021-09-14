@@ -82,12 +82,12 @@ export default class Quiz extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,160,'help_box2').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+60, "hint :자료형이란?\n"+
-                "C언어에서 사용되는 자료형은 크게 실수, 정수, 문자로 구분됩니다.\n"+
-                "(기존 수학적 정의와는 다르게, 컴퓨터는 소수점이 표현되는 수를 실수로 해석합니다.)\n"+
-                "대표적인 실수 자료형은 float, double이 있습니다.\n"+
-                "대표적인 정수 자료형은 int(integer을 생각해보세요!), long이 있습니다.\n"+
-                "대표적인 문자형 자료형은 char이 있습니다.", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+60, "\nHint :자료형이란?\n\
+                C언어에서 사용되는 자료형은 크게 실수, 정수, 문자로 구분됩니다.\n\
+                (기존 수학적 정의와는 다르게, 컴퓨터는 소수점이 표현되는 수를 실수로 해석합니다.)\n\
+                대표적인 실수 자료형은 float, double이 있습니다.\n\
+                대표적인 정수 자료형은 int(integer을 생각해보세요!), long이 있습니다.\n\
+                대표적인 문자형 자료형은 char이 있습니다.", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',

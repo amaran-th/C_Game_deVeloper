@@ -166,7 +166,9 @@ export default class FourthStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 4 힌트====================================", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30,
+            "\nHint : 이전 스테이지에서 배웠던 내용을 활용해 문제를 풀어봅시다!\n\
+            1부터 10까지 차례로 확인하며 만약 해당 수가 홀수라면 sum에 더합니다. ", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
