@@ -222,7 +222,7 @@ export default class ThirdStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 3 힌트====================================", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "\nhint : 빵집 어딘가에 있는 아이템을 찾고, 해당 아이템을 활용해 빵의 개수를 25개까지 늘려봅시다!", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',

@@ -49,6 +49,13 @@ export default class SecondStage extends Phaser.Scene {
         this.background2.play('fire',true);
 
 
+        /*** 맵 만들기 Create Map ***/
+        const map = this.make.tilemap({ key: "second_stage" });
+        
+        const tileset = map.addTilesetImage("map_stage2", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
+        this.darkpart = map.createLayer("darkpart", tileset, 0, 0);
+        
+
         /** 물 찰랑이는 거 **/
         this.anims.create({
             key: "waterWball",
@@ -68,10 +75,7 @@ export default class SecondStage extends Phaser.Scene {
         this.water.setVisible(false);
         
 
-        /*** 맵 만들기 Create Map ***/
-        const map = this.make.tilemap({ key: "second_stage" });
-        
-        const tileset = map.addTilesetImage("map_stage2", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
+
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
@@ -236,13 +240,13 @@ export default class SecondStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 이 스테이지에서는 사물로부터 '변수' 코드조각을 가져와 사용할 수 있습니다!\n 전광판에서 temp(온도) 변수를 드래그&드랍해봅시다.", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "\nHint : 이 스테이지에서는 사물로부터 '변수' 코드조각을 가져와 사용할 수 있습니다!\n <전광판>에서 temp(온도) 변수를 드래그&드랍해봅시다.", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
             wordWrap: { width: 500, height:230, useAdvancedWrap: true },
         }).setOrigin(0,0);
-        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 앞 퀘스트와 마찬가지로 땅과 강에서 변수를 얻어 드래그&드랍해봅시다!", {
+        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "\nHint : 앞 퀘스트와 마찬가지로 <땅>과 <강>에서 변수를 얻어 드래그&드랍해봅시다!", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
