@@ -319,30 +319,6 @@ export default class FirstStage extends Phaser.Scene {
             this.function=0;
         }
 
-
-        if(this.key2.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('second_stage');
-        }
-        if(this.key3.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("third_stage");
-        }if(this.key4.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("fourth_stage");
-        }if(this.key5.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("fifth_stage");
-        }if(this.key6.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('first_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("sixth_stage");
-        }
-
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //맵이동 (stage1) 로
         if (inZone1_1) {
