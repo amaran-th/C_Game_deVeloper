@@ -211,7 +211,7 @@ export default class FifthStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 3 힌트====================================", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "\nHint : Math.h 라이브러리를 include해 사용해봅시다! \nM_PI는 pi를, M_E는 e를 의미합니다. ", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
