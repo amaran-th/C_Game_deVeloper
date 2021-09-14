@@ -235,16 +235,6 @@ export default class ZeroStage extends Phaser.Scene {
             this.help_icon.clearTint();
         },this);
 
-//**나중에 지울것!!!!!!!!!!!!!!!!!!!!!!!!!! */
-//테이블 클릭하면 stage값 1 증가.
-        this.table.setInteractive();
-        this.table.on('pointerdown', function(){
-            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-            this.isstage.plus(this);
-            console.log("테이블 추가..",stage);
-
-        },this)
-        //****************** */
 
 
         

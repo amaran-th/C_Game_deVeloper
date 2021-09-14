@@ -720,7 +720,7 @@ export default class FourthStage extends Phaser.Scene {
 
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //맵이동 (stage3_0) 로
-        if (inZone4_1) {
+        if (inZone4_1&&!this.code_on) {
             this.pressX_1.x = this.player.player.x-50;
             this.pressX_1.y = this.player.player.y-100;
             this.pressX_1.setVisible(true);

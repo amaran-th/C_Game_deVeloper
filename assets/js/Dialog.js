@@ -1452,7 +1452,7 @@ stage4_11 = [//도어락 성공.
     ['print', '그럼 저도 회원증을 만들게요.'],
     ['wait-click'],
     ['setFace', 26],
-    ['print', '넵 잠시만요...성함이?'],
+    ['print', '넵 잠시만요...'],
     ['wait-click'],
     ['visible',false],
   ]
