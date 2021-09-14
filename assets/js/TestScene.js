@@ -288,7 +288,7 @@ export default class TestScene extends Phaser.Scene {
 
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.seyeon.x-150&&this.player.player.x<this.seyeon.x-50){
+        if(this.inevent==false&&this.player.player.x>this.seyeon.x-140&&this.player.player.x<this.seyeon.x-30){
             this.npc1_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
@@ -310,7 +310,7 @@ export default class TestScene extends Phaser.Scene {
         }else this.npc1_text.setVisible(false);
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.yeonu.x-150&&this.player.player.x<this.yeonu.x-50){
+        if(this.inevent==false&&this.player.player.x>this.yeonu.x-140&&this.player.player.x<this.yeonu.x-30){
             this.npc2_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
@@ -332,7 +332,7 @@ export default class TestScene extends Phaser.Scene {
         }else this.npc2_text.setVisible(false);
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.seoyun.x-150&&this.player.player.x<this.seoyun.x-50){
+        if(this.inevent==false&&this.player.player.x>this.seoyun.x-140&&this.player.player.x<this.seoyun.x-30){
             this.npc3_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
@@ -354,7 +354,7 @@ export default class TestScene extends Phaser.Scene {
         }else this.npc3_text.setVisible(false);
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.eunji.x-150&&this.player.player.x<this.eunji.x-50){
+        if(this.inevent==false&&this.player.player.x>this.eunji.x-140&&this.player.player.x<this.eunji.x-30){
             this.npc4_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
@@ -376,7 +376,7 @@ export default class TestScene extends Phaser.Scene {
         }else this.npc4_text.setVisible(false);
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.daeun.x-150&&this.player.player.x<this.daeun.x-50){
+        if(this.inevent==false&&this.player.player.x>this.daeun.x-140&&this.player.player.x<this.daeun.x-30){
             this.npc5_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;
