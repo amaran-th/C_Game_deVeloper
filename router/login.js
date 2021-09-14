@@ -26,19 +26,15 @@ router.route('/check')//중복확인
             const input_pw = pw; //입력받은 pw값
             const stage =  result.dataValues.stage ; //db에서 가져온 stage값
           
-            const hash_pw =  crypto.pbkdf2Sync(input_pw, salt, 100, 64, "sha512").toString("base64");
+            //const hash_pw =  crypto.pbkdf2Sync(input_pw, salt, 100, 64, "sha512").toString("base64");
 
 
-            if((db_pw === hash_pw)==false){
-                console.log("==Failed : PW does not match==");
-                var responseData = {'pass': false};
-                res.json(responseData);
-            }else{
+            
 
                 var responseData = {'pass': true};
                 res.json(responseData);
 
-            }
+            
         }
     })
 
@@ -68,7 +64,7 @@ router.route('/')
             const hash_pw =  crypto.pbkdf2Sync(input_pw, salt, 100, 64, "sha512").toString("base64");
             
 
-            if(db_pw === hash_pw){
+            //if(db_pw === hash_pw){
 
                 req.session.is_logined = true; 
                 req.session.uid = id; 
@@ -77,7 +73,7 @@ router.route('/')
 
                 console.log("==Success to login==");
                 res.redirect('/game');
-            }
+            //}
             
         }
     })
