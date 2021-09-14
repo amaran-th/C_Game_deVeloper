@@ -1889,7 +1889,7 @@ stage4_11 = [//도어락 성공.
   final_npc1 = [
     ['place', 40,400],
     ['visible',true],
-    ['setFace', 5],
+    ['setFace', 4],
     ['print', '안녕하세요~개발자 중 한 명입니다.'],
     ['wait-click'],
     ['print', '명목상 제가 프로젝트 팀장인데...어째 한 게 제일 없는 것 같아요(얘들아 미안)'],
@@ -1906,6 +1906,7 @@ stage4_11 = [//도어락 성공.
     ['wait-click'],
     ['print', '테스트플레이를 해준 제 지인분들께도 감사하다고 하고싶어요.'],
     ['wait-click'],
+    ['setFace', 40],
     ['print', 'tmi : 스테이지4의 악마 캐릭터는 제 취향을 갈아넣어서 만든 캐릭터입니다.'],
     ['wait-click'],
     ['visible',false],
