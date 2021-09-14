@@ -3,7 +3,6 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 
-var stage;
 var inZone3_1 = false;
 var inZone3_2 = false;
 var inZone3_3 = false;
@@ -14,23 +13,13 @@ export default class ThirdStage_0 extends Phaser.Scene {
     }
 
     preload() {
-        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage/check', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-        stage = result.stage;
-        });
 
         this.load.tilemapTiledJSON("third_0_stage", "./assets/third_stage_0.json");
 
     }
 
     create () {
+        this.isstage = new Stage(this);
 
         //this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
@@ -205,31 +194,7 @@ export default class ThirdStage_0 extends Phaser.Scene {
         this.playerCoord.x = this.worldView.x + 900;
         this.playerCoord.y = this.worldView.y + 10;
 */
-        if(this.key1.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage_0'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('first_stage');
-        }
-        if(this.key2.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage_0'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("second_stage");
-        }
-        if(this.key3.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage_0'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("third_stage");
-        }
-        if(this.key4.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage_0'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("fourth_stage");
-        }
-        if(this.key6.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('third_stage_0'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("sixth_stage");
-        }
+       
 
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //맵이동 (stage2) 로

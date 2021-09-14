@@ -3,7 +3,7 @@ import Inventory from "../Inventory.js";
 import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
-var stage;
+
 var inZone5_1;
 var inZone5_2;
 
@@ -13,17 +13,6 @@ export default class FifthStage extends Phaser.Scene {
     }
 
     preload() {
-         /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-         var xhr = new XMLHttpRequest();
-         xhr.open('POST', '/stage/check', true);
-         xhr.setRequestHeader('Content-type', 'application/json');
-         xhr.send();
- 
-         xhr.addEventListener('load', function() {
-         var result = JSON.parse(xhr.responseText);
-         console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-         stage = result.stage;
-         });
 
         this.load.image("stage5_tiles", "./assets/images/stage5/map_stage5.png");
         this.load.tilemapTiledJSON("fifth_stage", "./assets/fifth_stage.json");
@@ -31,7 +20,7 @@ export default class FifthStage extends Phaser.Scene {
     }
     
     create () {
-
+        this.isstage = new Stage(this);
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
         
@@ -222,7 +211,7 @@ export default class FifthStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 3 힌트====================================", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "\nHint : Math.h 라이브러리를 include해 사용해봅시다! \nM_PI는 pi를, M_E는 e를 의미합니다. ", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
@@ -365,8 +354,8 @@ export default class FifthStage extends Phaser.Scene {
         this.select_case2= ['<string.h>을 반납한다.','<string.h>을 반납하고 <math.h>을 대여한다.','아무것도 하지 않는다.'];
         
         this.msg="";
-        //this.correct_msg="ㅠ=3.14\n√64=8.00\nsin(45°)=0.71\ncos(60°)=0.50"
-        /*window */
+        this.correct_msg="ㅠ=3.14\n√64=8.00\nsin(45°)=0.71\ncos(60°)=0.50"
+        /*window 
         this.correct_msg = 
             "#include <stdio.h>\n" +            
             this.code_zone_1 +this.code_zone_2+"\n" +
@@ -376,7 +365,7 @@ export default class FifthStage extends Phaser.Scene {
             "   " + "printf" + "(\"sin(45°)=%.2f\\n\","+ this.code_zone_5 + "(" + this.code_zone_6 + "/4));\n"+
             "   " + "printf" + "(\"cos(60°)=%.2f\","+ this.code_zone_7 + "(" + this.code_zone_8 + "/3));\n"+
             "}"
-           
+   */        
         this.codeComplied = false; //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용
         this.codeError=false    //컴파일 이후 말풍선이 출력됐는지 여부 => x키 눌러서 말풍선 없애는 용(error)
         
@@ -385,6 +374,8 @@ export default class FifthStage extends Phaser.Scene {
         /* 스테이지 클리어 */
         this.stage_clear = this.add.image(0,0,'stage_clear').setOrigin(0.0);
         this.stage_clear.setVisible(false);
+
+        this.code_on = false;
     }
 
     update() {
@@ -706,7 +697,7 @@ export default class FifthStage extends Phaser.Scene {
         }
 
         //학생과의 대면 이벤트를 보고 math 문제가 해결되지 않은 동안 코드가 활성화되게
-        if(this.attention&&this.talk_num==0){
+        if(this.code_on){
             this.contenttext = 
             "#include <stdio.h>\n" +            
             this.code_zone_1 +this.code_zone_2+"\n" +
@@ -728,6 +719,9 @@ export default class FifthStage extends Phaser.Scene {
                 "   " + "printf" + "(\"cos(60°)=%f\",\n"+ "                         " + "("+"\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"+"/3));\n"+
                 "}"
     
+        }else{
+            this.contenttext = "" ; 
+            this.app_code_text = "" ;
         }
 
         if(this.dropPlus) {
@@ -815,35 +809,9 @@ export default class FifthStage extends Phaser.Scene {
         }
 
 
-        if(this.key1.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('first_stage');
-        }
-        if(this.key2.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("second_stage");
-        }
-        if(this.key3.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("third_stage");
-        }
-        if(this.key4.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("fourth_stage");
-        }
-        if(this.key6.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fifth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("sixth_stage");
-        }
-
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //맵이동 (stage4) 로
-        if (inZone5_1) {
+        if (inZone5_1&&!this.code_on) {
             this.pressX_1.x = this.player.player.x-50;
             this.pressX_1.y = this.player.player.y-100;
             this.pressX_1.setVisible(true);
@@ -857,7 +825,7 @@ export default class FifthStage extends Phaser.Scene {
         inZone5_1 = false;
         
         //맵이동 (stage3_0) 로
-        if (inZone5_2) {
+        if (inZone5_2&&!this.code_on) {
             this.pressX_2.x = this.player.player.x-50;
             this.pressX_2.y = this.player.player.y-100;
             this.pressX_2.setVisible(true);
@@ -967,50 +935,15 @@ export default class FifthStage extends Phaser.Scene {
             .load(this.dialog.stage5_3, this.dialog)
             .start();
             seq.on('complete', () => {
-                //닉네임 말하는 대사 출력하기
-                console.log('대사 출력');
-                var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
-                var script = this.add.text(textBox.x + 200, textBox.y +50, '\''+username+'\' 이에요.', {
-                fontFamily: 'Arial', 
-                fill: '#000000',
-                fontSize: '30px', 
-                wordWrap: { width: 450, useAdvancedWrap: true }
-                }).setOrigin(0,0);
-
-                var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 1);
-
-                /*
-                this.input.once('pointerdown', function() {
-                    textBox.setVisible(false);
-                    script.setVisible(false);
-                    playerFace.setVisible(false);
-                    this.librarian1.setFlipX(false);
-                    this.librarian1.play('working_librarian1',true);
-                    this.function=3;
-                }, this);
-                */
-
-
-                var onlyOnce = true;
-                this.keyX.on('down', () => {
-                    if(onlyOnce) {
-                        console.log('대사 지워짐');
-                        onlyOnce = undefined;
-                        textBox.setVisible(false);
-                        script.setVisible(false);
-                        playerFace.setVisible(false);
-                        this.librarian1.setFlipX(false);
-                        this.librarian1.play('working_librarian1',true);
-                        this.function=3;
-                    }
-                 }); //x키 입력 가능하게 함!
-
+                this.librarian1.setFlipX(false);
+                this.librarian1.play('working_librarian1',true);
+                this.function=3;
 
             });
     }
 
     stage5_4(){
-        var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
+   /*     var textBox = this.add.image(this.worldView.x+40,10,'textbox').setOrigin(0,0); 
         var script = this.add.text(textBox.x + 200, textBox.y +50, '\''+username+'\'... 어디보자...', {
             fontFamily: 'Arial', 
             fill: '#000000',
@@ -1019,12 +952,12 @@ export default class FifthStage extends Phaser.Scene {
         }).setOrigin(0,0);
 
         var playerFace = this.add.sprite(script.x + 600 ,script.y+50, 'face', 1);
-
+*/
         //0.5초 뒤에 자동으로 대사창 사라지고 애니메이션 실행
         this.time.delayedCall( 500, () => { 
-            textBox.setVisible(false);
-            script.setVisible(false);
-            playerFace.setVisible(false);
+        //    textBox.setVisible(false);
+        //    script.setVisible(false);
+        //    playerFace.setVisible(false);
             this.time.delayedCall( 2000, () => { 
                 this.librarian1.anims.stop();
                 this.librarian1.setFlipX(true);
@@ -1074,17 +1007,7 @@ export default class FifthStage extends Phaser.Scene {
         }, this);
 
         /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-
-            console.log("========stage 추가된다!: " + result.stage)
-            stage = result.stage;          
-        });
+        this.isstage.plus(this);
         
     }
     
@@ -1338,6 +1261,7 @@ export default class FifthStage extends Phaser.Scene {
             this.attention=true;
             this.paper_on=2;
             this.dropPlus = true;
+            this.code_on = true;
         });
     }
 
@@ -1383,17 +1307,7 @@ export default class FifthStage extends Phaser.Scene {
         seq.on('complete', () => {  
             
                 /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/stage', true);
-                xhr.setRequestHeader('Content-type', 'application/json');
-                xhr.send();
-
-                xhr.addEventListener('load', function() {
-                var result = JSON.parse(xhr.responseText);
-
-                    console.log("========stage 추가된다!: " + result.stage)
-                    stage = result.stage;          
-                });
+                this.isstage.plus(this);
            
                 this.clearEvent();
                 
@@ -1401,6 +1315,9 @@ export default class FifthStage extends Phaser.Scene {
                 this.quest_text1.setVisible(false);
                 this.quest_text2.setVisible(false);
                 this.help_icon.setVisible(false);
+
+                this.code_on = false;
+                this.reset_before_mission();//드랍존 지움.
 
         });
     }
@@ -1426,6 +1343,8 @@ export default class FifthStage extends Phaser.Scene {
         seq.on('complete', () => {  
             this.player.playerPaused=false;
             this.talk_num = 0;
+            this.code_on = true;
+            this.dropPlus = true;
 
             this.time.delayedCall(1000, () => {
                 this.cantalking2=true; 
@@ -1444,7 +1363,9 @@ export default class FifthStage extends Phaser.Scene {
         seq.on('complete', () => {  
             this.player.playerPaused=false;
             this.talk_num = 2; 
-            
+            this.code_on = false;
+            this.reset_before_mission();//드랍존 지움.
+
             this.time.delayedCall(1000, () => {
                 this.cantalking2=true;
             }, [], this);
@@ -1536,16 +1457,35 @@ export default class FifthStage extends Phaser.Scene {
         }
     }
 
+    reset_before_mission() {
+        this.draganddrop_1.reset_before_mission(this);
+        this.draganddrop_2.reset_before_mission(this);
+        this.draganddrop_3.reset_before_mission(this);
+        this.draganddrop_4.reset_before_mission(this);
+        this.draganddrop_5.reset_before_mission(this);
+        this.draganddrop_6.reset_before_mission(this);
+        this.draganddrop_7.reset_before_mission(this);
+        this.draganddrop_8.reset_before_mission(this);
+      
+        
+        this.draganddrop_1 = undefined;
+        this.draganddrop_2 = undefined;
+        this.draganddrop_3 = undefined;
+        this.draganddrop_4 = undefined;
+        this.draganddrop_5 = undefined;
+        this.draganddrop_6 = undefined;
+        this.draganddrop_7 = undefined;
+        this.draganddrop_8 = undefined;
+        
+       
+    }
+
     get_string_library_codepiece() {
         this.unique_codepiece_string_arr = [];
-        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '아';
-        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '무';
-        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = '말';
-        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '아';
-        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '무';
-        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
-        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
-        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] =  '말';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'strcpy';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'strcmp';
+        this.unique_codepiece_string_arr[this.unique_codepiece_string_arr.length] = 'strlen';
+
         
         this.unique_codepiece_x = 175;
         this.unique_codepiece_y = 130;

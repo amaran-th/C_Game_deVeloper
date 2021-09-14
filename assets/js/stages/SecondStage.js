@@ -4,7 +4,6 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 
-var stage;
 var tag_drop_state = false; // temp 가 드랍존에 들어가면 텍스트 오브젝트만 남도록
 var tag_text = '';
 var isDragging = false;
@@ -16,22 +15,12 @@ export default class SecondStage extends Phaser.Scene {
     }
 
     preload() {
-        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage/check', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-        stage = result.stage;
-        });
         this.load.tilemapTiledJSON("second_stage", "./assets/second_stage.json");
     
     }
     
     create () {
+        this.isstage = new Stage(this);//stage관련 
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -60,6 +49,13 @@ export default class SecondStage extends Phaser.Scene {
         this.background2.play('fire',true);
 
 
+        /*** 맵 만들기 Create Map ***/
+        const map = this.make.tilemap({ key: "second_stage" });
+        
+        const tileset = map.addTilesetImage("map_stage2", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
+        this.darkpart = map.createLayer("darkpart", tileset, 0, 0);
+        
+
         /** 물 찰랑이는 거 **/
         this.anims.create({
             key: "waterWball",
@@ -79,10 +75,7 @@ export default class SecondStage extends Phaser.Scene {
         this.water.setVisible(false);
         
 
-        /*** 맵 만들기 Create Map ***/
-        const map = this.make.tilemap({ key: "second_stage" });
-        
-        const tileset = map.addTilesetImage("map_stage2", "stage2_tiles"); //name of tileset(which is same as Png tileset) , source
+
         this.worldLayer = map.createLayer("background", tileset, 0, 0);// Parameters: layer name (or index) from Tiled, tileset, x, y
         this.deco = map.createLayer("deco", tileset, 0, 0);
 
@@ -247,13 +240,13 @@ export default class SecondStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 이 스테이지에서는 사물로부터 '변수' 코드조각을 가져와 사용할 수 있습니다!\n 전광판에서 temp(온도) 변수를 드래그&드랍해봅시다.", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "\nHint : 이 스테이지에서는 사물로부터 '변수' 코드조각을 가져와 사용할 수 있습니다!\n <전광판>에서 temp(온도) 변수를 드래그&드랍해봅시다.", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
             wordWrap: { width: 500, height:230, useAdvancedWrap: true },
         }).setOrigin(0,0);
-        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 앞 퀘스트와 마찬가지로 땅과 강에서 변수를 얻어 드래그&드랍해봅시다!", {
+        this.help_text2=this.add.text(this.help_box.x+30, this.help_box.y+30, "\nHint : 앞 퀘스트와 마찬가지로 <땅>과 <강>에서 변수를 얻어 드래그&드랍해봅시다!", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
@@ -471,13 +464,13 @@ export default class SecondStage extends Phaser.Scene {
         //코드 실행 후 비교할 목표 텍스트
         this.msg="";
 
-        /*this.correct_msg1="더워요";
+        this.correct_msg1="더워요";
         this.wrong_msg="추워요";
-        this.correct_msg2="water=100";*/
+        this.correct_msg2="water=100";
 
         //윈도우용
         
-        this.correct_msg1="#include <stdio.h>\n" + 
+      /*  this.correct_msg1="#include <stdio.h>\n" + 
             "int main(){\n" +
             "   "+"int "+this.code_zone_1+" = 45;\n" +
             "   " + this.code_zone_2 + "(" + this.code_zone_3 + this.code_zone_4 + "30){\n" + //if(Temp>30)
@@ -496,7 +489,7 @@ export default class SecondStage extends Phaser.Scene {
             "   }\n" +
             "   " + this.code_zone_6 + "(\"water=%d\",water);\n"+
             "}";
-
+*/
 
 
         //미니맵에서 사용할 전역변수
@@ -959,32 +952,6 @@ export default class SecondStage extends Phaser.Scene {
             
         }
 
-        if(this.key1.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('first_stage');
-        }
-        if(this.key3.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("third_stage");
-        }
-        if(this.key4.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("fourth_stage");
-        }
-        if(this.key5.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("fifth_stage");
-        }
-        if(this.key6.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('second_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("sixth_stage");
-        }
-
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //맵이동 (stage1) 로
         if (inZone2_1) {
@@ -1346,17 +1313,7 @@ export default class SecondStage extends Phaser.Scene {
                 this.npc7.setVisible(false);
 
                 /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/stage', true);
-                xhr.setRequestHeader('Content-type', 'application/json');
-                xhr.send();
-
-                xhr.addEventListener('load', function() {
-                var result = JSON.parse(xhr.responseText);
-
-                    console.log("========stage 추가된다!: " + result.stage)
-                    stage = result.stage;          
-                });
+                this.isstage.plus(this);
                 this.clearEvent1();
                 this.reset_before_mission();
             });
@@ -1555,17 +1512,7 @@ export default class SecondStage extends Phaser.Scene {
         this.water.play('water');
         
         /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-
-            console.log("========stage 추가된다!: " + result.stage)
-            stage = result.stage;          
-        });
+        this.isstage.plus(this);
         this.clearEvent2();
     }
 

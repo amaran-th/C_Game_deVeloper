@@ -130,9 +130,19 @@ export default class TestScene extends Phaser.Scene {
             color: '#000000'
         }).setOrigin(0,0);
 
+
         //daeun
-        this.npc5=this.add.image(1150 ,325,'devil2');
-        this.npc5_text = this.add.text(this.npc5.x-50, 225, 'X키로 말 걸기', {
+
+        this.anims.create({
+            key: "daeun",
+            frames: this.anims.generateFrameNumbers('dev3',{ start: 0, end: 2}), 
+            frameRate: 2,
+            repeat: -1,
+        });
+
+        this.daeun=this.add.sprite(1150 ,405,'dev3').setScale(1.1).setOrigin(0,1);
+        this.daeun.play('daeun');
+        this.npc5_text = this.add.text(this.daeun.x, 225, 'X키로 말 걸기', {
             fontFamily: ' Courier',
             color: '#000000'
         }).setOrigin(0,0);
@@ -366,7 +376,7 @@ export default class TestScene extends Phaser.Scene {
         }else this.npc4_text.setVisible(false);
 
         //npc에게 말걸기
-        if(this.inevent==false&&this.player.player.x>this.npc5.x-150&&this.player.player.x<this.npc5.x-50){
+        if(this.inevent==false&&this.player.player.x>this.daeun.x-150&&this.player.player.x<this.daeun.x-50){
             this.npc5_text.setVisible(true);
             if(this.keyX.isDown){
                 this.inevent=true;

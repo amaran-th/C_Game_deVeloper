@@ -15,17 +15,7 @@ export default class ZeroStage extends Phaser.Scene {
     }
 
     preload() {
-        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage/check', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-        stage = result.stage;
-        }); 
+    
         this.load.tilemapTiledJSON("map", "./assets/testSceneMap.json");
         /*
         /*** FROM Minicode.js***/
@@ -60,6 +50,8 @@ export default class ZeroStage extends Phaser.Scene {
     }
     
     create () {  
+        this.isstage = new Stage(this);
+
         this.inventory = new Inventory(this);
         this.dialog = new Dialog(this);
 
@@ -242,25 +234,7 @@ export default class ZeroStage extends Phaser.Scene {
             this.help_text.setVisible(false);
             this.help_icon.clearTint();
         },this);
-//**나중에 지울것!!!!!!!!!!!!!!!!!!!!!!!!!! */
-//테이블 클릭하면 stage값 1 증가.
-        this.table.setInteractive();
-        this.table.on('pointerdown', function(){
-                /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
 
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
-
-            console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
-        });
-
-        },this)
-        //****************** */
 
 
         
@@ -356,12 +330,12 @@ export default class ZeroStage extends Phaser.Scene {
         
         //코드 실행 후 비교할 목표 텍스트
 
-        //this.correct_msg="아-마잌테스트";
-         /**/
-        this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
+        this.correct_msg="아-마잌테스트";
+         
+      /*  this.correct_msg= this.code_zone_1+this.code_zone_2+"\n" + 
                 "int main(){ \n " + 
                 "    " + this.code_zone_3 +  "(\""+this.code_zone_4+"\"); \n }" ;
-
+*/
         stagenum=0;
 
         this.isdownX=true;  //X를 누를 때 이벤트가 여러번 동작하는 것을 방지하기 위한 트리거
@@ -571,23 +545,6 @@ export default class ZeroStage extends Phaser.Scene {
             
         }
 
-        if(this.key1.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('first_stage');
-
-
-        }
-        if(this.key2.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('second_stage');
-        }
-        if(this.key3.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('zero_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("third_stage");
-        }
 
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //맵이동 (stage1) 로
@@ -804,18 +761,8 @@ export default class ZeroStage extends Phaser.Scene {
             
             this.code_on=false;
             
-            /*** db에서 stage값을 1 증가시켜줌. because,, ***/
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
+            this.isstage.plus(this);
 
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
-
-            console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
-            });
             this.clearEvent();
 
         });

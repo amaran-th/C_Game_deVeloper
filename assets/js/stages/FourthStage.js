@@ -4,7 +4,7 @@ import Dialog from "../Dialog.js";
 import Command from "../Command.js";
 import DragAndDrop from "../DragAndDrop.js";
 import ThirdStage from "./ThirdStage.js";
-var stage;
+
 var droppedText; //드랍된 텍스트 무엇인지 판별할때 gameobject._text 값 저장하는 용으로 쓰임
 var graphics; //퀴즈 넘어갈때마다 드랍존 지워야 해서 전역으로 뺐음
 var inZone4_1;
@@ -15,23 +15,16 @@ export default class FourthStage extends Phaser.Scene {
     }
 
     preload() {
-        /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/stage/check', true);
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.send();
-
-        xhr.addEventListener('load', function() {
-        var result = JSON.parse(xhr.responseText);
-        console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-        stage = result.stage;
-        });
+        
 
         this.load.image("stage4_tiles", "./assets/images/stage4/map_stage4.png");
         this.load.tilemapTiledJSON("fourth_stage", "./assets/fourth_stage.json");
     }
     
     create () {
+        this.isstage = new Stage(this);
+        console.log(this.isstage.test);
+
         this.msg="";
 
         this.inventory = new Inventory(this);
@@ -173,7 +166,9 @@ export default class FourthStage extends Phaser.Scene {
         this.help_box=this.add.image(this.help_icon.x-418,215,'help_box').setOrigin(0,0);
         
         //help text
-        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30, "hint : 스테이지 4 힌트====================================", {
+        this.help_text=this.add.text(this.help_box.x+30, this.help_box.y+30,
+            "\nHint : 이전 스테이지에서 배웠던 내용을 활용해 문제를 풀어봅시다!\n\
+            1부터 10까지 차례로 확인하며 만약 해당 수가 홀수라면 sum에 더합니다. ", {
             font:'20px',
             fontFamily: ' Courier',
             color: '#000000',
@@ -255,9 +250,9 @@ export default class FourthStage extends Phaser.Scene {
          "}"
  
          //코드 실행후 불러올 output값
-         //this.correct_msg="정답은 25";
+         this.correct_msg="정답은 25";
 
-          /*window */
+          /*window 
           this.correct_msg=
           "#include <stdio.h>\n" +
                  "int main(){\n" +
@@ -269,7 +264,7 @@ export default class FourthStage extends Phaser.Scene {
                  "  }\n" +
                  "   printf(\"정답은 "+ this.code_zone_3 +"\",password);\n" +
                  "}"
- 
+ */
  
         
          /* 시작 대사 */
@@ -699,35 +694,9 @@ export default class FourthStage extends Phaser.Scene {
             
         }
 
-        if(this.key1.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fourth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run('first_stage');
-        }
-        if(this.key2.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fourth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("second_stage");
-        }
-        if(this.key3.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fourth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("third_stage");
-        }
-        if(this.key5.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fourth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("fifth_stage");
-        }
-        if(this.key6.isDown) {
-            console.log('맵이동');
-            this.scene.sleep('fourth_stage'); //방으로 돌아왔을 때 플레이어가 문 앞에 있도록 stop 말고 sleep (이전 위치 기억)
-            this.scene.run("sixth_stage");
-        }
-
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //맵이동 (stage3_0) 로
-        if (inZone4_1) {
+        if (inZone4_1&&!this.code_on) {
             this.pressX_1.x = this.player.player.x-50;
             this.pressX_1.y = this.player.player.y-100;
             this.pressX_1.setVisible(true);
@@ -970,17 +939,7 @@ export default class FourthStage extends Phaser.Scene {
             }, this);
 
             /*** db에서 stage값을 1 증가시켜줌. ***/
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
-
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
-
-                console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
-            });
+            this.isstage.plus(this);
 
         });
     }
@@ -1091,17 +1050,7 @@ export default class FourthStage extends Phaser.Scene {
             this.draganddrop_3.reset_before_mission(this)
 
             /*** db에서 stage값을 1 증가시켜줌. 도어락 퀘 완료. ***/ 
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/stage', true);
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.send();
-
-            xhr.addEventListener('load', function() {
-            var result = JSON.parse(xhr.responseText);
-
-                console.log("========stage 추가된다!: " + result.stage)
-                stage = result.stage;          
-            });
+            this.isstage.plus(this);
             this.clearEvent();
             
         });

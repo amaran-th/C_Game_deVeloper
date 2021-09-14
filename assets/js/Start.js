@@ -4,16 +4,6 @@ var username='AAA';
 var stage;
 var codepiece_string_arr = [];
 
-//데이터베이스에 접속해서 닉네임 불러와서 username 변수에 저장
-var xhr = new XMLHttpRequest();
-xhr.open('POST', '/get_session', true);
-xhr.setRequestHeader('Content-type', 'application/json');
-xhr.send();
-xhr.addEventListener('load', function() {
-  var result = JSON.parse(xhr.responseText);
-  console.log("nickname : "+result.nick);
-  username=result.nick;
- });
 
 class Start extends Phaser.Scene {
     constructor() {
@@ -22,17 +12,6 @@ class Start extends Phaser.Scene {
     }
 
     preload() {
-      /***  stage값 가져오기 ***/ //preload에서 갖고와야함!!!
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', '/stage/check', true);
-      xhr.setRequestHeader('Content-type', 'application/json');
-      xhr.send();
-
-      xhr.addEventListener('load', function() {
-      var result = JSON.parse(xhr.responseText);
-      console.log("======== 현재 스테이지는 : " + result.stage + " ========")
-      stage = result.stage;
-      });
       
       this.load.image("bubble","./assets/images/bubble.png");
       this.load.image("bubble2","./assets/images/bubble2.png")
@@ -313,6 +292,12 @@ class Start extends Phaser.Scene {
       this.load.spritesheet('dev2', './assets/images/npc/dev2.png', {
         frameWidth: 100,
         frameHeight: 130,
+      });
+
+      //엔딩룸_다은
+      this.load.spritesheet('dev3', './assets/images/npc/dev3.png', {
+        frameWidth: 92,
+        frameHeight: 127,
       });
 
       this.load.image("stage_clear", "./assets/images/stage_clear.png" );
